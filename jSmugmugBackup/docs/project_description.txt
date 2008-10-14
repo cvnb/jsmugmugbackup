@@ -1,0 +1,92 @@
+
+All photos on my harddrive are arranged like this: <camera_name>\<date> - <topic>.
+Since SmugMug doesn't really know about "directories", I have a category
+for each camera and i assign album names like this: "<date> - <topic>".
+
+------------------------------------------
+
+
+jSmugmugBackup is a litte tool i'm creating to backup and restore my
+pictures and videos on http://www.Smugmug.com
+
+It is written in Java and currently using the SmugFig API
+(http://blog.antonspaans.com/smugfig-api) from Anton Spaans in order
+to connect to Smugmug. It does not modify local files (at least
+thats not the intention).
+
+I created this project mainly for my own needs. Besides sharing my
+photos, I use SmugMug as a backup storage for my photos and videos.
+
+As to the state of this software, i refuse to call it "alpha" or
+"beta" or anything else. It works for me in the way i want it to
+work. If you want to know exactly what the program does, you should
+download, read and compile the source code. I take no responsibility
+for whatever this program will do to you, your SmugMug account, your
+computer or anyone else.
+
+I would like to thank especially Anton Spaans AKA Flying Dutchie
+(SmugFig API, http://blog.antonspaans.com/smugfig-api), Kallasoft
+(SmugMug Java API, http://www.kallasoft.com/smugmug-java-api/), and
+of course the guys from SmugMug who provided the groundwork for this
+program.
+
+If you find any bugs or have anything else on your mind .. drop me
+a message and I'll see what i can do about it.
+
+requirements:
+
+    * Java 1.5
+    * lots of RAM if you want to upload big videos 
+
+
+------------------------------------------
+
+requirements:
+  - Java 1.5
+  - lots of RAM if you want to upload big videos
+
+SmugMug Java API
+URL     : http://www.kallasoft.com/smugmug-java-api/
+Version : 0.5.0
+Contact : development@kallasoft.com
+License : Apache License, Version 2.0
+
+SmugFig API
+URL     : http://blog.antonspaans.com/smugfig-api
+Version : 0.1.1
+Contact : anton@streetsofboston.com
+License : Apache License, Version 2.0
+
+Apache Commons Codec
+URL     : http://commons.apache.org/
+Version : 
+Contact : 
+License : Apache License, Version 2.0
+
+Jakarta Commons HTTPclient
+URL     : http://hc.apache.org/httpclient-3.x/
+License : Apache License, Version 2.0
+
+Commons IO
+URL     : http://commons.apache.org/
+License : Apache License, Version 2.0
+
+JSON
+URL     : http://json.org/
+License :
+
+JUnit
+URL     : http://junit.org/
+License : Common Public License - v 1.0
+
+Logback
+URL     : http://logback.qos.ch/
+License : LGPL
+
+Migbase64
+URL     : http://www.miginfocom.com/
+License :
+
+slf4j
+URL     : http://www.slf4j.org/
+License :

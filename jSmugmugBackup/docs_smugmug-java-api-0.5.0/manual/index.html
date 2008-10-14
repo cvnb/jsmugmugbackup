@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>kallasoft SmugMug Java API Manual</title>
+		<meta http-equiv="keywords"
+			content="SmugMug, Java, Manual, API, JSON, HTTP, kallasoft">
+		<meta http-equiv="description"
+			content="Manual for the kallasoft SmugMug Java API.">
+		<meta http-equiv="content-type"
+			content="text/html; charset=ISO-8859-1">
+		<link rel="stylesheet" type="text/css" href="resources/styles.css">
+	</head>
+
+	<body>
+		<table id="root">
+			<thead>
+				<tr>
+					<td>
+						<h1>
+							kallasoft SmugMug API Manual
+							<br>
+						</h1>
+					</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<h1>
+							Table of Contents
+							<br>
+						</h1>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h1>
+							Introduction
+							<br>
+						</h1>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<h1>
+							Notes
+						</h1>
+						<p>
+							This section provide quick tidbits of information about the
+							Kallasoft SmugMug REST API.
+							<br>
+						</p>
+						<h2>
+							Unit Tests
+						</h2>
+						<p>
+							The kallasoft SmugMug REST API provides a full suite of JUnit
+							test cases for
+							<br>
+							each of the
+							<a href="http://smugmug.jot.com/WikiHome/API"
+								title="SmugMug API Documentation">API methods</a> implemented.
+							Because the API requires sensitive information
+							<br>
+							in order to run (e.g. login information, user IDs, etc.) all of
+							that information
+							<br>
+							has been collected in a single properties file and placed at the
+							root of the
+							<br>
+							classpath during development. This file cannot be shipped outside
+							of the
+							<br>
+							development environment for security reasons.
+							<br>
+							<br>
+							If you wish to run the suite of JUnit test cases against the API
+							you must
+							<br>
+							provide a file named &quot;
+							<em>TestConstants.properties</em>&quot; at the head of the
+							classpath
+							<br>
+							before running the tests. For example:
+						</p>
+						<p class="code">
+							java -cp TestConstants.properties;&lt;rest of CP&gt;
+							com.kallasoft.smugmug.api.rest.&lt;version&gt;.AllTests
+						</p>
+						<p>
+							The test implementation will pick up the properties file from the
+							classpath and use it's values for the sensitive information when
+							executing.
+						</p>
+						<p>
+							The format of the properties file is as follows:
+						</p>
+						<ul>
+							<li>
+								api_key=String, Your API key from SmugMug
+								<br>
+							</li>
+							<li>
+								user_id=Integer, Your user ID
+							</li>
+							<li>
+								username=String, Your login or username
+							</li>
+							<li>
+								nick_name_1=String, a nick name of an account that has atleast
+								50 public albums available
+							</li>
+							<li>
+								nick_name_2=String, a nick name of an account that has atleast
+								10 public albums available
+							</li>
+							<li>
+								password=String, The password used to log the given username
+								above in
+							</li>
+							<li>
+								password_hash=String, the hash code of your password. (See
+								<em>withPassword</em> method)
+								<br>
+							</li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<h1>
+							SmugMug JSON API Examples
+						</h1><p>
+							This section of the document provides links to the extensive
+							Request/Response API documentation for each version of the the
+							SmugMug JSON API that is supported.
+							<br>
+						</p>
+						<ul>
+							<li>
+								<a href="api_1.2.0.html">Version 1.2.0</a>
+								<br>
+							</li>
+						</ul></td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>
