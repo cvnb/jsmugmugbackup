@@ -13,10 +13,14 @@ import java.util.Vector;
 public interface ISmugmugConnectorNG
 {
 	void login(String userEmail, String password);
+	void relogin();
 	void logout();
 
 	Vector<ICategory> getTree();
 	void getImages();
+	void createCategory(String name);
+	void createSubcategory(int categoryID, String name);
+	void createAlbum(int categoryID, int subCategoryID, String name);
 	
 	void uploadFile(int albumID, File file);
 	void downloadFile(int imageID, File fileName);
