@@ -13,9 +13,6 @@ import jSmugmugBackup.abstractionLayerNG.data.*;
 
 public class Tests_main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args)
 	{
 		//get login data
