@@ -1,9 +1,10 @@
 todo:
  - GUI
- - loginNG
+ - loginNG, reloginNG, up- and downloadNG
+ 
  - 
- - SmugFig 0.1.2
  - deleting ???
+ - document handling of non-unique names
  - test bad connection handling - speed up timeouts
  - make login singleton - http://en.wikipedia.org/wiki/Singleton_pattern
  - check if image is already uploaded (md5)

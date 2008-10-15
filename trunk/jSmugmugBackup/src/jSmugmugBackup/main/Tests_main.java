@@ -39,15 +39,23 @@ public class Tests_main {
 		//test SmugmugConnectorNG
 		ISmugmugConnectorNG connector = new SmugmugConnectorNG(false);
 		connector.login(userEmail, password);
+		
+		//connector.relogin();
 		//connector.getTree();
-		connector.getImages();
+		//connector.getImages();
+		
+		//connector.createCategory("TestCategory001");
+		//connector.createSubcategory(356870, "TestSubCategory0002");
+		//connector.createAlbum(356870, 629710, "TestAlbum003");
+		
 		connector.logout();
 
+		
 		//test AccountListingProxy
-		IAccountListingProxy proxy = new AccountListingProxy();
-		proxy.login(userEmail, password);
-		proxy.getCategoryList();
-		proxy.logout();
+		//IAccountListingProxy proxy = new AccountListingProxy();
+		//proxy.login(userEmail, password);
+		//proxy.getCategoryList();
+		//proxy.logout();
 
 	}
 
