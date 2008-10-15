@@ -6,6 +6,7 @@
  */
 package jSmugmugBackup.main;
 
+import java.io.File;
 import java.util.Scanner;
 
 import jSmugmugBackup.abstractionLayerNG.*;
@@ -42,7 +43,9 @@ public class Tests_main {
 		
 		//connector.relogin();
 		//connector.getTree();
-		//connector.getImages();
+		//connector.getImages(6248916); //TestAlbum4
+		//connector.downloadFile(394714951, new File("/home/paul/temp/jSmugmugBackup/download/testalbum4-3rdimage.jpg"));
+		connector.uploadFile(6248916, new File("/home/paul/temp/jSmugmugBackup/upload/TestCategory1/TestSubCategory/TestAlbum2/P1010053.JPG"));
 		
 		//connector.createCategory("TestCategory001");
 		//connector.createSubcategory(356870, "TestSubCategory0002");
