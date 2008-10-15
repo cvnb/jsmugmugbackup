@@ -12,4 +12,5 @@ public class SmugmugConstantsNG
 	
 	public static final String SmugmugAPIKey = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
 
+	public static final String SmugmugAPIVersion = "1.2.0";
 }

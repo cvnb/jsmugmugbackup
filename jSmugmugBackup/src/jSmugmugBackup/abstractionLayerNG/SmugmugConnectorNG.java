@@ -7,15 +7,28 @@
 package jSmugmugBackup.abstractionLayerNG;
 
 import jSmugmugBackup.abstractionLayerNG.data.*;
+import jSmugmugBackup.model.AeSimpleMD5;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.simple.*;
@@ -94,7 +107,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 						
 						imageIndex++;
 						image = (JSONObject)this.getJSONValue(images, "Images[" + imageIndex + "]");
-					}				
+					}
 					
 					albumIndex++;
 					album = (JSONObject)this.getJSONValue(subcategory, "Albums[" + albumIndex + "]");
@@ -128,7 +141,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					
 					imageIndex++;
 					image = (JSONObject)this.getJSONValue(images, "Images[" + imageIndex + "]");
-				}	
+				}
 				
 				albumIndex++;
 				album = (JSONObject)this.getJSONValue(category, "Albums[" + albumIndex + "]");
@@ -142,9 +155,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return categoryList;
 	}
 
-	public void getImages()
+	public void getImages(int albumID)
 	{
-		this.smugmug_images_get(6197234);
+		JSONObject jobj = this.smugmug_images_get(albumID);
+		this.printJSONObject(jobj);
 	}
 	
 
@@ -166,14 +180,41 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		this.printJSONObject(jobj);
 	}
 	
-	public void uploadFile(int albumID, File file) {
-		// TODO Auto-generated method stub
+	public void uploadFile(int albumID, File file)
+	{
+		this.smugmug_images_upload(albumID, file);
 		
 	}
 	
-	public void downloadFile(int imageID, File fileName) {
-		// TODO Auto-generated method stub
-		
+	public void downloadFile(int imageID, File fileName)
+	{		
+		JSONObject jobj = this.smugmug_images_getURLs(imageID);
+		String imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
+    	//System.out.println("url = " + imageURL);
+				
+		//write url to file
+		try
+		{
+			URL url	= new URL(imageURL);
+			FileOutputStream out = new FileOutputStream(fileName);
+			URLConnection conn = url.openConnection();
+			InputStream  in = conn.getInputStream();
+			
+			
+			byte[] buffer = new byte[1024];
+			int numRead;
+			long numWritten = 0;
+			while ((numRead = in.read(buffer)) != -1)
+			{
+				out.write(buffer, 0, numRead);
+				numWritten += numRead;
+			}
+			
+			out.close();
+		}
+		catch (FileNotFoundException e) { e.printStackTrace(); }
+		catch (MalformedURLException e) { e.printStackTrace(); }
+		catch (IOException e)           { e.printStackTrace(); }
 	}
 
 	public void verifyFile() {
@@ -234,8 +275,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         }
         else { System.out.println("failed"); }
 	}
-	
-	
+		
 	private void smugmug_login_withHash()
 	{
 		System.out.print("smugmug.login.withHash ... ");
@@ -260,9 +300,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         }
         else { System.out.println("failed"); }
 	}
-	
-
-	
+		
 	private void smugmug_logout_logout()
 	{
 		System.out.print("smugmug.logout ...");
@@ -287,8 +325,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         }
         else { System.out.println("failed"); }
 	}
-	
-	
+		
 	private JSONObject smugmug_users_getTree()
 	{
 		System.out.print("smugmug.users.getTree ... ");
@@ -316,8 +353,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
 	}
-	
-	
+		
 	private JSONObject smugmug_images_get(int albumID)
 	{
 		String methodName = "smugmug.images.get";
@@ -353,8 +389,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
 	}
-	
-	
+		
 	private JSONObject smugmug_categories_create(String name)
 	{
 		String methodName = "smugmug.categories.create";
@@ -367,7 +402,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "Name=" + name + "&";
 				
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
@@ -394,7 +429,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
@@ -508,7 +543,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "ImageKey=&"; //string
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
@@ -549,10 +584,62 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
     }
 	
-	private JSONObject smugmug_images_upload()
+	private JSONObject smugmug_images_upload(int albumID, File fileName)
 	{
+		
+		String methodName = "smugmug.images.upload";
+		System.out.print(methodName + " ...");
+		
+		//build url
+		String url = "http://upload.smugmug.com/" + fileName.getName();
+		
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPut httpPut = new HttpPut(url);
+        
+        //add header
+        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
+        httpPut.addHeader("Content-MD5", this.computeMD5Hash(fileName) );
+        httpPut.addHeader("X-Smug-SessionID", this.login_sessionID);
+        httpPut.addHeader("X-Smug-Version", SmugmugConstantsNG.SmugmugAPIVersion);
+        httpPut.addHeader("X-Smug-ResponseType", "JSON");
+        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
+        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
+        httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
+        //httpPut.addHeader("X-Smug-Caption", ""); //optional
+        //httpPut.addHeader("X-Smug-Keywords", ""); //optional
+        //httpPut.addHeader("X-Smug-Latitude", ""); //optional
+        //httpPut.addHeader("X-Smug-Longitude", ""); //optional
+        //httpPut.addHeader("X-Smug-Altitude", ""); //optional
+
+        
+        // see: http://www.iana.org/assignments/media-types/
+        HttpEntity entity = new org.apache.http.entity.FileEntity(fileName, "image/jpeg");
+        httpPut.setEntity(entity);
+        
+        // Create a response handler
+        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+        String responseBody = null;
+		try { responseBody = httpclient.execute(httpPut, responseHandler); }
+		catch (ClientProtocolException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
+        
+		//System.out.println("response:");
+		//System.out.println(responseBody);
+		
+        Object obj = JSONValue.parse(responseBody);
+        JSONObject jobj = (JSONObject)obj;
+        
+		
+        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+             (this.getJSONValue(jobj, "method").equals(methodName)) )
+        {
+        	System.out.println("ok");
+        	return jobj;
+        }
+        else { System.out.println("failed"); }
+        
         return null;
-    }
+	}
 	
 	
 	//======================== private - helper ==============================
@@ -639,4 +726,26 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return null;
 	}
 
+    private String computeMD5Hash(File file)
+    {    	
+		//read local file
+		byte[] buffer = new byte[(int)file.length()];
+		InputStream is = null;
+    	try
+    	{
+			is = new FileInputStream(file);
+			is.read(buffer); //null pointer exception???
+			is.close();
+		}
+    	catch (FileNotFoundException e) { e.printStackTrace(); }
+		catch (IOException e) { e.printStackTrace(); }
+
+		//compute md5 from local file
+		String md5sum = null;
+		try { md5sum = AeSimpleMD5.MD5(buffer); }
+		catch (NoSuchAlgorithmException e) { e.printStackTrace(); }
+		catch (UnsupportedEncodingException e) { e.printStackTrace(); }
+    	
+    	return md5sum;
+    }
 }
