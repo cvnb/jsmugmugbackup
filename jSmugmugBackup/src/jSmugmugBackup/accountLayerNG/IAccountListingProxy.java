@@ -6,7 +6,6 @@
  */
 package jSmugmugBackup.accountLayerNG;
 
-import jSmugmugBackup.model.login.ISmugmugLogin;
 import jSmugmugBackup.view.login.ILoginView;
 
 import java.io.File;

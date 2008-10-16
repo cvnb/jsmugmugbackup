@@ -8,8 +8,6 @@ package jSmugmugBackup.view;
 
 import jSmugmugBackup.accountLayerNG.ICategory;
 import jSmugmugBackup.model.*;
-import jSmugmugBackup.model.data.*;
-import jSmugmugBackup.model.login.*;
 import jSmugmugBackup.view.login.ILoginView;
 
 import java.awt.event.*;
