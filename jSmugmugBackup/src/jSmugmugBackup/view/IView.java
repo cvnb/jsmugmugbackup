@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.accountLayerNG.ICategory;
+import jSmugmugBackup.model.accountLayerNG.ICategory;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.login.ILoginView;
 

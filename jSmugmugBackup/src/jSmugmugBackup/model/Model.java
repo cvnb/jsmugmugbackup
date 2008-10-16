@@ -1,8 +1,8 @@
 package jSmugmugBackup.model;
 
-import jSmugmugBackup.accountLayerNG.*;
+import jSmugmugBackup.model.accountLayerNG.*;
 import jSmugmugBackup.model.queue.*;
-import jSmugmugBackup.smugmugAbstractionLayerNG.*;
+import jSmugmugBackup.model.smugmugAbstractionLayerNG.*;
 import jSmugmugBackup.view.*;
 import jSmugmugBackup.view.login.ILoginView;
 
