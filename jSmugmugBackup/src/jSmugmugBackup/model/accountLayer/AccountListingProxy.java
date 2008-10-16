@@ -4,11 +4,11 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package jSmugmugBackup.model.accountLayerNG;
+package jSmugmugBackup.model.accountLayer;
 
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.queue.*;
-import jSmugmugBackup.model.smugmugAbstractionLayerNG.*;
+import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.Logger;
 import jSmugmugBackup.view.login.ILoginView;
 
