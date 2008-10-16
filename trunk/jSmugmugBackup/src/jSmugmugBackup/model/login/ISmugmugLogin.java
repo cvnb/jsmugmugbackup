@@ -6,7 +6,6 @@
  */
 package jSmugmugBackup.model.login;
 
-import com.streetsofboston.smugmug.v1_2_1.system.Session;
 
 public interface ISmugmugLogin
 {
