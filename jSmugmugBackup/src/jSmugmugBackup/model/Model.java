@@ -1,7 +1,6 @@
 package jSmugmugBackup.model;
 
 import jSmugmugBackup.accountLayerNG.*;
-import jSmugmugBackup.model.abstractionLayer.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
 import jSmugmugBackup.model.queue.*;
@@ -28,33 +27,19 @@ public class Model
     private long totalTransferedBytes;
 
     
-    private ISmugmugLogin loginToken = null; //Quick Hack
-
-    
     /** Constructor */
     public Model()
     {
-    	//this.smugmugConnector = new SmugmugConnectorNG(true);
     	this.log = Logger.getInstance();
-    	
-    	//this.transferQueue = new TransferQueue();
     	
     	Date date = new Date();
     	this.startTime = date.getTime();
     	this.totalTransferedBytes = 0;    	
     }    
 
-    public void login(ILoginView loginToken)
+    public void login(ILoginView loginMethod)
     {
-    	//this.loginToken = loginToken;
-    	//this.loginToken.login();
-    	//if (this.loginToken.getToken() == null) { return false; }
-
-    	//this.smugmugConnector.setLoginToken(loginToken);
-    	//this.smugmugConnector.login();
-    	this.accListing.setLoginToken(loginToken);
-    	
-    	//return this.smugmugConnector.login(loginToken);
+    	this.accListing.setLoginMethod(loginMethod);
     }
     
     public void getFileListing()
@@ -73,93 +58,89 @@ public class Model
     }
 
     public void uploadPrepare(ITransferDialogResult transferDialogResult)
-    {    	
-    	//check if we are logged in
-    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-    	{
-        	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
+    {
+    	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
 
-    		
-    		String category    = transferDialogResult.getCategoryName();
-    		String subcategory = transferDialogResult.getSubCategoryName();
-    		String album       = transferDialogResult.getAlbumName();
-    		
-    		if ( (transferDialogResult.getCategoryName() == null) && (transferDialogResult.getSubCategoryName() == null) && (transferDialogResult.getAlbumName() == null) )
-    		{
-    			File dir = new File(transferDialogResult.getDir());
-    			if (dir.isDirectory()) //should normally be true
-    			{
-    				if (this.containsPics(dir)) //we're already there
-    				{
-    					//album = this.extractAlbumNameFromDir(dir.getAbsolutePath());
-    					category    = "Other";
-    					subcategory = null;
-    					album       = dir.getName();    					
-    					this.uploadPrepareAlbum(category, subcategory, album, dir);
-    				}
-    				else //go on, search for sub-directories
-    				{
-    					File[] dirList = dir.listFiles();
-    					Arrays.sort(dirList, new Constants.FileComparator());
-    					for (int i=0; i < dirList.length; i++)
-    					{
-    						File subDir = dirList[i];
-    						if (subDir.isDirectory())
-    						{
-    							if (this.containsPics(subDir))
-    							{
-    								category    = subDir.getParentFile().getName();
-    								subcategory = null;
-    								album       = subDir.getName();
-    								this.uploadPrepareAlbum(category, subcategory, album, subDir);    								
-    							}
-    							else //search in sub-sub-directories
-    							{
-    								File[] subDirList = subDir.listFiles();
-    	    						Arrays.sort(subDirList, new Constants.FileComparator());
-    								for (int j=0; j < subDirList.length; j++)
-    								{
-    									File subSubDir = subDirList[j];
-    									if (subSubDir.isDirectory())
-    									{
-    										if (this.containsPics(subSubDir))
-    										{
-    											category    = subSubDir.getParentFile().getParentFile().getName();
-    											subcategory = subSubDir.getParentFile().getName();
-    											album       = subSubDir.getName();
-    											this.uploadPrepareAlbum(category, subcategory, album, subSubDir);
-    										}
-    										else
-    										{
-    											//not going any deeper
-    										}
-    									}
-    								}
-    							}
-    						}
-    					}
-    				}
-    	        }
-    			else
-    			{
-    				this.log.printLogLine("expected a directory, not a file");
-    			}
-    		}
-    		else if (transferDialogResult.getCategoryName() != null)
-    		{
-    			if (transferDialogResult.getAlbumName() == null)
-    			{
-    				//determine album name from directory
-    				album = this.extractAlbumNameFromDir(transferDialogResult.getDir());
-    			}
-    			this.uploadPrepareAlbum(category, subcategory, album, new File(transferDialogResult.getDir()));
-    		}
-    		else
-    		{
-    			this.log.printLogLine("this case is yet unhandled");
-    			this.quitApplication();
-    		}
-    	}    	
+		
+		String category    = transferDialogResult.getCategoryName();
+		String subcategory = transferDialogResult.getSubCategoryName();
+		String album       = transferDialogResult.getAlbumName();
+		
+		if ( (transferDialogResult.getCategoryName() == null) && (transferDialogResult.getSubCategoryName() == null) && (transferDialogResult.getAlbumName() == null) )
+		{
+			File dir = new File(transferDialogResult.getDir());
+			if (dir.isDirectory()) //should normally be true
+			{
+				if (this.containsPics(dir)) //we're already there
+				{
+					//album = this.extractAlbumNameFromDir(dir.getAbsolutePath());
+					category    = "Other";
+					subcategory = null;
+					album       = dir.getName();    					
+					this.uploadPrepareAlbum(category, subcategory, album, dir);
+				}
+				else //go on, search for sub-directories
+				{
+					File[] dirList = dir.listFiles();
+					Arrays.sort(dirList, new Constants.FileComparator());
+					for (int i=0; i < dirList.length; i++)
+					{
+						File subDir = dirList[i];
+						if (subDir.isDirectory())
+						{
+							if (this.containsPics(subDir))
+							{
+								category    = subDir.getParentFile().getName();
+								subcategory = null;
+								album       = subDir.getName();
+								this.uploadPrepareAlbum(category, subcategory, album, subDir);    								
+							}
+							else //search in sub-sub-directories
+							{
+								File[] subDirList = subDir.listFiles();
+	    						Arrays.sort(subDirList, new Constants.FileComparator());
+								for (int j=0; j < subDirList.length; j++)
+								{
+									File subSubDir = subDirList[j];
+									if (subSubDir.isDirectory())
+									{
+										if (this.containsPics(subSubDir))
+										{
+											category    = subSubDir.getParentFile().getParentFile().getName();
+											subcategory = subSubDir.getParentFile().getName();
+											album       = subSubDir.getName();
+											this.uploadPrepareAlbum(category, subcategory, album, subSubDir);
+										}
+										else
+										{
+											//not going any deeper
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+	        }
+			else
+			{
+				this.log.printLogLine("expected a directory, not a file");
+			}
+		}
+		else if (transferDialogResult.getCategoryName() != null)
+		{
+			if (transferDialogResult.getAlbumName() == null)
+			{
+				//determine album name from directory
+				album = this.extractAlbumNameFromDir(transferDialogResult.getDir());
+			}
+			this.uploadPrepareAlbum(category, subcategory, album, new File(transferDialogResult.getDir()));
+		}
+		else
+		{
+			this.log.printLogLine("this case is yet unhandled");
+			this.quitApplication();
+		}
     }    
     
     public void downloadPrepare(ITransferDialogResult transferDialogResult)
