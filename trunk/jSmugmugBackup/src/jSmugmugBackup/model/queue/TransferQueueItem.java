@@ -6,7 +6,6 @@
  */
 package jSmugmugBackup.model.queue;
 
-import jSmugmugBackup.model.abstractionLayer.*;
 import jSmugmugBackup.model.login.*;
 import jSmugmugBackup.trash_bin.ISmugMugConnector;
 import jSmugmugBackup.trash_bin.SmugmugConnector;
@@ -35,13 +34,13 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	private TransferQueueItem(TransferQueueItemActionEnum action, ISmugmugLogin loginToken)
+	private TransferQueueItem(TransferQueueItemActionEnum action)
 	{
 		this.log = Logger.getInstance();
 		//this.log.printLogLine("new TransferQueueItem()");
 		
 		this.smugmugConnector = new SmugmugConnector();
-		this.smugmugConnector.setLoginToken(loginToken);
+		//this.smugmugConnector.setLoginToken(loginToken);
 		//this.smugmugConnector.login();
 		
 		this.action = action;
@@ -52,10 +51,10 @@ public class TransferQueueItem implements ITransferQueueItem
 		this.result_message = "";
 		this.result_transferedBytes = 0;
 	}
-	public TransferQueueItem(TransferQueueItemActionEnum action, ISmugmugLogin loginToken, GUID albumGUID, File fileDescriptor) throws TransferQueueException
+	public TransferQueueItem(TransferQueueItemActionEnum action, GUID albumGUID, File fileDescriptor) throws TransferQueueException
 	{
 		//constructor for upload items
-		this(action, loginToken);
+		this(action);
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
 		{
 			this.albumGUID = albumGUID;
@@ -63,10 +62,10 @@ public class TransferQueueItem implements ITransferQueueItem
 		}
 		else throw new TransferQueueException("only the \"UPLOAD\" action is applicable for this constructor!");
 	}
-	public TransferQueueItem(TransferQueueItemActionEnum action, ISmugmugLogin loginToken, GUID imageGUID, String fileName) throws TransferQueueException
+	public TransferQueueItem(TransferQueueItemActionEnum action, GUID imageGUID, String fileName) throws TransferQueueException
 	{
 		//constructor for download or verify items
-		this(action, loginToken);
+		this(action);
 		if ( (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD)) ||
 			 (this.action.equals(TransferQueueItemActionEnum.VERIFY)) )
 		{
