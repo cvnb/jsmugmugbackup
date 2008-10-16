@@ -8,6 +8,7 @@ package jSmugmugBackup.smugmugAbstractionLayerNG;
 
 import jSmugmugBackup.accountLayerNG.*;
 import jSmugmugBackup.model.AeSimpleMD5;
+import jSmugmugBackup.view.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +37,8 @@ import org.json.simple.parser.*;
 
 public class SmugmugConnectorNG implements ISmugmugConnectorNG
 {
+	private Logger log = null;
+	
 	private String login_sessionID = null;
 	private Number login_userID = null;
 	private String login_nickname = null;
@@ -43,7 +46,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public SmugmugConnectorNG()
 	{
-		
+		this.log = Logger.getInstance();
 	}
 
 	public void login(String userEmail, String password)
@@ -359,7 +362,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 	private JSONObject smugmug_users_getTree()
 	{
-		System.out.print("smugmug.users.getTree ... ");
+		this.log.printLogLine("smugmug.users.getTree ... ");
 		
 		//build url
 		String url = SmugmugConstantsNG.SmugmugServerURL + "?";
@@ -377,10 +380,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
            	 (this.getJSONValue(jobj, "method").equals("smugmug.users.getTree")) )
         {        	
-           	System.out.println("ok");
+        	this.log.printLogLine("ok");
            	return jobj;
         }
-        else { System.out.println("failed"); }
+        else { this.log.printLogLine("failed"); }
         
         return null;
 	}
@@ -388,7 +391,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private JSONObject smugmug_images_get(int albumID)
 	{
 		String methodName = "smugmug.images.get";
-		System.out.print("smugmug.images.get ... ");
+		this.log.printLogLine("smugmug.images.get ... ");
 		
 		//build url
 		String url = SmugmugConstantsNG.SmugmugServerURL + "?";
@@ -407,16 +410,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
            	 (this.getJSONValue(jobj, "method").equals("smugmug.images.get")) )
         {        	
-           	System.out.println("ok");
+        	this.log.printLogLine("ok");
            	return jobj;
         }
         else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
         		  (this.getJSONValue(jobj, "code").equals(new Long(15))) )
         {
-        	System.out.println("empty");
+        	this.log.printLogLine("empty");
         	return jobj;
         }
-        else { System.out.println("failed"); }
+        else { this.log.printLogLine("failed"); }
         
         return null;
 	}
