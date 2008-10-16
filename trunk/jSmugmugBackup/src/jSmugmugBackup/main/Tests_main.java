@@ -9,8 +9,8 @@ package jSmugmugBackup.main;
 import java.io.File;
 import java.util.Scanner;
 
-import jSmugmugBackup.abstractionLayerNG.*;
-import jSmugmugBackup.abstractionLayerNG.data.*;
+import jSmugmugBackup.accountLayerNG.*;
+import jSmugmugBackup.smugmugAbstractionLayerNG.*;
 
 public class Tests_main {
 
@@ -38,27 +38,27 @@ public class Tests_main {
 		
 		
 		//test SmugmugConnectorNG
-		ISmugmugConnectorNG connector = new SmugmugConnectorNG(false);
-		connector.login(userEmail, password);
+		//ISmugmugConnectorNG connector = new SmugmugConnectorNG(false);
+		//connector.login(userEmail, password);
 		
 		//connector.relogin();
 		//connector.getTree();
 		//connector.getImages(6248916); //TestAlbum4
 		//connector.downloadFile(394714951, new File("/home/paul/temp/jSmugmugBackup/download/testalbum4-3rdimage.jpg"));
-		connector.uploadFile(6248916, new File("/home/paul/temp/jSmugmugBackup/upload/TestCategory1/TestSubCategory/TestAlbum2/P1010053.JPG"));
+		//connector.uploadFile(6248916, new File("/home/paul/temp/jSmugmugBackup/upload/TestCategory1/TestSubCategory/TestAlbum2/P1010053.JPG"));
 		
 		//connector.createCategory("TestCategory001");
 		//connector.createSubcategory(356870, "TestSubCategory0002");
 		//connector.createAlbum(356870, 629710, "TestAlbum003");
 		
-		connector.logout();
+		//connector.logout();
 
 		
 		//test AccountListingProxy
-		//IAccountListingProxy proxy = new AccountListingProxy();
+		IAccountListingProxy proxy = new AccountListingProxy();
 		//proxy.login(userEmail, password);
-		//proxy.getCategoryList();
-		//proxy.logout();
+		proxy.getCategoryList();
+		proxy.logout();
 
 	}
 

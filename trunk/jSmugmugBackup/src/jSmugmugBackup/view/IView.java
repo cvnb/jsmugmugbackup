@@ -9,13 +9,14 @@ package jSmugmugBackup.view;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
+import jSmugmugBackup.view.login.ILoginView;
 
 import java.awt.event.*;
 
 
 public interface IView
 {
-	ISmugmugLogin getLoginToken();
+	ILoginView getLoginToken();
 	void refreshFileListing(AccountListing accountListing);
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
