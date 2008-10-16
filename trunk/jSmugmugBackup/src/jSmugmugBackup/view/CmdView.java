@@ -1,6 +1,6 @@
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.accountLayerNG.*;
+import jSmugmugBackup.model.accountLayerNG.*;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.login.ILoginView;
 import jSmugmugBackup.view.login.LoginViewConsole_1_5;
