@@ -20,7 +20,7 @@ public class Model
     private IView view = null;
     private Logger log = null;
     private long startTime;
-    private long totalTransferedBytes;
+
 
     
     /** Constructor */
@@ -31,30 +31,21 @@ public class Model
     	
     	Date date = new Date();
     	this.startTime = date.getTime();
-    	this.totalTransferedBytes = 0;    	
     }    
 
     public void login(ILoginView loginMethod)
     {
     	this.accListing.setLoginMethod(loginMethod);
     	this.accListing.login();
+    	this.accListing.init();
     }
     
     public void getFileListing()
     {
-//    	//check if we are logged in
-//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-//    	{
-//    		//this.log.printLogLine("retrieving account data ...");
-//    		
-//    		if (this.view != null)
-//    		{
-//    			this.view.refreshFileListing(this.smugmugConnector.getAccountStructure());
-//    		}
-//    	}
-    	
-    	this.view.refreshFileListing( this.accListing.getCategoryList() );
-    	
+    	if (this.view != null)
+    	{
+    		this.view.refreshFileListing( this.accListing.getCategoryList() );
+    	}
     }
 
     public void uploadPrepare(ITransferDialogResult transferDialogResult)
@@ -76,8 +67,10 @@ public class Model
 					//album = this.extractAlbumNameFromDir(dir.getAbsolutePath());
 					category    = "Other";
 					subcategory = null;
-					album       = dir.getName();    					
-					this.uploadPrepareAlbum(category, subcategory, album, dir);
+					album       = dir.getName();
+
+					//this.uploadPrepareAlbum(category, subcategory, album, dir);
+					this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir);
 				}
 				else //go on, search for sub-directories
 				{
@@ -93,7 +86,9 @@ public class Model
 								category    = subDir.getParentFile().getName();
 								subcategory = null;
 								album       = subDir.getName();
-								this.uploadPrepareAlbum(category, subcategory, album, subDir);    								
+								
+								//this.uploadPrepareAlbum(category, subcategory, album, subDir);
+								this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDir);
 							}
 							else //search in sub-sub-directories
 							{
@@ -109,7 +104,8 @@ public class Model
 											category    = subSubDir.getParentFile().getParentFile().getName();
 											subcategory = subSubDir.getParentFile().getName();
 											album       = subSubDir.getName();
-											this.uploadPrepareAlbum(category, subcategory, album, subSubDir);
+											//this.uploadPrepareAlbum(category, subcategory, album, subSubDir);
+											this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDir);
 										}
 										else
 										{
@@ -134,7 +130,8 @@ public class Model
 				//determine album name from directory
 				album = this.extractAlbumNameFromDir(transferDialogResult.getDir());
 			}
-			this.uploadPrepareAlbum(category, subcategory, album, new File(transferDialogResult.getDir()));
+			//this.uploadPrepareAlbum(category, subcategory, album, new File(transferDialogResult.getDir()));
+			this.accListing.enqueueAlbumForUpload(category, subcategory, album, new File(transferDialogResult.getDir()));
 		}
 		else
 		{
@@ -299,18 +296,7 @@ public class Model
     
     public void startProcessingQueue()
     {
-//    	//check if we are logged in
-//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-//    	{
-//    		this.transferQueue.startSyncProcessing();
-//    		
-//    		//collect Results
-//    		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
-//    		for (ITransferQueueItem item : processedItemList)
-//    		{
-//    			this.totalTransferedBytes += item.getResults().getTransferedBytes();
-//    		}
-//    	}
+    	this.accListing.startProcessingQueue();
     }
     
     public void setView(IView view)
@@ -325,14 +311,15 @@ public class Model
     	if (this.accListing != null) { this.accListing.logout(); }
 
     	//statistics
+        long totalTransferedBytes = this.accListing.getTransferedBytes();
     	Date date = new Date();
     	long timeDiff = date.getTime() - this.startTime;
     	
-    	double transferedMB = (double)this.totalTransferedBytes / (1024.0 * 1024.0);
+    	double transferedMB = (double)totalTransferedBytes / (1024.0 * 1024.0);
     	
 		double transferSpeed = 0.0;
 		//avoid division by zero
-		if (timeDiff != 0) { transferSpeed = ((double)this.totalTransferedBytes / 1024.0) / ((double)timeDiff / 1000.0); }
+		if (timeDiff != 0) { transferSpeed = ((double)totalTransferedBytes / 1024.0) / ((double)timeDiff / 1000.0); }
 
 		
 		DecimalFormat df = new DecimalFormat("0.0");
@@ -426,8 +413,8 @@ public class Model
 //    	return selectedAlbumHashtable;
 //    }
     
-	private void uploadPrepareAlbum(String categoryName, String subcategoryName, String albumName, File pics_dir)
-    {
+//	private void uploadPrepareAlbum(String categoryName, String subcategoryName, String albumName, File pics_dir)
+//    {
 //    	this.log.printLogLine("-----------------------------------------------");
 //    	this.log.printLogLine("preparing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
 //
@@ -456,7 +443,7 @@ public class Model
 //        }
 //
 //        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
-    }
+//    }
     
 //    private void downloadPrepareAlbum(AccountListing accListing, GUID albumGUID, String targetDir)
 //    {

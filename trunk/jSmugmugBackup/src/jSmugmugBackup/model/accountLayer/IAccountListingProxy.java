@@ -14,11 +14,15 @@ import java.util.Vector;
 public interface IAccountListingProxy
 {
 	void setLoginMethod(ILoginView loginMethod);
+	void init();
+	
 	void login();
 	void logout();
 	
-	String getNickName();	
 	Vector<ICategory> getCategoryList();
 
-	void uploadAlbum(String categoryName, String subcategoryName, String albumName, File pics_dir);
+	void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
+	
+	void startProcessingQueue();
+	long getTransferedBytes();
 }

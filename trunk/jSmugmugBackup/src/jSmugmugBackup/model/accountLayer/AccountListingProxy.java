@@ -9,8 +9,8 @@ package jSmugmugBackup.model.accountLayer;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.queue.*;
 import jSmugmugBackup.model.smugmugLayer.*;
-import jSmugmugBackup.view.Logger;
-import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.view.*;
+import jSmugmugBackup.view.login.*;
 
 import java.io.File;
 import java.util.Arrays;
@@ -24,6 +24,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	private ILoginView loginMethod = null;
 	private Vector<ICategory> categoryList = null;
 	
+	private long transferedBytes = 0;
+	
 	public AccountListingProxy()
 	{
 		this.log = Logger.getInstance();
@@ -34,6 +36,11 @@ public class AccountListingProxy implements IAccountListingProxy
 	public void setLoginMethod(ILoginView loginToken)
 	{
 		this.loginMethod = loginToken;		
+	}
+	
+	public void init()
+	{		
+		this.categoryList = this.connector.getTree();
 	}
 	
 	public void login()
@@ -49,24 +56,15 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.connector.logout();
 	}
 
-	public String getNickName()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+
 	public Vector<ICategory> getCategoryList()
 	{
-		if (this.categoryList == null)
-		{
-			this.categoryList = this.connector.getTree();
-		}
-		
 		return this.categoryList;
 	}
 
-	public void uploadAlbum(String categoryName, String subcategoryName, String albumName, File pics_dir)
+	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
 	{
+		
     	this.log.printLogLine("-----------------------------------------------");
     	this.log.printLogLine("enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
 
@@ -84,18 +82,34 @@ public class AccountListingProxy implements IAccountListingProxy
         
         for (int i=0; i<fileList.length; i++)
         {
-//        	try
-//        	{
-//				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
-//				this.transferQueue.add(item);
-//                uploadCount++;
-//			}
-//        	catch (TransferQueueException e) { e.printStackTrace(); }
+        	try
+        	{
+				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+				this.transferQueue.add(item);
+                uploadCount++;
+			}
+        	catch (TransferQueueException e) { e.printStackTrace(); }
         }
 
         this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
 
 	}
+	
+	public void startProcessingQueue()
+	{
+		this.transferQueue.startSyncProcessing();
+		
+		//collect Results
+		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+		for (ITransferQueueItem item : processedItemList)
+		{
+			this.transferedBytes += item.getResults().getTransferedBytes();
+		}
+		
+	}
+
+	public long getTransferedBytes() { return this.transferedBytes; }
+	
 	
 	//----------- private ----------
 	private void addCategory(int id, String name)
@@ -212,6 +226,9 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		return 0;
 	}
+
+
+
 	
 
 	

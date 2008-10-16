@@ -40,10 +40,15 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 {
 	private Logger log = null;
 	
-	private String login_sessionID = null;
-	private Number login_userID = null;
-	private String login_nickname = null;
-	private String login_passwordHash = null;
+	// hack: there should be a better way to handle multiple instances of
+	//       the connector without having to ask for username and password again
+	private static String login_sessionID = null;
+	private static Number login_userID = null;
+	private static String login_nickname = null;
+	private static String login_passwordHash = null;
+	
+	private long transferedBytes = 0;;
+	
 	
 	public SmugmugConnectorNG()
 	{
@@ -221,12 +226,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 	}
 	
+
+	
 	public void downloadFile(int imageID, File fileName)
 	{		
 		JSONObject jobj = this.smugmug_images_getURLs(imageID);
 		String imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
     	//System.out.println("url = " + imageURL);
-				
+		
+		this.downloadFile(imageURL, fileName);		
+	}
+	
+	public void downloadFile(String imageURL, File fileName)
+	{
 		//write url to file
 		try
 		{
@@ -262,6 +274,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 	}
 	
+	public long getTransferedBytes() { return this.transferedBytes; }
+
 	
 	//======================== private - smugmug =============================
 	private JSONObject smugmugJSONRequest(String url)
@@ -676,6 +690,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
+        	this.transferedBytes += fileName.length();
         	System.out.println("ok");
         	return jobj;
         }
@@ -791,4 +806,5 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	
     	return md5sum;
     }
+
 }
