@@ -15,7 +15,12 @@ public class Constants
 	public static final String version = "0.2 (dev)";
     public static final String logfile = "jSmugmugBackup.log";
     public static final int retryWait = 20000; //time to wait before retrying
+
     
+	public static final String SmugmugServerURL = "https://api.smugmug.com/hack/json/1.2.0/";
+	public static final String SmugmugAPIKey = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
+	public static final String SmugmugAPIVersion = "1.2.0";
+	
 	
 	//...hope thats all possible types
 	public static final String[] supportedFileTypes = {".jpg", ".jpeg", ".png", ".gif", ".tiff",
