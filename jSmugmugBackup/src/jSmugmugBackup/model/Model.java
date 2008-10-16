@@ -30,6 +30,7 @@ public class Model
     /** Constructor */
     public Model()
     {
+    	this.accListing = new AccountListingProxy();
     	this.log = Logger.getInstance();
     	
     	Date date = new Date();
@@ -40,6 +41,7 @@ public class Model
     public void login(ILoginView loginMethod)
     {
     	this.accListing.setLoginMethod(loginMethod);
+    	this.accListing.login();
     }
     
     public void getFileListing()
@@ -54,6 +56,8 @@ public class Model
 //    			this.view.refreshFileListing(this.smugmugConnector.getAccountStructure());
 //    		}
 //    	}
+    	
+    	this.view.refreshFileListing( this.accListing.getCategoryList() );
     	
     }
 

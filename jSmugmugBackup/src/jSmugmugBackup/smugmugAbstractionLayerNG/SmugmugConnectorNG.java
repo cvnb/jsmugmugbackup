@@ -41,7 +41,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private String login_nickname = null;
 	private String login_passwordHash = null;
 	
-	public SmugmugConnectorNG(boolean heavy)
+	public SmugmugConnectorNG()
 	{
 		
 	}
@@ -70,86 +70,117 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		//iterate over categories
 		int categoryIndex = 0;
-		JSONObject category = (JSONObject)this.getJSONValue(tree, "Categories[" + categoryIndex + "]");
-		while (category != null)
+		JSONObject jsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + categoryIndex + "]");
+		while (jsonCategory != null)
 		{
-			Number categoryID = (Number)this.getJSONValue(category, "id");
-			String categoryName = (String)this.getJSONValue(category, "Name");
-			System.out.println("categoryIndex=" + categoryIndex + ": id=" + categoryID.intValue() + ", name=" + categoryName);
+			Number categoryID = (Number)this.getJSONValue(jsonCategory, "id");
+			String categoryName = (String)this.getJSONValue(jsonCategory, "Name");
+			//System.out.println("categoryIndex=" + categoryIndex + ": id=" + categoryID.intValue() + ", name=" + categoryName);
+			ICategory category = new Category(categoryID.intValue(), categoryName);
+			categoryList.add( category );
 
+			
 			//iterate over subcategories
 			int subcategoryIndex = 0;
-			JSONObject subcategory = (JSONObject)this.getJSONValue(category, "SubCategories[" + subcategoryIndex + "]");
-			while (subcategory != null)
+			JSONObject jsonSubcategory = (JSONObject)this.getJSONValue(jsonCategory, "SubCategories[" + subcategoryIndex + "]");
+			while (jsonSubcategory != null)
 			{
-				Number subcategoryID = (Number)this.getJSONValue(subcategory, "id");
-				String subcategoryName = (String)this.getJSONValue(subcategory, "Name");
-				System.out.println("   subcategoryIndex=" + subcategoryIndex + ": id=" + subcategoryID.intValue() + ", name=" + subcategoryName);
+				Number subcategoryID = (Number)this.getJSONValue(jsonSubcategory, "id");
+				String subcategoryName = (String)this.getJSONValue(jsonSubcategory, "Name");
+				//System.out.println("   subcategoryIndex=" + subcategoryIndex + ": id=" + subcategoryID.intValue() + ", name=" + subcategoryName);
+				ISubcategory subcategory = new Subcategory(subcategoryID.intValue(), subcategoryName);
+				category.addSubcategory(subcategory);
 				
 				//iterate over albums (with subcategories)
 				int albumIndex = 0;
-				JSONObject album = (JSONObject)this.getJSONValue(subcategory, "Albums[" + albumIndex + "]");
-				while (album != null)
+				JSONObject jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
+				while (jsonAlbum != null)
 				{
-					Number albumID = (Number)this.getJSONValue(album, "id");
-					String albumName = (String)this.getJSONValue(album, "Title");
-					System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
+					Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
+					String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
+					//System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
+					IAlbum album = new Album(albumID.intValue(), albumName);
+					subcategory.addAlbum(album);
 					
 					//iterate over images
-					JSONObject images = (JSONObject)this.smugmug_images_get(albumID.intValue());
+					JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 					int imageIndex = 0;
-					JSONObject image = (JSONObject)this.getJSONValue(images, "Images[" + imageIndex + "]");
-					while (image != null)
+					JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+					while (jsonImage != null)
 					{
-						Number imageID = (Number)this.getJSONValue(image, "id");
-						String imageKey = (String)this.getJSONValue(image, "Key");
-						System.out.println("         imageIndex=" + imageIndex + ": id=" + imageID.intValue() + ", key=" + imageKey);
+						Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
+						//String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
+						String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
+						String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
+						//String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords"); //doesn't work yet, probably a bug in getJSONValue
+						String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
+						Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
+						Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
+						Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
+						String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
+						String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
+						//IImage image = new Image(imageID.intValue(), "<image name>"); //todo: get real image name, not just the key
+						IImage image = new Image(imageID.intValue(), imageName, imageCaption, "<imageKeywords ... deactivated for the moment>", imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+						album.addImage(image);
 						
 						imageIndex++;
-						image = (JSONObject)this.getJSONValue(images, "Images[" + imageIndex + "]");
+						jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 					}
 					
 					albumIndex++;
-					album = (JSONObject)this.getJSONValue(subcategory, "Albums[" + albumIndex + "]");
+					jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
 				}
 
 				
 				subcategoryIndex++;
-				subcategory = (JSONObject)this.getJSONValue(category, "SubCategories[" + subcategoryIndex + "]");
+				jsonSubcategory = (JSONObject)this.getJSONValue(jsonCategory, "SubCategories[" + subcategoryIndex + "]");
 
 			}
 
 			
 			//iterate over albums (without subcategories)
 			int albumIndex = 0;
-			JSONObject album = (JSONObject)this.getJSONValue(category, "Albums[" + albumIndex + "]");
-			while (album != null)
+			JSONObject jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
+			while (jsonAlbum != null)
 			{
-				Number albumID = (Number)this.getJSONValue(album, "id");
-				String albumName = (String)this.getJSONValue(album, "Title");
-				System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
+				Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
+				String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
+				//System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
+				IAlbum album = new Album(albumID.intValue(), albumName);
+				category.addAlbum(album);
 				
 				//iterate over images
-				JSONObject images = (JSONObject)this.smugmug_images_get(albumID.intValue());
+				JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 				int imageIndex = 0;
-				JSONObject image = (JSONObject)this.getJSONValue(images, "Images[" + imageIndex + "]");
-				while (image != null)
+				JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+				while (jsonImage != null)
 				{
-					Number imageID = (Number)this.getJSONValue(image, "id");
-					String imageKey = (String)this.getJSONValue(image, "Key");
-					System.out.println("      imageIndex=" + imageIndex + ": id=" + imageID.intValue() + ", key=" + imageKey);
+					Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
+					//String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
+					String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
+					String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
+					//String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords"); //doesn't work yet, probably a bug in getJSONValue
+					String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
+					Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
+					Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
+					Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
+					String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
+					String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
+					//IImage image = new Image(imageID.intValue(), "<image name>"); //todo: get real image name, not just the key
+					IImage image = new Image(imageID.intValue(), imageName, imageCaption, "<imageKeywords ... deactivated for the moment>", imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+					album.addImage(image);
 					
 					imageIndex++;
-					image = (JSONObject)this.getJSONValue(images, "Images[" + imageIndex + "]");
+					jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 				}
 				
 				albumIndex++;
-				album = (JSONObject)this.getJSONValue(category, "Albums[" + albumIndex + "]");
+				jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
 			}
 			
 			
 			categoryIndex++;
-			category = (JSONObject)this.getJSONValue(tree, "Categories[" + categoryIndex + "]");
+			jsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + categoryIndex + "]");
 		}
 		
 		return categoryList;
@@ -335,12 +366,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=smugmug.users.getTree&";
 		url = url + "SessionID=" + this.login_sessionID + "&";
 		//url = url + "NickName=" + this.login_nickname + "&"; //optional
-		url = url + "Heavy=false&"; //optional
+		url = url + "Heavy=0&"; //optional
 		//url = url + "SitePassword=????&"; //optional
 		
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		//System.out.println("album: " + this.getJSONValue(jobj, "Categories[15].Albums[1].Title"));
+		//this.printJSONObject(jobj);
         
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
@@ -364,14 +395,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + this.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
-		url = url + "Heavy=false&"; //optional
+		url = url + "Heavy=1&"; //optional
 		//url = url + "Password=????&"; //optional
 		//url = url + "SitePassword=????&"; //optional
 		//url = url + "AlbumKey=" + albumKey + "&"; //seems to be optional, but is not documented
 		
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		
+		//this.printJSONObject(jobj);
       
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
            	 (this.getJSONValue(jobj, "method").equals("smugmug.images.get")) )
@@ -464,11 +495,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "Position=&"; //integer, optional
 		
 		//look&feel
-		url = url + "Header=&"; //boolean, optional (power & pro only), default: 0
+		//url = url + "Header=&"; //boolean, optional (power & pro only), default: 0
 		//url = url + "Clean=&"; //boolean, optional, default: 0
 		//url = url + "EXIF=&"; //boolean, optional, default: 1
-		url = url + "Filenames=true&"; //boolean, optional, default: 0
-		url = url + "SquareThumbs=false&"; //boolean, optional, default: 1
+		url = url + "Filenames=1&"; //boolean, optional, default: 0
+		url = url + "SquareThumbs=0&"; //boolean, optional, default: 1
 		//url = url + "TemplateID=&"; //integer, optional, default: 0 (viewer choice)
 		url = url + "SortMethod=FileName&"; //string, optional, default: position
 		url = url + "SortDirection=0&"; //boolean, optional, 0 --> ascending, 1 --> decending
@@ -476,9 +507,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//security&privacy
 		//url = url + "Password=&"; //string, optional
 		//url = url + "PasswordHint=&"; //string, optional
-		url = url + "Public=false&"; //boolean, optional, default: 1
-		url = url + "WorldSearchable=false&"; //boolean, optional, default: 1
-		url = url + "SmugSearchable=false&"; //boolean, optional, default: 1
+		url = url + "Public=0&"; //boolean, optional, default: 1
+		url = url + "WorldSearchable=0&"; //boolean, optional, default: 1
+		url = url + "SmugSearchable=0&"; //boolean, optional, default: 1
 		//url = url + "External=&"; //boolean, optional, default: 1
 		//url = url + "Protected=&"; //boolean, optional(power&pro only), default: 0
 		//url = url + "Watermarking=&"; //boolean, optional (pro only), default: 0

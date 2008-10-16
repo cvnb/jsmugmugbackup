@@ -1,5 +1,6 @@
 package jSmugmugBackup.view;
 
+import jSmugmugBackup.accountLayerNG.*;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
@@ -9,6 +10,7 @@ import jSmugmugBackup.view.login.LoginViewConsole_1_6;
 
 
 import java.awt.event.*;
+import java.util.Vector;
 
 
 public class CmdView implements IView
@@ -95,31 +97,31 @@ public class CmdView implements IView
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
 	
 
-	public void refreshFileListing(AccountListing accountListing)
+	public void refreshFileListing(Vector<ICategory> categoryList)
 	{		
 		//display listing on console
-		this.log.printLogLine("Nickname: " + accountListing.getNickName());
-		for (ICategoryType c : accountListing.getCategoryList())
+		//this.log.printLogLine("Nickname: " + accountListing.getNickName());
+		for (ICategory c : categoryList)
 		{
 			this.log.printLogLine("    category: " + c.getName());
 			
-			for (ISubCategoryType sc : c.getSubCategoryList())
+			for (ISubcategory sc : c.getSubcategoryList())
 			{
 				this.log.printLogLine("        subCategory: " + sc.getName());
-				for (IAlbumType a : c.getAlbumList())
+				for (IAlbum a : sc.getAlbumList())
 				{
 					this.log.printLogLine("            album: " + a.getName());
-					for (IImageType i : a.getImageList())
+					for (IImage i : a.getImageList())
 					{
 						this.log.printLogLine("                image: " + i.getName());
 					}
 				}
 			}
 			
-			for (IAlbumType a : c.getAlbumList())
+			for (IAlbum a : c.getAlbumList())
 			{
 				this.log.printLogLine("        album: " + a.getName());
-				for (IImageType i : a.getImageList())
+				for (IImage i : a.getImageList())
 				{
 					this.log.printLogLine("            image: " + i.getName());
 				}
@@ -127,11 +129,11 @@ public class CmdView implements IView
 		}
 	}
 
-	public ILoginView getLoginToken()
+	public ILoginView getLoginMethod()
 	{		
 		String account_email = this.extractArgumentValueFromCommandline("email");
 		
-		ILoginView loginToken = null;
+		ILoginView loginMethod = null;
 		
 		/*
 		//for speeding up testin a little bit ...
@@ -141,18 +143,18 @@ public class CmdView implements IView
     	//this should allow the program to run, even if only java 1.5 is available
     	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
     	{
-    		loginToken = new LoginViewConsole_1_5(account_email);
+    		loginMethod = new LoginViewConsole_1_5(account_email);
     	}
     	else //assuming we have Java 1.6 or higher
     	{
-    		loginToken = new LoginViewConsole_1_6(account_email);
+    		loginMethod = new LoginViewConsole_1_6(account_email);
     	}
     	
     	
     	
     	
 		
-		return loginToken;
+		return loginMethod;
 		
 	}
 

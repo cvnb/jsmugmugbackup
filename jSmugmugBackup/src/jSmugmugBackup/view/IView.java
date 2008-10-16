@@ -6,18 +6,20 @@
  */
 package jSmugmugBackup.view;
 
+import jSmugmugBackup.accountLayerNG.ICategory;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
 import jSmugmugBackup.view.login.ILoginView;
 
 import java.awt.event.*;
+import java.util.Vector;
 
 
 public interface IView
 {
-	ILoginView getLoginToken();
-	void refreshFileListing(AccountListing accountListing);
+	ILoginView getLoginMethod();
+	void refreshFileListing(Vector<ICategory> categoryList);
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
 	ITransferDialogResult showVerifyDialog();
