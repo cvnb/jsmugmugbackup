@@ -43,7 +43,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.login(view.getLoginToken());
+			model.login(view.getLoginMethod());
 			//model.getFileListing();
 		}
 	}

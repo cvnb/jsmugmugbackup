@@ -1,5 +1,6 @@
 package jSmugmugBackup.view;
 
+import jSmugmugBackup.accountLayerNG.ICategory;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
@@ -12,6 +13,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.Dimension;
+import java.util.Vector;
 
 public class SwingView extends JFrame implements IView
 {
@@ -304,31 +306,31 @@ public class SwingView extends JFrame implements IView
 	
 
 	//@Override
-	public void refreshFileListing(AccountListing accountListing)
+	public void refreshFileListing(Vector<ICategory> categoryList)
 	{
-		//this.files_root_node = new DefaultMutableTreeNode(accountListing.getNickName());
-		
-		for (ICategoryType cat : accountListing.getCategoryList())
-		{
-			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(cat.getName());
-			for (IAlbumType a : cat.getAlbumList())
-			{
-				DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
-				for (IImageType i : a.getImageList())
-				{
-					albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
-				}
-				categoryTreeNode.add(albumTreeNode);
-			}
-			
-			this.files_root_node.add(categoryTreeNode);
-		}
-		
-		//expand the tree
-		for (int row=0; row < this.getJTree_files().getRowCount(); row++)
-		{
-			this.getJTree_files().expandRow(row);
-		}
+//		//this.files_root_node = new DefaultMutableTreeNode(accountListing.getNickName());
+//		
+//		for (ICategoryType cat : accountListing.getCategoryList())
+//		{
+//			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(cat.getName());
+//			for (IAlbumType a : cat.getAlbumList())
+//			{
+//				DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
+//				for (IImageType i : a.getImageList())
+//				{
+//					albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
+//				}
+//				categoryTreeNode.add(albumTreeNode);
+//			}
+//			
+//			this.files_root_node.add(categoryTreeNode);
+//		}
+//		
+//		//expand the tree
+//		for (int row=0; row < this.getJTree_files().getRowCount(); row++)
+//		{
+//			this.getJTree_files().expandRow(row);
+//		}
 	}
 	
     public void showError(String errMessage) {
@@ -337,7 +339,7 @@ public class SwingView extends JFrame implements IView
 
 
 	//@Override
-	public ILoginView getLoginToken()
+	public ILoginView getLoginMethod()
 	{
 		//ILoginToken loginToken = new LoginToken(this.jTextField_username.getText(), this.jPasswordField_password.getText());
 		//ISmugmugLogin loginToken = new SmugmugLoginSwing(this.jTextField_username.getText(), this.jPasswordField_password.getText());
