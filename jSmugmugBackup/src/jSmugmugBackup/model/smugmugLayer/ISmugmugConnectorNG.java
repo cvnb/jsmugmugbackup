@@ -25,6 +25,9 @@ public interface ISmugmugConnectorNG
 	
 	void uploadFile(int albumID, File file);
 	void downloadFile(int imageID, File fileName);
+	void downloadFile(String imageURL, File fileName);
 	void verifyFile();
 	void deleteFile();
+	
+	long getTransferedBytes();
 }
