@@ -9,8 +9,8 @@ package jSmugmugBackup.main;
 import java.io.File;
 import java.util.Scanner;
 
-import jSmugmugBackup.model.accountLayerNG.*;
-import jSmugmugBackup.model.smugmugAbstractionLayerNG.*;
+import jSmugmugBackup.model.accountLayer.*;
+import jSmugmugBackup.model.smugmugLayer.*;
 
 public class Tests_main {
 
