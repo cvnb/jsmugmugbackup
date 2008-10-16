@@ -1,4 +1,4 @@
-package jSmugmugBackup.main;
+package jSmugmugBackup.controller;
 
 import jSmugmugBackup.model.Model;
 import jSmugmugBackup.view.CmdView;
