@@ -15,8 +15,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import com.streetsofboston.smugmug.v1_2_1.system.GUID;
-
 
 public class Model
 {
@@ -372,63 +370,63 @@ public class Model
     	return result;
     }
     
-    private Hashtable<GUID, String> matchAlbumsOnSmugmug(AccountListing accListing, String categoryName, String subcategoryName, String albumName)
-    {
-    	Hashtable<GUID, String> selectedAlbumHashtable = new Hashtable<GUID, String>();
-    	
-    	//decend to all album lists of all Subcategories and Categories
-		for (ICategoryType c : accListing.getCategoryList())
-		{
-			for (ISubCategoryType s : c.getSubCategoryList())
-			{
-				for (IAlbumType a : s.getAlbumList())
-				{
-					
-					//here, we should walk over all albums that belong to all subcategories
-					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
-					{
-						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
-						{
-							if ( (albumName == null) || (a.getName().equals(albumName)) )
-							{
-								String album_dir;
-								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
-								
-								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
-								this.log.printLogLine("  matched album: " + album_dir);
-								selectedAlbumHashtable.put(a.getGUID(), album_dir);
-							}
-						}
-					}
-					
-				}
-			}
-			
-			for (IAlbumType a : c.getAlbumList())
-			{
-				//here, we walk over all albums which have no subcategory
-				if (subcategoryName == null) //hence, subcategoryName must be null
-				{
-					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
-					{
-						if ( (albumName == null) || (a.getName().equals(albumName)) )
-						{
-							String album_dir;
-							album_dir = c.getName() + "/" + a.getName();
-							
-							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
-							selectedAlbumHashtable.put(a.getGUID(), album_dir);
-						}
-					}
-				}
-
-			}
-		}
-
-		this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    matched albums: " + selectedAlbumHashtable.size() );
-    	
-    	return selectedAlbumHashtable;
-    }
+//    private Hashtable<GUID, String> matchAlbumsOnSmugmug(AccountListing accListing, String categoryName, String subcategoryName, String albumName)
+//    {
+//    	Hashtable<GUID, String> selectedAlbumHashtable = new Hashtable<GUID, String>();
+//    	
+//    	//decend to all album lists of all Subcategories and Categories
+//		for (ICategoryType c : accListing.getCategoryList())
+//		{
+//			for (ISubCategoryType s : c.getSubCategoryList())
+//			{
+//				for (IAlbumType a : s.getAlbumList())
+//				{
+//					
+//					//here, we should walk over all albums that belong to all subcategories
+//					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+//					{
+//						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
+//						{
+//							if ( (albumName == null) || (a.getName().equals(albumName)) )
+//							{
+//								String album_dir;
+//								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
+//								
+//								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
+//								this.log.printLogLine("  matched album: " + album_dir);
+//								selectedAlbumHashtable.put(a.getGUID(), album_dir);
+//							}
+//						}
+//					}
+//					
+//				}
+//			}
+//			
+//			for (IAlbumType a : c.getAlbumList())
+//			{
+//				//here, we walk over all albums which have no subcategory
+//				if (subcategoryName == null) //hence, subcategoryName must be null
+//				{
+//					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+//					{
+//						if ( (albumName == null) || (a.getName().equals(albumName)) )
+//						{
+//							String album_dir;
+//							album_dir = c.getName() + "/" + a.getName();
+//							
+//							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
+//							selectedAlbumHashtable.put(a.getGUID(), album_dir);
+//						}
+//					}
+//				}
+//
+//			}
+//		}
+//
+//		this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    matched albums: " + selectedAlbumHashtable.size() );
+//    	
+//    	return selectedAlbumHashtable;
+//    }
     
 	private void uploadPrepareAlbum(String categoryName, String subcategoryName, String albumName, File pics_dir)
     {
@@ -462,8 +460,8 @@ public class Model
 //        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
     }
     
-    private void downloadPrepareAlbum(AccountListing accListing, GUID albumGUID, String targetDir)
-    {
+//    private void downloadPrepareAlbum(AccountListing accListing, GUID albumGUID, String targetDir)
+//    {
 //    	this.log.printLogLine("-----------------------------------------------");
 //    	this.log.printLogLine("preparing album (target:" + targetDir + ")");
 //
@@ -494,73 +492,73 @@ public class Model
 //    	}
 //    	
 //        this.log.printLogLine("  ... added " + downloadCount + " files (target:" + targetDir + ")");
-    }
+//    }
     
-    private void verifyAlbum(AccountListing accListing, GUID albumGUID, File targetDir)
-    {
-    	this.log.printLogLine("-----------------------------------------------");
-    	this.log.printLogLine("verifying album from " + targetDir.getAbsolutePath() + " ...");
-
-        File[] fileList = targetDir.listFiles(Constants.supportedFileTypesFilter);
-        if (fileList == null)
-        {
-        	/* Either dir does not exist or is not a directory */ 
-        	this.log.printLogLine("  exiting unexpected!");
-        	return;
-        }
-        Arrays.sort(fileList, new Constants.FileComparator()); //sort files, convienence only
-
-        IAlbumType album = accListing.getAlbumByGUID(albumGUID);
-        Vector<IImageType> imageList = album.getImageList();
-        
-        if ( fileList.length == imageList.size() )
-        {
-        	//everything seems fine: same number of pictures in SmugMug as in local dir
-        	for (int i=0; i<fileList.length; i++)
-            {
-            	for (IImageType image : imageList)
-            	{
-            		if ( fileList[i].getName().equals(image.getName()) )
-            		{
-            			//now we have the matching pair, so we check the md5sums
-            			String localFileMD5Sum = this.computeMD5Hash(fileList[i]);
-            			
-            			//compare
-				    	this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
-						if ( localFileMD5Sum.equals(image.getMD5Sum()) )
-						{
-							this.log.printLogLine("ok");
-						}
-						else
-						{
-							this.log.printLogLine("failed");
-							this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
-							this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5Sum());
-						}        				
-            		}
-            	}
-            }            
-        }
-        else 
-        {
-        	if ( fileList.length > imageList.size() )
-        	{
-        		//some files have not been uploaded
-        		this.log.printLogLine("looks like some files have not been uploaded");
-        	}
-        	else //if ( fileList.length < imageList.size() )
-        	{
-            	//some local files are missing
-            	this.log.printLogLine("looks like some local files are missing");
-        	}
-            
-        	this.log.printLogLine("listing local files (" + fileList.length + ") ... ");
-            for (int i=0; i<fileList.length; i++) { this.log.printLogLine("  " + fileList[i].getAbsolutePath() ); }
-            
-            this.log.printLogLine("listing remote files (" + imageList.size() + ") ... ");
-        	for (IImageType image : imageList) { this.log.printLogLine("  " + image.getName() ); }
-        }        
-    }
+//    private void verifyAlbum(AccountListing accListing, GUID albumGUID, File targetDir)
+//    {
+//    	this.log.printLogLine("-----------------------------------------------");
+//    	this.log.printLogLine("verifying album from " + targetDir.getAbsolutePath() + " ...");
+//
+//        File[] fileList = targetDir.listFiles(Constants.supportedFileTypesFilter);
+//        if (fileList == null)
+//        {
+//        	/* Either dir does not exist or is not a directory */ 
+//        	this.log.printLogLine("  exiting unexpected!");
+//        	return;
+//        }
+//        Arrays.sort(fileList, new Constants.FileComparator()); //sort files, convienence only
+//
+//        IAlbumType album = accListing.getAlbumByGUID(albumGUID);
+//        Vector<IImageType> imageList = album.getImageList();
+//        
+//        if ( fileList.length == imageList.size() )
+//        {
+//        	//everything seems fine: same number of pictures in SmugMug as in local dir
+//        	for (int i=0; i<fileList.length; i++)
+//            {
+//            	for (IImageType image : imageList)
+//            	{
+//            		if ( fileList[i].getName().equals(image.getName()) )
+//            		{
+//            			//now we have the matching pair, so we check the md5sums
+//            			String localFileMD5Sum = this.computeMD5Hash(fileList[i]);
+//            			
+//            			//compare
+//				    	this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
+//						if ( localFileMD5Sum.equals(image.getMD5Sum()) )
+//						{
+//							this.log.printLogLine("ok");
+//						}
+//						else
+//						{
+//							this.log.printLogLine("failed");
+//							this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
+//							this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5Sum());
+//						}        				
+//            		}
+//            	}
+//            }            
+//        }
+//        else 
+//        {
+//        	if ( fileList.length > imageList.size() )
+//        	{
+//        		//some files have not been uploaded
+//        		this.log.printLogLine("looks like some files have not been uploaded");
+//        	}
+//        	else //if ( fileList.length < imageList.size() )
+//        	{
+//            	//some local files are missing
+//            	this.log.printLogLine("looks like some local files are missing");
+//        	}
+//            
+//        	this.log.printLogLine("listing local files (" + fileList.length + ") ... ");
+//            for (int i=0; i<fileList.length; i++) { this.log.printLogLine("  " + fileList[i].getAbsolutePath() ); }
+//            
+//            this.log.printLogLine("listing remote files (" + imageList.size() + ") ... ");
+//        	for (IImageType image : imageList) { this.log.printLogLine("  " + image.getName() ); }
+//        }        
+//    }
     
     private String computeMD5Hash(File file)
     {    	
