@@ -3,6 +3,9 @@ package jSmugmugBackup.view;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
+import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.view.login.LoginViewConsole_1_5;
+import jSmugmugBackup.view.login.LoginViewConsole_1_6;
 
 
 import java.awt.event.*;
@@ -124,11 +127,11 @@ public class CmdView implements IView
 		}
 	}
 
-	public ISmugmugLogin getLoginToken()
+	public ILoginView getLoginToken()
 	{		
 		String account_email = this.extractArgumentValueFromCommandline("email");
 		
-		ISmugmugLogin loginToken = null;
+		ILoginView loginToken = null;
 		
 		/*
 		//for speeding up testin a little bit ...
@@ -138,11 +141,11 @@ public class CmdView implements IView
     	//this should allow the program to run, even if only java 1.5 is available
     	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
     	{
-    		loginToken = new SmugmugLoginConsole_1_5(account_email);
+    		loginToken = new LoginViewConsole_1_5(account_email);
     	}
     	else //assuming we have Java 1.6 or higher
     	{
-    		loginToken = new SmugmugLoginConsole_1_6(account_email);
+    		loginToken = new LoginViewConsole_1_6(account_email);
     	}
     	
     	

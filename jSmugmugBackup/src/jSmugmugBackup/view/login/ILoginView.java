@@ -1,13 +1,13 @@
 /*
- * Created on Oct 12, 2008
+ * Created on Oct 16, 2008
  *
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package jSmugmugBackup.abstractionLayerNG.data;
+package jSmugmugBackup.view.login;
 
-public interface ISmugmugObject
+public interface ILoginView
 {
-	int getID();
-	String getName();
+	String requestUserEmail();
+	String requestPassword();
 }

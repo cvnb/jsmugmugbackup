@@ -1,10 +1,13 @@
 package jSmugmugBackup.model;
 
+import jSmugmugBackup.accountLayerNG.*;
 import jSmugmugBackup.model.abstractionLayer.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
 import jSmugmugBackup.model.queue.*;
+import jSmugmugBackup.smugmugAbstractionLayerNG.*;
 import jSmugmugBackup.view.*;
+import jSmugmugBackup.view.login.ILoginView;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
@@ -18,53 +21,55 @@ import com.streetsofboston.smugmug.v1_2_1.system.GUID;
 
 public class Model
 {
-    private ISmugMugConnector smugmugConnector = null;
+	private IAccountListingProxy accListing = null;
     private IView view = null;
     private Logger log = null;
     private long startTime;
     private long totalTransferedBytes;
 
-    private ITransferQueue transferQueue = null;
+    
     private ISmugmugLogin loginToken = null; //Quick Hack
 
     
     /** Constructor */
     public Model()
     {
-    	this.smugmugConnector = new SmugmugConnector();
+    	//this.smugmugConnector = new SmugmugConnectorNG(true);
     	this.log = Logger.getInstance();
     	
-    	this.transferQueue = new TransferQueue();
+    	//this.transferQueue = new TransferQueue();
     	
     	Date date = new Date();
     	this.startTime = date.getTime();
     	this.totalTransferedBytes = 0;    	
     }    
 
-    public void login(ISmugmugLogin loginToken)
+    public void login(ILoginView loginToken)
     {
-    	this.loginToken = loginToken;
+    	//this.loginToken = loginToken;
     	//this.loginToken.login();
     	//if (this.loginToken.getToken() == null) { return false; }
 
-    	this.smugmugConnector.setLoginToken(loginToken);
-    	this.smugmugConnector.login();
+    	//this.smugmugConnector.setLoginToken(loginToken);
+    	//this.smugmugConnector.login();
+    	this.accListing.setLoginToken(loginToken);
     	
     	//return this.smugmugConnector.login(loginToken);
     }
     
     public void getFileListing()
     {
-    	//check if we are logged in
-    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-    	{
-    		//this.log.printLogLine("retrieving account data ...");
-    		
-    		if (this.view != null)
-    		{
-    			this.view.refreshFileListing(this.smugmugConnector.getAccountStructure());
-    		}
-    	}
+//    	//check if we are logged in
+//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
+//    	{
+//    		//this.log.printLogLine("retrieving account data ...");
+//    		
+//    		if (this.view != null)
+//    		{
+//    			this.view.refreshFileListing(this.smugmugConnector.getAccountStructure());
+//    		}
+//    	}
+    	
     }
 
     public void uploadPrepare(ITransferDialogResult transferDialogResult)
@@ -159,172 +164,172 @@ public class Model
     
     public void downloadPrepare(ITransferDialogResult transferDialogResult)
     {
-    	//check if we are logged in
-    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-    	{
-    		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
-    		
-    		AccountListing accListing = this.smugmugConnector.getAccountStructure();
-
-    		//key: GUID; value: album target path
-    		Hashtable<GUID, String> selectedAlbumHashtable = new Hashtable<GUID, String>();
-    		selectedAlbumHashtable = this.matchAlbumsOnSmugmug(accListing, transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-
-    		/*    		
-    		for (ICategoryType c : accListing.getCategoryList())
-    		{
-    			for (ISubCategoryType s : c.getSubCategoryList())
-    			{
-    				for (IAlbumType a : s.getAlbumList())
-    				{
-    					
-    					if ( (transferDialogResult.getCategoryName() == null) || (c.getName().equals(transferDialogResult.getCategoryName())) )
-    					{
-    						if ( (transferDialogResult.getSubCategoryName() == null) || (s.getName().equals(transferDialogResult.getSubCategoryName())) )
-    						{
-    							if ( (transferDialogResult.getAlbumName() == null) || (a.getName().equals(transferDialogResult.getAlbumName())) )
-    							{
-    								String album_dir;
-    								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
-    								
-    								this.log.printLogLine("   selecting album: " + a.getName() + " - " + album_dir);
-    								selectedAlbumHashtable.put(a.getGUID(), album_dir);
-    							}
-    						}
-    					}
-    					
-    				}
-    			}
-    			
-    			for (IAlbumType a : c.getAlbumList())
-    			{
-    				
-    				if (transferDialogResult.getSubCategoryName() == null)
-    				{
-    					if ( (transferDialogResult.getCategoryName() == null) || (c.getName().equals(transferDialogResult.getCategoryName())) )
-    					{
-    						if ( (transferDialogResult.getAlbumName() == null) || (a.getName().equals(transferDialogResult.getAlbumName())) )
-							{
-								String album_dir;
-								album_dir = c.getName() + "/" + a.getName();
-								
-								this.log.printLogLine("   selecting album: " + a.getName() + " - " + album_dir);
-								selectedAlbumHashtable.put(a.getGUID(), album_dir);
-							}
-    					}
-					}
-    				
-    			}
-    		}
-    		*/
-    		
-    		//collect selected albums
-			if (selectedAlbumHashtable.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
-    		
-			for (GUID albumGUID : selectedAlbumHashtable.keySet())
-    		{
-    	    	String targetDir = transferDialogResult.getDir() + selectedAlbumHashtable.get(albumGUID) + "/";    			
-    	    	this.downloadPrepareAlbum(accListing, albumGUID, targetDir);    			
-    		}
-    	}
+//    	//check if we are logged in
+//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
+//    	{
+//    		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
+//    		
+//    		AccountListing accListing = this.smugmugConnector.getAccountStructure();
+//
+//    		//key: GUID; value: album target path
+//    		Hashtable<GUID, String> selectedAlbumHashtable = new Hashtable<GUID, String>();
+//    		selectedAlbumHashtable = this.matchAlbumsOnSmugmug(accListing, transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+//
+//    		/*    		
+//    		for (ICategoryType c : accListing.getCategoryList())
+//    		{
+//    			for (ISubCategoryType s : c.getSubCategoryList())
+//    			{
+//    				for (IAlbumType a : s.getAlbumList())
+//    				{
+//    					
+//    					if ( (transferDialogResult.getCategoryName() == null) || (c.getName().equals(transferDialogResult.getCategoryName())) )
+//    					{
+//    						if ( (transferDialogResult.getSubCategoryName() == null) || (s.getName().equals(transferDialogResult.getSubCategoryName())) )
+//    						{
+//    							if ( (transferDialogResult.getAlbumName() == null) || (a.getName().equals(transferDialogResult.getAlbumName())) )
+//    							{
+//    								String album_dir;
+//    								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
+//    								
+//    								this.log.printLogLine("   selecting album: " + a.getName() + " - " + album_dir);
+//    								selectedAlbumHashtable.put(a.getGUID(), album_dir);
+//    							}
+//    						}
+//    					}
+//    					
+//    				}
+//    			}
+//    			
+//    			for (IAlbumType a : c.getAlbumList())
+//    			{
+//    				
+//    				if (transferDialogResult.getSubCategoryName() == null)
+//    				{
+//    					if ( (transferDialogResult.getCategoryName() == null) || (c.getName().equals(transferDialogResult.getCategoryName())) )
+//    					{
+//    						if ( (transferDialogResult.getAlbumName() == null) || (a.getName().equals(transferDialogResult.getAlbumName())) )
+//							{
+//								String album_dir;
+//								album_dir = c.getName() + "/" + a.getName();
+//								
+//								this.log.printLogLine("   selecting album: " + a.getName() + " - " + album_dir);
+//								selectedAlbumHashtable.put(a.getGUID(), album_dir);
+//							}
+//    					}
+//					}
+//    				
+//    			}
+//    		}
+//    		*/
+//    		
+//    		//collect selected albums
+//			if (selectedAlbumHashtable.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+//    		
+//			for (GUID albumGUID : selectedAlbumHashtable.keySet())
+//    		{
+//    	    	String targetDir = transferDialogResult.getDir() + selectedAlbumHashtable.get(albumGUID) + "/";    			
+//    	    	this.downloadPrepareAlbum(accListing, albumGUID, targetDir);    			
+//    		}
+//    	}
     }
     
     public void verifyPrepare(ITransferDialogResult transferDialogResult)
     {
-    	//todo: what about missing local dirs?
-    	
-    	//this.log.printLogLine("Model.verifyPrepare() - verifying files ... not implemented yet ...");
-    	//this.log.printLogLine("Model.verifyPrepare() -   category    : " + transferDialogResult.getCategoryName());
-    	//this.log.printLogLine("Model.verifyPrepare() -   subcategory : " + transferDialogResult.getSubCategoryName());
-    	//this.log.printLogLine("Model.verifyPrepare() -   album       : " + transferDialogResult.getAlbumName());
-    	//this.log.printLogLine("Model.verifyPrepare() -   dir         : " + transferDialogResult.getDir());
-
-    	//check if we are logged in
-    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-    	{
-    		//this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
-
-    		AccountListing accListing = this.smugmugConnector.getAccountStructure();
-    		
-    		//key: GUID; value: album target path
-    		Hashtable<GUID, String> selectedAlbumHashtable;
-    		selectedAlbumHashtable = this.matchAlbumsOnSmugmug(accListing, transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-
-    		//collect selected albums
-			if (selectedAlbumHashtable.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
-    		
-			for (GUID albumGUID : selectedAlbumHashtable.keySet())
-    		{
-				String targetDirString = transferDialogResult.getDir() + selectedAlbumHashtable.get(albumGUID) + "/";
-				File targetDir = new File(targetDirString);
-    	    	//this.log.printLogLine("Model.verifyPrepare() -  selected albumGUID: " + albumGUID + " (" + targetDir + ")" );
-    	    	
-    	    	this.verifyAlbum(accListing, albumGUID, targetDir);
-    		}
-    		
-    	}
+//    	//todo: what about missing local dirs?
+//    	
+//    	//this.log.printLogLine("Model.verifyPrepare() - verifying files ... not implemented yet ...");
+//    	//this.log.printLogLine("Model.verifyPrepare() -   category    : " + transferDialogResult.getCategoryName());
+//    	//this.log.printLogLine("Model.verifyPrepare() -   subcategory : " + transferDialogResult.getSubCategoryName());
+//    	//this.log.printLogLine("Model.verifyPrepare() -   album       : " + transferDialogResult.getAlbumName());
+//    	//this.log.printLogLine("Model.verifyPrepare() -   dir         : " + transferDialogResult.getDir());
+//
+//    	//check if we are logged in
+//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
+//    	{
+//    		//this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
+//
+//    		AccountListing accListing = this.smugmugConnector.getAccountStructure();
+//    		
+//    		//key: GUID; value: album target path
+//    		Hashtable<GUID, String> selectedAlbumHashtable;
+//    		selectedAlbumHashtable = this.matchAlbumsOnSmugmug(accListing, transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+//
+//    		//collect selected albums
+//			if (selectedAlbumHashtable.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+//    		
+//			for (GUID albumGUID : selectedAlbumHashtable.keySet())
+//    		{
+//				String targetDirString = transferDialogResult.getDir() + selectedAlbumHashtable.get(albumGUID) + "/";
+//				File targetDir = new File(targetDirString);
+//    	    	//this.log.printLogLine("Model.verifyPrepare() -  selected albumGUID: " + albumGUID + " (" + targetDir + ")" );
+//    	    	
+//    	    	this.verifyAlbum(accListing, albumGUID, targetDir);
+//    		}
+//    		
+//    	}
     }
     
     
     public void deletePrepare(ITransferDialogResult transferDialogResult)
     {
-    	//check if we are logged in
-    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-    	{
-    		this.log.printLogLine("preparing to delete files");
-
-    		//Vector<IAlbumType> selectedAlbumList = new Vector<IAlbumType>();
-    		//Vector<ISubCategoryType> selectedSubcategoryList = new Vector<ISubCategoryType>();
-    		Vector<ICategoryType> selectedCategoryList = new Vector<ICategoryType>();
-    		
-    		if ( (transferDialogResult.getCategoryName() == null) &&
-    			 (transferDialogResult.getSubCategoryName() == null) &&
-    			 (transferDialogResult.getAlbumName() == null) )
-    		{
-    			this.log.printLogLine("ERROR: the whole account can not be deleted! (for your own safety)");
-    		}
-    		else if ( (transferDialogResult.getCategoryName() != null) &&
-    				  (transferDialogResult.getSubCategoryName() == null) &&
-    			      (transferDialogResult.getAlbumName() == null) )
-    		{
-    			//just the category name is given
-        		AccountListing accListing = this.smugmugConnector.getAccountStructure();
-        		
-        		for (ICategoryType c : accListing.getCategoryList())
-        		{
-        			if ( c.getName().equals(transferDialogResult.getCategoryName()) )
-        			{
-        				selectedCategoryList.add(c);
-        				this.log.printLogLine("   selected category: " + c.getName());
-        				this.smugmugConnector.deleteFile(c.getGUID());
-        			}
-        		}
-    		}
-    		else
-    		{
-    			this.log.printLogLine("ERROR: not implemented yet");
-    		}
-
-    		
-    		this.log.printLogLine("no matching category was found on your SmugMug Account");
-    	}
+//    	//check if we are logged in
+//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
+//    	{
+//    		this.log.printLogLine("preparing to delete files");
+//
+//    		//Vector<IAlbumType> selectedAlbumList = new Vector<IAlbumType>();
+//    		//Vector<ISubCategoryType> selectedSubcategoryList = new Vector<ISubCategoryType>();
+//    		Vector<ICategoryType> selectedCategoryList = new Vector<ICategoryType>();
+//    		
+//    		if ( (transferDialogResult.getCategoryName() == null) &&
+//    			 (transferDialogResult.getSubCategoryName() == null) &&
+//    			 (transferDialogResult.getAlbumName() == null) )
+//    		{
+//    			this.log.printLogLine("ERROR: the whole account can not be deleted! (for your own safety)");
+//    		}
+//    		else if ( (transferDialogResult.getCategoryName() != null) &&
+//    				  (transferDialogResult.getSubCategoryName() == null) &&
+//    			      (transferDialogResult.getAlbumName() == null) )
+//    		{
+//    			//just the category name is given
+//        		AccountListing accListing = this.smugmugConnector.getAccountStructure();
+//        		
+//        		for (ICategoryType c : accListing.getCategoryList())
+//        		{
+//        			if ( c.getName().equals(transferDialogResult.getCategoryName()) )
+//        			{
+//        				selectedCategoryList.add(c);
+//        				this.log.printLogLine("   selected category: " + c.getName());
+//        				this.smugmugConnector.deleteFile(c.getGUID());
+//        			}
+//        		}
+//    		}
+//    		else
+//    		{
+//    			this.log.printLogLine("ERROR: not implemented yet");
+//    		}
+//
+//    		
+//    		this.log.printLogLine("no matching category was found on your SmugMug Account");
+//    	}
     }
 
     
     public void startProcessingQueue()
     {
-    	//check if we are logged in
-    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-    	{
-    		this.transferQueue.startSyncProcessing();
-    		
-    		//collect Results
-    		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
-    		for (ITransferQueueItem item : processedItemList)
-    		{
-    			this.totalTransferedBytes += item.getResults().getTransferedBytes();
-    		}
-    	}
+//    	//check if we are logged in
+//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
+//    	{
+//    		this.transferQueue.startSyncProcessing();
+//    		
+//    		//collect Results
+//    		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+//    		for (ITransferQueueItem item : processedItemList)
+//    		{
+//    			this.totalTransferedBytes += item.getResults().getTransferedBytes();
+//    		}
+//    	}
     }
     
     public void setView(IView view)
@@ -335,8 +340,8 @@ public class Model
     public void quitApplication()
     {
     	//logout from smugmug
-    	if (this.smugmugConnector != null) { this.smugmugConnector.logout(); }
-    	
+    	//if (this.smugmugConnector != null) { this.smugmugConnector.logout(); }
+    	if (this.accListing != null) { this.accListing.logout(); }
 
     	//statistics
     	Date date = new Date();
@@ -442,68 +447,68 @@ public class Model
     
 	private void uploadPrepareAlbum(String categoryName, String subcategoryName, String albumName, File pics_dir)
     {
-    	this.log.printLogLine("-----------------------------------------------");
-    	this.log.printLogLine("preparing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
-
-    	int uploadCount = 0;
-        File[] fileList = pics_dir.listFiles(Constants.supportedFileTypesFilter);
-        if (fileList == null) { return; /* Either dir does not exist or is not a directory */ }
-        Arrays.sort(fileList, new Constants.FileComparator()); //sort files
-        
-
-    	//create category, subcategory and album
-        GUID categoryGUID = this.smugmugConnector.getCategoryGUID(categoryName);
-        GUID subCategoryGUID = this.smugmugConnector.getSubCategoryGUID(categoryGUID, subcategoryName);
-        GUID albumGUID = this.smugmugConnector.getAlbumGUID(categoryGUID, subCategoryGUID, albumName, "");
-
-        for (int i=0; i<fileList.length; i++)
-        {
-        	//this.smugmugConnector.uploadFile(albumID, fileList[i]);
-        	
-        	try
-        	{
-				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, this.loginToken, albumGUID, fileList[i]);
-				this.transferQueue.add(item);
-                uploadCount++;
-			}
-        	catch (TransferQueueException e) { e.printStackTrace(); }
-        }
-
-        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
+//    	this.log.printLogLine("-----------------------------------------------");
+//    	this.log.printLogLine("preparing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
+//
+//    	int uploadCount = 0;
+//        File[] fileList = pics_dir.listFiles(Constants.supportedFileTypesFilter);
+//        if (fileList == null) { return; /* Either dir does not exist or is not a directory */ }
+//        Arrays.sort(fileList, new Constants.FileComparator()); //sort files
+//        
+//
+//    	//create category, subcategory and album
+//        GUID categoryGUID = this.smugmugConnector.getCategoryGUID(categoryName);
+//        GUID subCategoryGUID = this.smugmugConnector.getSubCategoryGUID(categoryGUID, subcategoryName);
+//        GUID albumGUID = this.smugmugConnector.getAlbumGUID(categoryGUID, subCategoryGUID, albumName, "");
+//
+//        for (int i=0; i<fileList.length; i++)
+//        {
+//        	//this.smugmugConnector.uploadFile(albumID, fileList[i]);
+//        	
+//        	try
+//        	{
+//				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, this.loginToken, albumGUID, fileList[i]);
+//				this.transferQueue.add(item);
+//                uploadCount++;
+//			}
+//        	catch (TransferQueueException e) { e.printStackTrace(); }
+//        }
+//
+//        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
     }
     
     private void downloadPrepareAlbum(AccountListing accListing, GUID albumGUID, String targetDir)
     {
-    	this.log.printLogLine("-----------------------------------------------");
-    	this.log.printLogLine("preparing album (target:" + targetDir + ")");
-
-    	int downloadCount = 0;
-
-    	//check target dir
-    	this.log.printLog("checking dir: " + targetDir + " ... ");
-    	boolean success = (new File(targetDir)).mkdirs();
-	    if (success) { this.log.printLogLine("created"); }
-	    else { this.log.printLogLine("ok"); }
-
-    	if (this.loginToken.getToken() != null)
-    	{
-    		IAlbumType album = accListing.getAlbumByGUID(albumGUID);
-    		
-    		for (IImageType image : album.getImageList())
-    		{
-    			//this.smugmugConnector.downloadFile(i.guid(), targetDir);
-    			
-            	try
-            	{
-    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, this.loginToken, image.getGUID(), targetDir);
-    				this.transferQueue.add(item);
-                    downloadCount++;
-    			}
-            	catch (TransferQueueException e) { e.printStackTrace(); }
-    		}    		
-    	}
-    	
-        this.log.printLogLine("  ... added " + downloadCount + " files (target:" + targetDir + ")");
+//    	this.log.printLogLine("-----------------------------------------------");
+//    	this.log.printLogLine("preparing album (target:" + targetDir + ")");
+//
+//    	int downloadCount = 0;
+//
+//    	//check target dir
+//    	this.log.printLog("checking dir: " + targetDir + " ... ");
+//    	boolean success = (new File(targetDir)).mkdirs();
+//	    if (success) { this.log.printLogLine("created"); }
+//	    else { this.log.printLogLine("ok"); }
+//
+//    	if (this.loginToken.getToken() != null)
+//    	{
+//    		IAlbumType album = accListing.getAlbumByGUID(albumGUID);
+//    		
+//    		for (IImageType image : album.getImageList())
+//    		{
+//    			//this.smugmugConnector.downloadFile(i.guid(), targetDir);
+//    			
+//            	try
+//            	{
+//    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, this.loginToken, image.getGUID(), targetDir);
+//    				this.transferQueue.add(item);
+//                    downloadCount++;
+//    			}
+//            	catch (TransferQueueException e) { e.printStackTrace(); }
+//    		}    		
+//    	}
+//    	
+//        this.log.printLogLine("  ... added " + downloadCount + " files (target:" + targetDir + ")");
     }
     
     private void verifyAlbum(AccountListing accListing, GUID albumGUID, File targetDir)

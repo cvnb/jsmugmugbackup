@@ -8,6 +8,8 @@ package jSmugmugBackup.model.queue;
 
 import jSmugmugBackup.model.abstractionLayer.*;
 import jSmugmugBackup.model.login.*;
+import jSmugmugBackup.trash_bin.ISmugMugConnector;
+import jSmugmugBackup.trash_bin.SmugmugConnector;
 import jSmugmugBackup.view.Logger;
 
 import java.io.*;

@@ -3,6 +3,8 @@ package jSmugmugBackup.view;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.data.*;
 import jSmugmugBackup.model.login.*;
+import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.view.login.LoginViewSwing;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -335,11 +337,11 @@ public class SwingView extends JFrame implements IView
 
 
 	//@Override
-	public ISmugmugLogin getLoginToken()
+	public ILoginView getLoginToken()
 	{
 		//ILoginToken loginToken = new LoginToken(this.jTextField_username.getText(), this.jPasswordField_password.getText());
 		//ISmugmugLogin loginToken = new SmugmugLoginSwing(this.jTextField_username.getText(), this.jPasswordField_password.getText());
-		ISmugmugLogin loginToken = new SmugmugLoginSwing(this);
+		ILoginView loginToken = new LoginViewSwing(this);
 		
 		return loginToken;
 	}
