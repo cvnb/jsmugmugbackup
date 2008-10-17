@@ -1,7 +1,6 @@
 todo:
  - GUI
- - verify, delete
- - deployment script
+ - verify
  - test download videos
  
  - deleting ???

@@ -176,9 +176,7 @@ public class AccountListingProxy implements IAccountListingProxy
         
         
         for (int i=0; i<fileList.length; i++)
-        {
-        	String fileMD5 = this.computeMD5Hash(fileList[i]);
-        	
+        {        	
         	int imageID;
         	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
         	if (imageID == 0) //image doesn't exist
@@ -187,13 +185,17 @@ public class AccountListingProxy implements IAccountListingProxy
 				this.transferQueue.add(item);
                 uploadCount++;
         	}
-        	else if (!this.getImage(imageID).getMD5().equals(fileMD5))
-        	{
-        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug, but has different MD5Sum ... skipping anyway");
-        	}
         	else
         	{
-        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
+            	String fileMD5 = this.computeMD5Hash(fileList[i]);
+	        	if (!this.getImage(imageID).getMD5().equals(fileMD5))
+	        	{
+	        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug, but has different MD5Sum ... skipping anyway");
+	        	}
+	        	else
+	        	{
+	        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
+	        	}
         	}
         }        
 
