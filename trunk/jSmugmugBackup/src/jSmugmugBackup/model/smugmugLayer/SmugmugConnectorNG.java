@@ -248,9 +248,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         return 0;
 	}
-	
-
-	
+		
 	public void downloadFile(int imageID, File fileName)
 	{		
 		JSONObject jobj = this.smugmug_images_getURLs(imageID);
@@ -262,6 +260,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public void downloadFile(String imageURL, File fileName)
 	{
+		this.log.printLog(this.getTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
+		
+		
 		//write url to file
 		try
 		{
@@ -269,6 +270,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			FileOutputStream out = new FileOutputStream(fileName);
 			URLConnection conn = url.openConnection();
 			InputStream  in = conn.getInputStream();
+			
+			
+			long startTime = (new Date()).getTime();
 			
 			
 			byte[] buffer = new byte[1024];
@@ -281,6 +285,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			}
 			
 			out.close();
+			
+			
+            long downloadTime = (new Date()).getTime() - startTime;
+            double downloadSpeed = 0.0;
+            //avoid division by zero
+            if (downloadTime != 0) { downloadSpeed = ((double)fileName.length() / 1024.0) / ((double)downloadTime / 1000.0); }
+            
+            // for statistics
+        	this.transferedBytes += fileName.length();
+            
+            DecimalFormat df = new DecimalFormat("0.0");                            
+            this.log.printLogLine("ok (" + df.format(downloadSpeed) + " kb/sec)");
+			//this.log.printLogLine("ok");
 		}
 		catch (FileNotFoundException e) { e.printStackTrace(); }
 		catch (MalformedURLException e) { e.printStackTrace(); }
@@ -630,7 +647,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private JSONObject smugmug_images_getURLs(int imageID)
 	{
 		String methodName = "smugmug.images.getURLs";
-		System.out.print(methodName + " ...");
+		//this.log.printLog(methodName + " ...");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
@@ -648,10 +665,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	System.out.println("ok");
+        	//this.log.printLogLine("ok");
         	return jobj;
         }
-        else { System.out.println("failed"); }
+        else
+        {
+        	//this.log.printLogLine("failed");
+        	this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
+        }
         
         return null;
     }
@@ -758,6 +779,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         {
         	this.log.printLogLine("failed");
         	this.printJSONObject(jobj);
+        	System.exit(0); //should be removed later ...
         }
         
         return null;

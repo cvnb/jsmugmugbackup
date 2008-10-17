@@ -15,13 +15,14 @@ public interface IAccountListingProxy
 {
 	void setLoginMethod(ILoginView loginMethod);
 	void init();
-	
 	void login();
 	void logout();
 	
 	Vector<ICategory> getCategoryList();
+	Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName);
 
 	void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
+	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	
 	void startProcessingQueue();
 	long getTransferedBytes();
