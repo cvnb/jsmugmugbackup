@@ -251,6 +251,101 @@ public class AccountListingProxy implements IAccountListingProxy
 	    this.log.printLogLine("  ... added " + downloadCount + " files (target:" + targetDir + ")");
 	}
 	
+    public void verifyAlbum(int albumID, String targetBaseDir)
+    {
+    	this.log.printLogLine(this.getTimeString() + " verifying album (id:" + albumID + ", target:" + targetBaseDir + ") ...");
+
+		//build target dir: search for category, subcategory, and album name
+		// ... maybe this can be moved into a separate method
+		String targetDir = targetBaseDir;
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID)
+					{
+						targetDir += c.getName() + "/" + s.getName() + "/" + a.getName() + "/";
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID)
+				{
+					targetDir += c.getName() + "/" + a.getName() + "/";
+				}
+			}
+		}		
+
+
+		File dir = new File(targetDir);
+	    File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
+	    if (fileList == null)
+	    {
+	    	/* Either dir does not exist or is not a directory */ 
+	      	this.log.printLogLine("ERROR: local album path could not be found");
+	      	return;
+	    }
+	    Arrays.sort(fileList, new Constants.FileComparator()); //sort files, convienence only
+
+
+	    //compare number of files
+        IAlbum album = this.getAlbum(albumID);
+        Vector<IImage> imageList = album.getImageList();
+        if ( fileList.length == imageList.size() )
+        {
+            //everything seems fine: same number of pictures in SmugMug as in local dir
+        }
+        else 
+        {
+        	if ( fileList.length > imageList.size() )
+        	{
+        		//some files have not been uploaded
+        		this.log.printLogLine("ERROR: some files have not been uploaded");
+        	}
+        	else //if ( fileList.length < imageList.size() )
+        	{
+        		//some local files are missing
+        		this.log.printLogLine("ERROR: some local files are missing");
+        	}
+          
+        	this.log.printLogLine("listing local files (" + fileList.length + ") ... ");
+        	for (int i=0; i<fileList.length; i++) { this.log.printLogLine("  " + fileList[i].getAbsolutePath() ); }
+          
+        	this.log.printLogLine("listing remote files (" + imageList.size() + ") ... ");
+        	for (IImage image : imageList) { this.log.printLogLine("  " + image.getName() ); }
+        }        
+    	
+	    // compare albums
+    	for (int i=0; i<fileList.length; i++)
+    	{
+    		for (IImage image : imageList)
+    		{
+    			if ( fileList[i].getName().equals(image.getName()) )
+    			{
+    				//now we have the matching pair, so we check the md5sums
+    				String localFileMD5Sum = this.computeMD5Hash(fileList[i]);
+      			
+    				//compare files
+			    	this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
+					if ( localFileMD5Sum.equals(image.getMD5()) )
+					{
+						this.log.printLogLine("ok");
+					}
+					else
+					{
+						this.log.printLogLine("failed");
+						this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
+						this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
+					}
+    			}
+      		}
+      	}
+    }
+
 	
 	public void startProcessingQueue()
 	{

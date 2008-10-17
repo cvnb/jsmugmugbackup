@@ -151,42 +151,23 @@ public class Model
     
     public void verifyPrepare(ITransferDialogResult transferDialogResult)
     {
-//    	//todo: what about missing local dirs?
-//    	
-//    	//this.log.printLogLine("Model.verifyPrepare() - verifying files ... not implemented yet ...");
-//    	//this.log.printLogLine("Model.verifyPrepare() -   category    : " + transferDialogResult.getCategoryName());
-//    	//this.log.printLogLine("Model.verifyPrepare() -   subcategory : " + transferDialogResult.getSubCategoryName());
-//    	//this.log.printLogLine("Model.verifyPrepare() -   album       : " + transferDialogResult.getAlbumName());
-//    	//this.log.printLogLine("Model.verifyPrepare() -   dir         : " + transferDialogResult.getDir());
-//
-//    	//check if we are logged in
-//    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
-//    	{
-//    		//this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
-//
-//    		AccountListing accListing = this.smugmugConnector.getAccountStructure();
-//    		
-//    		//key: GUID; value: album target path
-//    		Hashtable<GUID, String> selectedAlbumHashtable;
-//    		selectedAlbumHashtable = this.matchAlbumsOnSmugmug(accListing, transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-//
-//    		//collect selected albums
-//			if (selectedAlbumHashtable.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
-//    		
-//			for (GUID albumGUID : selectedAlbumHashtable.keySet())
-//    		{
-//				String targetDirString = transferDialogResult.getDir() + selectedAlbumHashtable.get(albumGUID) + "/";
-//				File targetDir = new File(targetDirString);
-//    	    	//this.log.printLogLine("Model.verifyPrepare() -  selected albumGUID: " + albumGUID + " (" + targetDir + ")" );
-//    	    	
-//    	    	this.verifyAlbum(accListing, albumGUID, targetDir);
-//    		}
-//    		
-//    	}
+    	//todo: what about missing local dirs?
+    	this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
+    	
+		Vector<IAlbum> selectedAlbums = this.accListing.matchAlbums(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+		if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+    	
+    	for (IAlbum a : selectedAlbums)
+    	{
+    		this.accListing.verifyAlbum(a.getID(), transferDialogResult.getDir());
+    	}
     }
     
     public void deletePrepare(ITransferDialogResult transferDialogResult)
     {
+    	this.log.printLogLine("preparing to delete files");
+    	this.log.printLogLine("ERROR: not implemented");
+
 //    	//check if we are logged in
 //    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
 //    	{
@@ -290,73 +271,6 @@ public class Model
     	
     	return result;
     }
-
-   
-//    private void verifyAlbum(AccountListing accListing, GUID albumGUID, File targetDir)
-//    {
-//    	this.log.printLogLine("-----------------------------------------------");
-//    	this.log.printLogLine("verifying album from " + targetDir.getAbsolutePath() + " ...");
-//
-//        File[] fileList = targetDir.listFiles(Constants.supportedFileTypesFilter);
-//        if (fileList == null)
-//        {
-//        	/* Either dir does not exist or is not a directory */ 
-//        	this.log.printLogLine("  exiting unexpected!");
-//        	return;
-//        }
-//        Arrays.sort(fileList, new Constants.FileComparator()); //sort files, convienence only
-//
-//        IAlbumType album = accListing.getAlbumByGUID(albumGUID);
-//        Vector<IImageType> imageList = album.getImageList();
-//        
-//        if ( fileList.length == imageList.size() )
-//        {
-//        	//everything seems fine: same number of pictures in SmugMug as in local dir
-//        	for (int i=0; i<fileList.length; i++)
-//            {
-//            	for (IImageType image : imageList)
-//            	{
-//            		if ( fileList[i].getName().equals(image.getName()) )
-//            		{
-//            			//now we have the matching pair, so we check the md5sums
-//            			String localFileMD5Sum = this.computeMD5Hash(fileList[i]);
-//            			
-//            			//compare
-//				    	this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
-//						if ( localFileMD5Sum.equals(image.getMD5Sum()) )
-//						{
-//							this.log.printLogLine("ok");
-//						}
-//						else
-//						{
-//							this.log.printLogLine("failed");
-//							this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
-//							this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5Sum());
-//						}        				
-//            		}
-//            	}
-//            }            
-//        }
-//        else 
-//        {
-//        	if ( fileList.length > imageList.size() )
-//        	{
-//        		//some files have not been uploaded
-//        		this.log.printLogLine("looks like some files have not been uploaded");
-//        	}
-//        	else //if ( fileList.length < imageList.size() )
-//        	{
-//            	//some local files are missing
-//            	this.log.printLogLine("looks like some local files are missing");
-//        	}
-//            
-//        	this.log.printLogLine("listing local files (" + fileList.length + ") ... ");
-//            for (int i=0; i<fileList.length; i++) { this.log.printLogLine("  " + fileList[i].getAbsolutePath() ); }
-//            
-//            this.log.printLogLine("listing remote files (" + imageList.size() + ") ... ");
-//        	for (IImageType image : imageList) { this.log.printLogLine("  " + image.getName() ); }
-//        }        
-//    }
     
     private String computeMD5Hash(File file)
     {    	

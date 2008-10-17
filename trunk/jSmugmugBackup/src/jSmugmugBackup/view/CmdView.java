@@ -148,12 +148,8 @@ public class CmdView implements IView
     		loginMethod = new LoginViewConsole_1_6(account_email);
     	}
     	
-    	
-    	
-    	
-		
-		return loginMethod;
-		
+
+    	return loginMethod;
 	}
 
 	public void showError(String errMessage)
