@@ -33,7 +33,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	private TransferQueueItem(TransferQueueItemActionEnum action)
+	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor)
 	{
 		this.log = Logger.getInstance();
 		//this.log.printLogLine("new TransferQueueItem()");
@@ -51,30 +51,19 @@ public class TransferQueueItem implements ITransferQueueItem
 		this.result_id = 0;
 		this.result_message = "";
 		this.result_transferedBytes = 0;
-	}
-	public TransferQueueItem(TransferQueueItemActionEnum action, int albumID, File fileDescriptor) throws TransferQueueException
-	{
-		//constructor for upload items
-		this(action);
+		
+		this.fileDescriptor = fileDescriptor;
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
 		{
-			this.albumID = albumID;
-			this.fileDescriptor = fileDescriptor;			
+			this.albumID = id;						
 		}
-		else throw new TransferQueueException("only the \"UPLOAD\" action is applicable for this constructor!");
+		else if ( (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD)) ||
+			      (this.action.equals(TransferQueueItemActionEnum.VERIFY)) )
+		{
+			this.imageID = id;
+		}
 	}
-//	public TransferQueueItem(TransferQueueItemActionEnum action, int imageID, File fileDescriptor) throws TransferQueueException
-//	{
-//		//constructor for download or verify items
-//		this(action);
-//		if ( (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD)) ||
-//			 (this.action.equals(TransferQueueItemActionEnum.VERIFY)) )
-//		{
-//			this.imageID = imageID;
-//			this.fileDescriptor = fileDescriptor;			
-//		}
-//		else throw new TransferQueueException("only the \"DOWNLOAD\" or \"VERIFY\" action is applicable for this constructor!");
-//	}
+
 
 	
 	public void process()

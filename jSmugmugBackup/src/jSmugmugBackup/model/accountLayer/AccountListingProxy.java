@@ -62,6 +62,74 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		return this.categoryList;
 	}
+	
+	public Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
+	{
+		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
+		
+		//decend to all album lists of all Subcategories and Categories
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					
+					//here, we should walk over all albums that belong to all subcategories
+					//note: if a parameter is null, we assume it's a wildcard
+					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+					{
+						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
+						{
+							if ( (albumName == null) || (a.getName().equals(albumName)) )
+							{
+								/*
+								String album_dir;
+								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
+								
+								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
+								this.log.printLogLine("  matched album: " + album_dir);
+								selectedAlbumHashtable.put(a.getGUID(), album_dir);
+								*/
+								selectedAlbums.add(a);
+							}
+						}
+					}
+					
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				//here, we walk over all albums which have no subcategory
+				if (subcategoryName == null) //hence, subcategoryName must be null
+				{
+					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+					{
+						if ( (albumName == null) || (a.getName().equals(albumName)) )
+						{
+							/*
+							String album_dir;
+							album_dir = c.getName() + "/" + a.getName();
+							
+							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
+							selectedAlbumHashtable.put(a.getGUID(), album_dir);
+							*/
+							selectedAlbums.add(a);
+						}
+					}
+				}
+
+			}
+		}
+
+		
+		this.log.printLogLine("matched albums: " + selectedAlbums.size() );
+
+		
+		return selectedAlbums;		
+	}
+
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
 	{
@@ -115,13 +183,9 @@ public class AccountListingProxy implements IAccountListingProxy
         	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
         	if (imageID == 0) //image doesn't exist
         	{
-	        	try
-	        	{
-					ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
-					this.transferQueue.add(item);
-	                uploadCount++;
-				}
-	        	catch (TransferQueueException e) { e.printStackTrace(); }
+				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+				this.transferQueue.add(item);
+                uploadCount++;
         	}
         	else if (!this.getImage(imageID).getMD5().equals(fileMD5))
         	{
@@ -134,6 +198,57 @@ public class AccountListingProxy implements IAccountListingProxy
         }        
 
         this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
+	}
+
+	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)
+	{
+		this.log.printLogLine(this.getTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
+		
+		int downloadCount = 0;
+		
+		//build target dir: search for category, subcategory, and album name
+		// ... maybe this can be moved into a separate method
+		String targetDir = targetBaseDir;
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID)
+					{
+						targetDir += c.getName() + "/" + s.getName() + "/" + a.getName() + "/";
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID)
+				{
+					targetDir += c.getName() + "/" + a.getName() + "/";
+				}
+			}
+		}		
+		
+		//check target dir
+		this.log.printLog("checking dir: " + targetDir + " ... ");
+		boolean success = (new File(targetDir)).mkdirs();
+	    if (success) { this.log.printLogLine("created"); }
+	    else { this.log.printLogLine("ok"); }
+	    
+	    
+		IAlbum album = this.getAlbum(albumID);
+		for (IImage image : album.getImageList())
+		{
+			File imageFile = new File(targetDir + image.getName());
+			
+			ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile);
+			this.transferQueue.add(item);
+			downloadCount++;
+		}   
+	    
+	    this.log.printLogLine("  ... added " + downloadCount + " files (target:" + targetDir + ")");
 	}
 	
 	
@@ -396,6 +511,27 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (i.getID() == imageID) { return i; }
 				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private IAlbum getAlbum(int albumID)
+	{
+		for (ICategory c : this.getCategoryList())
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID) { return a; }
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID) { return a; }
 			}
 		}
 		
