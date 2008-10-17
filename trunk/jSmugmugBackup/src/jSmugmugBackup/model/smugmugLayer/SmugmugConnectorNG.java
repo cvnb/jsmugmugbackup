@@ -7,32 +7,23 @@
 package jSmugmugBackup.model.smugmugLayer;
 
 import jSmugmugBackup.model.accountLayer.*;
-import jSmugmugBackup.model.AeSimpleMD5;
-import jSmugmugBackup.model.Constants;
-import jSmugmugBackup.view.Logger;
+import jSmugmugBackup.model.*;
+import jSmugmugBackup.view.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.NoSuchAlgorithmException;
-import java.util.Vector;
+import java.io.*;
+import java.net.*;
+import java.security.*;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.*;
+import org.apache.http.client.*;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.*;
+import org.apache.http.impl.client.*;
+
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
@@ -72,6 +63,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	public Vector<ICategory> getTree()
 	{
+		this.log.printLog(this.getTimeString() + " downloading account data ... ");
+		
 		Vector<ICategory> categoryList = new Vector<ICategory>();
 		
 		JSONObject tree = this.smugmug_users_getTree();
@@ -192,6 +185,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			jsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + categoryIndex + "]");
 		}
 		
+		this.log.printLogLine("ok");
+		
 		return categoryList;
 	}
 
@@ -202,22 +197,31 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	}
 	
 
-	public void createCategory(String name)
+	public int createCategory(String name)
 	{
 		JSONObject jobj = this.smugmug_categories_create(name);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
+		int categoryID = ((Number)this.getJSONValue(jobj, "Category.id")).intValue();
+		
+		return categoryID;
 	}
 
-	public void createSubcategory(int categoryID, String name)
+	public int createSubcategory(int categoryID, String name)
 	{
 		JSONObject jobj = this.smugmug_subcategories_create(name, categoryID);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
+		int subcategoryID = ((Number)this.getJSONValue(jobj, "SubCategory.id")).intValue();
+		
+		return subcategoryID;
 	}
 
-	public void createAlbum(int categoryID, int subCategoryID, String name)
+	public int createAlbum(int categoryID, int subCategoryID, String name)
 	{
 		JSONObject jobj = this.smugmug_albums_create(name, categoryID, subCategoryID);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
+		int albumID = ((Number)this.getJSONValue(jobj, "Album.id")).intValue();
+		
+		return albumID;
 	}
 	
 	public void uploadFile(int albumID, File file)
@@ -278,6 +282,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	
 	//======================== private - smugmug =============================
+	
 	private JSONObject smugmugJSONRequest(String url)
 	{
         HttpClient httpclient = new DefaultHttpClient();
@@ -299,7 +304,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private void smugmug_login_withPassword(String userEmail, String password)
 	{
-		this.log.printLog("smugmug.login.withPassword ... ");
+		this.log.printLog(this.getTimeString() + " logging in ... ");
+		//this.log.printLog("smugmug.login.withPassword ... ");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
@@ -316,25 +322,27 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
         	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withPassword")) )
         {
+        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
+        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
+        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
         	this.log.printLogLine("ok");
-        	this.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
-        	this.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
-        	this.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
-        	this.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
         }
         else { this.log.printLogLine("failed"); }
 	}
 		
 	private void smugmug_login_withHash()
 	{
-		this.log.printLog("smugmug.login.withHash ... ");
+		//this.log.printLog(this.getTimeString() + " relogin ... ");
+		
+		//this.log.printLog("smugmug.login.withHash ... ");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=smugmug.login.withHash&";
 		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
-		url = url + "UserID=" + this.login_userID + "&";
-		url = url + "PasswordHash=" + this.login_passwordHash + "&";
+		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
+		url = url + "PasswordHash=" + SmugmugConnectorNG.login_passwordHash + "&";
 
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
@@ -344,10 +352,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
         	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withHash")) )
         {
-        	this.log.printLogLine("ok");
-        	this.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+        	//this.log.printLogLine("ok");
+        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
         }
-        else { this.log.printLogLine("failed"); }
+        else
+        {
+        	this.log.printLog(this.getTimeString() + " smugmug.login.withHash ... failed");
+        	//this.log.printLogLine("failed");
+        }
 	}
 		
 	private void smugmug_logout_logout()
@@ -357,7 +369,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=smugmug.logout&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
@@ -367,10 +379,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
            	 (this.getJSONValue(jobj, "method").equals("smugmug.logout")) )
         {        	
         	this.log.printLogLine("ok");
-           	this.login_sessionID    = null;
-           	this.login_userID       = null;
-           	this.login_nickname     = null;
-           	this.login_passwordHash = null;
+        	SmugmugConnectorNG.login_sessionID    = null;
+        	SmugmugConnectorNG.login_userID       = null;
+        	SmugmugConnectorNG.login_nickname     = null;
+        	SmugmugConnectorNG.login_passwordHash = null;
         }
         else { this.log.printLogLine("failed"); }
 	}
@@ -382,7 +394,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=smugmug.users.getTree&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		//url = url + "NickName=" + this.login_nickname + "&"; //optional
 		url = url + "Heavy=0&"; //optional
 		//url = url + "SitePassword=????&"; //optional
@@ -401,7 +413,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         else
         {
         	//this.log.printLogLine("failed");
-        	this.log.printLogLine("smugmug.users.getTree ... failed");
+        	this.log.printLogLine(this.getTimeString() + " smugmug.users.getTree ... failed");
         }
         
         return null;
@@ -415,7 +427,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
 		url = url + "Heavy=1&"; //optional
 		//url = url + "Password=????&"; //optional
@@ -441,7 +453,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         else
         {
         	//this.log.printLogLine("failed");
-        	this.log.printLogLine("smugmug.images.get ... failed");
+        	this.log.printLogLine(this.getTimeString() + " smugmug.images.get ... failed");
         }
         
         return null;
@@ -449,65 +461,75 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 	private JSONObject smugmug_categories_create(String name)
 	{
+		this.log.printLog(this.getTimeString() + " creating category ... ");
+		
 		String methodName = "smugmug.categories.create";
-		System.out.print(methodName + " ...");
+		//System.out.print(methodName + " ...");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + name + "&";
 				
 		JSONObject jobj = this.smugmugJSONRequest(url);
 		//this.printJSONObject(jobj);
+		//this.log.printLogLine("url: " + url);
+		
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	System.out.println("ok");
+        	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
         	return jobj;
         }
-        else { System.out.println("failed"); }
+        else { this.log.printLogLine("failed"); }
         
         return null;
     }
 
 	private JSONObject smugmug_subcategories_create(String name, int categoryID)
 	{
+		this.log.printLog(this.getTimeString() + " creating subcategory ... ");
+		
 		String methodName = "smugmug.subcategories.create";
-		System.out.print(methodName + " ...");
+		//System.out.print(methodName + " ...");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + name + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
 		//this.printJSONObject(jobj);
+		//this.log.printLogLine("url: " + url);
+		
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	System.out.println("ok");
+        	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
            	return jobj;
         }
-        else { System.out.println("failed"); }
+        else { this.log.printLogLine("failed"); }
         
         return null;
 	}
 
 	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID)
 	{
+		this.log.printLog(this.getTimeString() + " creating album ... ");
+		
 		String methodName = "smugmug.albums.create";
-		System.out.print(methodName + " ...");
+		//System.out.print(methodName + " ...");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Title=" + title + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
@@ -571,15 +593,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
+		//this.log.printLogLine("url: " + url);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	System.out.println("ok");
+        	this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
            	return jobj;
         }
-        else { System.out.println("failed"); }
+        else { this.log.printLogLine("failed"); }
         
         return null;
 	}
@@ -592,7 +615,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
 		//url = url + "TemplateID=&"; //string, optional (specifies which Style to build the AlbumURL with), default: 3
 		//url = url + "Password=&"; //string, optional
@@ -621,7 +644,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + this.login_sessionID + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
 		//url = url + "Password=&"; //string, optional
 		//url = url + "SitePassword=&"; //string, optional
@@ -642,10 +665,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     }
 	
 	private JSONObject smugmug_images_upload(int albumID, File fileName)
-	{
+	{	
+		this.log.printLog(this.getTimeString() + " uploading: " + fileName.getAbsolutePath() + " ... ");
 		
 		String methodName = "smugmug.images.upload";
-		System.out.print(methodName + " ...");
+		//System.out.print(methodName + " ...");
 		
 		//build url
 		String url = "http://upload.smugmug.com/" + fileName.getName();
@@ -656,7 +680,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //add header
         //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
         httpPut.addHeader("Content-MD5", this.computeMD5Hash(fileName) );
-        httpPut.addHeader("X-Smug-SessionID", this.login_sessionID);
+        httpPut.addHeader("X-Smug-SessionID", SmugmugConnectorNG.login_sessionID);
         httpPut.addHeader("X-Smug-Version", Constants.SmugmugAPIVersion);
         httpPut.addHeader("X-Smug-ResponseType", "JSON");
         httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
@@ -672,6 +696,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         // see: http://www.iana.org/assignments/media-types/
         HttpEntity entity = new org.apache.http.entity.FileEntity(fileName, "image/jpeg");
         httpPut.setEntity(entity);
+        
+        long startTime = (new Date()).getTime();
+
         
         // Create a response handler
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -690,11 +717,20 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
+            long uploadTime = (new Date()).getTime() - startTime;
+            double uploadSpeed = 0.0;
+            //avoid division by zero
+            if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
+            
+            // for statistics
         	this.transferedBytes += fileName.length();
-        	System.out.println("ok");
+            
+            DecimalFormat df = new DecimalFormat("0.0");                            
+            this.log.printLogLine("ok (" + df.format(uploadSpeed) + " kb/sec)");
+        	//this.log.printLogLine("ok");
         	return jobj;
         }
-        else { System.out.println("failed"); }
+        else { this.log.printLogLine("failed"); }
         
         return null;
 	}
@@ -807,4 +843,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	return md5sum;
     }
 
+	private String getTimeString()
+	{
+		Date date = new Date();
+        //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        return dateFormat.format(date);
+	}
 }
