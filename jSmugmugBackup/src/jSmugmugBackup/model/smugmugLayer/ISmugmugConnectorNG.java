@@ -18,10 +18,10 @@ public interface ISmugmugConnectorNG
 	void logout();
 
 	Vector<ICategory> getTree();
-	void getImages(int albumID);
-	void createCategory(String name);
-	void createSubcategory(int categoryID, String name);
-	void createAlbum(int categoryID, int subCategoryID, String name);
+	void getImages(int albumID); //???
+	int createCategory(String name);
+	int createSubcategory(int categoryID, String name);
+	int createAlbum(int categoryID, int subCategoryID, String name);
 	
 	void uploadFile(int albumID, File file);
 	void downloadFile(int imageID, File fileName);
