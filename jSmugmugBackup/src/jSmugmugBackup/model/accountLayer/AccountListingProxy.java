@@ -12,18 +12,10 @@ import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.*;
 import jSmugmugBackup.view.login.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Vector;
+import java.io.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
 
 public class AccountListingProxy implements IAccountListingProxy
 {
@@ -34,6 +26,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	private Vector<ICategory> categoryList = null;
 	
 	private long transferedBytes = 0;
+	
 	
 	public AccountListingProxy()
 	{
@@ -64,7 +57,6 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		this.connector.logout();
 	}
-
 
 	public Vector<ICategory> getCategoryList()
 	{
@@ -117,45 +109,59 @@ public class AccountListingProxy implements IAccountListingProxy
         
         for (int i=0; i<fileList.length; i++)
         {
-            // check if file is smaller than 512 MB
-            if ( fileList[i].length() <= (512*1024*1024) )
-            {	
-	        	String fileMD5 = this.computeMD5Hash(fileList[i]);
-	        	
-	        	int imageID;
-	        	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileMD5);
-	        	if (imageID == 0) //image doesn't exist
+        	String fileMD5 = this.computeMD5Hash(fileList[i]);
+        	
+        	int imageID;
+        	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
+        	if (imageID == 0) //image doesn't exist
+        	{
+	        	try
 	        	{
-		        	try
-		        	{
-						ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
-						this.transferQueue.add(item);
-		                uploadCount++;
-					}
-		        	catch (TransferQueueException e) { e.printStackTrace(); }
-	        	}
-	        	else this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
-            }
-            else this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
-
-        }
-        
+					ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+					this.transferQueue.add(item);
+	                uploadCount++;
+				}
+	        	catch (TransferQueueException e) { e.printStackTrace(); }
+        	}
+        	else if (!this.getImage(imageID).getMD5().equals(fileMD5))
+        	{
+        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug, but has different MD5Sum ... skipping anyway");
+        	}
+        	else
+        	{
+        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
+        	}
+        }        
 
         this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
-
 	}
+	
 	
 	public void startProcessingQueue()
 	{
 		this.transferQueue.startSyncProcessing();
 		
 		//collect Results
+		this.connector.relogin(); //probably not nessceary
 		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
 		for (ITransferQueueItem item : processedItemList)
 		{
 			this.transferedBytes += item.getResults().getTransferedBytes();
 			
-			//add imageid to local data
+			// uploaded images:
+			// if item.getAction == upload then add imageid to local data
+			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
+			{
+				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
+				
+				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
+				int imageID = Integer.parseInt( imageInfo.get("ImageID") );
+				String imageName = imageInfo.get("ImageName");
+			
+				//this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
+
+				this.addImage(albumID, imageID, imageName);
+			}
 		}
 		
 	}
@@ -316,9 +322,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		return 0;
 	}
 
-	private int getImageID(int categoryID, int subcategoryID, int albumID, String imageMD5)
+	private int getImageID(int categoryID, int subcategoryID, int albumID, String imageName)
 	{
-		if (subcategoryID == 0) { return this.getImageID(categoryID, albumID, imageMD5); }
+		if (subcategoryID == 0) { return this.getImageID(categoryID, albumID, imageName); }
 		
 		for (ICategory c : this.categoryList)
 		{
@@ -334,7 +340,7 @@ public class AccountListingProxy implements IAccountListingProxy
 							{
 								for (IImage i : a.getImageList())
 								{
-									if (i.getMD5().equals(imageMD5)) return i.getID();
+									if (i.getName().equals(imageName)) return i.getID();
 								}
 							}
 						}
@@ -346,7 +352,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		return 0;
 	}
 	
-	private int getImageID(int categoryID, int albumID, String imageMD5)
+	private int getImageID(int categoryID, int albumID, String imageName)
 	{
 		for (ICategory c : this.categoryList)
 		{
@@ -358,7 +364,7 @@ public class AccountListingProxy implements IAccountListingProxy
 					{
 						for (IImage i : a.getImageList())
 						{
-							if (i.getMD5().equals(imageMD5)) return i.getID();
+							if (i.getName().equals(imageName)) return i.getID();
 						}
 					}
 				}
@@ -368,6 +374,35 @@ public class AccountListingProxy implements IAccountListingProxy
 		return 0;
 	}
 
+	
+	private IImage getImage(int imageID)
+	{
+		for (ICategory c : this.getCategoryList())
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					for (IImage i : a.getImageList())
+					{
+						if (i.getID() == imageID) { return i; }
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				for (IImage i : a.getImageList())
+				{
+					if (i.getID() == imageID) { return i; }
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	
     private String computeMD5Hash(File file)
     {    	
 		//read local file

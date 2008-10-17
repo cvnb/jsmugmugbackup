@@ -28,6 +28,8 @@ public class TransferQueueItem implements ITransferQueueItem
 	
 	private boolean result_processed;
 	private boolean result_successful;
+	private TransferQueueItemActionEnum result_action;
+	private int result_id;
 	private String result_message;
 	private long result_transferedBytes;
 	
@@ -45,6 +47,8 @@ public class TransferQueueItem implements ITransferQueueItem
 		
 		this.result_processed = false;
 		this.result_successful = false;
+		this.result_action = action;
+		this.result_id = 0;
 		this.result_message = "";
 		this.result_transferedBytes = 0;
 	}
@@ -81,7 +85,11 @@ public class TransferQueueItem implements ITransferQueueItem
 		{
 			//this.result_successful = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor);
 			this.smugmugConnector.relogin();
-			this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor);
+			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor);
+			
+			//this should be safe to assume
+			if (this.result_id == 0) { this.result_successful = false; }
+			else { this.result_successful = true; }
 		}
 		else if (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD))
 		{
@@ -101,6 +109,6 @@ public class TransferQueueItem implements ITransferQueueItem
 
 	public ITransferQueueItemProcessResults getResults()
 	{		
-		return new TransferQueueItemProcessResults(this.result_processed, this.result_successful, this.result_message, this.result_transferedBytes);
+		return new TransferQueueItemProcessResults(this.result_processed, this.result_successful, this.result_action, this.result_id, this.result_message, this.result_transferedBytes);
 	}
 }

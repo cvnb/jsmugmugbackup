@@ -13,9 +13,7 @@ import jSmugmugBackup.view.*;
 import java.io.*;
 import java.net.*;
 import java.security.*;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
 
 import org.apache.http.*;
@@ -196,6 +194,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		this.printJSONObject(jobj);
 	}
 	
+	public Hashtable<String, String> getImageInfo(int imageID)
+	{
+		Hashtable<String, String> result = new Hashtable<String, String>();
+		
+		JSONObject jobj = this.smugmug_images_getInfo(imageID);
+		//this.printJSONObject(jobj);
+		
+		result.put("AlbumID",   ((Long)this.getJSONValue(jobj, "Image.Album.id")).toString());
+		result.put("ImageID",   ((Long)this.getJSONValue(jobj, "Image.id")).toString());
+		result.put("ImageName", (String)this.getJSONValue(jobj, "Image.FileName"));
+		
+		return result;
+	}
 
 	public int createCategory(String name)
 	{
@@ -224,10 +235,18 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return albumID;
 	}
 	
-	public void uploadFile(int albumID, File file)
+	public int uploadFile(int albumID, File file)
 	{
-		this.smugmug_images_upload(albumID, file);
-		
+        // check if file is smaller than 512 MB
+        if ( file.length() <= (512*1024*1024) )
+        {	
+        	JSONObject jobj = this.smugmug_images_upload(albumID, file);
+        	//this.printJSONObject(jobj);
+        	return ((Number)this.getJSONValue(jobj, "Image.id")).intValue();
+        }
+        else this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
+
+        return 0;
 	}
 	
 
@@ -364,7 +383,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 	private void smugmug_logout_logout()
 	{
-		this.log.printLog("smugmug.logout ...");
+		this.log.printLog(this.getTimeString() + " logging out ... ");
+		//this.log.printLog("smugmug.logout ...");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
@@ -378,11 +398,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
            	 (this.getJSONValue(jobj, "method").equals("smugmug.logout")) )
         {        	
-        	this.log.printLogLine("ok");
         	SmugmugConnectorNG.login_sessionID    = null;
         	SmugmugConnectorNG.login_userID       = null;
         	SmugmugConnectorNG.login_nickname     = null;
         	SmugmugConnectorNG.login_passwordHash = null;
+        	this.log.printLogLine("ok");
         }
         else { this.log.printLogLine("failed"); }
 	}
@@ -639,7 +659,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private JSONObject smugmug_images_getInfo(int imageID)
 	{
 		String methodName = "smugmug.images.getInfo";
-		System.out.print(methodName + " ...");
+		//this.log.printLog(methodName + " ...");
 		
 		//build url
 		String url = Constants.SmugmugServerURL + "?";
@@ -651,15 +671,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "ImageKey=&"; //string
 		
 		JSONObject jobj = this.smugmugJSONRequest(url);
-		this.printJSONObject(jobj);
+		//this.printJSONObject(jobj);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	System.out.println("ok");
+        	//this.log.printLogLine("ok");
         	return jobj;
         }
-        else { System.out.println("failed"); }
+        else
+        {
+        	//this.log.printLogLine("failed");
+        	this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
+        }
         
         return null;
     }
@@ -730,7 +754,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	//this.log.printLogLine("ok");
         	return jobj;
         }
-        else { this.log.printLogLine("failed"); }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
         
         return null;
 	}
@@ -850,4 +878,5 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
 	}
+
 }
