@@ -56,7 +56,15 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public void logout()
 	{
-		this.smugmug_logout_logout();
+		if (SmugmugConnectorNG.login_sessionID != null) { this.smugmug_logout_logout(); }
+		else
+		{
+			//just to be sure
+        	SmugmugConnectorNG.login_sessionID    = null;
+        	SmugmugConnectorNG.login_userID       = null;
+        	SmugmugConnectorNG.login_nickname     = null;
+        	SmugmugConnectorNG.login_passwordHash = null;
+		}
 	}
 
 	public Vector<ICategory> getTree()
