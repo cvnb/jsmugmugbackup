@@ -10,34 +10,25 @@ public class TransferQueueItemProcessResults implements ITransferQueueItemProces
 {
 	private boolean processed;
 	private boolean successful;
+	private TransferQueueItemActionEnum action;
+	private int id;
 	private String message;
 	private long transferedBytes;
 	
-	public TransferQueueItemProcessResults(boolean processed, boolean successful, String message, long transferedBytes)
+	public TransferQueueItemProcessResults(boolean processed, boolean successful, TransferQueueItemActionEnum action, int id, String message, long transferedBytes)
 	{
 		this.processed = processed;
 		this.successful = successful;
+		this.action = action;
+		this.id = id;
 		this.message = message;
 		this.transferedBytes = transferedBytes;
 	}
 
-	public boolean isProcessed()
-	{
-		return this.processed;
-	}
-
-	public boolean wasSuccessful()
-	{
-		return this.successful;
-	}
-
-	public String getMessage()
-	{
-		return this.message;
-	}
-
-	public long getTransferedBytes()
-	{
-		return this.transferedBytes;
-	}
+	public boolean isProcessed()     { return this.processed; }
+	public boolean wasSuccessful()   { return this.successful; }
+	public TransferQueueItemActionEnum getAction() { return this.action; }
+	public int getID()               { return this.id; }
+	public String getMessage()       { return this.message; }
+	public long getTransferedBytes() { return this.transferedBytes; }
 }

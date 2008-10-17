@@ -10,6 +10,8 @@ public interface ITransferQueueItemProcessResults
 {
 	boolean isProcessed();
 	boolean wasSuccessful();
+	TransferQueueItemActionEnum getAction();
+	int getID();
 	String getMessage();
 	long getTransferedBytes();
 }

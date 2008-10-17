@@ -1,16 +1,12 @@
 package jSmugmugBackup.model;
 
 import jSmugmugBackup.model.accountLayer.*;
-import jSmugmugBackup.model.queue.*;
-import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.*;
-import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.view.login.*;
 
 import java.io.*;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.security.*;
+import java.text.*;
 import java.util.*;
 
 
