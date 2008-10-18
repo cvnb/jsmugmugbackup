@@ -253,7 +253,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         }
         
         //check if someone has manually set the ignore tag
-        if ( !(new File(file.getAbsolutePath() + Constants.UploadIgnoreFilePostfix)).exists() )
+        if ( (new File(file.getAbsolutePath() + Constants.UploadIgnoreFilePostfix)).exists() )
         {
         	this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " - the ignore tag was set ... skipping");
         	return 0;
@@ -767,8 +767,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		catch (ClientProtocolException e) { e.printStackTrace(); }
 		catch (IOException e) { e.printStackTrace(); }
         
-		//System.out.println("response:");
-		//System.out.println(responseBody);
+		System.out.println("response:");
+		System.out.println(responseBody);
 		
         Object obj = JSONValue.parse(responseBody);
         JSONObject jobj = (JSONObject)obj;

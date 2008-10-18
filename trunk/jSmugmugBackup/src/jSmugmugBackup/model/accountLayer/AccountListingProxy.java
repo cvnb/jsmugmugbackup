@@ -249,8 +249,8 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	    
 	    
-        boolean allOK = true;
-        String delayedOutputString = "";
+        boolean countOK = true;
+        String countDelayedOutputString = "";
 
 	    //compare number of files
         IAlbum album = this.getAlbum(albumID);
@@ -261,36 +261,36 @@ public class AccountListingProxy implements IAccountListingProxy
         }
         else 
         {
-        	allOK = false;
+        	countOK = false;
         	if ( fileList.length > imageList.size() )
         	{
         		//some files have not been uploaded
-        		delayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
-        		delayedOutputString += "   listing local files (" + (fileList.length - imageList.size())  + ") ... " + "\n";
+        		countDelayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
+        		countDelayedOutputString += "   listing local files (" + (fileList.length - imageList.size())  + ") ... " + "\n";
         		for (int i=0; i<fileList.length; i++)
         		{
         			boolean match = false;
         			for (IImage image : imageList)
         			{
-        				if (fileList[i].equals(image.getName())) { match = true; }
+        				if (fileList[i].getName().equals(image.getName())) { match = true; }
         			}
-        			if (match == false) { delayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
+        			if (match == false) { countDelayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
         		}
         		
         	}
         	else //if ( fileList.length < imageList.size() )
         	{
         		//some local files are missing
-        		delayedOutputString += "   ERROR: some local files are missing" + "\n";
-        		delayedOutputString += "   listing remote files (" + imageList.size() + ") ... " + "\n";
+        		countDelayedOutputString += "   ERROR: some local files are missing" + "\n";
+        		countDelayedOutputString += "   listing remote files (" + imageList.size() + ") ... " + "\n";
         		for (IImage image : imageList)
         		{
         			boolean match = false;
         			for (int i=0; i<fileList.length; i++)
         			{
-        				if (fileList[i].equals(image.getName())) { match = true; }
+        				if (fileList[i].getName().equals(image.getName())) { match = true; }
         			}
-        			if (match == false) { delayedOutputString += "  " + image.getName() + "\n"; }
+        			if (match == false) { countDelayedOutputString += "  " + image.getName() + "\n"; }
         		}
         	}
           
@@ -303,7 +303,10 @@ public class AccountListingProxy implements IAccountListingProxy
         	*/
         }        
     	
+        
 	    // compare albums
+        boolean compareOK = true;
+        String compareDelayedOutputString = "";
     	for (int i=0; i<fileList.length; i++)
     	{
     		for (IImage image : imageList)
@@ -315,11 +318,11 @@ public class AccountListingProxy implements IAccountListingProxy
       			
     				//compare files
 			    	//this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
-    				delayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
+    				compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
 					if ( localFileMD5Sum.equals(image.getMD5()) )
 					{
 						//this.log.printLogLine("ok");
-						delayedOutputString += "ok" + "\n";
+						compareDelayedOutputString += "ok" + "\n";
 					}
 					else
 					{
@@ -327,21 +330,26 @@ public class AccountListingProxy implements IAccountListingProxy
 						//this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
 						//this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
 
-						allOK = false;
-						delayedOutputString += "failed" + "\n";
-						delayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
-						delayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
+						compareOK = false;
+						compareDelayedOutputString += "failed" + "\n";
+						compareDelayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
+						compareDelayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
 					}
     			}
       		}
       	}
     	
-    	if (allOK)
+    	if (countOK && compareOK)
     	{
     		//this.log.printLogLine(this.getTimeString() + " all md5 sums checked ... ok");
     		this.log.printLogLine("ok (all md5 sums checked)");
     	}
-    	else { this.log.printLog("failed (see below)\n" + delayedOutputString); }
+    	else
+    	{
+    		this.log.printLog("failed (see below)\n");
+    		if (!countOK)   this.log.printLog( countDelayedOutputString );
+    		if (!compareOK) this.log.printLog( compareDelayedOutputString );
+    	}
     }
 
 	
