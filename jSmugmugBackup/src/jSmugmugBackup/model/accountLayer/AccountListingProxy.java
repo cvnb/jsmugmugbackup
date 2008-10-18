@@ -266,18 +266,41 @@ public class AccountListingProxy implements IAccountListingProxy
         	{
         		//some files have not been uploaded
         		delayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
+        		delayedOutputString += "   listing local files (" + (fileList.length - imageList.size())  + ") ... " + "\n";
+        		for (int i=0; i<fileList.length; i++)
+        		{
+        			boolean match = false;
+        			for (IImage image : imageList)
+        			{
+        				if (fileList[i].equals(image.getName())) { match = true; }
+        			}
+        			if (match == false) { delayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
+        		}
+        		
         	}
         	else //if ( fileList.length < imageList.size() )
         	{
         		//some local files are missing
         		delayedOutputString += "   ERROR: some local files are missing" + "\n";
+        		delayedOutputString += "   listing remote files (" + imageList.size() + ") ... " + "\n";
+        		for (IImage image : imageList)
+        		{
+        			boolean match = false;
+        			for (int i=0; i<fileList.length; i++)
+        			{
+        				if (fileList[i].equals(image.getName())) { match = true; }
+        			}
+        			if (match == false) { delayedOutputString += "  " + image.getName() + "\n"; }
+        		}
         	}
           
+        	/*
         	delayedOutputString += "listing local files (" + fileList.length + ") ... " + "\n";
         	for (int i=0; i<fileList.length; i++) { delayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
           
         	delayedOutputString += "listing remote files (" + imageList.size() + ") ... " + "\n";
         	for (IImage image : imageList) { delayedOutputString += "  " + image.getName() + "\n"; }
+        	*/
         }        
     	
 	    // compare albums
