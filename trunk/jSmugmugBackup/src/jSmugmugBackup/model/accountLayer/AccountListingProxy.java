@@ -376,7 +376,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			
 				//this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
 
-				this.addImage(albumID, imageID, imageName);
+				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
 			}
 		}
 		
