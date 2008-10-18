@@ -736,7 +736,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = "http://upload.smugmug.com/" + fileName.getName();
 		
-        HttpClient httpclient = new DefaultHttpClient();
         HttpPut httpPut = new HttpPut(url);
         
         //add header
@@ -762,6 +761,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         long startTime = (new Date()).getTime();
 
         
+        HttpClient httpclient = new DefaultHttpClient();        
         // Create a response handler
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = null;
@@ -769,13 +769,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		catch (ClientProtocolException e) { e.printStackTrace(); }
 		catch (IOException e) { e.printStackTrace(); }
         
-		System.out.println("response:");
-		System.out.println(responseBody);
-		
         Object obj = JSONValue.parse(responseBody);
         JSONObject jobj = (JSONObject)obj;
+
         
-		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
@@ -802,6 +799,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         else
         {
         	this.log.printLogLine("failed");
+        	this.log.printLogLine("response:");
+        	this.log.printLogLine(responseBody);
         	this.printJSONObject(jobj);
         	System.exit(0); //should be removed later ...
         }

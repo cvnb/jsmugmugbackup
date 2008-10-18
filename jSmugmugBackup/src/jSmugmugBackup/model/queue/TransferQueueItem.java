@@ -57,8 +57,8 @@ public class TransferQueueItem implements ITransferQueueItem
 		{
 			this.albumID = id;						
 		}
-		else if ( (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD)) ||
-			      (this.action.equals(TransferQueueItemActionEnum.VERIFY)) )
+		else if ( (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD)) /* ||
+			      (this.action.equals(TransferQueueItemActionEnum.VERIFY))*/ )
 		{
 			this.imageID = id;
 		}
@@ -85,11 +85,13 @@ public class TransferQueueItem implements ITransferQueueItem
 			//this.result_successful = this.smugmugConnector.downloadFile(this.imageID, this.fileName);
 			this.smugmugConnector.downloadFile(this.imageID, this.fileDescriptor);
 		}
+		/*
 		else if (this.action.equals(TransferQueueItemActionEnum.VERIFY))
 		{
 			//this.result_successful = this.smugmugConnector.verifyFile();
-			this.smugmugConnector.verifyFile();
+			//this.smugmugConnector.verifyFile();
 		}
+		*/
 		else this.log.printLogLine("error in TransferQueueItem.process()");
 		
 		this.result_transferedBytes = this.smugmugConnector.getTransferedBytes();

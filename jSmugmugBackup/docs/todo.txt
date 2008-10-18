@@ -3,6 +3,10 @@ todo:
  - verify
  - test download videos
  
+ - mozilla, opera, flash
+ - connection handler
+ 
+ 
  - deleting ???
  - document handling of non-unique names
  - test bad connection handling - speed up timeouts

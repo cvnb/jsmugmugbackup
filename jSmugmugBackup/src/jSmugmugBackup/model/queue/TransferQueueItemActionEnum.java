@@ -6,4 +6,4 @@
  */
 package jSmugmugBackup.model.queue;
 
-public enum TransferQueueItemActionEnum { UPLOAD, DOWNLOAD, VERIFY }
+public enum TransferQueueItemActionEnum { UPLOAD, DOWNLOAD/*, VERIFY*/ }
