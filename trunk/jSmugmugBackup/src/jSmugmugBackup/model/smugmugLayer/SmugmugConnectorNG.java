@@ -397,6 +397,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         JSONObject jobj = (JSONObject)obj;
         //this.printJSONObject(jobj);
         
+        //temporary:
+        if (jobj == null)
+        {
+        	this.log.printLogLine("ERROR: jobj == null ... this is unusual");
+        	this.log.printLogLine(responseBody);
+        }
+        
         return jobj;
 	}
 	
@@ -412,21 +419,31 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "EmailAddress=" + userEmail + "&";
 		url = url + "Password=" + password + "&";
 
-		HttpGet httpget = new HttpGet(url);
-		JSONObject jobj = this.smugmugJSONRequest(httpget);
-		//this.printJSONObject(jobj);
+		do
+		{	
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+	
+			
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	        	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withPassword")) )
+	        {
+	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+	        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
+	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
+	        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
+	        	this.log.printLogLine("ok");
+	        	return;
+	        }
+	        else
+	        {
+	        	//this.log.printLogLine("failed");
+	        	this.log.printLog("retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
 
-		
-        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-        	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withPassword")) )
-        {
-        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
-        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
-        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
-        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
-        	this.log.printLogLine("ok");
-        }
-        else { this.log.printLogLine("failed"); }
 	}
 		
 	private void smugmug_login_withHash()
@@ -442,22 +459,28 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
 		url = url + "PasswordHash=" + SmugmugConnectorNG.login_passwordHash + "&";
 
-		HttpGet httpget = new HttpGet(url);
-		JSONObject jobj = this.smugmugJSONRequest(httpget);
-		//this.printJSONObject(jobj);
-
 		
-        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-        	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withHash")) )
-        {
-        	//this.log.printLogLine("ok");
-        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
-        }
-        else
-        {
-        	this.log.printLog(this.getTimeString() + " smugmug.login.withHash ... failed");
-        	//this.log.printLogLine("failed");
-        }
+		do
+		{	
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+	
+			
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	        	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withHash")) )
+	        {
+	        	//this.log.printLogLine("ok");
+	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+	        }
+	        else
+	        {
+	        	//this.log.printLog(this.getTimeString() + " smugmug.login.withHash ... failed");
+	        	//this.log.printLogLine("failed");
+	        	this.log.printLog("relogin failed, retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
 	}
 		
 	private void smugmug_logout_logout()
@@ -498,24 +521,28 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "Heavy=0&"; //optional
 		//url = url + "SitePassword=????&"; //optional
 		
-		HttpGet httpget = new HttpGet(url);
-		JSONObject jobj = this.smugmugJSONRequest(httpget);
-		//this.printJSONObject(jobj);
+		do
+		{		
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+	        
+			
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	           	 (this.getJSONValue(jobj, "method").equals("smugmug.users.getTree")) )
+	        {        	
+	        	//this.log.printLogLine("ok");
+	           	return jobj;
+	        }
+	        else
+	        {
+	        	//this.log.printLogLine("failed");
+	        	this.log.printLog("smugmug.users.getTree failed, retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
         
-		
-        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-           	 (this.getJSONValue(jobj, "method").equals("smugmug.users.getTree")) )
-        {        	
-        	//this.log.printLogLine("ok");
-           	return jobj;
-        }
-        else
-        {
-        	//this.log.printLogLine("failed");
-        	this.log.printLogLine(this.getTimeString() + " smugmug.users.getTree ... failed");
-        }
-        
-        return null;
+        //return null;
 	}
 		
 	private JSONObject smugmug_images_get(int albumID)
@@ -533,29 +560,34 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "SitePassword=????&"; //optional
 		//url = url + "AlbumKey=" + albumKey + "&"; //seems to be optional, but is not documented
 		
-		HttpGet httpget = new HttpGet(url);
-		JSONObject jobj = this.smugmugJSONRequest(httpget);
-		//this.printJSONObject(jobj);
-      
-        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-           	 (this.getJSONValue(jobj, "method").equals("smugmug.images.get")) )
-        {        	
-        	//this.log.printLogLine("ok");
-           	return jobj;
-        }
-        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-        		  (this.getJSONValue(jobj, "code").equals(new Long(15))) )
-        {
-        	//this.log.printLogLine("empty");
-        	return jobj;
-        }
-        else
-        {
-        	//this.log.printLogLine("failed");
-        	this.log.printLogLine(this.getTimeString() + " smugmug.images.get ... failed");
-        }
+		
+		do
+		{	
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+	      
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	           	 (this.getJSONValue(jobj, "method").equals("smugmug.images.get")) )
+	        {        	
+	        	//this.log.printLogLine("ok");
+	           	return jobj;
+	        }
+	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	        		  (this.getJSONValue(jobj, "code").equals(new Long(15))) )
+	        {
+	        	//this.log.printLogLine("empty");
+	        	return jobj;
+	        }
+	        else
+	        {
+	        	//this.log.printLogLine("failed");
+	        	this.log.printLog("smugmug.images.get failed, retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
         
-        return null;
+        //return null;
 	}
 		
 	private JSONObject smugmug_categories_create(String name)
@@ -755,23 +787,28 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "SitePassword=&"; //string, optional
 		//url = url + "ImageKey=&"; //string
 		
-		HttpGet httpget = new HttpGet(url);
-		JSONObject jobj = this.smugmugJSONRequest(httpget);
-		//this.printJSONObject(jobj);
-		
-        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-             (this.getJSONValue(jobj, "method").equals(methodName)) )
-        {
-        	//this.log.printLogLine("ok");
-        	return jobj;
-        }
-        else
-        {
-        	//this.log.printLogLine("failed");
-        	this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
-        }
+		do
+		{
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+			
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	             (this.getJSONValue(jobj, "method").equals(methodName)) )
+	        {
+	        	//this.log.printLogLine("ok");
+	        	return jobj;
+	        }
+	        else
+	        {
+	        	//this.log.printLogLine("failed");
+	        	//this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
+	        	this.log.printLog(methodName + ", retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
         
-        return null;
+        //return null;
     }
 	
 	private JSONObject smugmug_images_upload(int albumID, File fileName)
@@ -784,101 +821,92 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = "http://upload.smugmug.com/" + fileName.getName();
 		
-        HttpPut httpPut = new HttpPut(url);
+		do
+		{	
+	        HttpPut httpPut = new HttpPut(url);
+	        
+	        //add header
+	        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
+	        httpPut.addHeader("Content-MD5", this.computeMD5Hash(fileName) );
+	        httpPut.addHeader("X-Smug-SessionID", SmugmugConnectorNG.login_sessionID);
+	        httpPut.addHeader("X-Smug-Version", Constants.SmugmugAPIVersion);
+	        httpPut.addHeader("X-Smug-ResponseType", "JSON");
+	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
+	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
+	        httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
+	        //httpPut.addHeader("X-Smug-Caption", ""); //optional
+	        //httpPut.addHeader("X-Smug-Keywords", ""); //optional
+	        //httpPut.addHeader("X-Smug-Latitude", ""); //optional
+	        //httpPut.addHeader("X-Smug-Longitude", ""); //optional
+	        //httpPut.addHeader("X-Smug-Altitude", ""); //optional
+	
+	        
+	        // see: http://www.iana.org/assignments/media-types/
+	        HttpEntity entity = new org.apache.http.entity.FileEntity(fileName, "image/jpeg");
+	        httpPut.setEntity(entity);
+	        
+	        long startTime = (new Date()).getTime();
+	
+	        
+			JSONObject jobj = this.smugmugJSONRequest(httpPut);
+	        
+	        
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	             (this.getJSONValue(jobj, "method").equals(methodName)) )
+	        {
+	            long uploadTime = (new Date()).getTime() - startTime;
+	            double uploadSpeed = 0.0;
+	            //avoid division by zero
+	            if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
+	            
+	            // for statistics
+	        	this.transferedBytes += fileName.length();
+	            
+	            DecimalFormat df = new DecimalFormat("0.0");                            
+	            this.log.printLogLine("ok (" + df.format(uploadSpeed) + " kb/sec)");
+	        	//this.log.printLogLine("ok");
+	        	return jobj;
+	        }
+	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                  (this.getJSONValue(jobj, "message").equals("wrong format ()")))
+	        {
+	        	this.log.printLogLine("failed (wrong format)");
+	            this.log.printLogLine("  ERROR: the file format was not recognized by SmugMug");
+	            this.log.printLogLine("  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
+	            this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+	            
+	            //todo: maybe set ignore tag here ... and print info to console
+	
+	        	return jobj;
+	        }
+	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	                (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
+	        {
+	        	this.log.printLogLine("failed (wrong bytecount)");
+	        	this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
+	        	this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
+	        	this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+	        
+	        	//todo: try again
+	        	//this.log.printLogLine("  ERROR: ... trying again ...");
+	
+	        	return jobj;
+	        }
+	        else
+	        {
+	        	
+	        	this.log.printLog("retrying ... ");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
         
-        //add header
-        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
-        httpPut.addHeader("Content-MD5", this.computeMD5Hash(fileName) );
-        httpPut.addHeader("X-Smug-SessionID", SmugmugConnectorNG.login_sessionID);
-        httpPut.addHeader("X-Smug-Version", Constants.SmugmugAPIVersion);
-        httpPut.addHeader("X-Smug-ResponseType", "JSON");
-        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
-        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
-        httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
-        //httpPut.addHeader("X-Smug-Caption", ""); //optional
-        //httpPut.addHeader("X-Smug-Keywords", ""); //optional
-        //httpPut.addHeader("X-Smug-Latitude", ""); //optional
-        //httpPut.addHeader("X-Smug-Longitude", ""); //optional
-        //httpPut.addHeader("X-Smug-Altitude", ""); //optional
-
-        
-        // see: http://www.iana.org/assignments/media-types/
-        HttpEntity entity = new org.apache.http.entity.FileEntity(fileName, "image/jpeg");
-        httpPut.setEntity(entity);
-        
-        long startTime = (new Date()).getTime();
-
-        
-		JSONObject jobj = this.smugmugJSONRequest(httpPut);
-        
-//        HttpClient httpclient = new DefaultHttpClient();        
-//        // Create a response handler
-//        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-//        String responseBody = null;
-//		try { responseBody = httpclient.execute(httpPut, responseHandler); }
-//		catch (ClientProtocolException e) { e.printStackTrace(); }
-//		catch (IOException e) { e.printStackTrace(); }
-//        
-//        Object obj = JSONValue.parse(responseBody);
-//        JSONObject jobj = (JSONObject)obj;
-
-        
-        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-             (this.getJSONValue(jobj, "method").equals(methodName)) )
-        {
-            long uploadTime = (new Date()).getTime() - startTime;
-            double uploadSpeed = 0.0;
-            //avoid division by zero
-            if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
-            
-            // for statistics
-        	this.transferedBytes += fileName.length();
-            
-            DecimalFormat df = new DecimalFormat("0.0");                            
-            this.log.printLogLine("ok (" + df.format(uploadSpeed) + " kb/sec)");
-        	//this.log.printLogLine("ok");
-        	return jobj;
-        }
-        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-                  (this.getJSONValue(jobj, "message").equals("wrong format ()")))
-        {
-        	this.log.printLogLine("failed (wrong format)");
-            this.log.printLogLine("  ERROR: the file format was not recognized by SmugMug");
-            this.log.printLogLine("  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
-            this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
-            
-            //todo: maybe set ignore tag here ... and print info to console
-
-        	return jobj;
-        }
-        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-                (this.getJSONValue(jobj, "method").equals(methodName)) &&
-                (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
-        {
-        	this.log.printLogLine("failed (wrong bytecount)");
-        	this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
-        	this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
-        	this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
-        
-        	//todo: try again
-        	//this.log.printLogLine("  ERROR: ... trying again ...");
-
-        	return jobj;
-        }
-        else
-        {
-        	this.log.printLogLine("failed");
-        	//this.log.printLogLine("response:");
-        	//this.log.printLogLine(responseBody);
-        	this.printJSONObject(jobj);
-        	System.exit(0); //should be removed later ...
-        }
-        
-        return null;
+        //return null;
 	}
 	
 	
+
 	//======================== private - helper ==============================
 	
 	private void printJSONObject(JSONObject jobj)
