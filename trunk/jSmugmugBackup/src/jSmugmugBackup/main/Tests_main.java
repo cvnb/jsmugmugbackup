@@ -7,6 +7,7 @@
 package jSmugmugBackup.main;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 import jSmugmugBackup.model.accountLayer.*;
@@ -16,6 +17,7 @@ public class Tests_main {
 
 	public static void main(String[] args)
 	{
+		/*
 		//get login data
 		String userEmail = null;
 		System.out.print("    Username (Email): ");
@@ -34,7 +36,7 @@ public class Tests_main {
     		System.out.print("    Password: ");
     		password = in.nextLine();
 		}
-		
+		*/
 		
 		
 		//test SmugmugConnectorNG
@@ -55,11 +57,15 @@ public class Tests_main {
 
 		
 		//test AccountListingProxy
-		IAccountListingProxy proxy = new AccountListingProxy();
+		//IAccountListingProxy proxy = new AccountListingProxy();
 		//proxy.login(userEmail, password);
-		proxy.getCategoryList();
-		proxy.logout();
+		//proxy.getCategoryList();
+		//proxy.logout();
 
+		File tag = new File("/home/paul/temp/jSmugmugBackup/upload/move.avi.jSmugmugBackup-upload-exclude.tag");
+		try { tag.createNewFile(); }
+		catch (IOException e) { e.printStackTrace(); }
+		
 	}
 
 }

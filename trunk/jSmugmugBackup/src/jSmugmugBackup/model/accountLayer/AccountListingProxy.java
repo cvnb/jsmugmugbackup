@@ -208,30 +208,8 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		int downloadCount = 0;
 		
-		//build target dir: search for category, subcategory, and album name
-		// ... maybe this can be moved into a separate method
-		String targetDir = targetBaseDir;
-		for (ICategory c : this.categoryList)
-		{
-			for (ISubcategory s : c.getSubcategoryList())
-			{
-				for (IAlbum a : s.getAlbumList())
-				{
-					if (a.getID() == albumID)
-					{
-						targetDir += c.getName() + "/" + s.getName() + "/" + a.getName() + "/";
-					}
-				}
-			}
-			
-			for (IAlbum a : c.getAlbumList())
-			{
-				if (a.getID() == albumID)
-				{
-					targetDir += c.getName() + "/" + a.getName() + "/";
-				}
-			}
-		}		
+		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
+	
 		
 		//check target dir
 		this.log.printLog("checking dir: " + targetDir + " ... ");
@@ -255,44 +233,24 @@ public class AccountListingProxy implements IAccountListingProxy
 	
     public void verifyAlbum(int albumID, String targetBaseDir)
     {
-    	this.log.printLogLine(this.getTimeString() + " verifying album (id:" + albumID + ", target:" + targetBaseDir + ") ...");
-
-		//build target dir: search for category, subcategory, and album name
-		// ... maybe this can be moved into a separate method
-		String targetDir = targetBaseDir;
-		for (ICategory c : this.categoryList)
-		{
-			for (ISubcategory s : c.getSubcategoryList())
-			{
-				for (IAlbum a : s.getAlbumList())
-				{
-					if (a.getID() == albumID)
-					{
-						targetDir += c.getName() + "/" + s.getName() + "/" + a.getName() + "/";
-					}
-				}
-			}
-			
-			for (IAlbum a : c.getAlbumList())
-			{
-				if (a.getID() == albumID)
-				{
-					targetDir += c.getName() + "/" + a.getName() + "/";
-				}
-			}
-		}		
-
+		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
+    	this.log.printLog(this.getTimeString() + " verifying album (id:" + albumID + ", target:" + targetDir + ") ... ");
 
 		File dir = new File(targetDir);
 	    File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
 	    if (fileList == null)
 	    {
-	    	/* Either dir does not exist or is not a directory */ 
+	    	/* Either dir does not exist or is not a directory */
+	    	this.log.printLogLine("failed");
 	      	this.log.printLogLine("ERROR: local album path could not be found");
 	      	return;
 	    }
 	    Arrays.sort(fileList, new Constants.FileComparator()); //sort files, convienence only
 
+	    
+	    
+        boolean allOK = true;
+        String delayedOutputString = "";
 
 	    //compare number of files
         IAlbum album = this.getAlbum(albumID);
@@ -303,22 +261,23 @@ public class AccountListingProxy implements IAccountListingProxy
         }
         else 
         {
+        	allOK = false;
         	if ( fileList.length > imageList.size() )
         	{
         		//some files have not been uploaded
-        		this.log.printLogLine("ERROR: some files have not been uploaded");
+        		delayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
         	}
         	else //if ( fileList.length < imageList.size() )
         	{
         		//some local files are missing
-        		this.log.printLogLine("ERROR: some local files are missing");
+        		delayedOutputString += "   ERROR: some local files are missing" + "\n";
         	}
           
-        	this.log.printLogLine("listing local files (" + fileList.length + ") ... ");
-        	for (int i=0; i<fileList.length; i++) { this.log.printLogLine("  " + fileList[i].getAbsolutePath() ); }
+        	delayedOutputString += "listing local files (" + fileList.length + ") ... " + "\n";
+        	for (int i=0; i<fileList.length; i++) { delayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
           
-        	this.log.printLogLine("listing remote files (" + imageList.size() + ") ... ");
-        	for (IImage image : imageList) { this.log.printLogLine("  " + image.getName() ); }
+        	delayedOutputString += "listing remote files (" + imageList.size() + ") ... " + "\n";
+        	for (IImage image : imageList) { delayedOutputString += "  " + image.getName() + "\n"; }
         }        
     	
 	    // compare albums
@@ -332,20 +291,37 @@ public class AccountListingProxy implements IAccountListingProxy
     				String localFileMD5Sum = this.computeMD5Hash(fileList[i]);
       			
     				//compare files
-			    	this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
+			    	//this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
+    				delayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
 					if ( localFileMD5Sum.equals(image.getMD5()) )
 					{
-						this.log.printLogLine("ok");
+						//this.log.printLogLine("ok");
+						delayedOutputString += "ok" + "\n";
 					}
 					else
 					{
-						this.log.printLogLine("failed");
-						this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
-						this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
+						//this.log.printLogLine("failed");
+						//this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
+						//this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
+
+						allOK = false;
+						delayedOutputString += "failed" + "\n";
+						delayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
+						delayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
 					}
     			}
       		}
       	}
+    	
+    	if (allOK)
+    	{
+    		//this.log.printLogLine(this.getTimeString() + " all md5 sums checked ... ok");
+    		this.log.printLogLine("ok (all md5 sums checked)");
+    	}
+    	else
+    	{
+    		this.log.printLog("failed (see below)\n" + delayedOutputString);
+    	}
     }
 
 	
@@ -633,6 +609,37 @@ public class AccountListingProxy implements IAccountListingProxy
 		}
 		
 		return null;
+	}
+	
+	
+	private String getAlbumDirEnd(int albumID)
+	{
+		//build album dir postfix: search for category, subcategory, and album name
+		String resultDir = "";
+		
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID)
+					{
+						resultDir += c.getName() + "/" + s.getName() + "/" + a.getName() + "/";
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID)
+				{
+					resultDir += c.getName() + "/" + a.getName() + "/";
+				}
+			}
+		}
+		
+		return resultDir;
 	}
 	
 	

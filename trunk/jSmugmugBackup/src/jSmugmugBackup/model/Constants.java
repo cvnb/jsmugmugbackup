@@ -21,6 +21,8 @@ public class Constants
 	public static final String SmugmugAPIKey = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
 	public static final String SmugmugAPIVersion = "1.2.0";
 	
+	public static final int UploadFileSizeLimit = 512*1024*1024; //512MB
+	public static final String UploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
 	
 	//...hope thats all possible types
 	public static final String[] supportedFileTypes = {".jpg", ".jpeg", ".png", ".gif", ".tiff",
