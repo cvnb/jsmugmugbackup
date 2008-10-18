@@ -261,7 +261,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
     	JSONObject jobj = this.smugmug_images_upload(albumID, file);
     	//this.printJSONObject(jobj);
-    	return ((Number)this.getJSONValue(jobj, "Image.id")).intValue();
+    	Object obj = this.getJSONValue(jobj, "Image.id");
+    	if (obj != null) { return ((Number)obj).intValue(); }
+    	else return 0;
 	}
 		
 	public void downloadFile(int imageID, File fileName)
@@ -319,10 +321,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		catch (IOException e)           { e.printStackTrace(); }
 	}
 
-	public void verifyFile() {
-		// TODO Auto-generated method stub
-		
-	}
+//	public void verifyFile() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 	public void deleteFile() {
 		// TODO Auto-generated method stub
@@ -788,6 +790,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             DecimalFormat df = new DecimalFormat("0.0");                            
             this.log.printLogLine("ok (" + df.format(uploadSpeed) + " kb/sec)");
         	//this.log.printLogLine("ok");
+        	return jobj;
+        }
+        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                  (this.getJSONValue(jobj, "message").equals("wrong format ()")))
+        {
+        	this.log.printLogLine("failed (wrong format)");
         	return jobj;
         }
         else
