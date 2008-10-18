@@ -234,7 +234,7 @@ public class AccountListingProxy implements IAccountListingProxy
     public void verifyAlbum(int albumID, String targetBaseDir)
     {
 		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
-    	this.log.printLog(this.getTimeString() + " verifying album (id:" + albumID + ", target:" + targetDir + ") ... ");
+    	this.log.printLog(this.getTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
 
 		File dir = new File(targetDir);
 	    File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
@@ -318,10 +318,7 @@ public class AccountListingProxy implements IAccountListingProxy
     		//this.log.printLogLine(this.getTimeString() + " all md5 sums checked ... ok");
     		this.log.printLogLine("ok (all md5 sums checked)");
     	}
-    	else
-    	{
-    		this.log.printLog("failed (see below)\n" + delayedOutputString);
-    	}
+    	else { this.log.printLog("failed (see below)\n" + delayedOutputString); }
     }
 
 	
