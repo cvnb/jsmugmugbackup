@@ -245,16 +245,23 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public int uploadFile(int albumID, File file)
 	{
-        // check if file is smaller than 512 MB
-        if ( file.length() <= (512*1024*1024) )
-        {	
-        	JSONObject jobj = this.smugmug_images_upload(albumID, file);
-        	//this.printJSONObject(jobj);
-        	return ((Number)this.getJSONValue(jobj, "Image.id")).intValue();
+        // check if file is smaller than 512 MB and
+        if (file.length() > (Constants.UploadFileSizeLimit))
+        {
+        	this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
+        	return 0;
         }
-        else this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
+        
+        //check if someone has manually set the ignore tag
+        if ( !(new File(file.getAbsolutePath() + Constants.UploadIgnoreFilePostfix)).exists() )
+        {
+        	this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " - the ignore tag was set ... skipping");
+        	return 0;
+        }
 
-        return 0;
+    	JSONObject jobj = this.smugmug_images_upload(albumID, file);
+    	//this.printJSONObject(jobj);
+    	return ((Number)this.getJSONValue(jobj, "Image.id")).intValue();
 	}
 		
 	public void downloadFile(int imageID, File fileName)
