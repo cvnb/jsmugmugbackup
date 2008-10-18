@@ -1,11 +1,6 @@
 todo:
  - GUI
- - verify
  - test download videos
- 
- - mozilla, opera, flash
- - connection handler
- 
  
  - deleting ???
  - document handling of non-unique names

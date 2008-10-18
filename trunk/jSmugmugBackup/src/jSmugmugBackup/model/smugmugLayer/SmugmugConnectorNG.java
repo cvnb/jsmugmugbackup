@@ -336,18 +336,63 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	//======================== private - smugmug =============================
 	
-	private JSONObject smugmugJSONRequest(String url)
+	private JSONObject smugmugJSONRequest(HttpRequestBase httpRequest)
 	{
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpget = new HttpGet(url); 
-
-        // Create a response handler
-        ResponseHandler<String> responseHandler = new BasicResponseHandler();
         String responseBody = null;
-		try { responseBody = httpclient.execute(httpget, responseHandler); }
-		catch (ClientProtocolException e) { e.printStackTrace(); }
-		catch (IOException e) { e.printStackTrace(); }
-        
+		
+		//repeat until success ... pretty agressive
+		// - maybe there should be a relogin in the loop???
+		boolean repeat = false;
+		do
+		{
+	        HttpClient httpclient = new DefaultHttpClient();        
+	
+	        // Create a response handler
+	        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			
+	        try
+			{
+				responseBody = httpclient.execute(httpRequest, responseHandler);
+				repeat = false; //no exception has been caught up to here, so we can exit the loop
+			}
+			catch (ClientProtocolException e)
+			{
+            	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ...");
+            	this.log.printLog("waiting ...");
+            	this.pause(Constants.retryWait);
+            	this.log.printLog("retrying ...");
+            	repeat = true;
+			}
+			catch (FileNotFoundException e)
+			{
+				this.log.printLog("caught FileNotFoundException ... ");
+				repeat = false;
+			}
+            catch (IOException e) //maybe repeating on IOException is a little too optimistic
+            {
+            	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ...");
+            	this.log.printLog("waiting ...");
+            	this.pause(Constants.retryWait);
+            	this.log.printLog("retrying ...");
+            	repeat = true;
+            }
+			catch (java.lang.RuntimeException e)
+            {
+            	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ...");
+            	this.log.printLog("waiting ...");
+            	this.pause(Constants.retryWait);
+            	this.log.printLog("retrying ...");
+            	repeat = true;
+            }
+            catch (Exception e)
+            {
+            	this.log.printLog("caught Exception (message:" + e.getMessage() + ") ...");
+                e.printStackTrace();
+            	repeat = false;
+            }
+		} while (repeat); //infinite loop until repeat becomes false
+
+		
         Object obj = JSONValue.parse(responseBody);
         JSONObject jobj = (JSONObject)obj;
         //this.printJSONObject(jobj);
@@ -367,8 +412,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "EmailAddress=" + userEmail + "&";
 		url = url + "Password=" + password + "&";
 
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 
 		
@@ -397,8 +442,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
 		url = url + "PasswordHash=" + SmugmugConnectorNG.login_passwordHash + "&";
 
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 
 		
@@ -425,8 +470,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=smugmug.logout&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
@@ -453,8 +498,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "Heavy=0&"; //optional
 		//url = url + "SitePassword=????&"; //optional
 		
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
         
 		
@@ -488,8 +533,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "SitePassword=????&"; //optional
 		//url = url + "AlbumKey=" + albumKey + "&"; //seems to be optional, but is not documented
 		
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
       
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
@@ -525,8 +570,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + name + "&";
-				
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 		//this.log.printLogLine("url: " + url);
 		
@@ -556,8 +602,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "Name=" + name + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 		//this.log.printLogLine("url: " + url);
 		
@@ -645,8 +691,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		// community
 		//url = url + "CommunityID=&"; //integer, optional, default: 0
 		
-		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 		//this.log.printLogLine("url: " + url);
 		
@@ -676,7 +722,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "SitePassword=&"; //string, optional
 		//url = url + "ImageKey=&"; //string
 		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
@@ -708,7 +755,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "SitePassword=&"; //string, optional
 		//url = url + "ImageKey=&"; //string
 		
-		JSONObject jobj = this.smugmugJSONRequest(url);
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
 		
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
@@ -761,16 +809,18 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         long startTime = (new Date()).getTime();
 
         
-        HttpClient httpclient = new DefaultHttpClient();        
-        // Create a response handler
-        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        String responseBody = null;
-		try { responseBody = httpclient.execute(httpPut, responseHandler); }
-		catch (ClientProtocolException e) { e.printStackTrace(); }
-		catch (IOException e) { e.printStackTrace(); }
+		JSONObject jobj = this.smugmugJSONRequest(httpPut);
         
-        Object obj = JSONValue.parse(responseBody);
-        JSONObject jobj = (JSONObject)obj;
+//        HttpClient httpclient = new DefaultHttpClient();        
+//        // Create a response handler
+//        ResponseHandler<String> responseHandler = new BasicResponseHandler();
+//        String responseBody = null;
+//		try { responseBody = httpclient.execute(httpPut, responseHandler); }
+//		catch (ClientProtocolException e) { e.printStackTrace(); }
+//		catch (IOException e) { e.printStackTrace(); }
+//        
+//        Object obj = JSONValue.parse(responseBody);
+//        JSONObject jobj = (JSONObject)obj;
 
         
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
@@ -794,13 +844,33 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                   (this.getJSONValue(jobj, "message").equals("wrong format ()")))
         {
         	this.log.printLogLine("failed (wrong format)");
+            this.log.printLogLine("  ERROR: the file format was not recognized by SmugMug");
+            this.log.printLogLine("  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
+            this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+            
+            //todo: maybe set ignore tag here ... and print info to console
+
+        	return jobj;
+        }
+        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
+        {
+        	this.log.printLogLine("failed (wrong bytecount)");
+        	this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
+        	this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
+        	this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+        
+        	//todo: try again
+        	//this.log.printLogLine("  ERROR: ... trying again ...");
+
         	return jobj;
         }
         else
         {
         	this.log.printLogLine("failed");
-        	this.log.printLogLine("response:");
-        	this.log.printLogLine(responseBody);
+        	//this.log.printLogLine("response:");
+        	//this.log.printLogLine(responseBody);
         	this.printJSONObject(jobj);
         	System.exit(0); //should be removed later ...
         }
@@ -923,5 +993,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
 	}
+	
+    private void pause(long millisecs)
+    {
+    	try { Thread.sleep(millisecs); }
+    	catch (InterruptedException e) {}
+    }
+
 
 }
