@@ -245,6 +245,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public int uploadFile(int albumID, File file)
 	{
+		//this.log.printLog("uploading ... ");
+		
         // check if file is smaller than 512 MB and
         if (file.length() > (Constants.UploadFileSizeLimit))
         {
@@ -357,10 +359,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			}
 			catch (ClientProtocolException e)
 			{
-            	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ...");
-            	this.log.printLog("waiting ...");
+            	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog("waiting ... ");
             	this.pause(Constants.retryWait);
-            	this.log.printLog("retrying ...");
+            	this.log.printLog("retrying ... ");
             	repeat = true;
 			}
 			catch (FileNotFoundException e)
@@ -370,23 +372,23 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			}
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
             {
-            	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ...");
-            	this.log.printLog("waiting ...");
+            	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog("waiting ... ");
             	this.pause(Constants.retryWait);
-            	this.log.printLog("retrying ...");
+            	this.log.printLog("retrying ... ");
             	repeat = true;
             }
 			catch (java.lang.RuntimeException e)
             {
-            	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ...");
-            	this.log.printLog("waiting ...");
+            	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog("waiting ... ");
             	this.pause(Constants.retryWait);
-            	this.log.printLog("retrying ...");
+            	this.log.printLog("retrying ... ");
             	repeat = true;
             }
             catch (Exception e)
             {
-            	this.log.printLog("caught Exception (message:" + e.getMessage() + ") ...");
+            	this.log.printLog("caught Exception (message:" + e.getMessage() + ") ... ");
                 e.printStackTrace();
             	repeat = false;
             }
@@ -472,6 +474,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        {
 	        	//this.log.printLogLine("ok");
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+	        	return;
 	        }
 	        else
 	        {
@@ -601,7 +604,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Name=" + name + "&";
+		url = url + "Name=" + this.encodeForURL(name) + "&";
 		
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -631,7 +634,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Name=" + name + "&";
+		url = url + "Name=" + this.encodeForURL(name) + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
 		HttpGet httpget = new HttpGet(url);
@@ -662,7 +665,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = Constants.SmugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Title=" + title + "&";
+		url = url + "Title=" + this.encodeForURL(title) + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
 		//essentials
@@ -819,7 +822,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = "http://upload.smugmug.com/" + fileName.getName();
+		String url = "http://upload.smugmug.com/" + this.encodeForURL(fileName.getName());
 		
 		do
 		{	
@@ -1028,5 +1031,21 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	catch (InterruptedException e) {}
     }
 
+    private String encodeForURL(String str)
+    {
+    	
+    	String encodedStr = str;
+    	
+    	encodedStr = encodedStr.replace("%", "%25"); //do this first    	
+    	
+    	encodedStr = encodedStr.replace(" ", "%20"); //space character
+    	encodedStr = encodedStr.replace("?", "%22"); 
+    	encodedStr = encodedStr.replace("<", "%3C");
+    	encodedStr = encodedStr.replace(">", "%3E");
+    	
+    	//this.log.printLogLine("encodeForURL: " + str + " --> " + encodedStr);
+    	
+    	return encodedStr;
+    }
 
 }
