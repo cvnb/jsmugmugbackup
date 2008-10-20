@@ -1,10 +1,8 @@
 todo:
  - GUI
- - test download videos
  
  - deleting ???
  - document handling of non-unique names
- - test bad connection handling - speed up timeouts
  - make login singleton - http://en.wikipedia.org/wiki/Singleton_pattern
  - supported file types - are all videos of type "MP4"?
  - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html

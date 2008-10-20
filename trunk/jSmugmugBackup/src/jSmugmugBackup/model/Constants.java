@@ -12,16 +12,16 @@ import java.util.Comparator;
 
 public class Constants
 {
-	public static final String version = "0.2";
+	public static final String version = "0.3 (dev)";
     public static final String logfile = "jSmugmugBackup.log";
-    public static final int retryWait = 20000; //time to wait before retrying
+    public static final int retryWait  = 20000; //time to wait before retrying
 
     
-	public static final String SmugmugServerURL = "https://api.smugmug.com/hack/json/1.2.0/";
-	public static final String SmugmugAPIKey = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
+	public static final String SmugmugServerURL  = "https://api.smugmug.com/hack/json/1.2.0/";
+	public static final String SmugmugAPIKey     = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
 	public static final String SmugmugAPIVersion = "1.2.0";
 	
-	public static final int UploadFileSizeLimit = 512*1024*1024; //512MB
+	public static final int UploadFileSizeLimit        = 512*1024*1024; //512MB
 	public static final String UploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
 	
 	//...hope thats all possible types

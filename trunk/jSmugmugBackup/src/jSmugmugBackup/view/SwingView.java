@@ -1,17 +1,15 @@
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.model.accountLayer.ICategory;
 import jSmugmugBackup.model.*;
-import jSmugmugBackup.view.login.ILoginView;
-import jSmugmugBackup.view.login.LoginViewSwing;
+import jSmugmugBackup.model.accountLayer.*;
+import jSmugmugBackup.view.login.*;
+
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.tree.*;
-import java.awt.Dimension;
-import java.util.Vector;
 
 public class SwingView extends JFrame implements IView
 {
@@ -63,7 +61,7 @@ public class SwingView extends JFrame implements IView
 		this.setSize(560, 452);
 		this.setContentPane(getJContentPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("jSmugmugBackup v" + Constants.version);
+		this.setTitle("jSmugmugBackup v" + Constants.version + " (experimental GUI)");
 		this.setVisible(true);
 	}
 
@@ -299,39 +297,54 @@ public class SwingView extends JFrame implements IView
 	public void addDeleteStartButtonListener(ActionListener listener) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	
+	}	
 
 	//@Override
 	public void refreshFileListing(Vector<ICategory> categoryList)
 	{
-//		//this.files_root_node = new DefaultMutableTreeNode(accountListing.getNickName());
-//		
-//		for (ICategoryType cat : accountListing.getCategoryList())
-//		{
-//			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(cat.getName());
-//			for (IAlbumType a : cat.getAlbumList())
-//			{
-//				DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
-//				for (IImageType i : a.getImageList())
-//				{
-//					albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
-//				}
-//				categoryTreeNode.add(albumTreeNode);
-//			}
-//			
-//			this.files_root_node.add(categoryTreeNode);
-//		}
-//		
-//		//expand the tree
-//		for (int row=0; row < this.getJTree_files().getRowCount(); row++)
-//		{
-//			this.getJTree_files().expandRow(row);
-//		}
+		this.files_root_node = new DefaultMutableTreeNode("account");
+		
+		for (ICategory c : categoryList)
+		{
+			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(c.getName());
+			
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				DefaultMutableTreeNode subcategoryTreeNode = new DefaultMutableTreeNode(s.getName());
+				for (IAlbum a : s.getAlbumList())
+				{
+					DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
+					for (IImage i : a.getImageList())
+					{
+						albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
+					}
+					subcategoryTreeNode.add(albumTreeNode);
+				}
+				categoryTreeNode.add(subcategoryTreeNode);
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
+				for (IImage i : a.getImageList())
+				{
+					albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
+				}
+				categoryTreeNode.add(albumTreeNode);
+			}
+			
+			this.files_root_node.add(categoryTreeNode);
+		}
+		
+		//expand the tree
+		for (int row=0; row < this.getJTree_files().getRowCount(); row++)
+		{
+			this.getJTree_files().expandRow(row);
+		}
 	}
 	
-    public void showError(String errMessage) {
+    public void showError(String errMessage)
+    {
         JOptionPane.showMessageDialog(this, errMessage);
     }
 

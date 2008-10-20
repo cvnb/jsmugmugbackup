@@ -24,9 +24,11 @@ public class Main {
         IView view = null;
         
         //decide weather to use Swing or the commandline
-        //if (args.length == 0) { view = new SwingView(model); }
-        //else { view = new CmdView(model, args); }
-        view = new CmdView(model, args);
+        if (args.length == 0) { view = new SwingView(model); }
+        else { view = new CmdView(model, args); }
+        
+        //only use the commandline-interface
+        //view = new CmdView(model, args);
         
         //init controller
         @SuppressWarnings("unused")
