@@ -382,7 +382,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
             	this.pause(Constants.retryWait);
-            	this.log.printLog("retrying ... ");
+            	this.log.printLog(this.getTimeString() + " retrying ... ");
             	repeat = true;
 			}
 			catch (FileNotFoundException e)
@@ -395,7 +395,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
             	this.pause(Constants.retryWait);
-            	this.log.printLog("retrying ... ");
+            	this.log.printLog(this.getTimeString() + " retrying ... ");
             	repeat = true;
             }
 			catch (java.lang.RuntimeException e)
@@ -403,12 +403,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
             	this.pause(Constants.retryWait);
-            	this.log.printLog("retrying ... ");
+            	this.log.printLog(this.getTimeString() + " retrying ... ");
             	repeat = true;
             }
             catch (Exception e)
             {
-            	this.log.printLog("caught Exception (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog(this.getTimeString() + " caught Exception (message:" + e.getMessage() + ") ... ");
                 e.printStackTrace();
             	repeat = false;
             }
@@ -638,7 +638,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
         	return jobj;
         }
-        else { this.log.printLogLine("failed"); }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
         
         return null;
     }
@@ -669,7 +673,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
            	return jobj;
         }
-        else { this.log.printLogLine("failed"); }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
         
         return null;
 	}
@@ -757,7 +765,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
            	return jobj;
         }
-        else { this.log.printLogLine("failed"); }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
         
         return null;
 	}
@@ -920,7 +932,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        else
 	        {
 	        	
-	        	this.log.printLog("retrying ... ");
+	        	this.log.printLog(this.getTimeString() + " retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -934,7 +946,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private void printJSONObject(JSONObject jobj)
 	{
-		System.out.println("jobj=" + jobj);
+		this.log.printLogLine("DEBUG: printing JSONObject ...");
+		//this.log.printLogLine("jobj=" + jobj);
 		
 		this.printJSONObject(jobj, "");
 	}
@@ -948,12 +961,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			
 			if (value instanceof JSONObject)
 			{
-				System.out.println(indent + key + ": ");
+				this.log.printLogLine("DEBUG:" + indent + key + ": ");
 				this.printJSONObject((JSONObject)value, indent + "   ");
 			}
 			else if (value instanceof JSONArray)
 			{
-				System.out.println(indent + key + " (Array)");
+				this.log.printLogLine("DEBUG:" + indent + key + " (Array)");
 				JSONArray array = (JSONArray)value;
 				for (int j = 0; j < array.size(); j++)
 				{
@@ -961,7 +974,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					this.printJSONObject((JSONObject)o, indent + key + "[" + j + "].");
 				}
 			}
-			else System.out.println(indent + key + ": " + value);
+			else this.log.printLogLine("DEBUG:" + indent + key + ": " + value);
 			
 			//System.out.println(indent + jobj.get(jobj.keySet().toArray()[i]));
 			
