@@ -269,10 +269,30 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	}
 		
 	public void downloadFile(int imageID, File fileName)
-	{		
-		JSONObject jobj = this.smugmug_images_getURLs(imageID);
-		String imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
-    	//System.out.println("url = " + imageURL);
+	{
+    	//JSONObject jobj = this.smugmug_images_getURLs(imageID); //retrieves just the urls
+		JSONObject jobj = this.smugmug_images_getInfo(imageID); // get image_info, including url
+		//this.printJSONObject(jobj);
+		
+		String imageFormat = (String)this.getJSONValue(jobj, "Image.Format");
+		String imageURL = null;
+		
+        if (imageFormat.equals("MP4")) // maybe there are other video types too
+        {
+            int video_width = ((Number)this.getJSONValue(jobj, "Image.Width")).intValue();
+            
+            //download always the largest resolution available
+            if (video_width == 320)       { imageURL = (String)this.getJSONValue(jobj, "Image.Video320URL"); }
+            else if (video_width == 640)  { imageURL = (String)this.getJSONValue(jobj, "Image.Video640URL"); }
+            else if (video_width == 960)  { imageURL = (String)this.getJSONValue(jobj, "Image.Video960URL"); }
+            else if (video_width == 1280) { imageURL = (String)this.getJSONValue(jobj, "Image.Video1280URL"); }
+            else { this.log.printLogLine("failed (could not retrieve video url))"); }
+        }
+        else
+        {
+        	//this is most likely a normal picture
+        	imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
+        }
 		
 		this.downloadFile(imageURL, fileName);		
 	}
