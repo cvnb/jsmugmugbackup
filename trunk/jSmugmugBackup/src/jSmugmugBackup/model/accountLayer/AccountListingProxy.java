@@ -357,6 +357,11 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		this.transferQueue.startSyncProcessing();
 		
+		
+		this.log.printLogLine("waiting 30 sec for smugmug to process the images ...");
+		this.pause(30000);
+		
+		
 		//collect Results
 		this.connector.relogin(); //probably not nessceary
 		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
@@ -701,6 +706,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
 	}
+	
+    private void pause(long millisecs)
+    {
+    	try { Thread.sleep(millisecs); }
+    	catch (InterruptedException e) {}
+    }
 
 	
 }
