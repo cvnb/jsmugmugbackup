@@ -826,7 +826,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        {
 	        	//this.log.printLogLine("failed");
 	        	//this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
-	        	this.log.printLog(methodName + ", retrying ...");
+	        	this.log.printLog(methodName + "retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -904,8 +904,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	return jobj;
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-	                (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
+	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                  (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
 	        {
 	        	this.log.printLogLine("failed (wrong bytecount)");
 	        	this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
