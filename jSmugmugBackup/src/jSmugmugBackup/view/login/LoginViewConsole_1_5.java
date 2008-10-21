@@ -32,6 +32,7 @@ public class LoginViewConsole_1_5 implements ILoginView
 		System.out.print("    Username (Email): ");
 		Scanner in = new Scanner(System.in);
 		userEmail = in.nextLine();
+		
 		return userEmail;
 	}
 	
