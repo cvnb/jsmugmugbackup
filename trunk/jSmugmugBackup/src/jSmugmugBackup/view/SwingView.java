@@ -3,6 +3,8 @@ package jSmugmugBackup.view;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.login.*;
+import jSmugmugBackup.view.swing_dialogs.SwingDownloadDialog;
+import jSmugmugBackup.view.swing_dialogs.SwingUploadDialog;
 
 import java.util.*;
 

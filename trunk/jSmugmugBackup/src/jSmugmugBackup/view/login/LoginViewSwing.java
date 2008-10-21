@@ -7,8 +7,8 @@
 package jSmugmugBackup.view.login;
 
 import jSmugmugBackup.view.Logger;
-import jSmugmugBackup.view.SmugmugLoginSwingDialog;
 import jSmugmugBackup.view.SwingView;
+import jSmugmugBackup.view.swing_dialogs.SwingLoginDialog;
 
 import javax.swing.JFrame;
 
@@ -37,8 +37,8 @@ public class LoginViewSwing implements ILoginView
 
 	public String requestUserEmail()
 	{
-		SmugmugLoginSwingDialog dialog = null;
-		dialog = new SmugmugLoginSwingDialog( (JFrame)this.view );
+		SwingLoginDialog dialog = null;
+		dialog = new SwingLoginDialog( (JFrame)this.view );
 		dialog.setModal(true); //doesn't work here
 		dialog.setVisible(true);
 
