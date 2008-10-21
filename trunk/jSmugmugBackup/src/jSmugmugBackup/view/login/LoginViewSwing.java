@@ -47,7 +47,7 @@ public class LoginViewSwing implements ILoginView
 		//...
 		this.pause(100); // just wait a little
 		while (dialog.isVisible()) this.pause(100);
-		//username and password should nopw be available in view
+		//username and password should now be available in view
 		
 		
 		this.initUserEmail = dialog.getJTextField_username().getText();
