@@ -30,6 +30,8 @@ public class SwingLoginDialog extends JDialog {
 	public SwingLoginDialog(Frame owner) {
 		super(owner);
 		initialize();
+		
+		
 	}
 
 	/**
