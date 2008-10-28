@@ -877,6 +877,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	        
 	        // see: http://www.iana.org/assignments/media-types/
+	        // ... maybe this causes the upload-problems with videos???
 	        HttpEntity entity = new org.apache.http.entity.FileEntity(fileName, "image/jpeg");
 	        httpPut.setEntity(entity);
 	        
@@ -919,20 +920,21 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
 	                  (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
 	        {
-	        	this.log.printLogLine("failed (wrong bytecount)");
-	        	this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
-	        	this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
-	        	this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+	        	//this.log.printLogLine("failed (wrong bytecount)");
+	        	//this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
+	        	//this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
+	        	//this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
 	        
-	        	//todo: try again
-	        	//this.log.printLogLine("  ERROR: ... trying again ...");
-	
-	        	return jobj;
+	        	//return jobj;
+
+            	this.log.printLog("waiting ... ");
+            	this.pause(Constants.retryWait);
+            	this.log.printLog(this.getTimeString() + " retrying ... ");
 	        }
 	        else
 	        {
 	        	
-	        	this.log.printLog(this.getTimeString() + " retrying ... ");
+	        	this.log.printLog(this.getTimeString() + " retrying (wrong bytecount) ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...

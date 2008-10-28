@@ -135,9 +135,15 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		
     	//this.log.printLogLine("-----------------------------------------------");
-    	this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
+    	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
+		this.log.printLogLine(this.getTimeString() + " enqueuing album ... dir: " + pics_dir);
 
     	int uploadCount = 0;
+    	int skippedCount = 0;
+    	int totalFiles = pics_dir.listFiles().length;
+    	int totalMediaFiles = pics_dir.listFiles(Constants.supportedFileTypesFilter).length;
+    	int unsupportedCount = totalFiles - totalMediaFiles;
+    	
         File[] fileList = pics_dir.listFiles(Constants.supportedFileTypesFilter);
         if (fileList == null) { return; /* Either dir does not exist or is not a directory */ }
         Arrays.sort(fileList, new Constants.FileComparator()); //sort files
@@ -191,15 +197,17 @@ public class AccountListingProxy implements IAccountListingProxy
 	        	if (!this.getImage(imageID).getMD5().equals(fileMD5))
 	        	{
 	        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug, but has different MD5Sum ... skipping anyway");
+	        		skippedCount++;
 	        	}
 	        	else
 	        	{
-	        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
+	        		//this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
+	        		skippedCount++;
 	        	}
         	}
         }        
 
-        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName);
+        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + skippedCount + " files were skipped, " + unsupportedCount + " had unsupported file type)");
 	}
 
 	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)

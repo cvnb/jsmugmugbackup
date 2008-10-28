@@ -207,11 +207,27 @@ public class CmdView implements IView
 	{
 		this.log.printLogLine("... up- and downloading files from Smugmug.com");
 		this.log.printLogLine("usage:");
-		this.log.printLogLine("     jSmugmugBackup --help");
-		this.log.printLogLine("     jSmugmugBackup --list [--email={username}]");
-		this.log.printLogLine("     jSmugmugBackup --upload [--email={username}] [--category={name}] [--subcategory={name}] --dir={photo_dir}");
-		this.log.printLogLine("     jSmugmugBackup --download [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}] --dir={target_dir}");
-		this.log.printLogLine("     jSmugmugBackup --verify [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}] --dir={target_dir}");
+		this.log.printLogLine("     jSmugmugBackup [action] [options ... ]");
+		this.log.printLogLine("");
+		this.log.printLogLine("actions:");
+		this.log.printLogLine("     --help         : print this help");
+		this.log.printLogLine("     --list         : list contents of yout smumgmug account");
+		this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
+		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
+		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
+		this.log.printLogLine("options");
+		this.log.printLogLine("     --email={username}    : specify the email-address or the username used to log into smugmug, optional");
+		this.log.printLogLine("     --category={name}     : the action should only be performed on the given category");
+		this.log.printLogLine("     --subcategory={name}  : perform the action only on the given subcategory");
+		this.log.printLogLine("     --album={name}        : perform the action only on the given album");
+		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
+		
+		
+		//this.log.printLogLine("     jSmugmugBackup --help");
+		//this.log.printLogLine("     jSmugmugBackup --list [--email={username}]");
+		//this.log.printLogLine("     jSmugmugBackup --upload [--email={username}] [--category={name}] [--subcategory={name}] --dir={photo_dir}");
+		//this.log.printLogLine("     jSmugmugBackup --download [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}] --dir={target_dir}");
+		//this.log.printLogLine("     jSmugmugBackup --verify [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}] --dir={target_dir}");
 		//undocumented feature ...
 		//this.log.printLogLine("     jSmugmugBackup --recursive-delete [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}]");
 	}

@@ -53,7 +53,7 @@ public class Controller
 		public void actionPerformed(ActionEvent e)
 		{
 			model.getFileListing();
-		}		
+		}
 	}
 	
 	class UploadDialogButtonListener implements ActionListener

@@ -1,5 +1,7 @@
 todo:
  - GUI
+ - match also when listing
+
  
  - deleting ???
  - document handling of non-unique names

@@ -250,23 +250,18 @@ public class SwingView extends JFrame implements IView
 
 	
 	//------------------------------------
-	//@Override
 	public void addLoginButtonListener(ActionListener listener) {
 		this.jButton_login.addActionListener(listener);
 	}
-	//@Override
 	public void addDownloadDialogButtonListener(ActionListener listener) {
 		this.jButton_download.addActionListener(listener);		
 	}
-	//@Override
 	public void addUploadDialogButtonListener(ActionListener listener) {
 		this.jButton_upload.addActionListener(listener);		
 	}
-	//@Override
 	public void addRefreshButtonListener(ActionListener listener) {
 		this.jButton_refresh.addActionListener(listener);
 	}
-	//@Override
 	public void addQuitButtonListener(ActionListener listener) {
 		this.jButton_quit.addActionListener(listener);		
 	}
