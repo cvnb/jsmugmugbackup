@@ -27,7 +27,7 @@ public interface ISmugmugConnectorNG
 	int createAlbum(int categoryID, int subCategoryID, String name);
 	
 	void renameCategory(int categoryID, String newName);
-	void renameSubcategory(int subCategoryID, String newName);
+	void renameSubcategory(int subcategoryID, String newName);
 	void renameAlbum(int albumID, String newName);
 	
 	int uploadFile(int albumID, File file);

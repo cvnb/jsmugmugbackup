@@ -247,38 +247,27 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	{
 		this.log.printLog("renaming Category (id=" + categoryID + ", " + newName + ") ... (stub)");
 		
+		JSONObject jobj = this.smugmug_categories_rename(categoryID, newName);
 	}
 
-	public void renameSubcategory(int subCategoryID, String newName)
+	public void renameSubcategory(int subcategoryID, String newName)
 	{
-		this.log.printLog("renaming Subcategory (id=" + subCategoryID + ", " + newName + ") ... (stub)");
+		this.log.printLog("renaming Subcategory (id=" + subcategoryID + ", " + newName + ") ... (stub)");
 		
+		JSONObject jobj = this.smugmug_subcategories_rename(subcategoryID, newName);
 	}
 
 	public void renameAlbum(int albumID, String newName)
 	{
 		this.log.printLog("renaming Album (id=" + albumID + ", " + newName + ") ... (stub)");
 		
+		JSONObject jobj = this.smugmug_albums_changeSettings(albumID, newName);
 	}
 	
 	public int uploadFile(int albumID, File file)
 	{
 		//this.log.printLog("uploading ... ");
 		
-        // check if file is smaller than 512 MB and
-        if (file.length() > (Constants.UploadFileSizeLimit))
-        {
-        	this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
-        	return 0;
-        }
-        
-        //check if someone has manually set the ignore tag
-        if ( (new File(file.getAbsolutePath() + Constants.UploadIgnoreFilePostfix)).exists() )
-        {
-        	this.log.printLogLine("  WARNING: " + file.getAbsolutePath() + " - the ignore tag was set ... skipping");
-        	return 0;
-        }
-
     	JSONObject jobj = this.smugmug_images_upload(albumID, file);
     	//this.printJSONObject(jobj);
     	Object obj = this.getJSONValue(jobj, "Image.id");
@@ -665,6 +654,42 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
     }
 
+	private JSONObject smugmug_categories_rename(int categoryID, String newName)
+	{
+		this.log.printLog(this.getTimeString() + " renaming category ... ");
+		
+		String methodName = "smugmug.categories.rename";
+		//System.out.print(methodName + " ...");
+		
+		//build url
+		String url = Constants.SmugmugServerURL + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "CategoryID=" + categoryID + "&";
+		url = url + "Name=" + this.encodeForURL(newName) + "&";
+		
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
+		//this.printJSONObject(jobj);
+		//this.log.printLogLine("url: " + url);
+		
+		
+        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+             (this.getJSONValue(jobj, "method").equals(methodName)) )
+        {
+        	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
+        	return jobj;
+        }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
+        
+        return null;
+    }
+
+	
 	private JSONObject smugmug_subcategories_create(String name, int categoryID)
 	{
 		this.log.printLog(this.getTimeString() + " creating subcategory ... ");
@@ -688,7 +713,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
+        	//this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
+        	this.log.printLogLine("ok");
+        	this.printJSONObject(jobj);
            	return jobj;
         }
         else
@@ -699,6 +726,43 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
 	}
+	
+	private JSONObject smugmug_subcategories_rename(int subcategoryID, String newName)
+	{
+		this.log.printLog(this.getTimeString() + " renaming subcategory ... ");
+		
+		String methodName = "smugmug.subcategories.rename";
+		//System.out.print(methodName + " ...");
+		
+		//build url
+		String url = Constants.SmugmugServerURL + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "SubCategoryID=" + subcategoryID + "&";
+		url = url + "Name=" + this.encodeForURL(newName) + "&";
+		
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
+		//this.printJSONObject(jobj);
+		//this.log.printLogLine("url: " + url);
+		
+		
+        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+             (this.getJSONValue(jobj, "method").equals(methodName)) )
+        {
+        	//this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
+        	this.log.printLogLine("ok");
+        	this.printJSONObject(jobj);
+        	return jobj;
+        }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
+        
+        return null;
+    }
 
 	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID)
 	{
@@ -792,6 +856,106 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
 	}
 
+	private JSONObject smugmug_albums_changeSettings(int albumID, String newTitle)
+	{
+		this.log.printLog(this.getTimeString() + " creating album ... ");
+		
+		String methodName = "smugmug.albums.changeSettings";
+		//System.out.print(methodName + " ...");
+		
+		//build url
+		String url = Constants.SmugmugServerURL + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "AlbumID=" + albumID + "&";
+		
+		
+
+		
+		//essentials
+		url = url + "Title=" + this.encodeForURL(newTitle) + "&";
+		//url = url + "CategoryID=" + categoryID + "&";
+		//url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0		
+		//url = url + "Description=&"; //string, optional
+		//url = url + "Keywords=&"; //string, optional
+		//url = url + "AlbumTemplateID=" + 0 + "&"; //integer, optional, default: 0
+		//url = url + "Geography=&"; //boolean, optional, default: 1
+		//url = url + "HighlightID=&"; //integer, optional
+		//url = url + "Position=&"; //integer, optional
+		
+		//look&feel
+		//url = url + "Header=&"; //boolean, optional (power & pro only), default: 0
+		//url = url + "Clean=&"; //boolean, optional, default: 0
+		//url = url + "EXIF=&"; //boolean, optional, default: 1
+		//url = url + "Filenames=1&"; //boolean, optional, default: 0
+		//url = url + "SquareThumbs=0&"; //boolean, optional, default: 1
+		//url = url + "TemplateID=&"; //integer, optional, default: 0 (viewer choice)
+		//url = url + "SortMethod=FileName&"; //string, optional, default: position
+		//url = url + "SortDirection=0&"; //boolean, optional, 0 --> ascending, 1 --> decending
+		
+		//security&privacy
+		//url = url + "Password=&"; //string, optional
+		//url = url + "PasswordHint=&"; //string, optional
+		//url = url + "Public=0&"; //boolean, optional, default: 1
+		//url = url + "WorldSearchable=0&"; //boolean, optional, default: 1
+		//url = url + "SmugSearchable=0&"; //boolean, optional, default: 1
+		//url = url + "External=&"; //boolean, optional, default: 1
+		//url = url + "Protected=&"; //boolean, optional(power&pro only), default: 0
+		//url = url + "Watermarking=&"; //boolean, optional (pro only), default: 0
+		//url = url + "WatermarkID=&"; //integer, optional (pro only), default: 0
+		//url = url + "HideOwner=&"; //boolean, optional, default: 0
+		//url = url + "Larges=&"; //boolean, optional (pro only), default: 1
+		//url = url + "XLarges=&"; //boolean, optional (pro only), default: 1
+		//url = url + "X2Larges=&"; //boolean, optional, default: 1
+		//url = url + "X3Larges=&"; //boolean, optional, default: 1
+		//url = url + "Originals=&"; //boolean, optional, default: 1
+		
+		//social
+		//url = url + "CanRank=&"; //boolean, optional, default: 1
+		//url = url + "FriendEdit=&"; //boolean, optional, default: 0
+		//url = url + "FamilyEdit=&"; //boolean, optional, default: 0
+		//url = url + "Comments=&"; //boolean, optional, default: 1
+		//url = url + "Share=&"; //boolean, optional, default: 1
+		
+		// printing&sales
+		//url = url + "Printable=&"; //boolean, optional, default: 1
+		//url = url + "DefaultColor=&"; //boolean, optional (pro only), default: 0
+		//url = url + "ProofDays=&"; //integer, optional (pro only), default: 0
+		//url = url + "Backprinting=&"; //string, optional (pro only)
+		
+		// photo sharpening
+		//url = url + "UnsharpAmount=&"; //float, optional (power&pro only), default: 0.200
+		//url = url + "UnsharpRadius=&"; //float, optional (power&pro only), default: 1.000
+		//url = url + "UnsharpThreshold=&"; //float, optional (power&pro only), default: 0.050
+		//url = url + "UnsharpSigma=&"; //float, optional (power&pro only), default: 1.000
+		
+		// community
+		//url = url + "CommunityID=&"; //integer, optional, default: 0
+		
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
+		//this.printJSONObject(jobj);
+		//this.log.printLogLine("url: " + url);
+		
+        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+             (this.getJSONValue(jobj, "method").equals(methodName)) )
+        {
+        	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
+        	this.log.printLogLine("ok");
+        	this.printJSONObject(jobj);
+        	return jobj;
+        }
+        else
+        {
+        	this.log.printLogLine("failed");
+        	this.printJSONObject(jobj);
+        }
+        
+        return null;
+	}
+
+	
+	
 	private JSONObject smugmug_images_getURLs(int imageID)
 	{
 		String methodName = "smugmug.images.getURLs";
