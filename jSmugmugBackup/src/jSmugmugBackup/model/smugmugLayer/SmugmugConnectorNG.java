@@ -104,6 +104,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				JSONObject jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
 				while (jsonAlbum != null)
 				{
+					//this.printJSONObject(jsonAlbum);
+					
 					Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
 					String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
 					//System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
@@ -151,6 +153,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			JSONObject jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
 			while (jsonAlbum != null)
 			{
+				//this.printJSONObject(jsonAlbum);
+				
 				Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
 				String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
 				//System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
@@ -243,26 +247,38 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return albumID;
 	}
 	
+	/*
 	public void renameCategory(int categoryID, String newName)
 	{
-		this.log.printLog("renaming Category (id=" + categoryID + ", " + newName + ") ... (stub)");
+		this.log.printLogLine("renaming Category (id=" + categoryID + ", " + newName + ") ... (stub)");
 		
 		JSONObject jobj = this.smugmug_categories_rename(categoryID, newName);
 	}
 
 	public void renameSubcategory(int subcategoryID, String newName)
 	{
-		this.log.printLog("renaming Subcategory (id=" + subcategoryID + ", " + newName + ") ... (stub)");
+		this.log.printLogLine("renaming Subcategory (id=" + subcategoryID + ", " + newName + ") ... (stub)");
 		
 		JSONObject jobj = this.smugmug_subcategories_rename(subcategoryID, newName);
 	}
 
 	public void renameAlbum(int albumID, String newName)
 	{
-		this.log.printLog("renaming Album (id=" + albumID + ", " + newName + ") ... (stub)");
+		this.log.printLogLine("renaming Album (id=" + albumID + ", newName=" + newName + ") ...");
 		
-		JSONObject jobj = this.smugmug_albums_changeSettings(albumID, newName);
+		JSONObject jobj = this.smugmug_albums_changeSettings_title(albumID, newName);
 	}
+	
+	public void setAlbumPosition(int albumID, int newPosition)
+	{
+		this.log.printLogLine("setting Album position (id=" + albumID + ", newPosition=" + newPosition + ") ...");
+		
+		//JSONObject albumInfo = this.smugmug_albums_getInfo(albumID);
+		//this.printJSONObject(albumInfo);
+		
+		JSONObject jobj = this.smugmug_albums_changeSettings_position(albumID, newPosition);
+	}
+	*/
 	
 	public int uploadFile(int albumID, File file)
 	{
@@ -598,7 +614,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			//this.printJSONObject(jobj);
 	      
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-	           	 (this.getJSONValue(jobj, "method").equals("smugmug.images.get")) )
+	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {        	
 	        	//this.log.printLogLine("ok");
 	           	return jobj;
@@ -619,7 +635,40 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         //return null;
 	}
+	
+	private JSONObject smugmug_images_delete(int imageID)
+	{
+		String methodName = "smugmug.images.delete";
+		//this.log.printLog("smugmug.images.get ... ");
 		
+		//build url
+		String url = Constants.SmugmugServerURL + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "ImageID=" + imageID + "&";
+		
+
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
+		//this.printJSONObject(jobj);
+	      
+			
+        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+             (this.getJSONValue(jobj, "method").equals(methodName)) )
+        {
+        	this.log.printLogLine("ok");
+           	return jobj;
+        }
+        else
+        {
+        	this.log.printLogLine("failed");
+           	this.printJSONObject(jobj);
+        }
+        
+        return null;
+	}
+
+	
 	private JSONObject smugmug_categories_create(String name)
 	{
 		this.log.printLog(this.getTimeString() + " creating category ... ");
@@ -856,9 +905,48 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
 	}
 
-	private JSONObject smugmug_albums_changeSettings(int albumID, String newTitle)
+	private JSONObject smugmug_albums_getInfo(int albumID)
 	{
-		this.log.printLog(this.getTimeString() + " creating album ... ");
+		String methodName = "smugmug.albums.getInfo";
+		//this.log.printLog(methodName + " ...");
+		
+		//build url
+		String url = Constants.SmugmugServerURL + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "AlbumID=" + albumID + "&"; //integer
+		//url = url + "Password=&"; //string, optional
+		//url = url + "SitePassword=&"; //string, optional
+		//url = url + "AlbumKey=&"; //string
+		
+		do
+		{
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+			
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	             (this.getJSONValue(jobj, "method").equals(methodName)) )
+	        {
+	        	//this.log.printLogLine("ok");
+	        	return jobj;
+	        }
+	        else
+	        {
+	        	//this.log.printLogLine("failed");
+	        	//this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
+	        	this.log.printLog(methodName + "retrying ... ");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
+        
+        //return null;
+    }
+
+	
+	private JSONObject smugmug_albums_changeSettings_title(int albumID, String newTitle)
+	{
+		this.log.printLog(this.getTimeString() + " changing album settings (title) ... ");
 		
 		String methodName = "smugmug.albums.changeSettings";
 		//System.out.print(methodName + " ...");
@@ -942,7 +1030,105 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         {
         	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
         	this.log.printLogLine("ok");
+        	//this.printJSONObject(jobj);
+        	return jobj;
+        }
+        else
+        {
+        	this.log.printLogLine("failed");
         	this.printJSONObject(jobj);
+        }
+        
+        return null;
+	}
+
+	private JSONObject smugmug_albums_changeSettings_position(int albumID, int newPosition)
+	{
+		this.log.printLog(this.getTimeString() + " changing album settings (id=" + albumID + ", newPosition=" + newPosition + ") ... ");
+		
+		String methodName = "smugmug.albums.changeSettings";
+		//System.out.print(methodName + " ...");
+		
+		//build url
+		String url = Constants.SmugmugServerURL + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "AlbumID=" + albumID + "&";
+		
+		
+
+		
+		//essentials
+		//url = url + "Title=" + this.encodeForURL(newTitle) + "&";
+		//url = url + "CategoryID=" + categoryID + "&";
+		//url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0		
+		//url = url + "Description=&"; //string, optional
+		//url = url + "Keywords=&"; //string, optional
+		//url = url + "AlbumTemplateID=" + 0 + "&"; //integer, optional, default: 0
+		//url = url + "Geography=&"; //boolean, optional, default: 1
+		//url = url + "HighlightID=&"; //integer, optional
+		url = url + "Position=" + newPosition + "&"; //integer, optional
+		
+		//look&feel
+		//url = url + "Header=&"; //boolean, optional (power & pro only), default: 0
+		//url = url + "Clean=&"; //boolean, optional, default: 0
+		//url = url + "EXIF=&"; //boolean, optional, default: 1
+		//url = url + "Filenames=1&"; //boolean, optional, default: 0
+		//url = url + "SquareThumbs=0&"; //boolean, optional, default: 1
+		//url = url + "TemplateID=&"; //integer, optional, default: 0 (viewer choice)
+		//url = url + "SortMethod=FileName&"; //string, optional, default: position
+		//url = url + "SortDirection=0&"; //boolean, optional, 0 --> ascending, 1 --> decending
+		
+		//security&privacy
+		//url = url + "Password=&"; //string, optional
+		//url = url + "PasswordHint=&"; //string, optional
+		//url = url + "Public=0&"; //boolean, optional, default: 1
+		//url = url + "WorldSearchable=0&"; //boolean, optional, default: 1
+		//url = url + "SmugSearchable=0&"; //boolean, optional, default: 1
+		//url = url + "External=&"; //boolean, optional, default: 1
+		//url = url + "Protected=&"; //boolean, optional(power&pro only), default: 0
+		//url = url + "Watermarking=&"; //boolean, optional (pro only), default: 0
+		//url = url + "WatermarkID=&"; //integer, optional (pro only), default: 0
+		//url = url + "HideOwner=&"; //boolean, optional, default: 0
+		//url = url + "Larges=&"; //boolean, optional (pro only), default: 1
+		//url = url + "XLarges=&"; //boolean, optional (pro only), default: 1
+		//url = url + "X2Larges=&"; //boolean, optional, default: 1
+		//url = url + "X3Larges=&"; //boolean, optional, default: 1
+		//url = url + "Originals=&"; //boolean, optional, default: 1
+		
+		//social
+		//url = url + "CanRank=&"; //boolean, optional, default: 1
+		//url = url + "FriendEdit=&"; //boolean, optional, default: 0
+		//url = url + "FamilyEdit=&"; //boolean, optional, default: 0
+		//url = url + "Comments=&"; //boolean, optional, default: 1
+		//url = url + "Share=&"; //boolean, optional, default: 1
+		
+		// printing&sales
+		//url = url + "Printable=&"; //boolean, optional, default: 1
+		//url = url + "DefaultColor=&"; //boolean, optional (pro only), default: 0
+		//url = url + "ProofDays=&"; //integer, optional (pro only), default: 0
+		//url = url + "Backprinting=&"; //string, optional (pro only)
+		
+		// photo sharpening
+		//url = url + "UnsharpAmount=&"; //float, optional (power&pro only), default: 0.200
+		//url = url + "UnsharpRadius=&"; //float, optional (power&pro only), default: 1.000
+		//url = url + "UnsharpThreshold=&"; //float, optional (power&pro only), default: 0.050
+		//url = url + "UnsharpSigma=&"; //float, optional (power&pro only), default: 1.000
+		
+		// community
+		//url = url + "CommunityID=&"; //integer, optional, default: 0
+		
+		HttpGet httpget = new HttpGet(url);
+		JSONObject jobj = this.smugmugJSONRequest(httpget);
+		//this.printJSONObject(jobj);
+		this.log.printLogLine("url: " + url);
+		
+        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+             (this.getJSONValue(jobj, "method").equals(methodName)) )
+        {
+        	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
+        	this.log.printLogLine("ok");
+        	//this.printJSONObject(jobj);
         	return jobj;
         }
         else
@@ -1131,7 +1317,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private void printJSONObject(JSONObject jobj)
 	{
 		this.log.printLogLine("DEBUG: printing JSONObject ...");
-		//this.log.printLogLine("jobj=" + jobj);
+		this.log.printLogLine("DEBUG: jobj=" + jobj);
 		
 		this.printJSONObject(jobj, "");
 	}

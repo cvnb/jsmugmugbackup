@@ -26,8 +26,8 @@ public interface IAccountListingProxy
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
 	
-	void resortCategory(int categoryID);
-	void resortSubcategory(int subcategoryID);
+	void resortCategoryAlbums(int categoryID);
+	void resortSubcategoryAlbums(int subcategoryID);
 	
 	void startProcessingQueue();
 	long getTransferedBytes();

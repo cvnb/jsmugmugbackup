@@ -1,6 +1,7 @@
 todo:
  - GUI
  - sort album lists and subcategories
+ - rewrite model.getAccountListing()
 
  
  - deleting ???

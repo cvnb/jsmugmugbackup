@@ -27,6 +27,11 @@ public class SmugmugObject implements ISmugmugObject
 		return this.name;
 	}
 
+	public int compareTo(Object o)
+	{
+		return this.name.compareToIgnoreCase( ((SmugmugObject)o).getName() );
+	}
+	
 	public SmugmugObject clone()
 	{
 		SmugmugObject myClone = null;
@@ -37,4 +42,6 @@ public class SmugmugObject implements ISmugmugObject
 		
 		return myClone;
 	}
+
+
 }
