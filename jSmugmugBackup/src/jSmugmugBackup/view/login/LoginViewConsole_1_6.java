@@ -10,16 +10,19 @@ import java.util.Scanner;
 
 public class LoginViewConsole_1_6 implements ILoginView
 {
-	private String initUserEmail = null;
+	private String initUserEmail;
+	private String initPassword;
 	
 	public LoginViewConsole_1_6()
 	{
 		this.initUserEmail = null;
+		this.initPassword = null;
 	}
 	
-	public LoginViewConsole_1_6(String userEmail)
+	public LoginViewConsole_1_6(String userEmail, String password)
 	{
 		this.initUserEmail = userEmail;
+		this.initPassword  = password;
 	}
 	
 	public String requestUserEmail()
@@ -35,6 +38,8 @@ public class LoginViewConsole_1_6 implements ILoginView
 	
 	public String requestPassword()
 	{
+		if (this.initPassword != null) { return this.initPassword; }
+		
 		String password = null;
 		
 		java.io.Console console = System.console(); //seems not to work in the eclipse console, returns null

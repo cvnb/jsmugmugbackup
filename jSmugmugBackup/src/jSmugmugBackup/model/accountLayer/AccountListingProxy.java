@@ -213,13 +213,28 @@ public class AccountListingProxy implements IAccountListingProxy
         {        	
         	int imageID;
         	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
-        	if (imageID == 0) //image doesn't exist
+        	if (imageID == 0) //image doesn't exist on smugmug
         	{
-				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
-				this.transferQueue.add(item);
-                uploadCount++;
+                // check if file is smaller than 512 MB and
+                if (fileList[i].length() > (Constants.UploadFileSizeLimit))
+                {
+                	this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
+                	skippedCount++;
+                }                
+                //check if someone has manually set the ignore tag
+                else if ( (new File(fileList[i].getAbsolutePath() + Constants.UploadIgnoreFilePostfix)).exists() )
+                {
+                	this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " - the ignore tag was set ... skipping");
+                	skippedCount++;
+                }
+                else
+                {
+    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+    				this.transferQueue.add(item);
+                    uploadCount++;
+                }
         	}
-        	else
+        	else //image already exists on smugmug
         	{
             	String fileMD5 = this.computeMD5Hash(fileList[i]);
 	        	if (!this.getImage(imageID).getMD5().equals(fileMD5))
