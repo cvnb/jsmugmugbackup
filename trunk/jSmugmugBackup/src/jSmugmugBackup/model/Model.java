@@ -36,11 +36,11 @@ public class Model
     	this.accListing.init();
     }
     
-    public void getFileListing()
+    public void getFileListing(ITransferDialogResult transferDialogResult)
     {
     	if (this.view != null)
     	{
-    		this.view.refreshFileListing( this.accListing.getCategoryList() );
+    		this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     	}
     }
 

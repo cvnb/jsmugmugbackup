@@ -21,9 +21,14 @@ public interface ISmugmugConnectorNG
 	Vector<ICategory> getTree();
 	void getImages(int albumID); //???
 	Hashtable<String, String> getImageInfo(int imageID);
+	
 	int createCategory(String name);
 	int createSubcategory(int categoryID, String name);
 	int createAlbum(int categoryID, int subCategoryID, String name);
+	
+	void renameCategory(int categoryID, String newName);
+	void renameSubcategory(int subCategoryID, String newName);
+	void renameAlbum(int albumID, String newName);
 	
 	int uploadFile(int albumID, File file);
 	void downloadFile(int imageID, File fileName);

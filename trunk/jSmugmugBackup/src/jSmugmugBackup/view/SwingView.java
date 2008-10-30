@@ -356,6 +356,12 @@ public class SwingView extends JFrame implements IView
 		return loginToken;
 	}
 	
+	public ITransferDialogResult showListDialog()
+	{
+		//empty result --> list everything
+		return new TransferDialogResult(null, null, null, null);
+	}
+	
 	public ITransferDialogResult showUploadDialog()
 	{
 		this.uploadDialog = new SwingUploadDialog();
@@ -392,6 +398,8 @@ public class SwingView extends JFrame implements IView
 		this.jTextArea_log.append(text);
 	}
 	//------------------------------------
+
+
 
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

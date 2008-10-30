@@ -58,11 +58,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.connector.logout();
 	}
 
-	public Vector<ICategory> getCategoryList()
-	{
-		return this.categoryList;
-	}
-	
 	public Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
 	{
 		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
@@ -130,6 +125,39 @@ public class AccountListingProxy implements IAccountListingProxy
 		return selectedAlbums;		
 	}
 
+	public Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName)
+	{
+		Vector<ICategory> result = new Vector<ICategory>();
+		
+		//find matching albums
+		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, albumName);
+		
+		for (IAlbum intern_a : albumList)
+		{
+			//IAlbum a = new Album(intern_a.getID(), intern_a.getName()); //make a copy of the album
+			
+			ICategory intern_c = this.getAlbumCategory(intern_a.getID());
+			ICategory c = new Category( intern_c.getID(), intern_c.getName() );
+			
+			ISubcategory intern_s = this.getAlbumSubcategory(intern_a.getID());
+			if ( intern_s != null )
+			{
+				ISubcategory s = new Subcategory(intern_s.getID(), intern_s.getName());
+				
+				result.add(c);
+				c.addSubcategory(s);
+				s.addAlbum( (IAlbum)intern_a.clone() );
+			}
+			else //album doesn't have a subcategory
+			{
+				result.add(c);
+				c.addAlbum( (IAlbum)intern_a.clone() );
+			}
+			
+		}
+		
+		return result;
+	}
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
 	{
@@ -360,6 +388,17 @@ public class AccountListingProxy implements IAccountListingProxy
     	}
     }
 
+	public void resortCategory(int categoryID)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void resortSubcategory(int subcategoryID)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public void startProcessingQueue()
 	{
@@ -394,7 +433,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		}
 		
 	}
-
+//------------------------------------------------------------------------
+	private Vector<ICategory> getCategoryList()
+	{
+		return this.categoryList;
+	}
+	
 	public long getTransferedBytes() { return this.transferedBytes; }
 	
 	
@@ -494,7 +538,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-	
+
 	private int getSubcategoryID(int categoryID, String subcategoryName)
 	{
 		for (ICategory c : this.categoryList)
@@ -534,7 +578,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-	
 	private int getAlbumID(int categoryID, String albumName)
 	{
 		for (ICategory c : this.categoryList)
@@ -550,7 +593,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-
 	private int getImageID(int categoryID, int subcategoryID, int albumID, String imageName)
 	{
 		if (subcategoryID == 0) { return this.getImageID(categoryID, albumID, imageName); }
@@ -580,7 +622,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-	
+
 	private int getImageID(int categoryID, int albumID, String imageName)
 	{
 		for (ICategory c : this.categoryList)
@@ -602,7 +644,65 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-
+	
+	private ICategory getAlbumCategory(int albumID)
+	{
+		//find the Category that contains the album, i.e. find the parent category
+		
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID)
+					{
+						return c;
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID)
+				{
+					return c;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	private ISubcategory getAlbumSubcategory(int albumID)
+	{
+		//find the Subcategory that contains the album, i.e. find the parent subcategory
+		
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID)
+					{
+						return s;
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID)
+				{
+					return null;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	
 	private IImage getImage(int imageID)
 	{
@@ -721,5 +821,4 @@ public class AccountListingProxy implements IAccountListingProxy
     	catch (InterruptedException e) {}
     }
 
-	
 }

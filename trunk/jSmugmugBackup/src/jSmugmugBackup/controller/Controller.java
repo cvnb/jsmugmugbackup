@@ -52,7 +52,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.getFileListing();
+			model.getFileListing(view.showListDialog());
 		}
 	}
 	

@@ -18,12 +18,16 @@ public interface IAccountListingProxy
 	void login();
 	void logout();
 	
-	Vector<ICategory> getCategoryList();
+	//Vector<ICategory> getCategoryList();
 	Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName);
 
+	Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName);
 	void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
+	
+	void resortCategory(int categoryID);
+	void resortSubcategory(int subcategoryID);
 	
 	void startProcessingQueue();
 	long getTransferedBytes();

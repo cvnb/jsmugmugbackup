@@ -162,6 +162,16 @@ public class CmdView implements IView
 		System.out.print(text);
 	}
 
+
+	public ITransferDialogResult showListDialog()
+	{
+		String category = this.extractArgumentValueFromCommandline("category");
+		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
+		String album = this.extractArgumentValueFromCommandline("album");
+		
+		return new TransferDialogResult(category, subCategory, album, null);
+	}
+	
 	public ITransferDialogResult showUploadDialog()
 	{
 		String category = this.extractArgumentValueFromCommandline("category");
@@ -290,5 +300,6 @@ public class CmdView implements IView
 		
 		return dir;
 	}
+
 
 }

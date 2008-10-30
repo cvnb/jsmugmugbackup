@@ -18,6 +18,7 @@ public interface IView
 {
 	ILoginView getLoginMethod();
 	void refreshFileListing(Vector<ICategory> categoryList);
+	ITransferDialogResult showListDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
 	ITransferDialogResult showVerifyDialog();
