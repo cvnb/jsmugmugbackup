@@ -14,7 +14,7 @@ public class SmugmugObject implements ISmugmugObject
 	protected SmugmugObject(int id, String name)
 	{
 		this.id = id;
-		this.name = name;		
+		this.name = name;
 	}
 	
 	public int getID()
@@ -27,4 +27,8 @@ public class SmugmugObject implements ISmugmugObject
 		return this.name;
 	}
 
+	public SmugmugObject clone()
+	{
+		return this.clone();
+	}
 }

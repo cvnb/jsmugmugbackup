@@ -243,6 +243,24 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return albumID;
 	}
 	
+	public void renameCategory(int categoryID, String newName)
+	{
+		this.log.printLog("renaming Category (id=" + categoryID + ", " + newName + ") ... (stub)");
+		
+	}
+
+	public void renameSubcategory(int subCategoryID, String newName)
+	{
+		this.log.printLog("renaming Subcategory (id=" + subCategoryID + ", " + newName + ") ... (stub)");
+		
+	}
+
+	public void renameAlbum(int albumID, String newName)
+	{
+		this.log.printLog("renaming Album (id=" + albumID + ", " + newName + ") ... (stub)");
+		
+	}
+	
 	public int uploadFile(int albumID, File file)
 	{
 		//this.log.printLog("uploading ... ");
