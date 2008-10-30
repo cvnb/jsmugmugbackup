@@ -1,6 +1,5 @@
 todo:
  - GUI
- - match also when listing
  - sort album lists and subcategories
 
  
