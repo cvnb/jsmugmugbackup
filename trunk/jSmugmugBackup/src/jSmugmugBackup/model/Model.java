@@ -163,6 +163,13 @@ public class Model
     	}
     }
     
+    public void resortPrepare(ITransferDialogResult transferDialogResult)
+    {
+    	this.log.printLogLine("preparing to sort albums");
+    	
+    	Vector<ICategory> categoryList = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+    }
+    
     public void deletePrepare(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing to delete files");

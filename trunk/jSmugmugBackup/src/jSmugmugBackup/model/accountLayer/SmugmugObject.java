@@ -29,6 +29,12 @@ public class SmugmugObject implements ISmugmugObject
 
 	public SmugmugObject clone()
 	{
-		return this.clone();
+		SmugmugObject myClone = null;
+		try
+		{
+			myClone = (SmugmugObject) super.clone();
+		} catch (CloneNotSupportedException e) { e.printStackTrace(); }
+		
+		return myClone;
 	}
 }

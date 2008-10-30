@@ -10,17 +10,19 @@ import java.util.Scanner;
 
 public class LoginViewConsole_1_5 implements ILoginView
 {
-	private String initUserEmail = null;
-
+	private String initUserEmail;
+	private String initPassword;
 
 	public LoginViewConsole_1_5()
 	{
 		this.initUserEmail = null;
+		this.initPassword = null;
 	}
 
-	public LoginViewConsole_1_5(String userEmail)
+	public LoginViewConsole_1_5(String userEmail, String password)
 	{
 		this.initUserEmail = userEmail;
+		this.initPassword  = password;
 	}
 
 
@@ -39,6 +41,8 @@ public class LoginViewConsole_1_5 implements ILoginView
 
 	public String requestPassword()
 	{
+		if (this.initPassword != null) { return this.initPassword; }
+		
 		String password = null;
 		
 		//this should be Java 5 compatible

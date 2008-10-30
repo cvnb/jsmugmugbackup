@@ -129,7 +129,8 @@ public class CmdView implements IView
 
 	public ILoginView getLoginMethod()
 	{		
-		String account_email = this.extractArgumentValueFromCommandline("email");
+		String account_email    = this.extractArgumentValueFromCommandline("email");
+		String account_password = this.extractArgumentValueFromCommandline("password");
 		
 		ILoginView loginMethod = null;
 		
@@ -141,11 +142,11 @@ public class CmdView implements IView
     	//this should allow the program to run, even if only java 1.5 is available
     	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
     	{
-    		loginMethod = new LoginViewConsole_1_5(account_email);
+    		loginMethod = new LoginViewConsole_1_5(account_email, account_password);
     	}
     	else //assuming we have Java 1.6 or higher
     	{
-    		loginMethod = new LoginViewConsole_1_6(account_email);
+    		loginMethod = new LoginViewConsole_1_6(account_email, account_password);
     	}
     	
 
@@ -227,7 +228,8 @@ public class CmdView implements IView
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
 		this.log.printLogLine("options");
 		this.log.printLogLine("     --email={username}    : specify the email-address or the username used to log into smugmug, optional");
-		this.log.printLogLine("     --category={name}     : the action should only be performed on the given category");
+		this.log.printLogLine("     --password={password} : specify the email-address or the username used to log into smugmug, optional");
+		this.log.printLogLine("     --category={name}     : perform the action only on the given category");
 		this.log.printLogLine("     --subcategory={name}  : perform the action only on the given subcategory");
 		this.log.printLogLine("     --album={name}        : perform the action only on the given album");
 		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
