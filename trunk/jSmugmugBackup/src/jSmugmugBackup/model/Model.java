@@ -41,7 +41,11 @@ public class Model
     	if (this.view != null)
     	{
     		this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
+    		
+    		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
+    		this.resortPrepare(transferDialogResult);
     	}
+    	
     }
 
     public void uploadPrepare(ITransferDialogResult transferDialogResult)
@@ -134,6 +138,10 @@ public class Model
 			this.log.printLogLine("this case is yet unhandled");
 			this.quitApplication();
 		}
+		
+		
+		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
+		this.resortPrepare(transferDialogResult);
     }    
     
     public void downloadPrepare(ITransferDialogResult transferDialogResult)
@@ -168,6 +176,19 @@ public class Model
     	this.log.printLogLine("preparing to sort albums");
     	
     	Vector<ICategory> categoryList = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+    	this.log.printLogLine("model: categoryList.size()=" + categoryList.size());
+    	
+    	for (ICategory c : categoryList)
+    	{
+    		this.log.printLogLine("model: c.getName()=" + c.getName());
+    		this.accListing.resortCategoryAlbums(c.getID());
+    		
+    		for (ISubcategory s : c.getSubcategoryList())
+    		{
+    			this.log.printLogLine("model: s.getName()=" + s.getName());
+    			this.accListing.resortSubcategoryAlbums(s.getID());
+    		}
+    	}
     }
     
     public void deletePrepare(ITransferDialogResult transferDialogResult)

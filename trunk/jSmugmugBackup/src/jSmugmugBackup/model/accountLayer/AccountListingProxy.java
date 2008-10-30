@@ -132,26 +132,56 @@ public class AccountListingProxy implements IAccountListingProxy
 		//find matching albums
 		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, albumName);
 		
+		// for all albums in the albumList:
+		// - find it's parent category
+		// - find it's parent subcategory (if existing)
+		// - add album, with correct category and subcategory to result
 		for (IAlbum intern_a : albumList)
 		{
-			//IAlbum a = new Album(intern_a.getID(), intern_a.getName()); //make a copy of the album
-			
+			this.log.printLogLine("intern_a.getName()=" + intern_a.getName());
 			ICategory intern_c = this.getAlbumCategory(intern_a.getID());
-			ICategory c = new Category( intern_c.getID(), intern_c.getName() );
+			
+			//check if category already exists in result set, if not create it
+			boolean result_c_exists = false;
+			ICategory result_c = null;
+			for (ICategory c : result)
+			{
+				if (c.getID() == intern_c.getID())
+				{
+					result_c = c;
+					result_c_exists = true;
+				}
+			}
+			if (result_c == null) { result_c = new Category( intern_c.getID(), intern_c.getName() ); } //create new category empty with the same name, because we don't want to copy subcategories and albums
+			
 			
 			ISubcategory intern_s = this.getAlbumSubcategory(intern_a.getID());
 			if ( intern_s != null )
 			{
-				ISubcategory s = new Subcategory(intern_s.getID(), intern_s.getName());
+				//check if subcategory already exists in result set, if not create it
+				boolean result_s_exists = false;
+				ISubcategory result_s = null;
+				for (ICategory c : result)
+				{
+					for (ISubcategory s : c.getSubcategoryList())
+					{
+						if (s.getID() == intern_s.getID())
+						{
+							result_s = s;
+							result_s_exists = true;
+						}
+					}
+				}
+				if ( result_s == null ) { result_s = new Subcategory(intern_s.getID(), intern_s.getName()); }
 				
-				result.add(c);
-				c.addSubcategory(s);
-				s.addAlbum( (IAlbum)intern_a.clone() );
+				if (!result_c_exists) { result.add(result_c); }
+				if (!result_s_exists) { result_c.addSubcategory(result_s); }
+				result_s.addAlbum( (IAlbum)intern_a.clone() ); //clone, because we need the children too, i.e. we copy the images too
 			}
 			else //album doesn't have a subcategory
 			{
-				result.add(c);
-				c.addAlbum( (IAlbum)intern_a.clone() );
+				if (!result_c_exists) { result.add(result_c); }
+				result_c.addAlbum( (IAlbum)intern_a.clone() ); //clone, because we need the children too, i.e. we copy the images too
 			}
 			
 		}
@@ -198,6 +228,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	        }
         }
         
+        //get or create album
         int albumID;
         albumID = this.getAlbumID(categoryID, subCategoryID, albumName);
         if (albumID == 0) //album doesn't exist, so create one
@@ -208,7 +239,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
         
-        
+        //add album files to the queue
         for (int i=0; i<fileList.length; i++)
         {        	
         	int imageID;
@@ -251,6 +282,8 @@ public class AccountListingProxy implements IAccountListingProxy
         }        
 
         this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + skippedCount + " files were skipped, " + unsupportedCount + " had unsupported file type)");
+        
+
 	}
 
 	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)
@@ -403,16 +436,67 @@ public class AccountListingProxy implements IAccountListingProxy
     	}
     }
 
-	public void resortCategory(int categoryID)
+	public void resortCategoryAlbums(int categoryID)
 	{
-		// TODO Auto-generated method stub
+		this.log.printLogLine("resortCategoryAlbums(" + categoryID + ")");
 		
+		//find category
+		ICategory c = this.getCategory(categoryID);
+
+		int index = 0;
+		IAlbum[] albumArray = new IAlbum[c.getAlbumList().size()];
+		for (IAlbum a : c.getAlbumList())
+		{
+			albumArray[index] = a;
+			index++;
+		}
+		
+		Arrays.sort(albumArray);
+		
+		for (int i = albumArray.length-1 ; i >= 0; i--)
+		{
+			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
+			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
+			//this.connector.setAlbumPosition(albumArray[i].getID(), i + 5000);
+			this.connector.uploadFile(albumArray[i].getID(), new File("/home/paul/temp/jSmugmugBackup/pixel.jpg"));
+		}
+//		for (int i = 0 ; i < albumArray.length; i++)
+//		{
+//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
+//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
+//			this.connector.setAlbumPosition(albumArray[i].getID(), i+4);
+//		}
 	}
 
-	public void resortSubcategory(int subcategoryID)
+	public void resortSubcategoryAlbums(int subcategoryID)
 	{
-		// TODO Auto-generated method stub
+		this.log.printLogLine("resortSubcategoryAlbums(" + subcategoryID + ")");
 		
+		//find category
+		ISubcategory s = this.getSubcategory(subcategoryID);
+
+		int index = 0;
+		IAlbum[] albumArray = new IAlbum[s.getAlbumList().size()];
+		for (IAlbum a : s.getAlbumList())
+		{
+			albumArray[index] = a;
+			index++;
+		}
+		
+		Arrays.sort(albumArray);
+		
+		for (int i = albumArray.length-1 ; i >= 0; i--)
+		{
+			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
+			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
+			//this.connector.setAlbumPosition(albumArray[i].getID(), i + 5000);
+		}
+//		for (int i = 0 ; i < albumArray.length; i++)
+//		{
+//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
+//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
+//			this.connector.setAlbumPosition(albumArray[i].getID(), i+4);
+//		}
 	}
 	
 	public void startProcessingQueue()
@@ -637,7 +721,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-
 	private int getImageID(int categoryID, int albumID, String imageName)
 	{
 		for (ICategory c : this.categoryList)
@@ -687,8 +770,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		}
 		
 		return null;
-	}
-	
+	}	
 	private ISubcategory getAlbumSubcategory(int albumID)
 	{
 		//find the Subcategory that contains the album, i.e. find the parent subcategory
@@ -718,7 +800,55 @@ public class AccountListingProxy implements IAccountListingProxy
 		return null;
 	}
 	
-	
+	private ICategory getCategory(int categoryID)
+	{
+		//find category
+		for (ICategory c : this.categoryList)
+		{
+			if (c.getID() == categoryID)
+			{
+				return c;
+			}
+		}
+		
+		return null;
+	}
+	private ISubcategory getSubcategory(int subcategoryID)
+	{
+		//find category
+		for (ICategory c : this.categoryList)
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				if (s.getID() == subcategoryID)
+				{
+					return s;
+				}
+			}
+		}
+		
+		return null;
+	}
+	private IAlbum getAlbum(int albumID)
+	{
+		for (ICategory c : this.getCategoryList())
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+					if (a.getID() == albumID) { return a; }
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				if (a.getID() == albumID) { return a; }
+			}
+		}
+		
+		return null;
+	}
 	private IImage getImage(int imageID)
 	{
 		for (ICategory c : this.getCategoryList())
@@ -746,26 +876,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		return null;
 	}
 	
-	private IAlbum getAlbum(int albumID)
-	{
-		for (ICategory c : this.getCategoryList())
-		{
-			for (ISubcategory s : c.getSubcategoryList())
-			{
-				for (IAlbum a : s.getAlbumList())
-				{
-					if (a.getID() == albumID) { return a; }
-				}
-			}
-			
-			for (IAlbum a : c.getAlbumList())
-			{
-				if (a.getID() == albumID) { return a; }
-			}
-		}
-		
-		return null;
-	}
+
 	
 	
 	private String getAlbumDirEnd(int albumID)
