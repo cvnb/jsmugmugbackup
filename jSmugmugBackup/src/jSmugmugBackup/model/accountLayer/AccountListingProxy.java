@@ -152,7 +152,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			
 			
 			ISubcategory intern_s = this.getAlbumSubcategory(intern_a.getID());
-			if ( intern_s != null )
+			if ( intern_s != null ) //album has a subcategory
 			{
 				//check if subcategory already exists in result set, if not create it
 				boolean result_s_exists = false;
@@ -501,6 +501,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		}
 	}
 	
+	
 	public void startProcessingQueue()
 	{
 		this.transferQueue.startSyncProcessing();
@@ -534,21 +535,20 @@ public class AccountListingProxy implements IAccountListingProxy
 		}
 		
 	}
-//------------------------------------------------------------------------
-	private Vector<ICategory> getCategoryList()
-	{
-		return this.categoryList;
-	}
 	
 	public long getTransferedBytes() { return this.transferedBytes; }
 	
 	
 	//----------- private ----------
+	private Vector<ICategory> getCategoryList()
+	{
+		return this.categoryList;
+	}
+	
 	private void addCategory(int id, String name)
 	{
 		this.categoryList.add( new Category(id, name) );
 	}
-	
 	private void addSubcategory(int categoryID, int id, String name)
 	{
 		for (ICategory c : this.categoryList)
@@ -562,7 +562,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addSubcategory: ERROR!");
 	}
-	
 	private void addAlbum(int categoryID, int subcategoryID, int id, String name)
 	{
 		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name); return; }
@@ -584,7 +583,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addAlbum: ERROR!");		
 	}
-
 	private void addAlbum(int categoryID, int id, String name)
 	{
 		for (ICategory c : this.categoryList)
@@ -598,7 +596,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addAlbum: ERROR!");
 	}
-	
 	private void addImage(int albumID, int id, String name)
 	{
 		for (ICategory c : this.categoryList)
@@ -639,7 +636,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-
 	private int getSubcategoryID(int categoryID, String subcategoryName)
 	{
 		for (ICategory c : this.categoryList)
@@ -655,7 +651,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-	
 	private int getAlbumID(int categoryID, int subcategoryID, String albumName)
 	{
 		if (subcategoryID == 0) { return this.getAlbumID(categoryID, albumName); }
@@ -878,8 +873,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		return null;
 	}
 	
-
-	
 	
 	private String getAlbumDirEnd(int albumID)
 	{
@@ -911,9 +904,4 @@ public class AccountListingProxy implements IAccountListingProxy
 		return resultDir;
 	}
 	
-	
-
-
-
-
 }
