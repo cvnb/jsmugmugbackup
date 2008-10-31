@@ -34,16 +34,17 @@ cd ../..
 #copy docs ... maybe not too useful to include them in the jar
 cp -v -r docs deployment/jSmugmugBackup/
 
+#copy resources
+cp -v -r res deployment/
+
 #remove all subversion files
 find deployment -name .svn -exec /bin/rm -r -f '{}' ';'
 
 #create jar
 cd deployment/jSmugmugBackup/
-jar -cvfe ../jSmugmugBackup.jar jSmugmugBackup.main.Main jSmugmugBackup/ org/ res/ documentation/
+jar -cvfe ../jSmugmugBackup.jar jSmugmugBackup.main.Main jSmugmugBackup/ org/ documentation/
 cd ../..
 
-#copy resources
-cp -v -r res deployment/
 
 #cleanup
 rm -r -f deployment/jSmugmugBackup
