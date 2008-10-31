@@ -27,7 +27,7 @@ public class SmugmugObject implements ISmugmugObject
 		return this.name;
 	}
 
-	public int compareTo(Object o)
+	public int compareTo(ISmugmugObject o)
 	{
 		return this.name.compareToIgnoreCase( ((SmugmugObject)o).getName() );
 	}
@@ -42,6 +42,5 @@ public class SmugmugObject implements ISmugmugObject
 		
 		return myClone;
 	}
-
 
 }

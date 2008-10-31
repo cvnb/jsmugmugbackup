@@ -62,6 +62,7 @@ public class TransferQueue implements ITransferQueue
 		catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void stopAsyncProcessing()
 	{
 		this.queueProcessorThread.stop();

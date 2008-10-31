@@ -53,7 +53,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.getFileListing(view.showListDialog());
+			model.list(view.showListDialog());
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.resortPrepare(view.showSortDialog());
+			model.sort(view.showSortDialog());
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.uploadPrepare(view.showUploadDialog());
+			model.upload(view.showUploadDialog());
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.downloadPrepare(view.showDownloadDialog());
+			model.download(view.showDownloadDialog());
 		}		
 	}
 	
@@ -101,7 +101,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.verifyPrepare(view.showVerifyDialog());
+			model.verify(view.showVerifyDialog());
 		}		
 	}
 	
@@ -117,7 +117,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.deletePrepare(view.showDeleteDialog());
+			model.delete(view.showDeleteDialog());
 		}		
 	}
 	

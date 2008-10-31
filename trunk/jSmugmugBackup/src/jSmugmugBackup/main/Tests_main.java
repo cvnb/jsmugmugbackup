@@ -8,10 +8,10 @@ package jSmugmugBackup.main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
-
-import jSmugmugBackup.model.accountLayer.*;
-import jSmugmugBackup.model.smugmugLayer.*;
+//import java.util.Scanner;
+//
+//import jSmugmugBackup.model.accountLayer.*;
+//import jSmugmugBackup.model.smugmugLayer.*;
 
 public class Tests_main {
 
