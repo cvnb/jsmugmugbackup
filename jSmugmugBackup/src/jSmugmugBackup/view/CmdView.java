@@ -28,6 +28,7 @@ public class CmdView implements IView
 	private ActionListener deleteDialogButtonListener = null;
 	private ActionListener deleteStartButtonListener = null;
 	private ActionListener refreshButtonListener = null;
+	private ActionListener sortButtonListener = null;
 	private ActionListener quitButtonListener = null;
 	
 	
@@ -50,6 +51,11 @@ public class CmdView implements IView
 		{
 			this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
 			this.refreshButtonListener.actionPerformed(null);
+		}
+		else if ( this.cmd_args[0].equals("--sort") )
+		{
+			this.loginButtonListener.actionPerformed(null);
+			this.sortButtonListener.actionPerformed(null);
 		}
 		else if ( this.cmd_args[0].equals("--upload") )
 		{
@@ -92,6 +98,7 @@ public class CmdView implements IView
 	public void addDeleteDialogButtonListener(ActionListener listener)   { this.deleteDialogButtonListener = listener; }
 	public void addDeleteStartButtonListener(ActionListener listener)    { this.deleteStartButtonListener = listener; }
 	public void addRefreshButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
+	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
 	
 
@@ -173,6 +180,15 @@ public class CmdView implements IView
 		return new TransferDialogResult(category, subCategory, album, null);
 	}
 	
+	public ITransferDialogResult showSortDialog()
+	{
+		String category = this.extractArgumentValueFromCommandline("category");
+		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
+		String album = this.extractArgumentValueFromCommandline("album");
+		
+		return new TransferDialogResult(category, subCategory, album, null);
+	}
+	
 	public ITransferDialogResult showUploadDialog()
 	{
 		String category = this.extractArgumentValueFromCommandline("category");
@@ -222,7 +238,8 @@ public class CmdView implements IView
 		this.log.printLogLine("");
 		this.log.printLogLine("actions:");
 		this.log.printLogLine("     --help         : print this help");
-		this.log.printLogLine("     --list         : list contents of yout smumgmug account");
+		this.log.printLogLine("     --list         : list contents of your smumgmug account");
+		this.log.printLogLine("     --sort         : sort categories, subcategories, albums");
 		this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");

@@ -37,7 +37,7 @@ public interface ISmugmugConnectorNG
 	void downloadFile(int imageID, File fileName);
 	void downloadFile(String imageURL, File fileName);
 	//void verifyFile();
-	void deleteFile();
+	void deleteFile(int imageID);
 	
 	long getTransferedBytes();
 }
