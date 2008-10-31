@@ -18,8 +18,9 @@ public class Constants
     
     public static final String smugmugUserAgentString = "jSmugmugBackup/v" + Constants.version;
 	public static final String smugmugServerURL       = "https://api.smugmug.com/hack/json/1.2.0/";
-	public static final String smugmugAPIKey          = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
-	public static final String smugmugAPIVersion      = "1.2.0";
+	//public static final String smugmugAPIKey          = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
+	public static final String smugmugAPIKey          = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
+	public static final String smugmugAPIVersion      = "1.2.0";	
 	
 	public static final int uploadFileSizeLimit        = 512*1024*1024; //512MB
 	public static final String uploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
