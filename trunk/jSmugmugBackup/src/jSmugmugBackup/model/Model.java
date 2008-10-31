@@ -157,10 +157,7 @@ public class Model
 			this.log.printLogLine("this case is yet unhandled");
 			this.quitApplication();
 		}
-		
-		
-		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
-		this.sort(transferDialogResult);
+
     }    
     
     public void download(ITransferDialogResult transferDialogResult)

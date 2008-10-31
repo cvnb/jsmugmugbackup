@@ -277,7 +277,7 @@ public class AccountListingProxy implements IAccountListingProxy
         	}
         }        
 
-        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + skippedCount + " files were skipped, " + unsupportedCount + " had unsupported file type)");
+        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + skippedCount + " files were skipped, " + unsupportedCount + " had an unsupported file type)");
         
 
 	}
