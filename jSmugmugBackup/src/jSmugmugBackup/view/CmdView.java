@@ -43,7 +43,7 @@ public class CmdView implements IView
 	
 	public void start()
 	{
-		this.log.printLogLine("jSmumugBackup v" + Constants.version);
+		this.log.printLogLine("jSmugmugBackup v" + Constants.version);
 		
 		if ( this.cmd_args.length == 0 ) this.printHelp();
 		else if ( this.cmd_args[0].equals("--help") ) this.printHelp();

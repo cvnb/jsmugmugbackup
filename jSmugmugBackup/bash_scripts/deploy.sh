@@ -31,9 +31,6 @@ rm -v *.jar
 rm -v -r META-INF/
 cd ../..
 
-#copy resources
-cp -v -r res deployment/jSmugmugBackup/
-
 #copy docs ... maybe not too useful to include them in the jar
 cp -v -r docs deployment/jSmugmugBackup/
 
@@ -45,6 +42,8 @@ cd deployment/jSmugmugBackup/
 jar -cvfe ../jSmugmugBackup.jar jSmugmugBackup.main.Main jSmugmugBackup/ org/ res/ documentation/
 cd ../..
 
+#copy resources
+cp -v -r res deployment/
 
 #cleanup
 rm -r -f deployment/jSmugmugBackup

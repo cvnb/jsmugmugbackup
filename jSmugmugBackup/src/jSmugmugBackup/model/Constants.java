@@ -47,12 +47,12 @@ public class Constants
         public boolean accept(File file) { return file.isDirectory(); }
     };
 
-    public static final class FileComparator implements Comparator
+	public static final class FileComparator implements Comparator<File>
     {
     	private Collator c = Collator.getInstance();
     	
-    	public int compare(Object o1, Object o2)
-    	{
+		public int compare(File o1, File o2)
+		{
     		if(o1 == o2) return 0;
     		
     		File f1 = (File) o1;
@@ -62,7 +62,7 @@ public class Constants
     		if(f1.isFile() && f2.isDirectory()) return 1;
     		
     		return c.compare(f1.getName(), f2.getName());
-    	}
+		}
     }
 
 }

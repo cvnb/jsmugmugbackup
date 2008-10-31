@@ -13,8 +13,6 @@ import jSmugmugBackup.view.*;
 import jSmugmugBackup.view.login.*;
 
 import java.io.*;
-import java.security.*;
-import java.text.*;
 import java.util.*;
 
 public class AccountListingProxy implements IAccountListingProxy
@@ -192,7 +190,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
     	//this.log.printLogLine("-----------------------------------------------");
     	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
-		this.log.printLogLine(this.getTimeString() + " enqueuing album ... dir: " + pics_dir);
+		this.log.printLogLine(Helper.getTimeString() + " enqueuing album ... dir: " + pics_dir);
 
     	int uploadCount = 0;
     	int skippedCount = 0;
@@ -265,7 +263,7 @@ public class AccountListingProxy implements IAccountListingProxy
         	}
         	else //image already exists on smugmug
         	{
-            	String fileMD5 = this.computeMD5Hash(fileList[i]);
+            	String fileMD5 = Helper.computeMD5Hash(fileList[i]);
 	        	if (!this.getImage(imageID).getMD5().equals(fileMD5))
 	        	{
 	        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug, but has different MD5Sum ... skipping anyway");
@@ -286,7 +284,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)
 	{
-		this.log.printLogLine(this.getTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
+		this.log.printLogLine(Helper.getTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
 		
 		int downloadCount = 0;
 		
@@ -316,7 +314,7 @@ public class AccountListingProxy implements IAccountListingProxy
     public void verifyAlbum(int albumID, String targetBaseDir)
     {
 		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
-    	this.log.printLog(this.getTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
+    	this.log.printLog(Helper.getTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
 
 		File dir = new File(targetDir);
 	    File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
@@ -396,7 +394,7 @@ public class AccountListingProxy implements IAccountListingProxy
     			if ( fileList[i].getName().equals(image.getName()) )
     			{
     				//now we have the matching pair, so we check the md5sums
-    				String localFileMD5Sum = this.computeMD5Hash(fileList[i]);
+    				String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
       			
     				//compare files
 			    	//this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
@@ -458,7 +456,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
-		this.pause(10000);
+		Helper.pause(10000);
 		this.connector.relogin();
 		//this.pause(30000);
 		
@@ -492,7 +490,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
-		this.pause(10000);
+		Helper.pause(10000);
 		this.connector.relogin();
 		//this.pause(30000);
 		
@@ -508,9 +506,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.transferQueue.startSyncProcessing();
 		
 		
-		this.log.printLogLine("waiting 30 sec for smugmug to process the images ...");
-		this.pause(30000);
-		
+		this.log.printLog("waiting 30 sec for smugmug to process the images ... ");
+		Helper.pause(30000);
+		this.log.printLogLine("ok");
 		
 		//collect Results
 		this.connector.relogin(); //probably not nessceary
@@ -914,41 +912,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	
 	
-    private String computeMD5Hash(File file)
-    {    	
-		//read local file
-		byte[] buffer = new byte[(int)file.length()];
-		InputStream is = null;
-    	try
-    	{
-			is = new FileInputStream(file);
-			is.read(buffer); //null pointer exception???
-			is.close();
-		}
-    	catch (FileNotFoundException e) { e.printStackTrace(); }
-		catch (IOException e) { e.printStackTrace(); }
 
-		//compute md5 from local file
-		String md5sum = null;
-		try { md5sum = AeSimpleMD5.MD5(buffer); }
-		catch (NoSuchAlgorithmException e) { e.printStackTrace(); }
-		catch (UnsupportedEncodingException e) { e.printStackTrace(); }
-    	
-    	return md5sum;
-    }
 
-	private String getTimeString()
-	{
-		Date date = new Date();
-        //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        return dateFormat.format(date);
-	}
-	
-    private void pause(long millisecs)
-    {
-    	try { Thread.sleep(millisecs); }
-    	catch (InterruptedException e) {}
-    }
+
 
 }

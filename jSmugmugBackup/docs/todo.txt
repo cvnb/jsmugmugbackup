@@ -1,6 +1,5 @@
 todo:
  - GUI
- - add pixel to svn and deployment
  - rewrite model.getAccountListing()
  - fmc
  

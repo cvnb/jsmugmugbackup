@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
-public interface ISmugmugObject extends Cloneable, Comparable
+public interface ISmugmugObject extends Cloneable, Comparable<ISmugmugObject>
 {
 	int getID();
 	String getName();

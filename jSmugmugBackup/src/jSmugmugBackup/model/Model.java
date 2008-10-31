@@ -5,7 +5,6 @@ import jSmugmugBackup.view.*;
 import jSmugmugBackup.view.login.*;
 
 import java.io.*;
-import java.security.*;
 import java.text.*;
 import java.util.*;
 
@@ -16,7 +15,6 @@ public class Model
     private IView view = null;
     private Logger log = null;
     private long startTime;
-
 
     
     /** Constructor */
@@ -36,16 +34,41 @@ public class Model
     	this.accListing.init();
     }
     
-    public void getFileListing(ITransferDialogResult transferDialogResult)
+    public void setView(IView view)
     {
-    	if (this.view != null)
-    	{
-    		this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
-    	}
+    	this.view = view;    	
+    }
+    
+    public void quitApplication()
+    {
+    	//logout from smugmug
+    	//if (this.smugmugConnector != null) { this.smugmugConnector.logout(); }
+    	if (this.accListing != null) { this.accListing.logout(); }
+
+    	//statistics
+        long totalTransferedBytes = this.accListing.getTransferedBytes();
+    	Date date = new Date();
+    	long timeDiff = date.getTime() - this.startTime;
     	
+    	double transferedMB = (double)totalTransferedBytes / (1024.0 * 1024.0);
+    	
+		double transferSpeed = 0.0;
+		//avoid division by zero
+		if (timeDiff != 0) { transferSpeed = ((double)totalTransferedBytes / 1024.0) / ((double)timeDiff / 1000.0); }
+
+		
+		DecimalFormat df = new DecimalFormat("0.0");
+    	this.log.printLogLine("finished. (execution time: " + this.getExecTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, speed: " + df.format(transferSpeed) + " kb/sec)");
+    	System.exit(0);
+    }
+    
+    public void list(ITransferDialogResult transferDialogResult)
+    {
+    	this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
 
-    public void uploadPrepare(ITransferDialogResult transferDialogResult)
+
+	public void upload(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
 
@@ -138,10 +161,10 @@ public class Model
 		
 		
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
-		this.resortPrepare(transferDialogResult);
+		this.sort(transferDialogResult);
     }    
     
-    public void downloadPrepare(ITransferDialogResult transferDialogResult)
+    public void download(ITransferDialogResult transferDialogResult)
     {
 		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
 		
@@ -154,7 +177,7 @@ public class Model
 		}
     }
     
-    public void verifyPrepare(ITransferDialogResult transferDialogResult)
+    public void verify(ITransferDialogResult transferDialogResult)
     {
     	//todo: what about missing local dirs?
     	this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
@@ -168,7 +191,7 @@ public class Model
     	}
     }
     
-    public void resortPrepare(ITransferDialogResult transferDialogResult)
+    public void sort(ITransferDialogResult transferDialogResult)
     {
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
     	this.log.printLogLine("preparing to sort albums");
@@ -189,7 +212,7 @@ public class Model
     	}
     }
     
-    public void deletePrepare(ITransferDialogResult transferDialogResult)
+    public void delete(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing to delete files");
     	this.log.printLogLine("ERROR: not implemented");
@@ -242,33 +265,6 @@ public class Model
     	this.accListing.startProcessingQueue();
     }
     
-    public void setView(IView view)
-    {
-    	this.view = view;    	
-    }
-    
-    public void quitApplication()
-    {
-    	//logout from smugmug
-    	//if (this.smugmugConnector != null) { this.smugmugConnector.logout(); }
-    	if (this.accListing != null) { this.accListing.logout(); }
-
-    	//statistics
-        long totalTransferedBytes = this.accListing.getTransferedBytes();
-    	Date date = new Date();
-    	long timeDiff = date.getTime() - this.startTime;
-    	
-    	double transferedMB = (double)totalTransferedBytes / (1024.0 * 1024.0);
-    	
-		double transferSpeed = 0.0;
-		//avoid division by zero
-		if (timeDiff != 0) { transferSpeed = ((double)totalTransferedBytes / 1024.0) / ((double)timeDiff / 1000.0); }
-
-		
-		DecimalFormat df = new DecimalFormat("0.0");
-    	this.log.printLogLine("finished. (execution time: " + this.getExecTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, speed: " + df.format(transferSpeed) + " kb/sec)");
-    	System.exit(0);
-    }
     
     //-------------------------- private ----------------------------------------
 
@@ -298,36 +294,6 @@ public class Model
     	return result;
     }
     
-    private String computeMD5Hash(File file)
-    {    	
-		//read local file
-		byte[] buffer = new byte[(int)file.length()];
-		InputStream is = null;
-    	try
-    	{
-			is = new FileInputStream(file);
-			is.read(buffer); //null pointer exception???
-			is.close();
-		}
-    	catch (FileNotFoundException e) { e.printStackTrace(); }
-		catch (IOException e) { e.printStackTrace(); }
-
-		//compute md5 from local file
-		String md5sum = null;
-		try { md5sum = AeSimpleMD5.MD5(buffer); }
-		catch (NoSuchAlgorithmException e) { e.printStackTrace(); }
-		catch (UnsupportedEncodingException e) { e.printStackTrace(); }
-    	
-    	return md5sum;
-    }
-    
-	private String getTimeString()
-	{
-		Date date = new Date();
-        //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        return dateFormat.format(date);
-	}
     
 	private String getExecTimeString(long time)
 	{				
