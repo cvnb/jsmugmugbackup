@@ -2,7 +2,7 @@ todo:
  - GUI
  - add pixel to svn and deployment
  - rewrite model.getAccountListing()
-
+ - fmc
  
  - deleting ???
  - document handling of non-unique names

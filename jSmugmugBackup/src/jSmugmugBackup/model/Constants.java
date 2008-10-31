@@ -15,14 +15,16 @@ public class Constants
 	public static final String version = "0.3 (dev)";
     public static final String logfile = "jSmugmugBackup.log";
     public static final int retryWait  = 20000; //time to wait before retrying
-
     
-	public static final String SmugmugServerURL  = "https://api.smugmug.com/hack/json/1.2.0/";
-	public static final String SmugmugAPIKey     = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
-	public static final String SmugmugAPIVersion = "1.2.0";
+    public static final String smugmugUserAgentString = "jSmugmugBackup/v" + Constants.version;
+	public static final String smugmugServerURL       = "https://api.smugmug.com/hack/json/1.2.0/";
+	public static final String smugmugAPIKey          = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
+	public static final String smugmugAPIVersion      = "1.2.0";
 	
-	public static final int UploadFileSizeLimit        = 512*1024*1024; //512MB
-	public static final String UploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
+	public static final int uploadFileSizeLimit        = 512*1024*1024; //512MB
+	public static final String uploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
+	
+	public static final String pixelFilename = "res/pixel.jpg";
 	
 	//...hope thats all possible types
 	public static final String[] supportedFileTypes = {".jpg", ".jpeg", ".png", ".gif", ".tiff",

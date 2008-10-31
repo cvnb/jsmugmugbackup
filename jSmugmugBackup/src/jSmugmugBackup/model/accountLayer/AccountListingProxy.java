@@ -245,13 +245,13 @@ public class AccountListingProxy implements IAccountListingProxy
         	if (imageID == 0) //image doesn't exist on smugmug
         	{
                 // check if file is smaller than 512 MB and
-                if (fileList[i].length() > (Constants.UploadFileSizeLimit))
+                if (fileList[i].length() > (Constants.uploadFileSizeLimit))
                 {
                 	this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
                 	skippedCount++;
                 }                
                 //check if someone has manually set the ignore tag
-                else if ( (new File(fileList[i].getAbsolutePath() + Constants.UploadIgnoreFilePostfix)).exists() )
+                else if ( (new File(fileList[i].getAbsolutePath() + Constants.uploadIgnoreFilePostfix)).exists() )
                 {
                 	this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " - the ignore tag was set ... skipping");
                 	skippedCount++;
@@ -456,7 +456,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File("/home/paul/temp/jSmugmugBackup/pixel.jpg"));
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
 		this.pause(10000);
 		this.connector.relogin();
@@ -490,7 +490,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File("/home/paul/temp/jSmugmugBackup/pixel.jpg"));
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
 		this.pause(10000);
 		this.connector.relogin();

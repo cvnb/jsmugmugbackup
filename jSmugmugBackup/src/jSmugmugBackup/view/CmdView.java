@@ -243,14 +243,25 @@ public class CmdView implements IView
 		this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
-		this.log.printLogLine("options");
-		this.log.printLogLine("     --email={username}    : specify the email-address or the username used to log into smugmug, optional");
-		this.log.printLogLine("     --password={password} : specify the email-address or the username used to log into smugmug, optional");
-		this.log.printLogLine("     --category={name}     : perform the action only on the given category");
-		this.log.printLogLine("     --subcategory={name}  : perform the action only on the given subcategory");
-		this.log.printLogLine("     --album={name}        : perform the action only on the given album");
+		this.log.printLogLine("options:");
+		this.log.printLogLine("     --email={username}    : specify the email-address or the username used to log into smugmug (optional)");
+		this.log.printLogLine("     --password={password} : specify the password used to log into smugmug, optional (optional)");
+		this.log.printLogLine("     --category={name}     : perform the given action only on the given category (optional)");
+		this.log.printLogLine("     --subcategory={name}  : perform the given action only on the given subcategory (optional)");
+		this.log.printLogLine("     --album={name}        : perform the given action only on the given album (optional)");
 		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
-		
+		this.log.printLogLine("");
+		this.log.printLogLine("notes:");
+		this.log.printLogLine(" - Names on smugmug are handled as if they were unique, although it is for instance");
+		this.log.printLogLine("   possible to have two albums with the same name on smugmug. jSmugmugBackup will");
+		this.log.printLogLine("   always use the first name the matches and ignore the second entity.");
+		this.log.printLogLine(" - If you want a certain file not to be uploaded, for instance because it takes too");
+		this.log.printLogLine("   with your internet connection, you can set an ignore tag. Just create a file with");
+		this.log.printLogLine("   the name of the file you don't want jSmugmugBackup to upload plus ");
+		this.log.printLogLine("   \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"");
+		this.log.printLogLine("   create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"");
+		this.log.printLogLine(" - <to be continued>");
+		this.log.printLogLine("");
 		
 		//this.log.printLogLine("     jSmugmugBackup --help");
 		//this.log.printLogLine("     jSmugmugBackup --list [--email={username}]");

@@ -25,6 +25,7 @@ import org.apache.http.impl.client.*;
 import org.json.simple.*;
 import org.json.simple.parser.*;
 
+
 public class SmugmugConnectorNG implements ISmugmugConnectorNG
 {
 	private Logger log = null;
@@ -379,12 +380,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	public long getTransferedBytes() { return this.transferedBytes; }
 
 	
+	
 	//======================== private - smugmug =============================
 	
 	private JSONObject smugmugJSONRequest(HttpRequestBase httpRequest)
 	{
         String responseBody = null;
 		
+        //User-Agent String to be identified by Smugmug ...
+        httpRequest.addHeader("User-Agent", Constants.smugmugUserAgentString);
+        
 		//repeat until success ... pretty agressive
 		// - maybe there should be a relogin in the loop???
 		boolean repeat = false;
@@ -458,7 +463,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.login.withPassword ... ");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=smugmug.login.withPassword&";
 		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
 		url = url + "EmailAddress=" + userEmail + "&";
@@ -498,7 +503,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.login.withHash ... ");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=smugmug.login.withHash&";
 		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
 		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
@@ -535,7 +540,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.logout ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=smugmug.logout&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		
@@ -560,7 +565,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.users.getTree ... ");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=smugmug.users.getTree&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		//url = url + "NickName=" + this.login_nickname + "&"; //optional
@@ -597,7 +602,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.images.get ... ");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -644,7 +649,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.images.get ... ");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&";
@@ -679,7 +684,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + this.encodeForURL(name) + "&";
@@ -713,7 +718,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "CategoryID=" + categoryID + "&";
@@ -749,7 +754,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + this.encodeForURL(name) + "&";
@@ -786,7 +791,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "SubCategoryID=" + subcategoryID + "&";
@@ -823,7 +828,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Title=" + this.encodeForURL(title) + "&";
@@ -913,7 +918,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&"; //integer
@@ -954,7 +959,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1052,7 +1057,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1150,7 +1155,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
@@ -1184,7 +1189,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog(methodName + " ...");
 		
 		//build url
-		String url = Constants.SmugmugServerURL + "?";
+		String url = Constants.smugmugServerURL + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
@@ -1234,7 +1239,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
 	        httpPut.addHeader("Content-MD5", this.computeMD5Hash(fileName) );
 	        httpPut.addHeader("X-Smug-SessionID", SmugmugConnectorNG.login_sessionID);
-	        httpPut.addHeader("X-Smug-Version", Constants.SmugmugAPIVersion);
+	        httpPut.addHeader("X-Smug-Version", Constants.smugmugAPIVersion);
 	        httpPut.addHeader("X-Smug-ResponseType", "JSON");
 	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
 	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
