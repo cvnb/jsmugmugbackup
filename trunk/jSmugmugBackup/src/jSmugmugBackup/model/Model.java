@@ -67,7 +67,6 @@ public class Model
     	this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
 
-
 	public void upload(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
@@ -293,7 +292,6 @@ public class Model
     	
     	return result;
     }
-    
     
 	private String getExecTimeString(long time)
 	{				

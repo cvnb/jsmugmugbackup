@@ -1,6 +1,5 @@
 todo:
  - GUI
- - rewrite model.getAccountListing()
  - fmc
  
  - deleting ???
