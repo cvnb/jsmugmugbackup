@@ -21,6 +21,7 @@ public class Controller
         //... Add listeners to the view.
         this.view.addLoginButtonListener(new LoginButtonListener());
         this.view.addRefreshButtonListener(new RefreshButtonListener());
+        this.view.addSortButtonListener(new SortButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
@@ -53,6 +54,14 @@ public class Controller
 		public void actionPerformed(ActionEvent e)
 		{
 			model.getFileListing(view.showListDialog());
+		}
+	}
+	
+	class SortButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			model.resortPrepare(view.showSortDialog());
 		}
 	}
 	

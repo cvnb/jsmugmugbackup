@@ -371,9 +371,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 //		
 //	}
 	
-	public void deleteFile() {
-		// TODO Auto-generated method stub
-		
+	public void deleteFile(int imageID)
+	{
+		JSONObject jobj = this.smugmug_images_delete(imageID);		
 	}
 	
 	public long getTransferedBytes() { return this.transferedBytes; }
@@ -638,6 +638,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_images_delete(int imageID)
 	{
+		this.log.printLog(this.getTimeString() + " deleting (imageID=" + imageID + ") ... ");
+		
 		String methodName = "smugmug.images.delete";
 		//this.log.printLog("smugmug.images.get ... ");
 		

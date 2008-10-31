@@ -19,6 +19,7 @@ public interface IView
 	ILoginView getLoginMethod();
 	void refreshFileListing(Vector<ICategory> categoryList);
 	ITransferDialogResult showListDialog();
+	ITransferDialogResult showSortDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
 	ITransferDialogResult showVerifyDialog();
@@ -29,6 +30,7 @@ public interface IView
 	
 	void addLoginButtonListener(ActionListener listener);
 	void addRefreshButtonListener(ActionListener listener);
+	void addSortButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addUploadStartButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);

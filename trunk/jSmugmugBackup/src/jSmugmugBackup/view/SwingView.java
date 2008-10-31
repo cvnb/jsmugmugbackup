@@ -10,6 +10,7 @@ import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.tree.*;
 
@@ -262,6 +263,9 @@ public class SwingView extends JFrame implements IView
 	public void addRefreshButtonListener(ActionListener listener) {
 		this.jButton_refresh.addActionListener(listener);
 	}
+	public void addSortButtonListener(ActionListener listener) {
+			
+	}
 	public void addQuitButtonListener(ActionListener listener) {
 		this.jButton_quit.addActionListener(listener);		
 	}
@@ -362,6 +366,11 @@ public class SwingView extends JFrame implements IView
 		return new TransferDialogResult(null, null, null, null);
 	}
 	
+	public ITransferDialogResult showSortDialog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public ITransferDialogResult showUploadDialog()
 	{
 		this.uploadDialog = new SwingUploadDialog();
@@ -398,7 +407,6 @@ public class SwingView extends JFrame implements IView
 		this.jTextArea_log.append(text);
 	}
 	//------------------------------------
-
 
 
 

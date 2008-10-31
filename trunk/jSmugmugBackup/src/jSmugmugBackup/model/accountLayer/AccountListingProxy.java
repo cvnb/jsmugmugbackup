@@ -117,10 +117,8 @@ public class AccountListingProxy implements IAccountListingProxy
 
 			}
 		}
-
 		
-		this.log.printLogLine("matched albums: " + selectedAlbums.size() );
-
+		//this.log.printLogLine("matched albums: " + selectedAlbums.size() );
 		
 		return selectedAlbums;		
 	}
@@ -138,7 +136,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		// - add album, with correct category and subcategory to result
 		for (IAlbum intern_a : albumList)
 		{
-			this.log.printLogLine("intern_a.getName()=" + intern_a.getName());
+			//this.log.printLogLine("intern_a.getName()=" + intern_a.getName());
 			ICategory intern_c = this.getAlbumCategory(intern_a.getID());
 			
 			//check if category already exists in result set, if not create it
@@ -453,19 +451,22 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		Arrays.sort(albumArray);
 		
-		for (int i = albumArray.length-1 ; i >= 0; i--)
+
+		//add one pixel image
+		int[] imageIDArray = new int[albumArray.length];
+		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
-			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
-			//this.connector.setAlbumPosition(albumArray[i].getID(), i + 5000);
-			this.connector.uploadFile(albumArray[i].getID(), new File("/home/paul/temp/jSmugmugBackup/pixel.jpg"));
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File("/home/paul/temp/jSmugmugBackup/pixel.jpg"));
 		}
-//		for (int i = 0 ; i < albumArray.length; i++)
-//		{
-//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
-//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
-//			this.connector.setAlbumPosition(albumArray[i].getID(), i+4);
-//		}
+		this.pause(10000);
+		this.connector.relogin();
+		//this.pause(30000);
+		
+		//delete image again
+		for (int i = 0 ; i < albumArray.length; i++)
+		{
+			this.connector.deleteFile(imageIDArray[i]);
+		}
 	}
 
 	public void resortSubcategoryAlbums(int subcategoryID)
@@ -485,18 +486,21 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		Arrays.sort(albumArray);
 		
-		for (int i = albumArray.length-1 ; i >= 0; i--)
+		//add one pixel image
+		int[] imageIDArray = new int[albumArray.length];
+		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
-			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
-			//this.connector.setAlbumPosition(albumArray[i].getID(), i + 5000);
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File("/home/paul/temp/jSmugmugBackup/pixel.jpg"));
 		}
-//		for (int i = 0 ; i < albumArray.length; i++)
-//		{
-//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName() + "_");
-//			//this.connector.renameAlbum(albumArray[i].getID(), albumArray[i].getName());
-//			this.connector.setAlbumPosition(albumArray[i].getID(), i+4);
-//		}
+		this.pause(10000);
+		this.connector.relogin();
+		//this.pause(30000);
+		
+		//delete image again
+		for (int i = 0 ; i < albumArray.length; i++)
+		{
+			this.connector.deleteFile(imageIDArray[i]);
+		}
 	}
 	
 	public void startProcessingQueue()

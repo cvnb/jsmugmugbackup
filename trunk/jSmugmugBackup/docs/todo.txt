@@ -1,6 +1,6 @@
 todo:
  - GUI
- - sort album lists and subcategories
+ - add pixel to svn and deployment
  - rewrite model.getAccountListing()
 
  
