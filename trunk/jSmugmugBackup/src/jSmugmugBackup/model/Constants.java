@@ -20,7 +20,7 @@ public class Constants
 	public static final String smugmugServerURL       = "https://api.smugmug.com/hack/json/1.2.0/";
 	//public static final String smugmugAPIKey          = "EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb"; //not mine yet - from SmugFig API
 	public static final String smugmugAPIKey          = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
-	public static final String smugmugAPIVersion      = "1.2.0";	
+	public static final String smugmugAPIVersion      = "1.2.0"; 	
 	
 	public static final int uploadFileSizeLimit        = 512*1024*1024; //512MB
 	public static final String uploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
@@ -28,17 +28,26 @@ public class Constants
 	public static final String pixelFilename = "res/pixel.jpg";
 	
 	//...hope thats all possible types
-	public static final String[] supportedFileTypes = {".jpg", ".jpeg", ".png", ".gif", ".tiff",
-		                                               ".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp"};
+	public static final String[] supportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
+	public static final String[] supportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp"};
 
 	public static final FilenameFilter supportedFileTypesFilter = new FilenameFilter()
 	{
 		public boolean accept(File dir, String name)
 		{
-			for (String fileEnding : Constants.supportedFileTypes)
+			//check if it's an image
+			for (String fileEnding : Constants.supportedFileTypes_Images)
 			{
 				if (name.toLowerCase().endsWith(fileEnding)) return true;
 			}
+			
+			//check if it's a video
+			for (String fileEnding : Constants.supportedFileTypes_Videos)
+			{
+				if (name.toLowerCase().endsWith(fileEnding)) return true;
+			}
+			
+			//it neither an image nor a video
 			return false;
 		}
 	};
