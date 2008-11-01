@@ -190,7 +190,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
     	//this.log.printLogLine("-----------------------------------------------");
     	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
-		this.log.printLogLine(Helper.getTimeString() + " enqueuing album ... dir: " + pics_dir);
+		this.log.printLogLine(Helper.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + pics_dir + ")");
 
     	int uploadCount = 0;
     	int skippedCount = 0;
@@ -245,13 +245,13 @@ public class AccountListingProxy implements IAccountListingProxy
                 // check if file is smaller than 512 MB and
                 if (fileList[i].length() > (Constants.uploadFileSizeLimit))
                 {
-                	this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " filesize greater than 512 MB is not supported ... skipping");
+                	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize greater than 512 MB is not supported ... skipping");
                 	skippedCount++;
                 }                
                 //check if someone has manually set the ignore tag
                 else if ( (new File(fileList[i].getAbsolutePath() + Constants.uploadIgnoreFilePostfix)).exists() )
                 {
-                	this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " - the ignore tag was set ... skipping");
+                	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - the ignore tag was set ... skipping");
                 	skippedCount++;
                 }
                 else
@@ -264,20 +264,41 @@ public class AccountListingProxy implements IAccountListingProxy
         	else //image already exists on smugmug
         	{
             	String fileMD5 = Helper.computeMD5Hash(fileList[i]);
-	        	if (!this.getImage(imageID).getMD5().equals(fileMD5))
+	        	if (!this.getImage(imageID).getMD5().equals(fileMD5)) //exists already, but has wrong md5
 	        	{
-	        		this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug, but has different MD5Sum ... skipping anyway");
-	        		skippedCount++;
+	    			//check if it's a video
+	        		boolean isVideo = false;
+	    			for (String fileEnding : Constants.supportedFileTypes_Videos)
+	    			{
+	    				if (this.getImage(imageID).getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+	    			}
+	    			
+	    			
+	    			if (isVideo)
+	    			{
+	    				//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is normal for a video ... skipping");
+	    				skippedCount++;
+	    			}
+	    			else
+	    			{
+	    				//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
+	    				//skippedCount++;
+	    				
+	    				this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... uploading again");
+	    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+	    				this.transferQueue.add(item);
+	                    uploadCount++;
+	    			}
 	        	}
-	        	else
+	        	else //exists already and the md5 is ok --> we can safely skip this upload
 	        	{
-	        		//this.log.printLogLine("  WARNING: " + fileList[i].getAbsolutePath() + " already exists on smugmug ... skipping");
+	        		//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " already exists on smugmug ... skipping");
 	        		skippedCount++;
 	        	}
         	}
         }        
 
-        this.log.printLogLine("  ... added " + uploadCount + " files to album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + skippedCount + " files were skipped, " + unsupportedCount + " had an unsupported file type)");
+        this.log.printLogLine("  ... added " + uploadCount + " files, " + skippedCount + " were skipped, " + unsupportedCount + " had an unsupported file type.");
         
 
 	}
