@@ -281,13 +281,13 @@ public class AccountListingProxy implements IAccountListingProxy
 	    			}
 	    			else
 	    			{
-	    				//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
-	    				//skippedCount++;
+	    				this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
+	    				skippedCount++;
 	    				
-	    				this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... uploading again");
-	    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
-	    				this.transferQueue.add(item);
-	                    uploadCount++;
+	    				//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... uploading again");
+	    				//ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+	    				//this.transferQueue.add(item);
+	                    //uploadCount++;
 	    			}
 	        	}
 	        	else //exists already and the md5 is ok --> we can safely skip this upload
@@ -455,7 +455,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void resortCategoryAlbums(int categoryID)
 	{
-		this.log.printLogLine("resortCategoryAlbums(" + categoryID + ")");
+		this.log.printLogLine("resortCategoryAlbums(name=" + this.getCategory(categoryID).getName() + ")");
 		
 		//find category
 		ICategory c = this.getCategory(categoryID);
@@ -471,13 +471,17 @@ public class AccountListingProxy implements IAccountListingProxy
 		Arrays.sort(albumArray);
 		
 
-		//add one pixel image
+		//add one pixel image to each album
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
-		Helper.pause(10000);
+		
+		this.log.printLog(Helper.getTimeString() + " waiting a few secs ...");
+		Helper.pause(Constants.retryWait);
+		this.log.printLogLine("ok");
+		
 		this.connector.relogin();
 		//this.pause(30000);
 		
@@ -490,7 +494,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void resortSubcategoryAlbums(int subcategoryID)
 	{
-		this.log.printLogLine("resortSubcategoryAlbums(" + subcategoryID + ")");
+		this.log.printLogLine("resortSubcategoryAlbums(name=" + this.getSubcategory(subcategoryID).getName() + ")");
 		
 		//find category
 		ISubcategory s = this.getSubcategory(subcategoryID);
@@ -511,7 +515,11 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
-		Helper.pause(10000);
+		
+		this.log.printLog(Helper.getTimeString() + " waiting a few secs ...");
+		Helper.pause(Constants.retryWait);
+		this.log.printLogLine("ok");
+		
 		this.connector.relogin();
 		//this.pause(30000);
 		
