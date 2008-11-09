@@ -1411,9 +1411,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	encodedStr = encodedStr.replace("%", "%25"); //do this first    	
     	
     	encodedStr = encodedStr.replace(" ", "%20"); //space character
-    	encodedStr = encodedStr.replace("?", "%22"); 
+    	encodedStr = encodedStr.replace("#", "%23"); //not sure, if it is nesseciary
+    	encodedStr = encodedStr.replace("+", "%2B");
     	encodedStr = encodedStr.replace("<", "%3C");
     	encodedStr = encodedStr.replace(">", "%3E");
+    	encodedStr = encodedStr.replace("?", "%3F");
     	
     	//this.log.printLogLine("encodeForURL: " + str + " --> " + encodedStr);
     	

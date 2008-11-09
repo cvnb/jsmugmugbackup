@@ -536,8 +536,8 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.transferQueue.startSyncProcessing();
 		
 		
-		this.log.printLog("waiting 30 sec for smugmug to process the images ... ");
-		Helper.pause(30000);
+		this.log.printLog(Helper.getTimeString() + " waiting a few secs for smugmug to process the images ... ");
+		Helper.pause(Constants.retryWait);
 		this.log.printLogLine("ok");
 		
 		//collect Results
@@ -551,6 +551,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			// if item.getAction == upload then add imageid to local data
 			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
 			{
+				this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
 				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
 				
 				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );

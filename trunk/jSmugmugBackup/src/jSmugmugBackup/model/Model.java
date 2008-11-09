@@ -259,6 +259,8 @@ public class Model
     public void startProcessingQueue()
     {
     	this.accListing.startProcessingQueue();
+    	
+    	this.quitApplication();
     }
     
     
