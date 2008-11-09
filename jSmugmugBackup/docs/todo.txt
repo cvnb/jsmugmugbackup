@@ -1,7 +1,11 @@
 todo:
+ - check deployment
+ - add copyright info
+ - queue output: queue size, size of files in queue
  - GUI
    - common transfer dialog, which can be parametrized
  - fmc
+ - Nullpointer Exception when trying to upload a file with 0 bytes
  
  - deleting ???
  - document handling of non-unique names
