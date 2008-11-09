@@ -1,6 +1,4 @@
 todo:
- - check deployment
- - add copyright info
  - queue output: queue size, size of files in queue
  - GUI
    - common transfer dialog, which can be parametrized
