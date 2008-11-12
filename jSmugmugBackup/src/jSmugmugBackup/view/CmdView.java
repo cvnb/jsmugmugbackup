@@ -255,7 +255,7 @@ public class CmdView implements IView
 		this.log.printLogLine(" - Names on smugmug are handled as if they were unique, although it is for instance");
 		this.log.printLogLine("   possible to have two albums with the same name on smugmug. jSmugmugBackup will");
 		this.log.printLogLine("   always use the first name the matches and ignore the second entity.");
-		this.log.printLogLine(" - If you want a certain file not to be uploaded, for instance because it takes too");
+		this.log.printLogLine(" - If you want a certain file not to be uploaded, for instance because it takes too long");
 		this.log.printLogLine("   with your internet connection, you can set an ignore tag. Just create a file with");
 		this.log.printLogLine("   the name of the file you don't want jSmugmugBackup to upload plus ");
 		this.log.printLogLine("   \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"");

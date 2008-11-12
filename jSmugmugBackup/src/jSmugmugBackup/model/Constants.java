@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 public class Constants
 {
-	public static final String version = "0.3";
+	public static final String version = "0.4 (dev)";
     public static final String logfile = "jSmugmugBackup.log";
     public static final int retryWait  = 20000; //time to wait before retrying
     

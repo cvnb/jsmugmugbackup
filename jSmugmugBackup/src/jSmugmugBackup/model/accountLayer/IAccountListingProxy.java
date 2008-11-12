@@ -15,7 +15,7 @@ public interface IAccountListingProxy
 {
 	void setLoginMethod(ILoginView loginMethod);
 	void init();
-	void login();
+	boolean login();
 	void logout();
 	
 	//Vector<ICategory> getCategoryList();
