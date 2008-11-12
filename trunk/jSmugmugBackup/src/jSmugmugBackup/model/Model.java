@@ -30,7 +30,16 @@ public class Model
     public void login(ILoginView loginMethod)
     {
     	this.accListing.setLoginMethod(loginMethod);
-    	this.accListing.login();
+    	
+    	//make a maximum of 3 login attempts
+    	boolean success = false;
+    	for (int i=0; i < 3; i++)
+    	{
+    		success = this.accListing.login();
+    		if (success) { break; }
+    	}
+    	if (!success) { this.quitApplication(); }
+    	
     	this.accListing.init();
     }
     

@@ -43,12 +43,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.categoryList = this.connector.getTree();
 	}
 	
-	public void login()
+	public boolean login()
 	{
 		String userEmail = this.loginMethod.requestUserEmail();
 		String password = this.loginMethod.requestPassword();
 		
-		this.connector.login(userEmail, password);
+		return this.connector.login(userEmail, password);
 	}
 	
 	public void logout()
@@ -313,7 +313,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 		
 		//check target dir
-		this.log.printLog("checking dir: " + targetDir + " ... ");
+		this.log.printLog("  ... checking dir: " + targetDir + " ... ");
 		boolean success = (new File(targetDir)).mkdirs();
 	    if (success) { this.log.printLogLine("created"); }
 	    else { this.log.printLogLine("ok"); }

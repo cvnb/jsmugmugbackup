@@ -42,9 +42,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		this.log = Logger.getInstance();
 	}
 
-	public void login(String userEmail, String password)
+	public boolean login(String userEmail, String password)
 	{
-		this.smugmug_login_withPassword(userEmail, password);
+		return this.smugmug_login_withPassword(userEmail, password);
 	}
 
 	public void relogin()
@@ -454,7 +454,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return jobj;
 	}
 	
-	private void smugmug_login_withPassword(String userEmail, String password)
+	private boolean smugmug_login_withPassword(String userEmail, String password)
 	{
 		this.log.printLog(Helper.getTimeString() + " logging in ... ");
 		//this.log.printLog("smugmug.login.withPassword ... ");
@@ -481,7 +481,21 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
 	        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
 	        	this.log.printLogLine("ok");
-	        	return;
+	        	return true;
+	        }
+	        if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+		       	 (this.getJSONValue(jobj, "message").equals("invalid login")) )
+	        {
+	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+	        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
+	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
+	        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
+	        	this.log.printLogLine("failed");
+	        	
+	        	//this is not the optimal solution
+	        	//System.exit(0);
+	        	
+	        	return false;
 	        }
 	        else
 	        {
@@ -768,7 +782,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         {
         	//this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
         	this.log.printLogLine("ok");
-        	this.printJSONObject(jobj);
+        	//this.printJSONObject(jobj);
            	return jobj;
         }
         else

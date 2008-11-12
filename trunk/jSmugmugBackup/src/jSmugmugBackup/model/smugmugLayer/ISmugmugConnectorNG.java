@@ -14,7 +14,7 @@ import java.util.Vector;
 
 public interface ISmugmugConnectorNG
 {
-	void login(String userEmail, String password);
+	boolean login(String userEmail, String password);
 	void relogin();
 	void logout();
 
