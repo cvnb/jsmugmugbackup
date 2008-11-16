@@ -10,4 +10,5 @@ public interface ITransferQueueItem
 {
 	void process();
 	ITransferQueueItemProcessResults getResults();
+	long getFileSize();
 }

@@ -6,8 +6,10 @@
  */
 package jSmugmugBackup.model.queue;
 
+import jSmugmugBackup.model.Helper;
 import jSmugmugBackup.view.Logger;
 
+import java.text.DecimalFormat;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -23,12 +25,22 @@ public class TransferQueueProcessor implements Runnable
 		this.queue = queue;
 		this.processedItemList = processedItemList;
 		
-		this.log.printLogLine("initializing TransferQueueProcessor ... queue size: " + this.queue.size() + " items");		
+		// compute queue size
+		long queue_size_byte = 0;
+		for (ITransferQueueItem item : queue)
+		{
+			queue_size_byte += item.getFileSize();
+		}		
+    	double queue_size_mb = (double)queue_size_byte/(1024*1024);
+		DecimalFormat df = new DecimalFormat("0.0");		
+		
+		
+		this.log.printLogLine(Helper.getTimeString() + " initializing TransferQueueProcessor (items=" + this.queue.size() + ", size=" + df.format(queue_size_mb) + " mb) ... ok");
 	}
 	
 	public void run()
 	{
-		this.log.printLogLine("running TransferQueueProcessor in separate Thread ...");
+		this.log.printLogLine(Helper.getTimeString() + " running TransferQueueProcessor in separate Thread ...");
 		
 		ITransferQueueItem item = this.queue.poll(); //Retrieves and removes the head of this queue, or null  if this queue is empty
 		while (item != null)

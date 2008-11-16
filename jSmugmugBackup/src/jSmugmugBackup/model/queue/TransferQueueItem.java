@@ -102,4 +102,9 @@ public class TransferQueueItem implements ITransferQueueItem
 	{		
 		return new TransferQueueItemProcessResults(this.result_processed, this.result_successful, this.result_action, this.result_id, this.result_message, this.result_transferedBytes);
 	}
+
+	public long getFileSize()
+	{
+		return this.fileDescriptor.length();
+	}
 }
