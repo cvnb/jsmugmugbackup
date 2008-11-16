@@ -35,7 +35,7 @@ public class TransferQueueProcessor implements Runnable
 		DecimalFormat df = new DecimalFormat("0.0");		
 		
 		
-		this.log.printLogLine(Helper.getTimeString() + " initializing TransferQueueProcessor (items=" + this.queue.size() + ", size=" + df.format(queue_size_mb) + " mb) ... ok");
+		this.log.printLogLine(Helper.getTimeString() + " initializing TransferQueueProcessor (items: " + this.queue.size() + ", size: " + df.format(queue_size_mb) + " mb) ... ok");
 	}
 	
 	public void run()
