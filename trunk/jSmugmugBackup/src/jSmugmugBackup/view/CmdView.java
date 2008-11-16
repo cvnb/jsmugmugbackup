@@ -260,6 +260,8 @@ public class CmdView implements IView
 		this.log.printLogLine("   the name of the file you don't want jSmugmugBackup to upload plus ");
 		this.log.printLogLine("   \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"");
 		this.log.printLogLine("   create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"");
+		this.log.printLogLine(" - uploaded albums are by default private, not searchable through smugmug and not searchable");
+		this.log.printLogLine("   through google ... right now, the only way to change that is the smugmug website");
 		this.log.printLogLine(" - <to be continued>");
 		this.log.printLogLine("");
 		
