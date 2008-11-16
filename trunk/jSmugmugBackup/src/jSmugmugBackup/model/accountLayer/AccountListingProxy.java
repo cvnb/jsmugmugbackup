@@ -242,8 +242,14 @@ public class AccountListingProxy implements IAccountListingProxy
         	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
         	if (imageID == 0) //image doesn't exist on smugmug
         	{
-                // check if file is smaller than 512 MB and
-                if (fileList[i].length() > (Constants.uploadFileSizeLimit))
+                // check if file is not empty
+                if (fileList[i].length() == 0)
+                {
+                	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - file has 0 bytes ... skipping");
+                	skippedCount++;
+                }                
+                // check if file is smaller than 512 MB
+                else if (fileList[i].length() > (Constants.uploadFileSizeLimit))
                 {
                 	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize greater than 512 MB is not supported ... skipping");
                 	skippedCount++;
@@ -490,6 +496,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			this.connector.deleteFile(imageIDArray[i]);
 		}
+		
+		//this line is not too useful
+		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
 	}
 
 	public void resortSubcategoryAlbums(int subcategoryID)
@@ -533,14 +542,16 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	public void startProcessingQueue()
 	{
+		// start syncronous processing
 		this.transferQueue.startSyncProcessing();
 		
-		
+		// wait a few secs
 		this.log.printLog(Helper.getTimeString() + " waiting a few secs for smugmug to process the images ... ");
 		Helper.pause(Constants.retryWait);
 		this.log.printLogLine("ok");
 		
 		//collect Results
+		this.log.printLog(Helper.getTimeString() + " updating local database ... ");
 		this.connector.relogin(); //probably not nessceary
 		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
 		for (ITransferQueueItem item : processedItemList)
@@ -551,7 +562,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			// if item.getAction == upload then add imageid to local data
 			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
 			{
-				this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
+				//this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
 				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
 				
 				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
@@ -563,6 +574,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
 			}
 		}
+		this.log.printLogLine("ok");
 		
 	}
 	
