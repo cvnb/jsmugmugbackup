@@ -17,14 +17,14 @@ public class Image extends SmugmugObject implements IImage
 	private String md5 = null;
 	private String originalURL = null;
 	
-	public Image(int id, String name)
+	public Image(IAlbum parentAlbum, int id, String name)
 	{
-		super(id, name);
+		super(parentAlbum, id, name);
 	}
 	
-	public Image(int id, String name, String caption, String keywords, String format, int height, int width, long size, String md5, String originalURL)
+	public Image(IAlbum parentAlbum, int id, String name, String caption, String keywords, String format, int height, int width, long size, String md5, String originalURL)
 	{
-		super(id, name);
+		super(parentAlbum, id, name);
 		this.caption = caption;
 		this.keywords = keywords;
 		this.format = format;
@@ -35,6 +35,9 @@ public class Image extends SmugmugObject implements IImage
 		this.originalURL = originalURL;
 	}
 
+	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_IMAGE; }
+
+	
 	public String getCaption() { return this.caption; }
 	public String getKeywords() { return this.keywords; }
 	public String getFormat() { return this.format; }
@@ -43,6 +46,8 @@ public class Image extends SmugmugObject implements IImage
 	public long getSize() { return this.size; }
 	public String getMD5() { return this.md5; }
 	public String getOriginalURL() { return this.originalURL; }
+
+
 
 
 }

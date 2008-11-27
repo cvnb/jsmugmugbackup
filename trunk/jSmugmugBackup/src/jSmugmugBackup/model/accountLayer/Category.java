@@ -14,12 +14,15 @@ public class Category extends SmugmugObject implements ICategory
 	private Vector<ISubcategory> subcategoryList = null;
 
 
-	public Category(int id, String name)
+	public Category(IRoot parentRoot, int id, String name)
 	{
-		super(id, name);
+		super(parentRoot, id, name);
 		this.albumList = new Vector<IAlbum>();
 		this.subcategoryList = new Vector<ISubcategory>();		
 	}
+	
+	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_CATEGORY; }
+	
 	
 	public void addAlbum(IAlbum album)
 	{

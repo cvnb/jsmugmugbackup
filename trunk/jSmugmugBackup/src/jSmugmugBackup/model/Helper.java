@@ -42,12 +42,21 @@ public class Helper
     	return md5sum;
     }
     
-	public static String getTimeString()
+	public static String getCurrentTimeString()
 	{
 		Date date = new Date();
         //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
+	}
+	
+	public static String getDurationTimeString(long time)
+	{				
+		int hours   = (int)(time / 1000 / 60 / 60);
+		int minutes = (int)(time / 1000 / 60);
+		int seconds = (int)(time / 1000);
+		
+		return new String(hours + "h" + (minutes-(hours*60)) + "m" + (seconds-(minutes*60)) + "s");
 	}
 	
     public static void pause(long millisecs)

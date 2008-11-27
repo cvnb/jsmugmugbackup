@@ -21,6 +21,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	private ISmugmugConnectorNG connector = null;
 	private ITransferQueue transferQueue = null;
 	private ILoginView loginMethod = null;
+	
+	private IRoot smugmugRoot = null;
 	private Vector<ICategory> categoryList = null;
 	
 	private long transferedBytes = 0;
@@ -39,7 +41,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	
 	public void init()
-	{		
+	{
+		this.smugmugRoot = new Root("");
 		this.categoryList = this.connector.getTree();
 	}
 	
@@ -123,6 +126,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName)
 	{
+		IRoot resultRoot = new Root("");
 		Vector<ICategory> result = new Vector<ICategory>();
 		
 		//find matching albums
@@ -148,7 +152,7 @@ public class AccountListingProxy implements IAccountListingProxy
 					result_c_exists = true;
 				}
 			}
-			if (result_c == null) { result_c = new Category( intern_c.getID(), intern_c.getName() ); } //create new category empty with the same name, because we don't want to copy subcategories and albums
+			if (result_c == null) { result_c = new Category(resultRoot, intern_c.getID(), intern_c.getName() ); } //create new category empty with the same name, because we don't want to copy subcategories and albums
 			
 			
 			ISubcategory intern_s = this.getAlbumSubcategory(intern_a.getID());
@@ -168,16 +172,16 @@ public class AccountListingProxy implements IAccountListingProxy
 						}
 					}
 				}
-				if ( result_s == null ) { result_s = new Subcategory(intern_s.getID(), intern_s.getName()); }
+				if ( result_s == null ) { result_s = new Subcategory(result_c, intern_s.getID(), intern_s.getName()); }
 				
 				if (!result_c_exists) { result.add(result_c); }
 				if (!result_s_exists) { result_c.addSubcategory(result_s); }
-				result_s.addAlbum( (IAlbum)intern_a.clone() ); //clone, because we need the children too, i.e. we copy the images too
+				result_s.addAlbum( (IAlbum)intern_a.clone(result_s) ); //clone, because we need the children too, i.e. we copy the images too
 			}
 			else //album doesn't have a subcategory
 			{
 				if (!result_c_exists) { result.add(result_c); }
-				result_c.addAlbum( (IAlbum)intern_a.clone() ); //clone, because we need the children too, i.e. we copy the images too
+				result_c.addAlbum( (IAlbum)intern_a.clone(result_c) ); //clone, because we need the children too, i.e. we copy the images too
 			}
 			
 		}
@@ -190,7 +194,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
     	//this.log.printLogLine("-----------------------------------------------");
     	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
-		this.log.printLogLine(Helper.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + pics_dir + ")");
+		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + pics_dir + ")");
 
     	int uploadCount = 0;
     	int skippedCount = 0;
@@ -311,7 +315,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)
 	{
-		this.log.printLogLine(Helper.getTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
+		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
 		
 		int downloadCount = 0;
 		
@@ -341,7 +345,7 @@ public class AccountListingProxy implements IAccountListingProxy
     public void verifyAlbum(int albumID, String targetBaseDir)
     {
 		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
-    	this.log.printLog(Helper.getTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
+    	this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
 
 		File dir = new File(targetDir);
 	    File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
@@ -484,7 +488,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
 		
-		this.log.printLog(Helper.getTimeString() + " waiting a few secs ...");
+		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
 		Helper.pause(Constants.retryWait);
 		this.log.printLogLine("ok");
 		
@@ -525,7 +529,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
 		}
 		
-		this.log.printLog(Helper.getTimeString() + " waiting a few secs ...");
+		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
 		Helper.pause(Constants.retryWait);
 		this.log.printLogLine("ok");
 		
@@ -546,12 +550,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.transferQueue.startSyncProcessing();
 		
 		// wait a few secs
-		this.log.printLog(Helper.getTimeString() + " waiting a few secs for smugmug to process the images ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs for smugmug to process the images ... ");
 		Helper.pause(Constants.retryWait);
 		this.log.printLogLine("ok");
 		
 		//collect Results
-		this.log.printLog(Helper.getTimeString() + " updating local database ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
 		this.connector.relogin(); //probably not nessceary
 		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
 		for (ITransferQueueItem item : processedItemList)
@@ -589,7 +593,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	private void addCategory(int id, String name)
 	{
-		this.categoryList.add( new Category(id, name) );
+		this.categoryList.add( new Category(this.smugmugRoot, id, name) );
 	}
 	private void addSubcategory(int categoryID, int id, String name)
 	{
@@ -597,7 +601,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			if (c.getID() == categoryID)
 			{
-				c.addSubcategory(new Subcategory(id, name) );
+				c.addSubcategory(new Subcategory(c, id, name) );
 				return;
 			}
 		}
@@ -616,7 +620,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (s.getID() == subcategoryID)
 					{
-						s.addAlbum( new Album(id, name) );
+						s.addAlbum( new Album(s, id, name) );
 						return;
 					}
 				}
@@ -631,7 +635,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			if (c.getID() == categoryID)
 			{
-				c.addAlbum( new Album(id, name) );
+				c.addAlbum( new Album(c, id, name) );
 				return;
 			}
 		}
@@ -648,7 +652,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (a.getID() == albumID)
 					{
-						a.addImage(new Image(id, name));
+						a.addImage(new Image(a, id, name));
 						return;
 					}
 				}
@@ -659,7 +663,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			{
 				if (a.getID() == albumID)
 				{
-					a.addImage(new Image(id, name));
+					a.addImage(new Image(a, id, name));
 					return;
 				}
 			}

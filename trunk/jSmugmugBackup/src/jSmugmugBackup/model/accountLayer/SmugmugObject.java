@@ -6,13 +6,16 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
-public class SmugmugObject implements ISmugmugObject
+public abstract class SmugmugObject implements ISmugmugObject
 {
+	private ISmugmugObject parent = null;
 	private int id = -1;
 	private String name = null;
-
-	protected SmugmugObject(int id, String name)
+	
+	
+	protected SmugmugObject(ISmugmugObject parent, int id, String name)
 	{
+		this.parent = parent;
 		this.id = id;
 		this.name = name;
 	}
@@ -26,19 +29,31 @@ public class SmugmugObject implements ISmugmugObject
 	{
 		return this.name;
 	}
+	
+	public ISmugmugObject getParent()
+	{
+		return this.parent;
+	}
+
+	public abstract SmugmugTypeEnum getSmugmugType();
+
+	
 
 	public int compareTo(ISmugmugObject o)
 	{
 		return this.name.compareToIgnoreCase( ((SmugmugObject)o).getName() );
 	}
 	
-	public SmugmugObject clone()
+	public SmugmugObject clone(ISmugmugObject newParent)
 	{
 		SmugmugObject myClone = null;
 		try
 		{
 			myClone = (SmugmugObject) super.clone();
 		} catch (CloneNotSupportedException e) { e.printStackTrace(); }
+		
+		//put new parent link
+		myClone.parent = newParent;
 		
 		return myClone;
 	}

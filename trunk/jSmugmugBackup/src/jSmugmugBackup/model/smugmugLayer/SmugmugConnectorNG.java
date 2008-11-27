@@ -67,8 +67,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	public Vector<ICategory> getTree()
 	{
-		this.log.printLog(Helper.getTimeString() + " downloading account data ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data ... ");
 		
+		IRoot smugmugRoot = new Root(this.login_nickname);
 		Vector<ICategory> categoryList = new Vector<ICategory>();
 		
 		JSONObject tree = this.smugmug_users_getTree();
@@ -82,7 +83,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			Number categoryID = (Number)this.getJSONValue(jsonCategory, "id");
 			String categoryName = (String)this.getJSONValue(jsonCategory, "Name");
 			//System.out.println("categoryIndex=" + categoryIndex + ": id=" + categoryID.intValue() + ", name=" + categoryName);
-			ICategory category = new Category(categoryID.intValue(), categoryName);
+			ICategory category = new Category(smugmugRoot, categoryID.intValue(), categoryName);
 			categoryList.add( category );
 
 			
@@ -94,7 +95,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				Number subcategoryID = (Number)this.getJSONValue(jsonSubcategory, "id");
 				String subcategoryName = (String)this.getJSONValue(jsonSubcategory, "Name");
 				//System.out.println("   subcategoryIndex=" + subcategoryIndex + ": id=" + subcategoryID.intValue() + ", name=" + subcategoryName);
-				ISubcategory subcategory = new Subcategory(subcategoryID.intValue(), subcategoryName);
+				ISubcategory subcategory = new Subcategory(category, subcategoryID.intValue(), subcategoryName);
 				category.addSubcategory(subcategory);
 				
 				//iterate over albums (with subcategories)
@@ -107,7 +108,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
 					String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
 					//System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
-					IAlbum album = new Album(albumID.intValue(), albumName);
+					IAlbum album = new Album(subcategory, albumID.intValue(), albumName);
 					subcategory.addAlbum(album);
 					
 					//iterate over images
@@ -128,7 +129,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 						String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
 						String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
 						//IImage image = new Image(imageID.intValue(), "<image name>"); //todo: get real image name, not just the key
-						IImage image = new Image(imageID.intValue(), imageName, imageCaption, "<imageKeywords ... deactivated for the moment>", imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+						IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, "<imageKeywords ... deactivated for the moment>", imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
 						album.addImage(image);
 						
 						imageIndex++;
@@ -156,7 +157,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
 				String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
 				//System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
-				IAlbum album = new Album(albumID.intValue(), albumName);
+				IAlbum album = new Album(category, albumID.intValue(), albumName);
 				category.addAlbum(album);
 				
 				//iterate over images
@@ -177,7 +178,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
 					String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
 					//IImage image = new Image(imageID.intValue(), "<image name>"); //todo: get real image name, not just the key
-					IImage image = new Image(imageID.intValue(), imageName, imageCaption, "<imageKeywords ... deactivated for the moment>", imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+					IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, "<imageKeywords ... deactivated for the moment>", imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
 					album.addImage(image);
 					
 					imageIndex++;
@@ -320,7 +321,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public void downloadFile(String imageURL, File fileName)
 	{
-		this.log.printLog(Helper.getTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
 		
 		
 		//write url to file
@@ -407,7 +408,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
             	Helper.pause(Constants.retryWait);
-            	this.log.printLog(Helper.getTimeString() + " retrying ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
 			}
 			catch (FileNotFoundException e)
@@ -420,7 +421,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
             	Helper.pause(Constants.retryWait);
-            	this.log.printLog(Helper.getTimeString() + " retrying ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
             }
 			catch (java.lang.RuntimeException e)
@@ -428,12 +429,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
             	Helper.pause(Constants.retryWait);
-            	this.log.printLog(Helper.getTimeString() + " retrying ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
             }
             catch (Exception e)
             {
-            	this.log.printLog(Helper.getTimeString() + " caught Exception (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " caught Exception (message:" + e.getMessage() + ") ... ");
                 e.printStackTrace();
             	repeat = false;
             }
@@ -456,7 +457,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private boolean smugmug_login_withPassword(String userEmail, String password)
 	{
-		this.log.printLog(Helper.getTimeString() + " logging in ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " logging in ... ");
 		//this.log.printLog("smugmug.login.withPassword ... ");
 		
 		//build url
@@ -547,7 +548,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 	private void smugmug_logout_logout()
 	{
-		this.log.printLog(Helper.getTimeString() + " logging out ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " logging out ... ");
 		//this.log.printLog("smugmug.logout ...");
 		
 		//build url
@@ -654,7 +655,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_images_delete(int imageID)
 	{
-		this.log.printLog(Helper.getTimeString() + " deleting (imageID=" + imageID + ") ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " deleting (imageID=" + imageID + ") ... ");
 		
 		String methodName = "smugmug.images.delete";
 		//this.log.printLog("smugmug.images.get ... ");
@@ -689,7 +690,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_categories_create(String name)
 	{
-		this.log.printLog(Helper.getTimeString() + " creating category ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " creating category ... ");
 		
 		String methodName = "smugmug.categories.create";
 		//System.out.print(methodName + " ...");
@@ -723,7 +724,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	private JSONObject smugmug_categories_rename(int categoryID, String newName)
 	{
-		this.log.printLog(Helper.getTimeString() + " renaming category ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " renaming category ... ");
 		
 		String methodName = "smugmug.categories.rename";
 		//System.out.print(methodName + " ...");
@@ -759,7 +760,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_subcategories_create(String name, int categoryID)
 	{
-		this.log.printLog(Helper.getTimeString() + " creating subcategory ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " creating subcategory ... ");
 		
 		String methodName = "smugmug.subcategories.create";
 		//System.out.print(methodName + " ...");
@@ -796,7 +797,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_subcategories_rename(int subcategoryID, String newName)
 	{
-		this.log.printLog(Helper.getTimeString() + " renaming subcategory ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " renaming subcategory ... ");
 		
 		String methodName = "smugmug.subcategories.rename";
 		//System.out.print(methodName + " ...");
@@ -833,7 +834,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID)
 	{
-		this.log.printLog(Helper.getTimeString() + " creating album ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " creating album ... ");
 		
 		String methodName = "smugmug.albums.create";
 		//System.out.print(methodName + " ...");
@@ -964,7 +965,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_albums_changeSettings_title(int albumID, String newTitle)
 	{
-		this.log.printLog(Helper.getTimeString() + " changing album settings (title) ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (title) ... ");
 		
 		String methodName = "smugmug.albums.changeSettings";
 		//System.out.print(methodName + " ...");
@@ -1062,7 +1063,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	private JSONObject smugmug_albums_changeSettings_position(int albumID, int newPosition)
 	{
-		this.log.printLog(Helper.getTimeString() + " changing album settings (id=" + albumID + ", newPosition=" + newPosition + ") ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (id=" + albumID + ", newPosition=" + newPosition + ") ... ");
 		
 		String methodName = "smugmug.albums.changeSettings";
 		//System.out.print(methodName + " ...");
@@ -1188,7 +1189,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         else
         {
         	//this.log.printLogLine("failed");
-        	this.log.printLogLine(Helper.getTimeString() + " " + methodName + " ... failed");
+        	this.log.printLogLine(Helper.getCurrentTimeString() + " " + methodName + " ... failed");
         }
         
         return null;
@@ -1234,7 +1235,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_images_upload(int albumID, File fileName)
 	{	
-		this.log.printLog(Helper.getTimeString() + " uploading: " + fileName.getAbsolutePath() + " ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " uploading: " + fileName.getAbsolutePath() + " ... ");
 		
 		String methodName = "smugmug.images.upload";
 		//System.out.print(methodName + " ...");
@@ -1283,9 +1284,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	            
 	            // for statistics
 	        	this.transferedBytes += fileName.length();
-	            
+	            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
+	        	
 	            DecimalFormat df = new DecimalFormat("0.0");                            
-	            this.log.printLogLine("ok (" + df.format(uploadSpeed) + " kb/sec)");
+	            this.log.printLog("ok (" + df.format(filesizeMB) + "mb at " + df.format(uploadSpeed) + "kb/sec)");
 	        	//this.log.printLogLine("ok");
 	        	return jobj;
 	        }
@@ -1315,7 +1317,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
             	this.log.printLog("waiting ... ");
             	Helper.pause(Constants.retryWait);
-            	this.log.printLog(Helper.getTimeString() + " retrying (file was truncated) ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
@@ -1323,14 +1325,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        {
 	          	this.log.printLog("waiting ... ");
 	          	Helper.pause(Constants.retryWait);
-	          	this.log.printLog(Helper.getTimeString() + " retrying (invalid album id) ... ");
+	          	this.log.printLog(Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
 	          	
 	          	//note: this error seems not to go away, even through repetition
 	        }
 	        else
 	        {
 	        	
-	        	this.log.printLog(Helper.getTimeString() + " retrying (wrong bytecount???) ... ");
+	        	this.log.printLog(Helper.getCurrentTimeString() + " retrying (wrong bytecount???) ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
