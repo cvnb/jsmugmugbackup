@@ -5,6 +5,7 @@ import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.login.*;
 import jSmugmugBackup.view.swing_dialogs.SwingDownloadDialog;
 import jSmugmugBackup.view.swing_dialogs.SwingUploadDialog;
+import jSmugmugBackup.view.swing_dialogs.SwingWaitDialog;
 
 import java.util.*;
 
@@ -20,6 +21,7 @@ public class SwingView extends JFrame implements IView
 	private Model model = null;
 	private SwingUploadDialog uploadDialog = null;  //  @jve:decl-index=0:visual-constraint="582,10"
 	private SwingDownloadDialog downloadDialog = null;
+	private SwingWaitDialog waitDialog = null;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel jContentPane = null;
@@ -53,6 +55,8 @@ public class SwingView extends JFrame implements IView
 		this.model.setView(this);
 		this.log = Logger.getInstance();
 		this.log.registerView(this);
+		
+		this.waitDialog = new SwingWaitDialog(this);
 	}
 
 	/**
@@ -349,8 +353,20 @@ public class SwingView extends JFrame implements IView
         JOptionPane.showMessageDialog(this, errMessage);
     }
 
+	public void showBusyStart(String waitingMessage)
+	{
+		
+		//this.waitDialog.startProgressAnimation();
+		this.waitDialog.setVisible(true);
+	}
+	
 
-	//@Override
+	public void showBusyStop()
+	{
+		this.waitDialog.setVisible(false);
+		//this.waitDialog.stopProgressAnimation();
+	}
+
 	public ILoginView getLoginMethod()
 	{
 		//ILoginToken loginToken = new LoginToken(this.jTextField_username.getText(), this.jPasswordField_password.getText());
@@ -381,7 +397,6 @@ public class SwingView extends JFrame implements IView
 		return null;
 	}
 
-	//@Override
 	public TransferDialogResult showDownloadDialog()
 	{
 		this.downloadDialog = new SwingDownloadDialog();
