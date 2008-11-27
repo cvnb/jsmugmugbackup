@@ -2,6 +2,9 @@ todo:
  - GUI
    - common transfer dialog, which can be parametrized
  - fmc
+ - SmugmugObject
+   - getSmugmugType()
+   - parent()
 
  
  - deleting ???

@@ -26,7 +26,8 @@ public interface IView
 	ITransferDialogResult showDeleteDialog();
 	void printLog(String text);
 	void showError(String errMessage);
-	
+	void showBusyStart(String waitingMessage);
+	void showBusyStop();
 	
 	void addLoginButtonListener(ActionListener listener);
 	void addRefreshButtonListener(ActionListener listener);

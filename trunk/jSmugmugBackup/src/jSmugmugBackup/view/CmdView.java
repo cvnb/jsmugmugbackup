@@ -164,6 +164,16 @@ public class CmdView implements IView
 	{
 		System.out.println(errMessage);
 	}
+	
+	public void showBusyStart(String waitingMessage)
+	{
+		/* noop */
+	}
+	
+	public void showBusyStop()
+	{
+		/* noop */
+	}
 
 	public void printLog(String text)
 	{

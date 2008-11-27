@@ -1315,12 +1315,22 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
             	this.log.printLog("waiting ... ");
             	Helper.pause(Constants.retryWait);
-            	this.log.printLog(Helper.getTimeString() + " retrying ... ");
+            	this.log.printLog(Helper.getTimeString() + " retrying (file was truncated) ... ");
+	        }
+	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                  (((String)this.getJSONValue(jobj, "message")).startsWith("system error (invalid album id)") ))
+	        {
+	          	this.log.printLog("waiting ... ");
+	          	Helper.pause(Constants.retryWait);
+	          	this.log.printLog(Helper.getTimeString() + " retrying (invalid album id) ... ");
+	          	
+	          	//note: this error seems not to go away, even through repetition
 	        }
 	        else
 	        {
 	        	
-	        	this.log.printLog(Helper.getTimeString() + " retrying (wrong bytecount) ... ");
+	        	this.log.printLog(Helper.getTimeString() + " retrying (wrong bytecount???) ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
