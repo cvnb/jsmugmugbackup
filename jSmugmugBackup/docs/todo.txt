@@ -5,6 +5,7 @@ todo:
  - SmugmugObject
    - getSmugmugType()
    - parent()
+ - rewrite Model.upload
 
  
  - deleting ???

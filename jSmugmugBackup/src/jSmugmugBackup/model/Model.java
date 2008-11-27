@@ -71,7 +71,7 @@ public class Model
 
 		
 		DecimalFormat df = new DecimalFormat("0.0");
-    	this.log.printLogLine("finished. (execution time: " + this.getExecTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, speed: " + df.format(transferSpeed) + " kb/sec)");
+    	this.log.printLogLine("finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, speed: " + df.format(transferSpeed) + " kb/sec)");
     	System.exit(0);
     }
     
@@ -305,12 +305,5 @@ public class Model
     	return result;
     }
     
-	private String getExecTimeString(long time)
-	{				
-		int hours   = (int)(time / 1000 / 60 / 60);
-		int minutes = (int)(time / 1000 / 60);
-		int seconds = (int)(time / 1000);
-		
-		return new String(hours + "h" + (minutes-(hours*60)) + "m" + (seconds-(minutes*60)) + "s");
-	}
+
 }

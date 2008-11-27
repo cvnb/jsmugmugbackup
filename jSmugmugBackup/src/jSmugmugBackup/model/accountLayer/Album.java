@@ -12,12 +12,15 @@ public class Album extends SmugmugObject implements IAlbum
 {
 	private Vector<IImage> imageList = null;
 	
-	public Album(int id, String name)
+	public Album(ISmugmugObject parent, int id, String name)
 	{
-		super(id, name);
+		super(parent, id, name);
 		this.imageList = new Vector<IImage>();
 	}
 
+	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_ALBUM; }
+	
+	
 	public void addImage(IImage image)
 	{
 		this.imageList.add(image);
@@ -27,6 +30,8 @@ public class Album extends SmugmugObject implements IAlbum
 	{
 		return this.imageList;
 	}
+
+
 
 
 
