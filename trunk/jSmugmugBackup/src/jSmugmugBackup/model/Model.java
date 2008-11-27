@@ -80,6 +80,8 @@ public class Model
     	this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
 
+    /*
+     * the original ...
 	public void upload(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
@@ -172,6 +174,231 @@ public class Model
 		}
 
     }    
+    */
+
+	public void upload(ITransferDialogResult transferDialogResult)
+    {
+    	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
+
+		
+		String category    = transferDialogResult.getCategoryName();
+		String subcategory = transferDialogResult.getSubCategoryName();
+		String album       = transferDialogResult.getAlbumName();
+		
+		if ( (transferDialogResult.getCategoryName()    == null) && 
+		     (transferDialogResult.getSubCategoryName() == null) &&
+		     (transferDialogResult.getAlbumName()       == null) )
+		{
+			File rootDir = new File(transferDialogResult.getDir());
+			if (rootDir.isDirectory()) //should normally be true
+			{
+				if (this.containsPics(rootDir))
+				{
+					//print a warning - we have nowhere to put the images
+					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+				}
+				
+				//go on, search for sub-directories
+				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, new Constants.FileComparator());
+				for (int i=0; i < subDirFileList.length; i++)
+				{
+					File subDirFile = subDirFileList[i];
+					if (subDirFile.isDirectory())
+					{
+						if (this.containsPics(subDirFile))
+						{
+							category = "Other";
+							subcategory = null;
+							album = subDirFile.getName();								
+							this.upload_prepare_albumDir(category, subcategory, album, subDirFile);
+						}
+						else //search in sub-sub-directories
+						{
+							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, new Constants.FileComparator());
+							for (int j=0; j < subSubDirList.length; j++)
+							{
+								File subSubDirFile = subSubDirList[j];
+								if (subSubDirFile.isDirectory())
+								{
+									if (this.containsPics(subSubDirFile))
+									{
+										category    = subSubDirFile.getParentFile().getName();
+										subcategory = null;
+										album       = subSubDirFile.getName();
+										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile);
+									}
+									else //search in sub-sub-sub-directories
+									{
+										File[] subSubSubDirList = subSubDirFile.listFiles(); Arrays.sort(subSubSubDirList, new Constants.FileComparator());
+										for (int k=0; k < subSubSubDirList.length; k++)
+										{
+											File subSubSubDirFile = subSubSubDirList[k];
+											if (subSubSubDirFile.isDirectory())
+											{
+												if (this.containsPics(subSubSubDirFile))
+												{
+													category    = subSubSubDirFile.getParentFile().getParentFile().getName();
+													subcategory = subSubSubDirFile.getParentFile().getName();
+													album       = subSubSubDirFile.getName();
+													this.upload_prepare_albumDir(category, subcategory, album, subSubSubDirFile);
+												}
+												else
+												{
+													//not going any deeper
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+	        }
+			else
+			{
+				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+			}
+		}
+		else if ( (transferDialogResult.getCategoryName()    != null) &&
+				  (transferDialogResult.getSubCategoryName() == null) &&
+				  (transferDialogResult.getAlbumName()       == null) )
+		{
+		
+			File rootDir = new File(transferDialogResult.getDir());
+			if (rootDir.isDirectory()) //should normally be true
+			{
+				if (this.containsPics(rootDir))
+				{
+					//print a warning - we have nowhere to put the images
+					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+				}
+				
+				//go on, search for sub-directories
+				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, new Constants.FileComparator());
+				for (int i=0; i < subDirFileList.length; i++)
+				{
+					File subDirFile = subDirFileList[i];
+					if (subDirFile.isDirectory())
+					{
+						if (this.containsPics(subDirFile))
+						{
+							//category is defined above
+							subcategory = null;
+							album = subDirFile.getName();								
+							this.upload_prepare_albumDir(category, subcategory, album, subDirFile);
+						}
+						else //search in sub-sub-directories
+						{
+							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, new Constants.FileComparator());
+							for (int j=0; j < subSubDirList.length; j++)
+							{
+								File subSubDirFile = subSubDirList[j];
+								if (subSubDirFile.isDirectory())
+								{
+									if (this.containsPics(subSubDirFile))
+									{
+										//category is defined above
+										subcategory = subSubDirFile.getParentFile().getName();
+										album       = subSubDirFile.getName();
+										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile);
+									}
+									else
+									{
+										//not going any deeper
+									}
+								}
+							}
+						}
+					}
+				}
+	        }
+			else
+			{
+				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+			}
+		}
+		else if ( (transferDialogResult.getCategoryName()    != null) &&
+				  (transferDialogResult.getSubCategoryName() != null) &&
+				  (transferDialogResult.getAlbumName()       == null) )
+		{
+		
+			File rootDir = new File(transferDialogResult.getDir());
+			if (rootDir.isDirectory()) //should normally be true
+			{
+				if (this.containsPics(rootDir))
+				{
+					//print a warning - we have nowhere to put the images
+					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+				}
+				
+				//go on, search for sub-directories
+				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, new Constants.FileComparator());
+				for (int i=0; i < subDirFileList.length; i++)
+				{
+					File subDirFile = subDirFileList[i];
+					if (subDirFile.isDirectory())
+					{
+						if (this.containsPics(subDirFile))
+						{
+							//category is defined above
+							//subcategory is defined above
+							album = subDirFile.getName();								
+							this.upload_prepare_albumDir(category, subcategory, album, subDirFile);
+						}
+						else
+						{
+							//not going any deeper
+						}
+					}
+				}
+	        }
+			else
+			{
+				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+			}
+		}
+		else if (transferDialogResult.getAlbumName() != null) //handles all cases where an album name is given
+		{			
+			if (transferDialogResult.getCategoryName() == null) { category = "Other"; }
+			//if subcategory is null or not, doesn't matter
+			
+			File rootDir = new File(transferDialogResult.getDir());
+			if (rootDir.isDirectory()) //should normally be true
+			{
+				if (this.containsPics(rootDir))
+				{
+					//category is defined above
+					//subcategory is defined above
+					//album is defined above
+					
+					this.upload_prepare_albumDir(category, subcategory, album, rootDir);
+				}
+	        }
+			else
+			{
+				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+			}
+		}		
+		else
+		{
+			this.log.printLogLine("ERROR: this case is yet unhandled");
+			this.quitApplication();
+		}
+
+    }
+	
+	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir)
+	{
+//		this.log.printLogLine("DEBUG: enqueuing ...");
+//		this.log.printLogLine("DEBUG:      category    : " + category);
+//		this.log.printLogLine("DEBUG:      subcategory : " + subcategory);
+//		this.log.printLogLine("DEBUG:      album       : " + album);
+//		this.log.printLogLine("DEBUG:      dir         : " + dir);
+		
+		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir);
+	}
+
     
     public void download(ITransferDialogResult transferDialogResult)
     {
