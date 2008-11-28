@@ -32,7 +32,7 @@ public class Model
     	this.accListing.setLoginMethod(loginMethod);
     	
     	//make a maximum of 3 login attempts
-    	//this.view.showBusyStart("logging in");
+    	this.view.showBusyStart("logging in");
     	boolean success = false;
     	for (int i=0; i < 3; i++)
     	{
@@ -40,10 +40,10 @@ public class Model
     		if (success) { break; }
     	}
     	if (!success) { this.quitApplication(); }
-    	//this.view.showBusyStop();
+    	this.view.showBusyStop();
     	
     	//this.view.showBusyStart("getting data");
-    	this.accListing.init();
+    	//this.accListing.init();
     	//this.view.showBusyStop();
     }
     

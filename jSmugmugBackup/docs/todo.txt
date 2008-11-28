@@ -4,8 +4,9 @@ todo:
  - fmc
  - SmugmugObject
    - reimplements clone() ... make deep copies, rearrange parent links
+ - console client view
 
-
+ - GUI: show pretty waiting animation 
  - speedup in AccountListingProxy by making use of the "parent"-relation 
  - deleting ???
  - document handling of non-unique names

@@ -356,15 +356,15 @@ public class SwingView extends JFrame implements IView
 	public void showBusyStart(String waitingMessage)
 	{
 		
-		//this.waitDialog.startProgressAnimation();
-		this.waitDialog.setVisible(true);
+		this.waitDialog.startProgressAnimation();
+		//this.waitDialog.setVisible(true);
 	}
 	
 
 	public void showBusyStop()
 	{
-		this.waitDialog.setVisible(false);
-		//this.waitDialog.stopProgressAnimation();
+		//this.waitDialog.setVisible(false);
+		this.waitDialog.stopProgressAnimation();
 	}
 
 	public ILoginView getLoginMethod()

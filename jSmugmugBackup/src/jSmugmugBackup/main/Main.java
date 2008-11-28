@@ -23,12 +23,11 @@ public class Main {
         //init view
         IView view = null;
         
-        //decide weather to use Swing or the commandline
+        //decide which view to use
         if (args.length == 0) { view = new SwingView(model); }
+        else if (args[0].equals("--console")) { view = new ConsoleView(model); }
         else { view = new CmdView(model, args); }
         
-        //only use the commandline-interface
-        //view = new CmdView(model, args);
         
         //init controller
         @SuppressWarnings("unused")
