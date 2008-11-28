@@ -65,12 +65,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		}
 	}
 
-	public Vector<ICategory> getTree()
+	public IRootElement getTree()
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data ... ");
 		
-		IRoot smugmugRoot = new Root(this.login_nickname);
-		Vector<ICategory> categoryList = new Vector<ICategory>();
+		IRootElement smugmugRoot = new RootElement(this.login_nickname);
 		
 		JSONObject tree = this.smugmug_users_getTree();
 		//this.printJSONObject(tree);
@@ -84,7 +83,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			String categoryName = (String)this.getJSONValue(jsonCategory, "Name");
 			//System.out.println("categoryIndex=" + categoryIndex + ": id=" + categoryID.intValue() + ", name=" + categoryName);
 			ICategory category = new Category(smugmugRoot, categoryID.intValue(), categoryName);
-			categoryList.add( category );
+			smugmugRoot.addCategory(category);
 
 			
 			//iterate over subcategories
@@ -196,7 +195,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		this.log.printLogLine("ok");
 		
-		return categoryList;
+		return smugmugRoot;
 	}
 
 	public void getImages(int albumID)

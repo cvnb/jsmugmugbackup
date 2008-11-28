@@ -7,6 +7,7 @@
 package jSmugmugBackup.view;
 
 import jSmugmugBackup.model.accountLayer.ICategory;
+import jSmugmugBackup.model.accountLayer.IRootElement;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.login.ILoginView;
 
@@ -17,7 +18,7 @@ import java.util.Vector;
 public interface IView
 {
 	ILoginView getLoginMethod();
-	void refreshFileListing(Vector<ICategory> categoryList);
+	void refreshFileListing(IRootElement smugmugRoot);
 	ITransferDialogResult showListDialog();
 	ITransferDialogResult showSortDialog();
 	ITransferDialogResult showUploadDialog();

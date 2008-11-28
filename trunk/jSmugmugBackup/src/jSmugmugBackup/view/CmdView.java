@@ -102,11 +102,11 @@ public class CmdView implements IView
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
 	
 
-	public void refreshFileListing(Vector<ICategory> categoryList)
+	public void refreshFileListing(IRootElement smugmugRoot)
 	{		
 		//display listing on console
 		//this.log.printLogLine("Nickname: " + accountListing.getNickName());
-		for (ICategory c : categoryList)
+		for (ICategory c : smugmugRoot.getCategoryList())
 		{
 			this.log.printLogLine("    category: " + c.getName());
 			

@@ -14,7 +14,7 @@ public class Category extends SmugmugObject implements ICategory
 	private Vector<ISubcategory> subcategoryList = null;
 
 
-	public Category(IRoot parentRoot, int id, String name)
+	public Category(IRootElement parentRoot, int id, String name)
 	{
 		super(parentRoot, id, name);
 		this.albumList = new Vector<IAlbum>();

@@ -432,10 +432,10 @@ public class Model
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
     	this.log.printLogLine("preparing to sort albums");
     	
-    	Vector<ICategory> categoryList = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+    	IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
     	//this.log.printLogLine("model: categoryList.size()=" + categoryList.size());
     	
-    	for (ICategory c : categoryList)
+    	for (ICategory c : smugmugRoot.getCategoryList())
     	{
     		//this.log.printLogLine("model: c.getName()=" + c.getName());
     		this.accListing.resortCategoryAlbums(c.getID());

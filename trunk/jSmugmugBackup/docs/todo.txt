@@ -3,12 +3,10 @@ todo:
    - common transfer dialog, which can be parametrized
  - fmc
  - SmugmugObject
-   - getSmugmugType()
-   - parent()
-   - addChild()
-   - getChildren()
+   - reimplements clone() ... make deep copies, rearrange parent links
 
- 
+
+ - speedup in AccountListingProxy by making use of the "parent"-relation 
  - deleting ???
  - document handling of non-unique names
  - make login singleton - http://en.wikipedia.org/wiki/Singleton_pattern
