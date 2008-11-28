@@ -22,8 +22,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	private ITransferQueue transferQueue = null;
 	private ILoginView loginMethod = null;
 	
-	private IRoot smugmugRoot = null;
-	private Vector<ICategory> categoryList = null;
+	private IRootElement smugmugRoot = null;
+	//private Vector<ICategory> categoryList = null;
 	
 	private long transferedBytes = 0;
 	
@@ -42,8 +42,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	public void init()
 	{
-		this.smugmugRoot = new Root("");
-		this.categoryList = this.connector.getTree();
+		//this.categoryList = this.connector.getTree();
+		this.smugmugRoot = this.connector.getTree();
 	}
 	
 	public boolean login()
@@ -64,7 +64,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
 		
 		//decend to all album lists of all Subcategories and Categories
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -124,6 +124,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		return selectedAlbums;		
 	}
 
+	/*
 	public Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName)
 	{
 		IRoot resultRoot = new Root("");
@@ -188,6 +189,63 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return result;
 	}
+	*/
+	public IRootElement getAccountListing(String categoryName, String subcategoryName, String albumName)
+	{
+		IRootElement result = new RootElement("");
+		
+		//find matching albums
+		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, albumName);
+		
+		// for all albums in the albumList:
+		// - find it's parent category
+		// - find it's parent subcategory (if existing)
+		// - add album, with correct category and subcategory to result
+		for (IAlbum intern_a : albumList)
+		{
+			//this.log.printLogLine("intern_a.getName()=" + intern_a.getName());
+			ICategory intern_c = this.getAlbumCategory(intern_a.getID());
+			
+			//check if category already exists in result set, if not create it
+			boolean result_c_exists = false;
+			ICategory result_c = null;
+			for (ICategory c : result.getCategoryList())
+			{
+				if (c.getID() == intern_c.getID()) { result_c = c; result_c_exists = true; }
+			}
+			if (result_c == null) { result_c = new Category(result, intern_c.getID(), intern_c.getName() ); } //create new category empty with the same name, because we don't want to copy subcategories and albums
+			
+			
+			ISubcategory intern_s = this.getAlbumSubcategory(intern_a.getID());
+			if ( intern_s != null ) //album has a subcategory
+			{
+				//check if subcategory already exists in result set, if not create it
+				boolean result_s_exists = false;
+				ISubcategory result_s = null;
+				for (ICategory c : result.getCategoryList())
+				{
+					for (ISubcategory s : c.getSubcategoryList())
+					{
+						if (s.getID() == intern_s.getID()) { result_s = s; result_s_exists = true; }
+					}
+				}
+				if ( result_s == null ) { result_s = new Subcategory(result_c, intern_s.getID(), intern_s.getName()); }
+				
+				if (!result_c_exists) { result.addCategory(result_c); }
+				if (!result_s_exists) { result_c.addSubcategory(result_s); }
+				result_s.addAlbum( (IAlbum)intern_a.clone(result_s) ); //clone, because we need the children too, i.e. we copy the images too
+			}
+			else //album doesn't have a subcategory
+			{
+				if (!result_c_exists) { result.addCategory(result_c); }
+				result_c.addAlbum( (IAlbum)intern_a.clone(result_c) ); //clone, because we need the children too, i.e. we copy the images too
+			}
+			
+		}
+		
+		return result;
+	}
+	
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
 	{
@@ -213,7 +271,8 @@ public class AccountListingProxy implements IAccountListingProxy
         if (categoryID == 0) //category doesn't exist, so we create one
         {
         	categoryID = this.connector.createCategory(categoryName); //create on smugmug
-        	this.addCategory(categoryID, categoryName); //add to local structure
+        	//this.addCategory(categoryID, categoryName); //add to local structure
+        	this.smugmugRoot.addCategory( new Category(this.smugmugRoot, categoryID, categoryName) );
         }
         
         //get or create subcategory
@@ -586,18 +645,19 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	
 	//----------- private ----------
-	private Vector<ICategory> getCategoryList()
-	{
-		return this.categoryList;
-	}
+//	private Vector<ICategory> getCategoryList()
+//	{
+//		return this.smugmugRoot.getCategoryList();
+//	}
 	
-	private void addCategory(int id, String name)
-	{
-		this.categoryList.add( new Category(this.smugmugRoot, id, name) );
-	}
+//	private void addCategory(int id, String name)
+//	{
+//		//this.categoryList.add( new Category(this.smugmugRoot, id, name) );
+//		this.smugmugRoot.addCategory( new Category(this.smugmugRoot, id, name) );
+//	}
 	private void addSubcategory(int categoryID, int id, String name)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -612,7 +672,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name); return; }
 		
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -631,7 +691,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private void addAlbum(int categoryID, int id, String name)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -644,7 +704,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private void addImage(int albumID, int id, String name)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -675,7 +735,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	private int getCategoryID(String categoryName)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getName().equals(categoryName)) return c.getID();
 		}
@@ -684,7 +744,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private int getSubcategoryID(int categoryID, String subcategoryName)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -701,7 +761,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		if (subcategoryID == 0) { return this.getAlbumID(categoryID, albumName); }
 		
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -722,7 +782,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private int getAlbumID(int categoryID, String albumName)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -739,7 +799,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		if (subcategoryID == 0) { return this.getImageID(categoryID, albumID, imageName); }
 		
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -766,7 +826,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private int getImageID(int categoryID, int albumID, String imageName)
 	{
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -790,7 +850,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		//find the Category that contains the album, i.e. find the parent category
 		
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -818,7 +878,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		//find the Subcategory that contains the album, i.e. find the parent subcategory
 		
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -846,7 +906,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	private ICategory getCategory(int categoryID)
 	{
 		//find category
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
@@ -859,7 +919,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	private ISubcategory getSubcategory(int subcategoryID)
 	{
 		//find category
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -874,7 +934,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private IAlbum getAlbum(int albumID)
 	{
-		for (ICategory c : this.getCategoryList())
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -894,7 +954,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 	private IImage getImage(int imageID)
 	{
-		for (ICategory c : this.getCategoryList())
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{
@@ -925,7 +985,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		//build album dir postfix: search for category, subcategory, and album name
 		String resultDir = "";
 		
-		for (ICategory c : this.categoryList)
+		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			for (ISubcategory s : c.getSubcategoryList())
 			{

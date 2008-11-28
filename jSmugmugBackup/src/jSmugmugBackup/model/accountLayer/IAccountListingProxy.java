@@ -18,10 +18,11 @@ public interface IAccountListingProxy
 	boolean login();
 	void logout();
 	
-	//Vector<ICategory> getCategoryList();
+	
 	Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName);
 
-	Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName);
+	//Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName);
+	IRootElement getAccountListing(String categoryName, String subcategoryName, String albumName);
 	void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);

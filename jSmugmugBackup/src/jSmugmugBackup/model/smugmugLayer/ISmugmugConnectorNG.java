@@ -18,7 +18,7 @@ public interface ISmugmugConnectorNG
 	void relogin();
 	void logout();
 
-	Vector<ICategory> getTree();
+	IRootElement getTree();
 	void getImages(int albumID); //???
 	Hashtable<String, String> getImageInfo(int imageID);
 	

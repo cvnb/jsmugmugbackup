@@ -305,11 +305,11 @@ public class SwingView extends JFrame implements IView
 	}	
 
 	//@Override
-	public void refreshFileListing(Vector<ICategory> categoryList)
+	public void refreshFileListing(IRootElement smugmugRoot)
 	{
 		this.files_root_node = new DefaultMutableTreeNode("account");
 		
-		for (ICategory c : categoryList)
+		for (ICategory c : smugmugRoot.getCategoryList())
 		{
 			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(c.getName());
 			
