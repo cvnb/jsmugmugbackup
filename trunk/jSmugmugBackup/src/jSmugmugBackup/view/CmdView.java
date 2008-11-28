@@ -141,11 +141,6 @@ public class CmdView implements IView
 		
 		ILoginView loginMethod = null;
 		
-		/*
-		//for speeding up testin a little bit ...
-		loginToken = new SmugmugLoginHardcode();
-		*/
-		
     	//this should allow the program to run, even if only java 1.5 is available
     	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
     	{
@@ -244,7 +239,9 @@ public class CmdView implements IView
 	{
 		this.log.printLogLine("... up- and downloading files from Smugmug.com");
 		this.log.printLogLine("usage:");
-		this.log.printLogLine("     jSmugmugBackup [action] [options ... ]");
+		this.log.printLogLine("     jSmugmugBackup                          : gui interface");
+		this.log.printLogLine("     jSmugmugBackup --console                : console interface (Java 1.6 only)");
+		this.log.printLogLine("     jSmugmugBackup [action] [options ... ]  : commandline interface");
 		this.log.printLogLine("");
 		this.log.printLogLine("actions:");
 		this.log.printLogLine("     --help         : print this help");

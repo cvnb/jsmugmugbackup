@@ -1,8 +1,7 @@
 package jSmugmugBackup.controller;
 
 import jSmugmugBackup.model.Model;
-import jSmugmugBackup.view.CmdView;
-import jSmugmugBackup.view.IView;
+import jSmugmugBackup.view.*;
 
 import java.awt.event.*;
 
@@ -37,6 +36,10 @@ public class Controller
         if ( this.view instanceof CmdView )
         {
         	((CmdView) (this.view)).start();
+        }
+        if ( this.view instanceof ConsoleView )
+        {
+        	((ConsoleView) (this.view)).start();
         }
 	}
 	

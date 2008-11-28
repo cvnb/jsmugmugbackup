@@ -108,13 +108,13 @@ public class SwingWaitDialog extends JDialog
 				try { Thread.sleep(1000); }
 				catch (InterruptedException e) { e.printStackTrace(); }
 
-//				int progressValue = jProgressBar.getValue();
-//				if (progressValue < 100)
-//				{
-//					progressValue += 10;
-//				}
-//				else { progressValue = 0; }
-//				jProgressBar.setValue(progressValue);				
+				int progressValue = jProgressBar.getValue();
+				if (progressValue < 100)
+				{
+					progressValue += 10;
+				}
+				else { progressValue = 0; }
+				jProgressBar.setValue(progressValue);				
 			}			
 		}
 		
