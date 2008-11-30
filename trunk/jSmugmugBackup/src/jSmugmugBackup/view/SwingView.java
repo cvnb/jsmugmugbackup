@@ -255,6 +255,12 @@ public class SwingView extends JFrame implements IView
 
 	
 	//------------------------------------
+	public void start()
+	{
+		/* noop */
+	}
+	
+	
 	public void addLoginButtonListener(ActionListener listener) {
 		this.jButton_login.addActionListener(listener);
 	}
@@ -422,7 +428,5 @@ public class SwingView extends JFrame implements IView
 		this.jTextArea_log.append(text);
 	}
 	//------------------------------------
-
-
 
 }  //  @jve:decl-index=0:visual-constraint="10,10"

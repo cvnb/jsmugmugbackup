@@ -17,6 +17,8 @@ import java.util.Vector;
 
 public interface IView
 {
+	void start();
+	
 	ILoginView getLoginMethod();
 	void refreshFileListing(IRootElement smugmugRoot);
 	ITransferDialogResult showListDialog();

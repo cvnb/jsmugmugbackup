@@ -258,19 +258,8 @@ public class CmdView implements IView
 		this.log.printLogLine("     --album={name}        : perform the given action only on the given album (optional)");
 		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
 		this.log.printLogLine("");
-		this.log.printLogLine("notes:");
-		this.log.printLogLine(" - Names on smugmug are handled as if they were unique, although it is for instance");
-		this.log.printLogLine("   possible to have two albums with the same name on smugmug. jSmugmugBackup will");
-		this.log.printLogLine("   always use the first name the matches and ignore the second entity.");
-		this.log.printLogLine(" - If you want a certain file not to be uploaded, for instance because it takes too long");
-		this.log.printLogLine("   with your internet connection, you can set an ignore tag. Just create a file with");
-		this.log.printLogLine("   the name of the file you don't want jSmugmugBackup to upload plus ");
-		this.log.printLogLine("   \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"");
-		this.log.printLogLine("   create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"");
-		this.log.printLogLine(" - uploaded albums are by default private, not searchable through smugmug and not searchable");
-		this.log.printLogLine("   through google ... right now, the only way to change that is the smugmug website");
-		this.log.printLogLine(" - <to be continued>");
-		this.log.printLogLine("");
+		this.log.printLogLine(Constants.helpNotes);
+
 		
 		//this.log.printLogLine("     jSmugmugBackup --help");
 		//this.log.printLogLine("     jSmugmugBackup --list [--email={username}]");
