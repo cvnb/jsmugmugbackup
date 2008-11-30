@@ -33,14 +33,7 @@ public class Controller
         
         // rotten hack: the Listers must be registered before the CmdView can start
         //              to work. When constructing the object this is not yet the case.
-        if ( this.view instanceof CmdView )
-        {
-        	((CmdView) (this.view)).start();
-        }
-        if ( this.view instanceof ConsoleView )
-        {
-        	((ConsoleView) (this.view)).start();
-        }
+        this.view.start();
 	}
 	
 	class LoginButtonListener implements ActionListener

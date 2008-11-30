@@ -75,4 +75,20 @@ public class Constants
 		}
     }
 
+	public static final String helpNotes =
+		"notes:\n" +
+	    " - Names on smugmug are handled as if they were unique, although it is for instance\n" +
+	    "   possible to have two albums with the same name on smugmug. jSmugmugBackup will\n" +
+	    "   always use the first name the matches and ignore the second entity.\n" +
+	    " - on your local machine category names are mapped to subfolders, subcategory names\n" +
+	    "   to subsubfolders and albums to subsubsubfolders.\n" +
+	    " - If you want a certain file not to be uploaded, for instance because it takes too long\n" +
+	    "   with your internet connection, you can set an ignore tag. Just create a file with\n" +
+	    "   the name of the file you don't want jSmugmugBackup to upload plus\n" +
+	    "   \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"\n" +
+	    "   create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"\n" +
+	    " - uploaded albums are by default private, not searchable through smugmug and not searchable\n" +
+	    "   through google ... right now, the only way to change that is the smugmug website\n" +
+	    " - <to be continued>\n";
+		
 }
