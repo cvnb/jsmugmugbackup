@@ -32,6 +32,7 @@ public class ConsoleView implements IView
 	
 	private Console console = null;
 	private Vector<String> lastInputTokenVector = null; //only the last input is beeing stored here
+	private Vector<Vector<String>> inputHistory = null;
 	
 	private ActionListener loginButtonListener = null;
 	private ActionListener uploadDialogButtonListener = null;
@@ -56,6 +57,8 @@ public class ConsoleView implements IView
 		
 		this.log = Logger.getInstance();
 		this.log.registerView(this);
+		
+		this.inputHistory = new Vector<Vector<String>>();
 	}
 
 	public void start()
@@ -71,75 +74,86 @@ public class ConsoleView implements IView
 			this.console.printf("jSmugmugBackup> ");
 			
 			command = this.console.readLine();
-			command = command.toLowerCase(); //make it independent from case
+			//command = command.toLowerCase(); //make us independent from case; not a good idea, since it's problematic when matching category names, for instance
 			this.lastInputTokenVector = new Vector<String>();
-			StringTokenizer st = new StringTokenizer(command);
+			StringTokenizer st = new StringTokenizer(command, " ");
 			while (st.hasMoreTokens())
 			{
 				String currentToken = st.nextToken();
 				//handle parenthesis
 				if ( (currentToken.startsWith("\"")) || (currentToken.startsWith("\'")) )
 				{
-					do
+					while ( (!currentToken.endsWith("\"")) && (!currentToken.endsWith("\'")) )
 					{
-						if ( st.hasMoreTokens() ) { currentToken = currentToken + st.nextToken(); }
+						if ( st.hasMoreTokens() ) { currentToken = currentToken + " " + st.nextToken(); }
 						else { this.console.printf("INPUT ERROR: problem while parsing parenthesis"); }
-					} while ( (!currentToken.endsWith("\"")) && (!currentToken.endsWith("\'")) );
+					}
 					
 					//remove leading and tailing characters ... which are hopefully parenthesis
-					this.console.printf("parenthesis detected: %s" + currentToken);
-					currentToken = currentToken.substring(1, currentToken.length()-2);
-					this.console.printf("finally: %s" + currentToken);
+					this.console.printf("parenthesis detected: " + currentToken + "\n");
+					currentToken = currentToken.substring(1, currentToken.length()-1);
+					this.console.printf("finally: " + currentToken + "\n");
 				}				
 				
 				this.lastInputTokenVector.add( currentToken );
 			}
 
-			String action = this.lastInputTokenVector.firstElement();
-			if (action.equals("help"))
+			//if the input is not empty, handle input, else ignore
+			if (this.lastInputTokenVector.size() > 0)
 			{
-				if (this.lastInputTokenVector.size() > 1)
+				String action = this.lastInputTokenVector.firstElement().toLowerCase(); //converting to lower case should be safe here, but it's not absolutely nesseciary
+				if (action.equals("help"))
 				{
-					this.printHelp(this.lastInputTokenVector.get(1));
+					if (this.lastInputTokenVector.size() > 1)
+					{
+						this.printHelp(this.lastInputTokenVector.get(1));
+					}
+					else { this.printHelp(null); }	
 				}
-				else { this.printHelp(null); }
-
-			}
-			else if (action.equals("login"))
-			{
-				this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
-			}
-			else if (action.equals("list"))
-			{
-				//this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
-				this.refreshButtonListener.actionPerformed(null);
-			}
-			else if (action.equals("sort"))
-			{
-				//this.loginButtonListener.actionPerformed(null);
-				this.sortButtonListener.actionPerformed(null);
-			}
-			else if (action.equals("upload"))
-			{
-				//this.loginButtonListener.actionPerformed(null);
-				this.uploadDialogButtonListener.actionPerformed(null);
-				this.uploadStartButtonListener.actionPerformed(null);
-			}
-			else if (action.equals("download"))
-			{
-				//this.loginButtonListener.actionPerformed(null);
-				this.downloadDialogButtonListener.actionPerformed(null);
-				this.downloadStartButtonListener.actionPerformed(null);
-			}
-			else if (action.equals("verify"))
-			{
-				//this.loginButtonListener.actionPerformed(null);
-				this.verifyDialogButtonListener.actionPerformed(null);
-				this.verifyStartButtonListener.actionPerformed(null);
-			}
-			else if (action.equals("quit"))
-			{
-				this.model.quitApplication();
+				else if (action.equals("history"))
+				{
+					this.printHistory();
+				}
+				else if (action.equals("login"))
+				{
+					this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
+				}
+				else if (action.equals("list"))
+				{
+					//this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
+					this.refreshButtonListener.actionPerformed(null);
+				}
+				else if (action.equals("sort"))
+				{
+					//this.loginButtonListener.actionPerformed(null);
+					this.sortButtonListener.actionPerformed(null);
+				}
+				else if (action.equals("upload"))
+				{
+					//this.loginButtonListener.actionPerformed(null);
+					this.uploadDialogButtonListener.actionPerformed(null);
+					this.uploadStartButtonListener.actionPerformed(null);
+				}
+				else if (action.equals("download"))
+				{
+					//this.loginButtonListener.actionPerformed(null);
+					this.downloadDialogButtonListener.actionPerformed(null);
+					this.downloadStartButtonListener.actionPerformed(null);
+				}
+				else if (action.equals("verify"))
+				{
+					//this.loginButtonListener.actionPerformed(null);
+					this.verifyDialogButtonListener.actionPerformed(null);
+					this.verifyStartButtonListener.actionPerformed(null);
+				}
+				else if (action.equals("quit"))
+				{
+					this.model.quitApplication();
+				}
+				
+				// seems like the command has been successfully executed without crashing
+				// and the input wasn't empty either --> add the command to the history
+				this.inputHistory.add(this.lastInputTokenVector);
 			}
 		}		
 		
@@ -247,13 +261,13 @@ public class ConsoleView implements IView
 		}
 		else if (this.lastInputTokenVector.size() == 4) // command: list <category> <subcategory> <album>
 		{
-			category = this.lastInputTokenVector.get(1);
-			subCategory = this.lastInputTokenVector.get(2);
-			album = this.lastInputTokenVector.get(3);
+			if (!this.lastInputTokenVector.get(1).equals("null")) { category = this.lastInputTokenVector.get(1); }
+			if (!this.lastInputTokenVector.get(2).equals("null")) { subCategory = this.lastInputTokenVector.get(2); }
+			if (!this.lastInputTokenVector.get(3).equals("null")) { album = this.lastInputTokenVector.get(3); }
 		}
 		else
 		{
-			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+			this.console.printf("INPUT WARNING: incorrect number of parameters, try \"help <action>\"\n");
 		}
 		
 		return new TransferDialogResult(category, subCategory, album, null);
@@ -261,30 +275,6 @@ public class ConsoleView implements IView
 	
 	public ITransferDialogResult showSortDialog()
 	{
-		/*
-		String category = null;
-		String subCategory = null;
-		String album = null;
-		if (this.lastInputTokenVector.size() == 1) // command: sort
-		{
-			//everything is already initialized with null
-			// noop
-			
-		}
-		else if (this.lastInputTokenVector.size() == 4) // command: sort <category> <subcategory> <album>
-		{
-			category = this.lastInputTokenVector.get(1);
-			subCategory = this.lastInputTokenVector.get(2);
-			album = this.lastInputTokenVector.get(3);
-		}
-		else
-		{
-			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help sort\"");
-		}
-		
-		return new TransferDialogResult(category, subCategory, album, null);
-		*/
-		
 		//code is identical to list dialog
 		return this.showListDialog();
 	}
@@ -301,14 +291,14 @@ public class ConsoleView implements IView
 		}
 		else if (this.lastInputTokenVector.size() == 4) // command: upload <category> <subcategory> <album> <dir>
 		{
-			category = this.lastInputTokenVector.get(1);
-			subCategory = this.lastInputTokenVector.get(2);
-			album = this.lastInputTokenVector.get(3);
+			if (!this.lastInputTokenVector.get(1).equals("null")) { category = this.lastInputTokenVector.get(1); }
+			if (!this.lastInputTokenVector.get(2).equals("null")) { subCategory = this.lastInputTokenVector.get(2); }
+			if (!this.lastInputTokenVector.get(3).equals("null")) { album = this.lastInputTokenVector.get(3); }
 			dir = this.lastInputTokenVector.get(4);
 		}
 		else
 		{
-			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+			this.console.printf("INPUT WARNING: incorrect number of parameters, try \"help <action>\"\n");
 		}
 		
 		return new TransferDialogResult(category, subCategory, album, dir);
@@ -339,7 +329,8 @@ public class ConsoleView implements IView
 		if ( (command == null) || (command.equals("")) )
 		{
 			this.console.printf("actions:\n");
-			this.console.printf("  help [<action>] : print this help\n");
+			this.console.printf("  help [<action>]                                   : print this help\n");
+			this.console.printf("  history                                           : print the last commands that have been used\n");
 			this.console.printf("  login [<email>]                                   : log into your smugmug account\n");
 			//this.console.printf("  logout                                            : logout\n");
 			this.console.printf("  list [<category> <subcategory> <album>]           : list images\n");
@@ -357,6 +348,12 @@ public class ConsoleView implements IView
 			this.console.printf("\n");
 			this.console.printf("options:\n");
 			this.console.printf("  <action>     ... print more info on the specified action (optional)\n");
+		}
+		else if (command.equals("history"))
+		{
+			this.console.printf("usage: history\n");
+			this.console.printf("\n");
+			this.console.printf("  ... no further info available\n");
 		}
 		else if (command.equals("login"))
 		{
@@ -428,6 +425,21 @@ public class ConsoleView implements IView
 		else
 		{
 			this.console.printf("no help available, the specified parameter is not an action\n");
+		}
+	}
+	
+	private void printHistory()
+	{
+		int num = 0;
+		for (Vector<String> command : this.inputHistory)
+		{
+			this.console.printf("%d\t:", num);
+			for (String token : command)
+			{
+				this.console.printf(" " + token);
+			}
+			this.console.printf("\n");
+			num++;
 		}
 	}
 

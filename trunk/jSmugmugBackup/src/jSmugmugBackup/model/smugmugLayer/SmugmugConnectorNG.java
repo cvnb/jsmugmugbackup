@@ -67,7 +67,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	public IRootElement getTree()
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a long time) ... ");
 		
 		IRootElement smugmugRoot = new RootElement(this.login_nickname);
 		
@@ -415,6 +415,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				this.log.printLog("caught FileNotFoundException ... ");
 				repeat = false;
 			}
+            catch (java.net.SocketException e)
+            {
+            	this.log.printLog("caught java.net.SocketException (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog("waiting ... ");
+            	Helper.pause(Constants.retryWait);
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
+            	repeat = true;
+            }
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
             {
             	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ... ");
