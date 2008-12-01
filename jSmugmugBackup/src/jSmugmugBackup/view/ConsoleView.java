@@ -53,7 +53,11 @@ public class ConsoleView implements IView
 		this.model.setView(this);
 
 		this.console = System.console(); //allocate console
-		if(console == null) { this.model.quitApplication(); }
+		if(console == null)
+		{
+			System.out.println("ERROR: could not allocate console! Is Java 1.6 installed?");
+			this.model.quitApplication();
+		}
 		
 		this.log = Logger.getInstance();
 		this.log.registerView(this);
@@ -90,9 +94,7 @@ public class ConsoleView implements IView
 					}
 					
 					//remove leading and tailing characters ... which are hopefully parenthesis
-					this.console.printf("parenthesis detected: " + currentToken + "\n");
 					currentToken = currentToken.substring(1, currentToken.length()-1);
-					this.console.printf("finally: " + currentToken + "\n");
 				}				
 				
 				this.lastInputTokenVector.add( currentToken );

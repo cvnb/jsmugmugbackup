@@ -2,10 +2,11 @@ todo:
  - GUI
    - common transfer dialog, which can be parametrized
  - fmc
+
+
+ - store password hash
  - SmugmugObject
    - reimplements clone() ... make deep copies, rearrange parent links
-
-
  - GUI: show pretty waiting animation 
  - speedup in AccountListingProxy by making use of the "parent"-relation 
  - deleting ???

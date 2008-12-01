@@ -36,14 +36,13 @@ public abstract class SmugmugObject implements ISmugmugObject
 	}
 
 	public abstract SmugmugTypeEnum getSmugmugType();
-
 	
 
 	public int compareTo(ISmugmugObject o)
 	{
 		return this.name.compareToIgnoreCase( ((SmugmugObject)o).getName() );
 	}
-	
+
 	public SmugmugObject clone(ISmugmugObject newParent)
 	{
 		SmugmugObject myClone = null;
@@ -57,5 +56,6 @@ public abstract class SmugmugObject implements ISmugmugObject
 		
 		return myClone;
 	}
+
 
 }

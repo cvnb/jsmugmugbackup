@@ -43,7 +43,4 @@ public class Category extends SmugmugObject implements ICategory
 		return this.subcategoryList;
 	}
 
-
-
-
 }
