@@ -5,6 +5,7 @@ todo:
  - SmugmugObject
    - reimplements clone() ... make deep copies, rearrange parent links
  - console client view
+   - login parameters
 
  - GUI: show pretty waiting animation 
  - speedup in AccountListingProxy by making use of the "parent"-relation 

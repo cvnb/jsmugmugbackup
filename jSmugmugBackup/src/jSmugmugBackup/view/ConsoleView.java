@@ -9,7 +9,12 @@ package jSmugmugBackup.view;
 import jSmugmugBackup.model.Constants;
 import jSmugmugBackup.model.ITransferDialogResult;
 import jSmugmugBackup.model.Model;
+import jSmugmugBackup.model.TransferDialogResult;
+import jSmugmugBackup.model.accountLayer.IAlbum;
+import jSmugmugBackup.model.accountLayer.ICategory;
+import jSmugmugBackup.model.accountLayer.IImage;
 import jSmugmugBackup.model.accountLayer.IRootElement;
+import jSmugmugBackup.model.accountLayer.ISubcategory;
 import jSmugmugBackup.view.login.ILoginView;
 import jSmugmugBackup.view.login.LoginViewConsole_1_5;
 import jSmugmugBackup.view.login.LoginViewConsole_1_6;
@@ -24,7 +29,9 @@ public class ConsoleView implements IView
 {
 	private Model model = null;
 	private Logger log = null;
+	
 	private Console console = null;
+	private Vector<String> lastInputTokenVector = null; //only the last input is beeing stored here
 	
 	private ActionListener loginButtonListener = null;
 	private ActionListener uploadDialogButtonListener = null;
@@ -65,50 +72,70 @@ public class ConsoleView implements IView
 			
 			command = this.console.readLine();
 			command = command.toLowerCase(); //make it independent from case
-			Vector<String> commandTokenVector = new Vector<String>();
+			this.lastInputTokenVector = new Vector<String>();
 			StringTokenizer st = new StringTokenizer(command);
 			while (st.hasMoreTokens())
 			{
-				commandTokenVector.add( st.nextToken() );
+				String currentToken = st.nextToken();
+				//handle parenthesis
+				if ( (currentToken.startsWith("\"")) || (currentToken.startsWith("\'")) )
+				{
+					do
+					{
+						if ( st.hasMoreTokens() ) { currentToken = currentToken + st.nextToken(); }
+						else { this.console.printf("INPUT ERROR: problem while parsing parenthesis"); }
+					} while ( (!currentToken.endsWith("\"")) && (!currentToken.endsWith("\'")) );
+					
+					//remove leading and tailing characters ... which are hopefully parenthesis
+					this.console.printf("parenthesis detected: %s" + currentToken);
+					currentToken = currentToken.substring(1, currentToken.length()-2);
+					this.console.printf("finally: %s" + currentToken);
+				}				
+				
+				this.lastInputTokenVector.add( currentToken );
 			}
 
-			String action = commandTokenVector.firstElement();
+			String action = this.lastInputTokenVector.firstElement();
 			if (action.equals("help"))
 			{
-				if (commandTokenVector.size() > 1)
+				if (this.lastInputTokenVector.size() > 1)
 				{
-					this.printHelp(commandTokenVector.get(1));
+					this.printHelp(this.lastInputTokenVector.get(1));
 				}
 				else { this.printHelp(null); }
 
 			}
 			else if (action.equals("login"))
 			{
-				
-			}
-			else if (action.equals("logout"))
-			{
-				
+				this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
 			}
 			else if (action.equals("list"))
 			{
-				
+				//this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
+				this.refreshButtonListener.actionPerformed(null);
 			}
 			else if (action.equals("sort"))
 			{
-				
+				//this.loginButtonListener.actionPerformed(null);
+				this.sortButtonListener.actionPerformed(null);
 			}
 			else if (action.equals("upload"))
 			{
-				
+				//this.loginButtonListener.actionPerformed(null);
+				this.uploadDialogButtonListener.actionPerformed(null);
+				this.uploadStartButtonListener.actionPerformed(null);
 			}
 			else if (action.equals("download"))
 			{
-				
+				//this.loginButtonListener.actionPerformed(null);
+				this.downloadDialogButtonListener.actionPerformed(null);
+				this.downloadStartButtonListener.actionPerformed(null);
 			}
 			else if (action.equals("verify"))
 			{
-				
+				//this.loginButtonListener.actionPerformed(null);
+				this.verifyDialogButtonListener.actionPerformed(null);
+				this.verifyStartButtonListener.actionPerformed(null);
 			}
 			else if (action.equals("quit"))
 			{
@@ -136,18 +163,23 @@ public class ConsoleView implements IView
 	public ILoginView getLoginMethod()
 	{
 		ILoginView loginMethod = null;
-		
-    	//this should allow the program to run, even if only java 1.5 is available
-    	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
-    	{
-    		loginMethod = new LoginViewConsole_1_5();
-    	}
-    	else //assuming we have Java 1.6 or higher
-    	{
-    		loginMethod = new LoginViewConsole_1_6();
-    	}
-    	
 
+		if (this.lastInputTokenVector.size() == 1) // command: login
+		{
+			loginMethod = new LoginViewConsole_1_6();
+		}
+		else if (this.lastInputTokenVector.size() == 2) // command: login <email>
+		{
+			String username = this.lastInputTokenVector.get(1);
+			loginMethod = new LoginViewConsole_1_6(username, null);
+		}
+		else
+		{
+			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+		}
+
+		//loginMethod = new LoginViewConsole_1_6();
+		
     	return loginMethod;
 	}
 
@@ -171,40 +203,135 @@ public class ConsoleView implements IView
 		/* noop */
 	}
 
-	public void refreshFileListing(IRootElement smugmugRoot) {
-		// TODO Auto-generated method stub
-
+	public void refreshFileListing(IRootElement smugmugRoot)
+	{		
+		//display listing on console
+		//this.log.printLogLine("Nickname: " + accountListing.getNickName());
+		for (ICategory c : smugmugRoot.getCategoryList())
+		{
+			this.log.printLogLine("    category: " + c.getName());
+			
+			for (ISubcategory sc : c.getSubcategoryList())
+			{
+				this.log.printLogLine("        subCategory: " + sc.getName());
+				for (IAlbum a : sc.getAlbumList())
+				{
+					this.log.printLogLine("            album: " + a.getName());
+					for (IImage i : a.getImageList())
+					{
+						this.log.printLogLine("                image: " + i.getName());
+					}
+				}
+			}
+			
+			for (IAlbum a : c.getAlbumList())
+			{
+				this.log.printLogLine("        album: " + a.getName());
+				for (IImage i : a.getImageList())
+				{
+					this.log.printLogLine("            image: " + i.getName());
+				}
+			}
+		}
 	}
 	
-	public ITransferDialogResult showDeleteDialog() {
-		// TODO Auto-generated method stub
+	public ITransferDialogResult showListDialog()
+	{
+		String category = null;
+		String subCategory = null;
+		String album = null;
+		if (this.lastInputTokenVector.size() == 1) // command: list
+		{
+			//everything is already initialized with null
+			/* noop */
+		}
+		else if (this.lastInputTokenVector.size() == 4) // command: list <category> <subcategory> <album>
+		{
+			category = this.lastInputTokenVector.get(1);
+			subCategory = this.lastInputTokenVector.get(2);
+			album = this.lastInputTokenVector.get(3);
+		}
+		else
+		{
+			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+		}
+		
+		return new TransferDialogResult(category, subCategory, album, null);
+	}
+	
+	public ITransferDialogResult showSortDialog()
+	{
+		/*
+		String category = null;
+		String subCategory = null;
+		String album = null;
+		if (this.lastInputTokenVector.size() == 1) // command: sort
+		{
+			//everything is already initialized with null
+			// noop
+			
+		}
+		else if (this.lastInputTokenVector.size() == 4) // command: sort <category> <subcategory> <album>
+		{
+			category = this.lastInputTokenVector.get(1);
+			subCategory = this.lastInputTokenVector.get(2);
+			album = this.lastInputTokenVector.get(3);
+		}
+		else
+		{
+			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help sort\"");
+		}
+		
+		return new TransferDialogResult(category, subCategory, album, null);
+		*/
+		
+		//code is identical to list dialog
+		return this.showListDialog();
+	}
+	
+	public ITransferDialogResult showUploadDialog()
+	{
+		String category = null;
+		String subCategory = null;
+		String album = null;
+		String dir = null;
+		if (this.lastInputTokenVector.size() == 2) // command: upload <dir>
+		{
+			dir = this.lastInputTokenVector.get(1);
+		}
+		else if (this.lastInputTokenVector.size() == 4) // command: upload <category> <subcategory> <album> <dir>
+		{
+			category = this.lastInputTokenVector.get(1);
+			subCategory = this.lastInputTokenVector.get(2);
+			album = this.lastInputTokenVector.get(3);
+			dir = this.lastInputTokenVector.get(4);
+		}
+		else
+		{
+			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+		}
+		
+		return new TransferDialogResult(category, subCategory, album, dir);
+	}
+	
+	public ITransferDialogResult showDownloadDialog()
+	{
+		//code is identical to upload dialog
+		return this.showUploadDialog();
+	}
+	
+	public ITransferDialogResult showVerifyDialog()
+	{
+		//code is identical to upload dialog
+		return this.showUploadDialog();
+	}
+
+	public ITransferDialogResult showDeleteDialog()
+	{
+		// not implemented
 		return null;
 	}
 
-	public ITransferDialogResult showDownloadDialog() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public ITransferDialogResult showListDialog() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public ITransferDialogResult showSortDialog() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public ITransferDialogResult showUploadDialog() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public ITransferDialogResult showVerifyDialog() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	//-------------------- private -----------------------------
 	private void printHelp(String command)
@@ -213,8 +340,8 @@ public class ConsoleView implements IView
 		{
 			this.console.printf("actions:\n");
 			this.console.printf("  help [<action>] : print this help\n");
-			this.console.printf("  login [<email>] [<password>]                      : log into your smugmug account\n");
-			this.console.printf("  logout                                            : logout\n");
+			this.console.printf("  login [<email>]                                   : log into your smugmug account\n");
+			//this.console.printf("  logout                                            : logout\n");
 			this.console.printf("  list [<category> <subcategory> <album>]           : list images\n");
 			this.console.printf("  sort [<category> <subcategory> <album>]           : sort images by name\n");
 			this.console.printf("  upload [<category> <subcategory> <album>] <dir>   : upload images to smugmug\n");
@@ -233,18 +360,17 @@ public class ConsoleView implements IView
 		}
 		else if (command.equals("login"))
 		{
-			this.console.printf("usage: login [<email>] [<password>]\n");
+			this.console.printf("usage: login [<email>]\n");
 			this.console.printf("\n");
 			this.console.printf("options:\n");
 			this.console.printf("  <email>      ... your email address or account name (optional)\n");
-			this.console.printf("  <password>   ... your password (optional)\n");
 		}
-		else if (command.equals("logout"))
-		{
-			this.console.printf("usage: logout\n");
-			this.console.printf("\n");
-			this.console.printf("  ... no further info available\n");
-		}
+//		else if (command.equals("logout"))
+//		{
+//			this.console.printf("usage: logout\n");
+//			this.console.printf("\n");
+//			this.console.printf("  ... no further info available\n");
+//		}
 		else if (command.equals("list"))
 		{
 			this.console.printf("usage: list [<category> <subcategory> <album>]\n");

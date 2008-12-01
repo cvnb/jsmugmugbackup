@@ -187,11 +187,16 @@ public class CmdView implements IView
 	
 	public ITransferDialogResult showSortDialog()
 	{
+		/*
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
 		
 		return new TransferDialogResult(category, subCategory, album, null);
+		*/
+		
+		//method is identical to the list dialog
+		return this.showListDialog();
 	}
 	
 	public ITransferDialogResult showUploadDialog()
@@ -206,32 +211,47 @@ public class CmdView implements IView
 	
 	public ITransferDialogResult showDownloadDialog()
 	{
+		/*
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
 		String target_dir = this.extractDirectoryFromCommandline();
 			    
 		return new TransferDialogResult(category, subCategory, album, target_dir);
+		*/
+		
+		//method is identical to the upload dialog
+		return this.showUploadDialog();
 	}
 	
 	public ITransferDialogResult showVerifyDialog()
 	{
+		/*
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
 		String target_dir = this.extractDirectoryFromCommandline();
 			    
 		return new TransferDialogResult(category, subCategory, album, target_dir);
+		*/
+
+		//method is identical to the upload dialog
+		return this.showUploadDialog();
 	}
 	
 	public ITransferDialogResult showDeleteDialog()
 	{
+		/*
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
 		String target_dir = this.extractDirectoryFromCommandline();
 			    
 		return new TransferDialogResult(category, subCategory, album, target_dir);
+		*/
+
+		//method is identical to the upload dialog
+		return this.showUploadDialog();
 	}
 
 	//---------------------- private -----------------------------------------------
