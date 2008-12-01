@@ -289,7 +289,7 @@ public class ConsoleView implements IView
 		{
 			dir = this.lastInputTokenVector.get(1);
 		}
-		else if (this.lastInputTokenVector.size() == 4) // command: upload <category> <subcategory> <album> <dir>
+		else if (this.lastInputTokenVector.size() == 5) // command: upload <category> <subcategory> <album> <dir>
 		{
 			if (!this.lastInputTokenVector.get(1).equals("null")) { category = this.lastInputTokenVector.get(1); }
 			if (!this.lastInputTokenVector.get(2).equals("null")) { subCategory = this.lastInputTokenVector.get(2); }
@@ -298,7 +298,8 @@ public class ConsoleView implements IView
 		}
 		else
 		{
-			this.console.printf("INPUT WARNING: incorrect number of parameters, try \"help <action>\"\n");
+			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+			this.model.quitApplication();
 		}
 		
 		return new TransferDialogResult(category, subCategory, album, dir);
