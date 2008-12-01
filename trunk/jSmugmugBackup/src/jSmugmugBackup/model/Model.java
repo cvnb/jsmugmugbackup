@@ -43,7 +43,7 @@ public class Model
     	this.view.showBusyStop();
     	
     	//this.view.showBusyStart("getting data");
-    	//this.accListing.init();
+    	this.accListing.init();
     	//this.view.showBusyStop();
     }
     
