@@ -14,10 +14,10 @@ import java.util.Vector;
 
 public interface ISmugmugConnectorNG
 {
-	boolean login(String userEmail, String password);
+	Number login(String userEmail, String password);
 	void relogin();
 	void logout();
-
+	
 	IRootElement getTree();
 	void getImages(int albumID); //???
 	Hashtable<String, String> getImageInfo(int imageID);
