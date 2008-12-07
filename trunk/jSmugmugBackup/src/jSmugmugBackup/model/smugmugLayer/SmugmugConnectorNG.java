@@ -42,7 +42,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		this.log = Logger.getInstance();
 	}
 
-	public boolean login(String userEmail, String password)
+	public Number login(String userEmail, String password)
 	{
 		return this.smugmug_login_withPassword(userEmail, password);
 	}
@@ -462,7 +462,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return jobj;
 	}
 	
-	private boolean smugmug_login_withPassword(String userEmail, String password)
+	private Number smugmug_login_withPassword(String userEmail, String password)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " logging in ... ");
 		//this.log.printLog("smugmug.login.withPassword ... ");
@@ -489,7 +489,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
 	        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
 	        	this.log.printLogLine("ok");
-	        	return true;
+	        	//return true;
+	        	return SmugmugConnectorNG.login_userID;
 	        }
 	        if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 		       	 (this.getJSONValue(jobj, "message").equals("invalid login")) )
@@ -503,7 +504,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	//this is not the optimal solution
 	        	//System.exit(0);
 	        	
-	        	return false;
+	        	return null;
 	        }
 	        else
 	        {

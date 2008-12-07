@@ -45,8 +45,18 @@ public class AccountListingProxy implements IAccountListingProxy
 		//this.categoryList = this.connector.getTree();
 		this.smugmugRoot = this.connector.getTree();
 	}
+
+	public void init(File accountDataFile)
+	{
+		//todo
+	}
 	
-	public boolean login()
+	public void serialize(File accoutDataFile)
+	{
+		//todo
+	}
+	
+	public Number login()
 	{
 		String userEmail = this.loginMethod.requestUserEmail();
 		String password = this.loginMethod.requestPassword();

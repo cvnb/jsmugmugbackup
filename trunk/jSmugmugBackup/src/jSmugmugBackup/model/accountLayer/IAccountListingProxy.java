@@ -15,7 +15,9 @@ public interface IAccountListingProxy
 {
 	void setLoginMethod(ILoginView loginMethod);
 	void init();
-	boolean login();
+	void init(File accoutDataFile);
+	void serialize(File accoutDataFile);
+	Number login();
 	void logout();
 	
 	

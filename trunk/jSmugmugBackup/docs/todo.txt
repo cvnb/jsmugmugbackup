@@ -2,7 +2,12 @@ todo:
  - GUI
    - common transfer dialog, which can be parametrized
  - fmc
-
+ - speedup account info dowload: store account data on disk, serializable >>jSmugmug.<nickname>.dat
+ - global config singleton
+   - case-sensitive image/album names (yes/no)
+   - upload options (public/unlisted/...)
+   - persistence in xml-file
+ 
 
  - store password hash
  - SmugmugObject

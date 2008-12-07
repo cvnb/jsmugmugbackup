@@ -33,13 +33,13 @@ public class Model
     	
     	//make a maximum of 3 login attempts
     	this.view.showBusyStart("logging in");
-    	boolean success = false;
+    	Number userId = null;
     	for (int i=0; i < 3; i++)
     	{
-    		success = this.accListing.login();
-    		if (success) { break; }
+    		userId = this.accListing.login();
+    		if (userId != null) { break; }
     	}
-    	if (!success) { this.quitApplication(); }
+    	if (userId == null) { this.quitApplication(); }
     	this.view.showBusyStop();
     	
     	//this.view.showBusyStart("getting data");
