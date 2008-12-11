@@ -10,6 +10,7 @@ todo:
  - verify doesn't work yet  
  
 
+ - search for tags
  - store password hash
  - SmugmugObject
    - reimplements clone() ... make deep copies, rearrange parent links
