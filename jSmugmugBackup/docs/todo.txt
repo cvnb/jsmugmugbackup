@@ -7,6 +7,7 @@ todo:
    - case-sensitive image/album names (yes/no)
    - upload options (public/unlisted/...)
    - persistence in xml-file
+   - check md5sums
  - verify doesn't work yet  
  
 
