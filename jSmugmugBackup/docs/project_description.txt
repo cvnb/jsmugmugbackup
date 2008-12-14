@@ -45,6 +45,13 @@ requirements:
   - Java 1.5
   - lots of RAM if you want to upload big videos
 
+Swing Application Framework
+URL     : https://appframework.dev.java.net/
+Version : 1.0.3
+Contact : 
+License : Lesser General Public License (LGPL)
+
+
 SmugMug Java API
 URL     : http://www.kallasoft.com/smugmug-java-api/
 Version : 0.5.0
