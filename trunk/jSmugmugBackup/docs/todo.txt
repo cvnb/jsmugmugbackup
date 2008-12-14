@@ -10,6 +10,8 @@ todo:
  - verify doesn't work yet  
  
 
+ - refresh action listener doesn't make much sense, maybe merge functionality
+   with login and throw out "refresh"
  - search for tags
  - store password hash
  - SmugmugObject
