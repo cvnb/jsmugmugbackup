@@ -9,6 +9,7 @@ package jSmugmugBackup.main;
 import jSmugmugBackup.controller.Controller;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.*;
+import jSmugmugBackup.view.ng.SwingViewNGStarterApp;
 
 public class Main {
 
@@ -24,7 +25,17 @@ public class Main {
         IView view = null;
         
         //decide which view to use
-        if (args.length == 0) { view = new SwingView(model); }
+        if (args.length == 0)
+        {
+            // start old swing view (designed in eclipse)
+            //view = new SwingView(model);
+            
+            // start new Swing view, designed with NetBeans
+            SwingViewNGStarterApp.launch(SwingViewNGStarterApp.class, args);
+            
+            Helper.pause(1000); // wait a sec until gui is initialized
+            view = SwingViewNGStarterApp.getView();
+        }
         else if (args[0].equals("--console")) { view = new ConsoleView(model); }
         else { view = new CmdView(model, args); }
         
