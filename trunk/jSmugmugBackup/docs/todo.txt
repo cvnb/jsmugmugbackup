@@ -8,6 +8,7 @@ todo:
    - upload options (public/unlisted/...)
    - persistence in xml-file
    - check md5sums
+   - session info
  - verify doesn't work yet  
  
 
