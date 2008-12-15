@@ -34,6 +34,7 @@ public class Main {
             SwingViewNGStarterApp.launch(SwingViewNGStarterApp.class, args);
             
             Helper.pause(1000); // wait a sec until gui is initialized
+            SwingViewNGStarterApp.getView().init(model);
             view = SwingViewNGStarterApp.getView();
         }
         else if (args[0].equals("--console")) { view = new ConsoleView(model); }
