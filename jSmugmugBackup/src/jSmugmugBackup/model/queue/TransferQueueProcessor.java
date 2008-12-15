@@ -47,7 +47,9 @@ public class TransferQueueProcessor implements Runnable
 	public void run()
 	{
 		this.log.printLogLine(Helper.getCurrentTimeString() + " running TransferQueueProcessor in separate Thread ...");
-		
+
+        int itemCount = 0;
+        int itemTotalNumber = this.queue.size(); //total number of items in queue
 		ITransferQueueItem item = this.queue.poll(); //Retrieves and removes the head of this queue, or null  if this queue is empty
 		while (item != null)
 		{
@@ -55,13 +57,14 @@ public class TransferQueueProcessor implements Runnable
 			item.process();
 			this.processedItemList.add(item);
 			
-			//estimate remaining time
+			//estimate remaining time, generate output
+            itemCount++;
 			long currTransferedBytes = 0;
 			for (ITransferQueueItem processedItem : this.processedItemList) { currTransferedBytes += processedItem.getFileSize(); }
 			long elapsedTime = (new Date()).getTime() - startTime;
 			double estimatedTotalTime = (double)elapsedTime / ( (double)currTransferedBytes / (double)this.queue_size_byte );
 			long estimatedRemainingTime = (long)estimatedTotalTime - elapsedTime;
-			this.log.printLogLine(" ... " + Helper.getDurationTimeString(estimatedRemainingTime) + " remaining");
+			this.log.printLogLine(" ... processed item " + itemCount + "/" + itemTotalNumber + ": " + Helper.getDurationTimeString(estimatedRemainingTime) + " remaining");
 			
 			//get next item
 			item = this.queue.poll();

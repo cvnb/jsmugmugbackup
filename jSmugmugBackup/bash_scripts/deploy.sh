@@ -13,9 +13,12 @@ cp -v lib/httpcomponents-client-4.0-beta1/lib/httpclient-4.0-beta1.jar deploymen
 cp -v lib/httpcomponents-client-4.0-beta1/lib/httpcore-4.0-beta2.jar deployment/jSmugmugBackup/
 cp -v lib/httpcomponents-client-4.0-beta1/lib/httpmime-4.0-beta1.jar deployment/jSmugmugBackup/
 cp -v lib/json_simple/lib/json_simple.jar deployment/jSmugmugBackup/
+cp -v lib/appframework/appframework-1.0.3.jar deployment/jSmugmugBackup/
+cp -v lib/appframework/swing-worker-1.1.jar deployment/jSmugmugBackup/
 
 #copy code
-cp -v -r bin/jSmugmugBackup deployment/jSmugmugBackup/
+#cp -v -r bin/jSmugmugBackup deployment/jSmugmugBackup/ #eclipse
+cp -v -r build/classes/jSmugmugBackup deployment/jSmugmugBackup/ #netbeans
 
 #extract libs
 cd deployment/jSmugmugBackup/
@@ -26,6 +29,8 @@ jar -xvf httpclient-4.0-beta1.jar
 jar -xvf httpcore-4.0-beta2.jar
 jar -xvf httpmime-4.0-beta1.jar
 jar -xvf json_simple.jar
+jar -xvf appframework-1.0.3.jar
+jar -xvf swing-worker-1.1.jar
 
 rm -v *.jar
 rm -v -r META-INF/
