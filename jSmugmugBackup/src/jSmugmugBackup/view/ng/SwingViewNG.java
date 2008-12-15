@@ -4,11 +4,11 @@
 
 package jSmugmugBackup.view.ng;
 
-import jSmugmugBackup.model.ITransferDialogResult;
-import jSmugmugBackup.model.accountLayer.IRootElement;
-import jSmugmugBackup.view.IView;
-import jSmugmugBackup.view.login.ILoginView;
-import jSmugmugBackup.view.ng.SwingViewNGStarterApp;
+import jSmugmugBackup.model.*;
+import jSmugmugBackup.model.accountLayer.*;
+import jSmugmugBackup.view.*;
+import jSmugmugBackup.view.login.*;
+
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -24,9 +24,11 @@ import javax.swing.JFrame;
 /**
  * The application's main frame.
  */
-public class SwingViewNG extends FrameView implements IView {
+public class SwingViewNG extends FrameView implements IView
+{
 
-    public SwingViewNG(SingleFrameApplication app) {
+    public SwingViewNG(SingleFrameApplication app)
+    {
         super(app);
 
         initComponents();
@@ -107,6 +109,8 @@ public class SwingViewNG extends FrameView implements IView {
 
         mainPanel = new javax.swing.JPanel();
         loginButton = new javax.swing.JButton();
+        logtextareaScrollPane = new javax.swing.JScrollPane();
+        logTextArea = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -125,21 +129,35 @@ public class SwingViewNG extends FrameView implements IView {
         loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
         loginButton.setName("loginButton"); // NOI18N
 
+        logtextareaScrollPane.setName("logtextareaScrollPane"); // NOI18N
+
+        logTextArea.setColumns(20);
+        logTextArea.setRows(5);
+        logTextArea.setName("logTextArea"); // NOI18N
+        logtextareaScrollPane.setViewportView(logTextArea);
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(loginButton)
-                .addContainerGap(325, Short.MAX_VALUE))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(loginButton))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(loginButton)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -212,8 +230,10 @@ public class SwingViewNG extends FrameView implements IView {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea logTextArea;
     private javax.swing.JButton loginButton;
     private javax.swing.JMenuItem loginMenuItem;
+    private javax.swing.JScrollPane logtextareaScrollPane;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JProgressBar progressBar;
@@ -231,14 +251,29 @@ public class SwingViewNG extends FrameView implements IView {
     private JDialog aboutBox;
 
     //-------------- IView Implementation -----------------------------------
+	private Logger log = null;
+	private Model model = null;
+
+    // called by the constructor
+    public void init(Model model)
+    {
+        this.model = model;
+		this.model.setView(this);
+		this.log = Logger.getInstance();
+		this.log.registerView(this);
+
+
+    }
 
     public void start()
     {
         /* noop */
     }
 
-    public ILoginView getLoginMethod() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ILoginView getLoginMethod()
+    {
+        ILoginView loginToken = new LoginViewSwingNG(this);
+        return loginToken;
     }
 
     public void refreshFileListing(IRootElement smugmugRoot) {
@@ -269,20 +304,23 @@ public class SwingViewNG extends FrameView implements IView {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void printLog(String text) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void printLog(String text)
+    {
+        this.logTextArea.append(text);
     }
 
     public void showError(String errMessage) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void showBusyStart(String waitingMessage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void showBusyStart(String waitingMessage)
+    {
+        /* nothing yet */
     }
 
-    public void showBusyStop() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void showBusyStop()
+    {
+        /* nothing yet */
     }
 
     public void addLoginButtonListener(ActionListener listener)
@@ -293,47 +331,56 @@ public class SwingViewNG extends FrameView implements IView {
 
     public void addRefreshButtonListener(ActionListener listener)
     {
-
+        /* todo: nothing to register yet */
     }
 
     public void addSortButtonListener(ActionListener listener)
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        /* todo: nothing to register yet */
     }
 
-    public void addUploadDialogButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addUploadDialogButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addUploadStartButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addUploadStartButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addDownloadDialogButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addDownloadDialogButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addDownloadStartButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addDownloadStartButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addVerifyDialogButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addVerifyDialogButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addVerifyStartButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addVerifyStartButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addDeleteDialogButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addDeleteDialogButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addDeleteStartButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addDeleteStartButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
-    public void addQuitButtonListener(ActionListener listener) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addQuitButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 }
