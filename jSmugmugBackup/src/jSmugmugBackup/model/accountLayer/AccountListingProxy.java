@@ -7,6 +7,7 @@
 package jSmugmugBackup.model.accountLayer;
 
 import jSmugmugBackup.config.Constants;
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.queue.*;
 import jSmugmugBackup.model.smugmugLayer.*;
@@ -18,6 +19,7 @@ import java.util.*;
 
 public class AccountListingProxy implements IAccountListingProxy
 {
+    private GlobalConfig config = null;
 	private Logger log = null;
 	private ISmugmugConnectorNG connector = null;
 	private ITransferQueue transferQueue = null;
@@ -31,6 +33,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	public AccountListingProxy()
 	{
+        this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
 		this.connector = new SmugmugConnectorNG();
 		this.transferQueue = new TransferQueue();
@@ -248,7 +251,7 @@ public class AccountListingProxy implements IAccountListingProxy
         {        	
         	int imageID;
         	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
-        	if (imageID == 0) //image doesn't exist on smugmug
+        	if (imageID == 0) //image doesn't exist on smugmug (no need for md5 check, since we have nothing to compare to)
         	{
                 // check if file is not empty
                 if (fileList[i].length() == 0)
@@ -277,38 +280,46 @@ public class AccountListingProxy implements IAccountListingProxy
         	}
         	else //image already exists on smugmug
         	{
-            	String fileMD5 = Helper.computeMD5Hash(fileList[i]);
-	        	if (!this.getImage(imageID).getMD5().equals(fileMD5)) //exists already, but has wrong md5
-	        	{
-	    			//check if it's a video
-	        		boolean isVideo = false;
-	    			for (String fileEnding : Constants.supportedFileTypes_Videos)
-	    			{
-	    				if (this.getImage(imageID).getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
-	    			}
-	    			
-	    			
-	    			if (isVideo)
-	    			{
-	    				//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is normal for a video ... skipping");
-	    				skippedCount++;
-	    			}
-	    			else
-	    			{
-	    				this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
-	    				skippedCount++;
-	    				
-	    				//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... uploading again");
-	    				//ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
-	    				//this.transferQueue.add(item);
-	                    //uploadCount++;
-	    			}
-	        	}
-	        	else //exists already and the md5 is ok --> we can safely skip this upload
-	        	{
-	        		//this.log.printLogLine("  WARNING: " + fileList[i].getName() + " already exists on smugmug ... skipping");
-	        		skippedCount++;
-	        	}
+                if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
+                {
+                    String fileMD5 = Helper.computeMD5Hash(fileList[i]); //generate md5sum
+                    if (!this.getImage(imageID).getMD5().equals(fileMD5)) //exists already, but has wrong md5
+                    {
+                        //check if it's a video
+                        boolean isVideo = false;
+                        for (String fileEnding : Constants.supportedFileTypes_Videos)
+                        {
+                            if (this.getImage(imageID).getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                        }
+
+
+                        if (isVideo)
+                        {
+                            //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is normal for a video ... skipping");
+                            skippedCount++;
+                        }
+                        else
+                        {
+                            this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
+                            skippedCount++;
+
+                            //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... uploading again");
+                            //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+                            //this.transferQueue.add(item);
+                            //uploadCount++;
+                        }
+                    }
+                    else //exists already and the md5 is ok --> we can safely skip this upload
+                    {
+                        //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " already exists on smugmug ... skipping");
+                        skippedCount++;
+                    }
+                }
+                else // md5 checking ist disabled in config, check only the filename
+                {
+                    //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug ... skipping");
+                    skippedCount++;
+                }
         	}
         }        
 
