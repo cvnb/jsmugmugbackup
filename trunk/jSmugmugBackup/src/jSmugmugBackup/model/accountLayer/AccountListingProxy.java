@@ -6,7 +6,6 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
-import jSmugmugBackup.config.Constants;
 import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.queue.*;
@@ -205,12 +204,12 @@ public class AccountListingProxy implements IAccountListingProxy
     	int uploadCount = 0;
     	int skippedCount = 0;
     	int totalFiles = pics_dir.listFiles().length;
-    	int totalMediaFiles = pics_dir.listFiles(Constants.supportedFileTypesFilter).length;
+    	int totalMediaFiles = pics_dir.listFiles(this.config.getConstantSupportedFileTypesFilter()).length;
     	int unsupportedCount = totalFiles - totalMediaFiles;
     	
-        File[] fileList = pics_dir.listFiles(Constants.supportedFileTypesFilter);
+        File[] fileList = pics_dir.listFiles(this.config.getConstantSupportedFileTypesFilter());
         if (fileList == null) { return; /* Either dir does not exist or is not a directory */ }
-        Arrays.sort(fileList, new Constants.FileComparator()); //sort files
+        Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files
         
 
     	//get or create category
@@ -260,13 +259,13 @@ public class AccountListingProxy implements IAccountListingProxy
                 	skippedCount++;
                 }                
                 // check if file is smaller than 512 MB
-                else if (fileList[i].length() > (Constants.uploadFileSizeLimit))
+                else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
                 {
                 	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize greater than 512 MB is not supported ... skipping");
                 	skippedCount++;
                 }                
                 //check if someone has manually set the ignore tag
-                else if ( (new File(fileList[i].getAbsolutePath() + Constants.uploadIgnoreFilePostfix)).exists() )
+                else if ( (new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists() )
                 {
                 	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - the ignore tag was set ... skipping");
                 	skippedCount++;
@@ -287,7 +286,7 @@ public class AccountListingProxy implements IAccountListingProxy
                     {
                         //check if it's a video
                         boolean isVideo = false;
-                        for (String fileEnding : Constants.supportedFileTypes_Videos)
+                        for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
                         {
                             if (this.getImage(imageID).getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
                         }
@@ -363,7 +362,7 @@ public class AccountListingProxy implements IAccountListingProxy
     	this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
 
 		File dir = new File(targetDir);
-	    File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
+	    File[] fileList = dir.listFiles(this.config.getConstantSupportedFileTypesFilter());
 	    if (fileList == null)
 	    {
 	    	/* Either dir does not exist or is not a directory */
@@ -371,7 +370,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	      	this.log.printLogLine("ERROR: local album path could not be found");
 	      	return;
 	    }
-	    Arrays.sort(fileList, new Constants.FileComparator()); //sort files, convienence only
+	    Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files, convienence only
 
 	    
 	    
@@ -500,12 +499,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
             this.log.printLog("\n");
 		}
 		
 		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
-		Helper.pause(Constants.retryWait);
+		Helper.pause(this.config.getConstantRetryWait());
 		this.log.printLogLine("ok");
 		
 		this.connector.relogin();
@@ -542,11 +541,11 @@ public class AccountListingProxy implements IAccountListingProxy
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
 		}
 		
 		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
-		Helper.pause(Constants.retryWait);
+		Helper.pause(this.config.getConstantRetryWait());
 		this.log.printLogLine("ok");
 		
 		this.connector.relogin();
@@ -567,7 +566,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		// wait a few secs
 		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs for smugmug to process the images ... ");
-		Helper.pause(Constants.retryWait);
+		Helper.pause(this.config.getConstantRetryWait());
 		this.log.printLogLine("ok");
 		
 		//collect Results

@@ -1,6 +1,6 @@
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.config.Constants;
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.login.ILoginView;
@@ -14,6 +14,7 @@ import java.util.Vector;
 
 public class CmdView implements IView
 {
+    private GlobalConfig config = null;
 	private Model model = null;
 	private Logger log = null;
 	
@@ -35,6 +36,7 @@ public class CmdView implements IView
 	
 	public CmdView(Model model, String[] cmd_args)
 	{
+        this.config = GlobalConfig.getInstance();
 		this.model = model;
 		this.model.setView(this);
 		this.log = Logger.getInstance();
@@ -44,7 +46,7 @@ public class CmdView implements IView
 	
 	public void start()
 	{
-		this.log.printLogLine("jSmugmugBackup v" + Constants.version);
+		this.log.printLogLine("jSmugmugBackup v" + this.config.getConstantVersion());
 		
 		if ( this.cmd_args.length == 0 ) this.printHelp();
 		else if ( this.cmd_args[0].equals("--help") ) this.printHelp();
@@ -279,7 +281,7 @@ public class CmdView implements IView
 		this.log.printLogLine("     --album={name}        : perform the given action only on the given album (optional)");
 		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
 		this.log.printLogLine("");
-		this.log.printLogLine(Constants.helpNotes);
+		this.log.printLogLine(this.config.getConstantHelpNotes());
 
 		
 		//this.log.printLogLine("     jSmugmugBackup --help");

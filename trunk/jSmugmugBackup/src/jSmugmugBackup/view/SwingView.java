@@ -1,6 +1,6 @@
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.config.Constants;
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.login.*;
@@ -18,6 +18,7 @@ import javax.swing.tree.*;
 
 public class SwingView extends JFrame implements IView
 {
+    private GlobalConfig config = null;
 	private Logger log = null;
 	private Model model = null;
 	private SwingUploadDialog uploadDialog = null;  //  @jve:decl-index=0:visual-constraint="582,10"
@@ -51,7 +52,8 @@ public class SwingView extends JFrame implements IView
 	{
 		super();
 		initialize();
-		
+
+        this.config = GlobalConfig.getInstance();
 		this.model = model;
 		this.model.setView(this);
 		this.log = Logger.getInstance();
@@ -69,7 +71,7 @@ public class SwingView extends JFrame implements IView
 		this.setSize(560, 452);
 		this.setContentPane(getJContentPane());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle("jSmugmugBackup v" + Constants.version + " (experimental GUI)");
+		this.setTitle("jSmugmugBackup v" + this.config.getConstantVersion() + " (experimental GUI)");
 		this.setVisible(true);
 	}
 
