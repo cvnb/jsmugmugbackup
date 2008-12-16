@@ -63,6 +63,8 @@ cp -v lib/json_simple/README.txt deployment/docs/README.json_simple.txt
 #cleanup
 rm -r -f deployment/jSmugmugBackup
 
+#copy config
+cp -v config.xml deployment/
 
 #create unix script
 echo "#!/bin/bash" >> deployment/jSmugmugBackup.sh

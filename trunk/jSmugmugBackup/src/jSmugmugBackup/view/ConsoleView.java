@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.model.Constants;
+import jSmugmugBackup.config.Constants;
 import jSmugmugBackup.model.ITransferDialogResult;
 import jSmugmugBackup.model.Model;
 import jSmugmugBackup.model.TransferDialogResult;

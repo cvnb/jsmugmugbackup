@@ -1,5 +1,6 @@
 package jSmugmugBackup.view;
 
+import jSmugmugBackup.config.Constants;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.login.*;
