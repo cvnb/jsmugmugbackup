@@ -1,5 +1,7 @@
 package jSmugmugBackup.model;
 
+import jSmugmugBackup.config.Constants;
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
 import jSmugmugBackup.view.login.*;
@@ -11,6 +13,7 @@ import java.util.*;
 
 public class Model
 {
+    private GlobalConfig config = null;
 	private IAccountListingProxy accListing = null;
     private IView view = null;
     private Logger log = null;
@@ -20,6 +23,8 @@ public class Model
     /** Constructor */
     public Model()
     {
+        this.config = GlobalConfig.getInstance();
+
     	this.accListing = new AccountListingProxy();
     	this.log = Logger.getInstance();
     	

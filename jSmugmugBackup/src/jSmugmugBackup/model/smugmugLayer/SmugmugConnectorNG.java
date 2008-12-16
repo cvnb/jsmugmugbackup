@@ -6,6 +6,7 @@
  */
 package jSmugmugBackup.model.smugmugLayer;
 
+import jSmugmugBackup.config.Constants;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.*;

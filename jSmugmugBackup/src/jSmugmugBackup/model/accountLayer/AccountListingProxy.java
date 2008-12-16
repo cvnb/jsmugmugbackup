@@ -6,6 +6,7 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
+import jSmugmugBackup.config.Constants;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.queue.*;
 import jSmugmugBackup.model.smugmugLayer.*;
@@ -489,6 +490,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
 			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(Constants.pixelFilename));
+            this.log.printLog("\n");
 		}
 		
 		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");

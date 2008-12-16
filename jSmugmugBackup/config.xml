@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jSmugmugBackup>
+    <config>
+        <logfile>jSmugmugBackup.log</logfile>
+        <checkMD5Sums>true</checkMD5Sums>
+    </config>
+</jSmugmugBackup>
+
+

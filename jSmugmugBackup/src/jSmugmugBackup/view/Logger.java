@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.model.Constants;
+import jSmugmugBackup.config.Constants;
 
 import java.io.File;
 import java.io.FileWriter;
