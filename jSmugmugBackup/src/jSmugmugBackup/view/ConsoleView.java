@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.config.Constants;
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.ITransferDialogResult;
 import jSmugmugBackup.model.Model;
 import jSmugmugBackup.model.TransferDialogResult;
@@ -27,6 +27,7 @@ import java.util.Vector;
 
 public class ConsoleView implements IView
 {
+    private GlobalConfig config = null;
 	private Model model = null;
 	private Logger log = null;
 	
@@ -49,6 +50,8 @@ public class ConsoleView implements IView
 	
 	public ConsoleView(Model model)
 	{
+        this.config = GlobalConfig.getInstance();
+        
 		this.model = model;
 		this.model.setView(this);
 
@@ -67,7 +70,7 @@ public class ConsoleView implements IView
 
 	public void start()
 	{
-		this.log.printLogLine("jSmugmugBackup v" + Constants.version);
+		this.log.printLogLine("jSmugmugBackup v" + this.config.getConstantVersion());
 
 		this.console.printf("type \"help\" for available commands\n");
 		
@@ -343,7 +346,7 @@ public class ConsoleView implements IView
 			this.console.printf("  verify [<category> <subcategory> <album>] <dir>   : compare local contents with your data on smugmug\n");
 			this.console.printf("  quit                                              : quit application\n");
 			this.console.printf("\n");
-			this.console.printf("%s", Constants.helpNotes);
+			this.console.printf("%s", this.config.getConstantHelpNotes());
 		}
 		else if (command.equals("help"))
 		{

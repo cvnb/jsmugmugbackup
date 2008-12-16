@@ -1,6 +1,5 @@
 package jSmugmugBackup.model;
 
-import jSmugmugBackup.config.Constants;
 import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
@@ -109,7 +108,7 @@ public class Model
 				}
 				
 				//go on, search for sub-directories
-				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, new Constants.FileComparator());
+				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
 				for (int i=0; i < subDirFileList.length; i++)
 				{
 					File subDirFile = subDirFileList[i];
@@ -124,7 +123,7 @@ public class Model
 						}
 						else //search in sub-sub-directories
 						{
-							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, new Constants.FileComparator());
+							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, this.config.getConstantFileComparator());
 							for (int j=0; j < subSubDirList.length; j++)
 							{
 								File subSubDirFile = subSubDirList[j];
@@ -139,7 +138,7 @@ public class Model
 									}
 									else //search in sub-sub-sub-directories
 									{
-										File[] subSubSubDirList = subSubDirFile.listFiles(); Arrays.sort(subSubSubDirList, new Constants.FileComparator());
+										File[] subSubSubDirList = subSubDirFile.listFiles(); Arrays.sort(subSubSubDirList, this.config.getConstantFileComparator());
 										for (int k=0; k < subSubSubDirList.length; k++)
 										{
 											File subSubSubDirFile = subSubSubDirList[k];
@@ -185,7 +184,7 @@ public class Model
 				}
 				
 				//go on, search for sub-directories
-				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, new Constants.FileComparator());
+				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
 				for (int i=0; i < subDirFileList.length; i++)
 				{
 					File subDirFile = subDirFileList[i];
@@ -200,7 +199,7 @@ public class Model
 						}
 						else //search in sub-sub-directories
 						{
-							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, new Constants.FileComparator());
+							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, this.config.getConstantFileComparator());
 							for (int j=0; j < subSubDirList.length; j++)
 							{
 								File subSubDirFile = subSubDirList[j];
@@ -243,7 +242,7 @@ public class Model
 				}
 				
 				//go on, search for sub-directories
-				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, new Constants.FileComparator());
+				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
 				for (int i=0; i < subDirFileList.length; i++)
 				{
 					File subDirFile = subDirFileList[i];
@@ -418,7 +417,7 @@ public class Model
 
     private boolean containsPics(File dir)
     {
-    	File[] fileList = dir.listFiles(Constants.supportedFileTypesFilter);
+    	File[] fileList = dir.listFiles(config.getConstantSupportedFileTypesFilter());
     	for (int i=0; i < fileList.length; i++)
     	{
     		// if the (already filtered) fileList contains Files and not just Directories, these Files must be pictures

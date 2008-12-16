@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.model.smugmugLayer;
 
-import jSmugmugBackup.config.Constants;
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.*;
@@ -26,6 +26,7 @@ import org.json.simple.*;
 
 public class SmugmugConnectorNG implements ISmugmugConnectorNG
 {
+    private GlobalConfig config = null;
 	private Logger log = null;
 	
 	// hack: there should be a better way to handle multiple instances of
@@ -40,6 +41,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public SmugmugConnectorNG()
 	{
+        this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
 	}
 
@@ -386,7 +388,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         String responseBody = null;
 		
         //User-Agent String to be identified by Smugmug ...
-        httpRequest.addHeader("User-Agent", Constants.smugmugUserAgentString);
+        httpRequest.addHeader("User-Agent", this.config.getConstantSmugmugUserAgentString());
         
 		//repeat until success ... pretty agressive
 		// - maybe there should be a relogin in the loop???
@@ -407,7 +409,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			{
             	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
-            	Helper.pause(Constants.retryWait);
+            	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
 			}
@@ -420,7 +422,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             {
             	this.log.printLog("caught java.net.SocketException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
-            	Helper.pause(Constants.retryWait);
+            	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
             }
@@ -428,7 +430,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             {
             	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
-            	Helper.pause(Constants.retryWait);
+            	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
             }
@@ -436,7 +438,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             {
             	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ... ");
             	this.log.printLog("waiting ... ");
-            	Helper.pause(Constants.retryWait);
+            	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
             }
@@ -469,7 +471,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.login.withPassword ... ");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=smugmug.login.withPassword&";
 		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
 		url = url + "EmailAddress=" + userEmail + "&";
@@ -524,7 +526,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.login.withHash ... ");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=smugmug.login.withHash&";
 		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
 		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
@@ -561,7 +563,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.logout ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=smugmug.logout&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		
@@ -586,7 +588,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.users.getTree ... ");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=smugmug.users.getTree&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		//url = url + "NickName=" + this.login_nickname + "&"; //optional
@@ -623,7 +625,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.images.get ... ");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -670,7 +672,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.images.get ... ");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&";
@@ -705,7 +707,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + this.encodeForURL(name) + "&";
@@ -739,7 +741,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "CategoryID=" + categoryID + "&";
@@ -775,7 +777,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Name=" + this.encodeForURL(name) + "&";
@@ -812,7 +814,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "SubCategoryID=" + subcategoryID + "&";
@@ -849,7 +851,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "Title=" + this.encodeForURL(title) + "&";
@@ -939,7 +941,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&"; //integer
@@ -980,7 +982,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1078,7 +1080,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1176,7 +1178,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
@@ -1210,7 +1212,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog(methodName + " ...");
 		
 		//build url
-		String url = Constants.smugmugServerURL + "?";
+		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
@@ -1260,7 +1262,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
 	        httpPut.addHeader("Content-MD5", Helper.computeMD5Hash(fileName) );
 	        httpPut.addHeader("X-Smug-SessionID", SmugmugConnectorNG.login_sessionID);
-	        httpPut.addHeader("X-Smug-Version", Constants.smugmugAPIVersion);
+	        httpPut.addHeader("X-Smug-Version", this.config.getConstantSmugmugAPIVersion());
 	        httpPut.addHeader("X-Smug-ResponseType", "JSON");
 	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
 	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
@@ -1325,7 +1327,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	//return jobj;
 
             	this.log.printLog("waiting ... ");
-            	Helper.pause(Constants.retryWait);
+            	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
@@ -1333,7 +1335,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	                  (((String)this.getJSONValue(jobj, "message")).startsWith("system error (invalid album id)") ))
 	        {
 	          	this.log.printLog("waiting ... ");
-	          	Helper.pause(Constants.retryWait);
+	          	Helper.pause(this.config.getConstantRetryWait());
 	          	this.log.printLog(Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
 	          	
 	          	//note: this error seems not to go away, even through repetition

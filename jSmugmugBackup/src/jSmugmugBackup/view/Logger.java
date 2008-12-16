@@ -6,8 +6,8 @@
  */
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.config.Constants;
 
+import jSmugmugBackup.config.GlobalConfig;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,10 +17,12 @@ public class Logger
 	// Protected constructor is sufficient to suppress unauthorized calls to the constructor
 	protected Logger()
 	{
+        this.config = GlobalConfig.getInstance();
+
     	try
     	{
     		//create a new and empty logfile
-    		FileWriter out = new FileWriter(new File(Constants.logfile), false);
+    		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), false);
 			out.close();
 		}
     	catch (IOException e) { e.printStackTrace(); }
@@ -42,7 +44,8 @@ public class Logger
 	}	 
 	
 	//------------------------------------
-	IView view = null;
+	private GlobalConfig config = null;
+    private IView view = null;
 	
 	public void registerView(IView view)
 	{
@@ -57,7 +60,7 @@ public class Logger
     	//write to file
     	try
     	{
-    		FileWriter out = new FileWriter(new File(Constants.logfile), true);
+    		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), true);
     		out.write(text);
 			out.close();
 		}
