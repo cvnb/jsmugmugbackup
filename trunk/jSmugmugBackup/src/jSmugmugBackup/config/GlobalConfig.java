@@ -38,10 +38,12 @@ public class GlobalConfig
    }
 
    //------------------------------------------------------------
+   // intern constants, not getter
+   private final String constantXMLConfigFilename = "config.xml";
 
    // constants --> getter
    private final String constantVersion = "0.4 (dev)";
-   private final String constantXMLConfigFilename = "config.xml";
+
 
    // persistent options --> getter, xml
    private String persistentLogfile = null;
@@ -90,5 +92,21 @@ public class GlobalConfig
    {
        //todo: write to xml-file
    }
+
+   // constant getter
+   public String getConstantVersion() { return this.constantVersion; }
+
+   //persistant getter
+   public boolean getPersistentCheckMD5Sums() { return this.persistentCheckMD5Sums; }
+   public String getPersistentLogfile() { return persistentLogfile; }
+
+   //runtime getters and setters
+   public String getRtconfigSession() { return this.rtconfigSession; }
+   public void setRtconfigSession(String rtconfigSession) { this.rtconfigSession = rtconfigSession; }
+
+
+
+
+
 
 }
