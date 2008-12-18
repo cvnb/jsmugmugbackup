@@ -4,20 +4,12 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package jSmugmugBackup.view;
+package jSmugmugBackup.view.console;
 
-import jSmugmugBackup.config.GlobalConfig;
-import jSmugmugBackup.model.ITransferDialogResult;
-import jSmugmugBackup.model.Model;
-import jSmugmugBackup.model.TransferDialogResult;
-import jSmugmugBackup.model.accountLayer.IAlbum;
-import jSmugmugBackup.model.accountLayer.ICategory;
-import jSmugmugBackup.model.accountLayer.IImage;
-import jSmugmugBackup.model.accountLayer.IRootElement;
-import jSmugmugBackup.model.accountLayer.ISubcategory;
-import jSmugmugBackup.view.login.ILoginView;
-import jSmugmugBackup.view.login.LoginViewConsole_1_5;
-import jSmugmugBackup.view.login.LoginViewConsole_1_6;
+import jSmugmugBackup.view.*;
+import jSmugmugBackup.config.*;
+import jSmugmugBackup.model.*;
+import jSmugmugBackup.model.accountLayer.*;
 
 import java.awt.event.ActionListener;
 import java.io.Console;
@@ -179,28 +171,7 @@ public class ConsoleView implements IView
 
 	
 
-	public ILoginView getLoginMethod()
-	{
-		ILoginView loginMethod = null;
 
-		if (this.lastInputTokenVector.size() == 1) // command: login
-		{
-			loginMethod = new LoginViewConsole_1_6();
-		}
-		else if (this.lastInputTokenVector.size() == 2) // command: login <email>
-		{
-			String username = this.lastInputTokenVector.get(1);
-			loginMethod = new LoginViewConsole_1_6(username, null);
-		}
-		else
-		{
-			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
-		}
-
-		//loginMethod = new LoginViewConsole_1_6();
-		
-    	return loginMethod;
-	}
 
 	public void printLog(String text)
 	{
@@ -254,6 +225,29 @@ public class ConsoleView implements IView
 		}
 	}
 	
+    public ILoginDialogResult showLoginDialog()
+	{
+		ILoginView loginView = null;
+
+		if (this.lastInputTokenVector.size() == 1) // command: login
+		{
+			loginView = new ConsoleViewLogin_1_6();
+		}
+		else if (this.lastInputTokenVector.size() == 2) // command: login <email>
+		{
+			String username = this.lastInputTokenVector.get(1);
+			loginView = new ConsoleViewLogin_1_6(username, null);
+		}
+		else
+		{
+			this.console.printf("INPUT ERROR: incorrect number of parameters, try \"help <action>\"\n");
+		}
+
+		//loginMethod = new LoginViewConsole_1_6();
+		
+    	return loginView.getLoginDialogResult();
+	}
+
 	public ITransferDialogResult showListDialog()
 	{
 		String category = null;

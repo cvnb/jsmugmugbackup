@@ -4,29 +4,40 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package jSmugmugBackup.view.login;
+package jSmugmugBackup.view.console;
 
+import jSmugmugBackup.view.ILoginView;
+import jSmugmugBackup.model.*;
 import java.util.Scanner;
 
-public class LoginViewConsole_1_5 implements ILoginView
+public class ConsoleViewLogin_1_5 implements ILoginView
 {
 	private String initUserEmail;
 	private String initPassword;
 
-	public LoginViewConsole_1_5()
+	public ConsoleViewLogin_1_5()
 	{
 		this.initUserEmail = null;
 		this.initPassword = null;
 	}
 
-	public LoginViewConsole_1_5(String userEmail, String password)
+	public ConsoleViewLogin_1_5(String userEmail, String password)
 	{
 		this.initUserEmail = userEmail;
 		this.initPassword  = password;
 	}
 
+    public ILoginDialogResult getLoginDialogResult()
+    {
+        this.requestUserEmail();
+        this.requestPassword();
 
-	public String requestUserEmail()
+        return new LoginDialogResult(this.initUserEmail, this.initPassword);
+    }
+
+
+    //--------------------------------------------------------------------------
+	private String requestUserEmail()
 	{
 		if (this.initUserEmail != null) { return this.initUserEmail; }
 		
@@ -39,7 +50,7 @@ public class LoginViewConsole_1_5 implements ILoginView
 	}
 	
 
-	public String requestPassword()
+	private String requestPassword()
 	{
 		if (this.initPassword != null) { return this.initPassword; }
 		

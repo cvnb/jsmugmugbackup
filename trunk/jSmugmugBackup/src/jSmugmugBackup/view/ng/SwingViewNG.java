@@ -7,7 +7,6 @@ package jSmugmugBackup.view.ng;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
-import jSmugmugBackup.view.login.*;
 
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -254,6 +253,8 @@ public class SwingViewNG extends FrameView implements IView
 	private Logger log = null;
 	private Model model = null;
 
+    private SwingViewNGWaitDialog waitDialog = null;
+
     // called by the constructor
     public void init(Model model)
     {
@@ -270,14 +271,21 @@ public class SwingViewNG extends FrameView implements IView
         /* noop */
     }
 
-    public ILoginView getLoginMethod()
-    {
-        ILoginView loginToken = new LoginViewSwingNG(this);
-        return loginToken;
-    }
+//    public ILoginView getLoginMethod()
+//    {
+//        ILoginView loginToken = new LoginViewSwingNG(this);
+//        return loginToken;
+//    }
 
     public void refreshFileListing(IRootElement smugmugRoot) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ILoginDialogResult showLoginDialog()
+    {
+        SwingViewNGLoginDialog dialog = new SwingViewNGLoginDialog( this.getFrame(), true );
+		dialog.setVisible(true);
+        return dialog.getLoginDialogResult();
     }
 
     public ITransferDialogResult showListDialog() {
@@ -315,12 +323,28 @@ public class SwingViewNG extends FrameView implements IView
 
     public void showBusyStart(String waitingMessage)
     {
-        /* nothing yet */
+        
+        //this.waitDialog = new SwingViewNGWaitDialog(this.getFrame(), false, waitingMessage);
+        ////this.waitDialog.setMessage("please wait ...", waitingMessage);
+        //this.waitDialog.setVisible(true);
+
+        //disable frame, so no mouse events will be recieved
+        
+        this.getFrame().setEnabled(false);
+        this.statusMessageLabel.setText(waitingMessage);
+        this.getFrame().validate();
+
+
     }
 
     public void showBusyStop()
     {
-        /* nothing yet */
+        
+        //this.waitDialog.setVisible(false);
+        //this.waitDialog = null;
+
+        //enable frame
+        this.getFrame().setEnabled(true);
     }
 
     public void addLoginButtonListener(ActionListener listener)

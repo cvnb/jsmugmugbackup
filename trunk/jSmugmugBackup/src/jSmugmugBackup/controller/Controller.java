@@ -40,7 +40,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			model.login(view.getLoginMethod());
+			model.login(view.showLoginDialog());
 			//model.getFileListing();
 		}
 	}

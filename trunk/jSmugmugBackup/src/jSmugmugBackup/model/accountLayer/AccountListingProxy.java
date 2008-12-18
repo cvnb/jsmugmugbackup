@@ -11,7 +11,6 @@ import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.queue.*;
 import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.*;
-import jSmugmugBackup.view.login.*;
 
 import java.io.*;
 import java.util.*;
@@ -22,7 +21,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	private Logger log = null;
 	private ISmugmugConnectorNG connector = null;
 	private ITransferQueue transferQueue = null;
-	private ILoginView loginMethod = null;
+//	private ILoginView loginMethod = null;
 	
 	private IRootElement smugmugRoot = null;
 	//private Vector<ICategory> categoryList = null;
@@ -38,10 +37,10 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.transferQueue = new TransferQueue();
 	}
 	
-	public void setLoginMethod(ILoginView loginToken)
-	{
-		this.loginMethod = loginToken;		
-	}
+//	public void setLoginMethod(ILoginView loginToken)
+//	{
+//		this.loginMethod = loginToken;
+//	}
 	
 	public void init()
 	{
@@ -59,11 +58,8 @@ public class AccountListingProxy implements IAccountListingProxy
 		//todo
 	}
 	
-	public Number login()
+	public Number login(String userEmail, String password)
 	{
-		String userEmail = this.loginMethod.requestUserEmail();
-		String password = this.loginMethod.requestPassword();
-		
 		return this.connector.login(userEmail, password);
 	}
 	
