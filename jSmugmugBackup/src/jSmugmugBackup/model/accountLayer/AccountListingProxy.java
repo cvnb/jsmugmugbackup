@@ -42,16 +42,16 @@ public class AccountListingProxy implements IAccountListingProxy
 //		this.loginMethod = loginToken;
 //	}
 	
-	public void init()
-	{
-		//this.categoryList = this.connector.getTree();
-		this.smugmugRoot = this.connector.getTree();
-	}
-
-	public void init(File accountDataFile)
-	{
-		//todo
-	}
+//	public void init()
+//	{
+//		//this.categoryList = this.connector.getTree();
+//		this.smugmugRoot = this.connector.getTree();
+//	}
+//
+//	public void init(File accountDataFile)
+//	{
+//		//todo
+//	}
 	
 	public void serialize(File accoutDataFile)
 	{
@@ -135,6 +135,9 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public IRootElement getAccountListing(String categoryName, String subcategoryName, String albumName)
 	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
 		IRootElement result = new RootElement("");
 		
 		//find matching albums

@@ -31,35 +31,6 @@ public class Model
     	this.startTime = date.getTime();
     }    
 
-    public void login(ILoginDialogResult loginDialogResult)
-    {
-        //this.view.showLoginDialog();
-
-        //String userEmail = this.config.popRtconfigLoginUsername();
-		//String password = this.config.popRtconfigLoginPassword();
-
-    	//this.accListing.setLoginMethod(loginMethod);
-
-        
-
-    	//make a maximum of 3 login attempts
-    	this.view.showBusyStart("logging in");
-        Helper.pause(500);
-
-    	Number userId = null;
-    	for (int i=0; i < 3; i++)
-    	{
-    		userId = this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
-    		if (userId != null) { break; }
-    	}
-    	if (userId == null) { this.quitApplication(); }
-    	this.view.showBusyStop();
-    	
-    	//this.view.showBusyStart("getting data");
-    	//this.accListing.init();
-    	//this.view.showBusyStop();
-    }
-    
     public void setView(IView view)
     {
     	this.view = view;    	
@@ -86,6 +57,43 @@ public class Model
 		DecimalFormat df = new DecimalFormat("0.0");
     	this.log.printLogLine("finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, speed: " + df.format(transferSpeed) + " kb/sec)");
     	System.exit(0);
+    }
+
+    public void login(ILoginDialogResult loginDialogResult)
+    {
+        //this.view.showLoginDialog();
+
+        //String userEmail = this.config.popRtconfigLoginUsername();
+		//String password = this.config.popRtconfigLoginPassword();
+
+    	//this.accListing.setLoginMethod(loginMethod);
+
+        
+
+    	//make a maximum of 3 login attempts
+    	//this.view.showBusyStart("logging in");
+
+//    	Number userId = null;
+//    	for (int i=0; i < 3; i++)
+//    	{
+//    		userId = this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
+//    		if (userId != null) { break; }
+//    	}
+//    	if (userId == null) { this.quitApplication(); }
+    	//this.view.showBusyStop();
+    	
+    	//this.view.showBusyStart("getting data");
+    	//this.accListing.init();
+    	//this.view.showBusyStop();
+
+
+        
+        this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
+
+
+        //this.view.showBusyStart("getting data");
+    	//this.accListing.init();
+    	//this.view.showBusyStop();
     }
     
     public void list(ITransferDialogResult transferDialogResult)

@@ -28,7 +28,7 @@ public class LoginDialogResult implements ILoginDialogResult
 
     public String getLoginPassword()
     {
-        return this.loginUsername;
+        return this.loginPassword;
     }
 
 }
