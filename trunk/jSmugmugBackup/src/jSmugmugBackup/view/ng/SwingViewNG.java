@@ -8,6 +8,7 @@ import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
 
+import javax.swing.tree.TreeModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -19,6 +20,8 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
  * The application's main frame.
@@ -110,6 +113,8 @@ public class SwingViewNG extends FrameView implements IView
         loginButton = new javax.swing.JButton();
         logtextareaScrollPane = new javax.swing.JScrollPane();
         logTextArea = new javax.swing.JTextArea();
+        accountScrollPane = new javax.swing.JScrollPane();
+        accountTree = new javax.swing.JTree();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -135,27 +140,39 @@ public class SwingViewNG extends FrameView implements IView
         logTextArea.setName("logTextArea"); // NOI18N
         logtextareaScrollPane.setViewportView(logTextArea);
 
+        accountScrollPane.setName("accountScrollPane"); // NOI18N
+
+        accountTree.setName("accountTree"); // NOI18N
+        accountScrollPane.setViewportView(accountTree);
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(accountScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(loginButton))
+                        .addComponent(loginButton)
+                        .addGap(82, 82, 82))
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(loginButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-                .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                        .addGap(142, 142, 142)
+                        .addComponent(loginButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -187,6 +204,7 @@ public class SwingViewNG extends FrameView implements IView
         menuBar.add(helpMenu);
 
         statusPanel.setName("statusPanel"); // NOI18N
+        statusPanel.setPreferredSize(new java.awt.Dimension(521, 30));
 
         statusPanelSeparator.setName("statusPanelSeparator"); // NOI18N
 
@@ -201,11 +219,11 @@ public class SwingViewNG extends FrameView implements IView
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 214, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusAnimationLabel)
@@ -229,6 +247,8 @@ public class SwingViewNG extends FrameView implements IView
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane accountScrollPane;
+    private javax.swing.JTree accountTree;
     private javax.swing.JTextArea logTextArea;
     private javax.swing.JButton loginButton;
     private javax.swing.JMenuItem loginMenuItem;
@@ -277,8 +297,50 @@ public class SwingViewNG extends FrameView implements IView
 //        return loginToken;
 //    }
 
-    public void refreshFileListing(IRootElement smugmugRoot) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void refreshFileListing(IRootElement smugmugRoot)
+    {
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("account");
+
+        for (ICategory c : smugmugRoot.getCategoryList())
+		{
+			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(c.getName());
+
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				DefaultMutableTreeNode subcategoryTreeNode = new DefaultMutableTreeNode(s.getName());
+				for (IAlbum a : s.getAlbumList())
+				{
+					DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
+					for (IImage i : a.getImageList())
+					{
+						albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
+					}
+					subcategoryTreeNode.add(albumTreeNode);
+				}
+				categoryTreeNode.add(subcategoryTreeNode);
+			}
+
+			for (IAlbum a : c.getAlbumList())
+			{
+				DefaultMutableTreeNode albumTreeNode = new DefaultMutableTreeNode(a.getName());
+				for (IImage i : a.getImageList())
+				{
+					albumTreeNode.add(new DefaultMutableTreeNode(i.getName()));
+				}
+				categoryTreeNode.add(albumTreeNode);
+			}
+
+			rootNode.add(categoryTreeNode);
+		}
+
+        this.accountTree.setModel((TreeModel) rootNode);
+
+
+		//expand the tree
+		for (int row=0; row < this.accountTree.getRowCount(); row++)
+		{
+			this.accountTree.expandRow(row);
+		}
     }
 
     public ILoginDialogResult showLoginDialog()
@@ -323,28 +385,31 @@ public class SwingViewNG extends FrameView implements IView
 
     public void showBusyStart(String waitingMessage)
     {
-        
-        //this.waitDialog = new SwingViewNGWaitDialog(this.getFrame(), false, waitingMessage);
-        ////this.waitDialog.setMessage("please wait ...", waitingMessage);
-        //this.waitDialog.setVisible(true);
-
         //disable frame, so no mouse events will be recieved
-        
         this.getFrame().setEnabled(false);
+
+        //set message in statusbar
         this.statusMessageLabel.setText(waitingMessage);
+
+        //display waiting dialog
+        this.waitDialog = new SwingViewNGWaitDialog(this.getFrame(), false, waitingMessage);
+        ////this.waitDialog.setMessage("please wait ...", waitingMessage);
+        this.waitDialog.setVisible(true);
+        this.waitDialog.validate();
+
         this.getFrame().validate();
-
-
     }
 
     public void showBusyStop()
-    {
-        
-        //this.waitDialog.setVisible(false);
-        //this.waitDialog = null;
+    {        
+        this.waitDialog.setVisible(false);
+        this.waitDialog = null;
 
+        this.statusMessageLabel.setText("");
+        
         //enable frame
         this.getFrame().setEnabled(true);
+        this.getFrame().validate();
     }
 
     public void addLoginButtonListener(ActionListener listener)

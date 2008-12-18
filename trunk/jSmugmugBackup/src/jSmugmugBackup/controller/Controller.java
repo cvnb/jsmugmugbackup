@@ -1,6 +1,7 @@
 package jSmugmugBackup.controller;
 
 import jSmugmugBackup.model.Model;
+import jSmugmugBackup.model.TransferDialogResult;
 import jSmugmugBackup.view.*;
 
 import java.awt.event.*;
@@ -40,8 +41,14 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+            view.showBusyStart("downloading account data ...");
 			model.login(view.showLoginDialog());
-			//model.getFileListing();
+            //view.showBusyStop();
+
+
+            //view.showBusyStart("downloading account data ...");
+            model.list(new TransferDialogResult(null, null, null, null));
+            view.showBusyStop();
 		}
 	}
 	

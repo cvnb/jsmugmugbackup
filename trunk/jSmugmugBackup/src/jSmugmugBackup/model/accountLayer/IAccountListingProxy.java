@@ -14,8 +14,8 @@ import java.util.Vector;
 public interface IAccountListingProxy
 {
 	//void setLoginMethod(ILoginView loginMethod);
-	void init();
-	void init(File accoutDataFile);
+//	void init();
+//	void init(File accoutDataFile);
 	void serialize(File accoutDataFile);
 	Number login(String userEmail, String password);
 	void logout();
