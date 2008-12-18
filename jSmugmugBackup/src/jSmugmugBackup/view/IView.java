@@ -9,7 +9,7 @@ package jSmugmugBackup.view;
 import jSmugmugBackup.model.accountLayer.ICategory;
 import jSmugmugBackup.model.accountLayer.IRootElement;
 import jSmugmugBackup.model.*;
-import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.view.ILoginView;
 
 import java.awt.event.*;
 import java.util.Vector;
@@ -19,9 +19,11 @@ public interface IView
 {
 	void start();
 	
-	ILoginView getLoginMethod();
+	//ILoginView getLoginMethod();
 	void refreshFileListing(IRootElement smugmugRoot);
-	ITransferDialogResult showListDialog();
+	
+    ILoginDialogResult showLoginDialog();
+    ITransferDialogResult showListDialog();
 	ITransferDialogResult showSortDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();

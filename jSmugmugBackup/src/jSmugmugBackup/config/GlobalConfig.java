@@ -127,7 +127,9 @@ public class GlobalConfig
    
 
    // runtime config --> getter and setter
-   private String rtconfigSession = "";
+   private String rtconfigLoginSessionID = "";
+//   private String rtconfigLoginUsername = null;
+//   private String rtconfigLoginPassword = null;
 
 
    private void loadConfig()
@@ -182,20 +184,33 @@ public class GlobalConfig
    public FilenameFilter getConstantSupportedFileTypesFilter() { return this.constantSupportedFileTypesFilter; }
    public FileFilter     getConstantDirectoryFileFilter()      { return this.constantDirectoryFileFilter; }
    public FileComparator getConstantFileComparator()           { return this.constantFileComparator; }
-   // FileComparator
-
-
 
 
    //persistant getter
    public boolean getPersistentCheckMD5Sums() { return this.persistentCheckMD5Sums; }
    public String getPersistentLogfile() { return persistentLogfile; }
 
+
    //runtime getters and setters
-   public String getRtconfigSession() { return this.rtconfigSession; }
-   public void setRtconfigSession(String rtconfigSession) { this.rtconfigSession = rtconfigSession; }
+   public String getRtconfigLoginSessionID() { return this.rtconfigLoginSessionID; }
+   public void setRtconfigLoginSessionID(String rtconfigLoginSessionID) { this.rtconfigLoginSessionID = rtconfigLoginSessionID; }
 
 
+//   //special accessors for username and password - can be retrieved only once
+//   public void pushRtconfigLoginUsername(String username) { this.rtconfigLoginUsername = username; }
+//   public String popRtconfigLoginUsername()
+//   {
+//       String username = this.rtconfigLoginUsername;
+//       this.rtconfigLoginUsername = null;
+//       return username;
+//   }
+//   public void pushRtconfigLoginPassword(String password) { this.rtconfigLoginPassword = password; }
+//   public String popRtconfigLoginPassword()
+//   {
+//       String password = this.rtconfigLoginPassword;
+//       this.rtconfigLoginPassword = null;
+//       return password;
+//   }
 
 
 

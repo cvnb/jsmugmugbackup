@@ -11,18 +11,18 @@
 
 package jSmugmugBackup.view.ng;
 
-import jSmugmugBackup.model.Helper;
-import jSmugmugBackup.view.IView;
-import jSmugmugBackup.view.Logger;
-import jSmugmugBackup.view.SwingView;
-import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.config.*;
+import jSmugmugBackup.model.*;
+import jSmugmugBackup.view.*;
+import jSmugmugBackup.view.ILoginView;
 import javax.swing.JTextField;
 
 /**
  *
  * @author paul
  */
-public class SwingViewNGLoginDialog extends javax.swing.JDialog {
+public class SwingViewNGLoginDialog extends javax.swing.JDialog implements ILoginView
+{
 
     /** Creates new form SwingViewNGLoginDialog */
     public SwingViewNGLoginDialog(java.awt.Frame parent, boolean modal) {
@@ -121,16 +121,27 @@ public class SwingViewNGLoginDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
+
         //making form invisible
         this.setVisible(false);
+
+        //storing username and password
+        this.loginDialogResult = new LoginDialogResult(this.usernameTextField.getText(), this.passwordPasswordField.getText());
+
+        //clear input fields
+        this.usernameTextField.setText("");
+        this.passwordPasswordField.setText("");
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
+        //making form invisible
+        this.setVisible(false);
+
+        this.loginDialogResult = new LoginDialogResult(null, null);
+
+        //clear input fields
         this.usernameTextField.setText("");
         this.passwordPasswordField.setText("");
-        this.setVisible(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
@@ -160,15 +171,11 @@ public class SwingViewNGLoginDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
 
-    //-------------------------------------------------------
-    public String getUsernameTextField_Text()
-    {
-        return this.usernameTextField.getText();
-    }
+    //-------------------------------------------------------------
+    private ILoginDialogResult loginDialogResult = null;
 
-    public String getPasswordTextField_Password()
+    public ILoginDialogResult getLoginDialogResult()
     {
-        return this.passwordPasswordField.getText();
+        return this.loginDialogResult;
     }
-
 }

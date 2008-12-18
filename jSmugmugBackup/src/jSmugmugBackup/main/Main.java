@@ -6,6 +6,8 @@
  */
 package jSmugmugBackup.main;
 
+import jSmugmugBackup.view.console.ConsoleView;
+import jSmugmugBackup.view.console.CmdView;
 import jSmugmugBackup.controller.Controller;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.view.*;

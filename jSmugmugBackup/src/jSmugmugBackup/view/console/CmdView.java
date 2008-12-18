@@ -1,11 +1,12 @@
-package jSmugmugBackup.view;
+package jSmugmugBackup.view.console;
 
+import jSmugmugBackup.view.*;
 import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.model.*;
-import jSmugmugBackup.view.login.ILoginView;
-import jSmugmugBackup.view.login.LoginViewConsole_1_5;
-import jSmugmugBackup.view.login.LoginViewConsole_1_6;
+import jSmugmugBackup.view.ILoginView;
+import jSmugmugBackup.view.console.ConsoleViewLogin_1_5;
+import jSmugmugBackup.view.console.ConsoleViewLogin_1_6;
 
 
 import java.awt.event.*;
@@ -137,26 +138,6 @@ public class CmdView implements IView
 		}
 	}
 
-	public ILoginView getLoginMethod()
-	{		
-		String account_email    = this.extractArgumentValueFromCommandline("email");
-		String account_password = this.extractArgumentValueFromCommandline("password");
-		
-		ILoginView loginMethod = null;
-		
-    	//this should allow the program to run, even if only java 1.5 is available
-    	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
-    	{
-    		loginMethod = new LoginViewConsole_1_5(account_email, account_password);
-    	}
-    	else //assuming we have Java 1.6 or higher
-    	{
-    		loginMethod = new LoginViewConsole_1_6(account_email, account_password);
-    	}
-    	
-
-    	return loginMethod;
-	}
 
 	public void showError(String errMessage)
 	{
@@ -178,6 +159,27 @@ public class CmdView implements IView
 		System.out.print(text);
 	}
 
+
+    public ILoginDialogResult showLoginDialog()
+	{
+		String account_email    = this.extractArgumentValueFromCommandline("email");
+		String account_password = this.extractArgumentValueFromCommandline("password");
+
+		ILoginView loginView = null;
+
+    	//this should allow the program to run, even if only java 1.5 is available
+    	if (java.lang.System.getProperty("java.specification.version").equals("1.5"))
+    	{
+    		loginView = new ConsoleViewLogin_1_5(account_email, account_password);
+    	}
+    	else //assuming we have Java 1.6 or higher
+    	{
+    		loginView = new ConsoleViewLogin_1_6(account_email, account_password);
+    	}
+
+
+    	return loginView.getLoginDialogResult();
+	}
 
 	public ITransferDialogResult showListDialog()
 	{

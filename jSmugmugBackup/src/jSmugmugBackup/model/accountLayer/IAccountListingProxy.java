@@ -6,18 +6,18 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
-import jSmugmugBackup.view.login.ILoginView;
+import jSmugmugBackup.view.ILoginView;
 
 import java.io.File;
 import java.util.Vector;
 
 public interface IAccountListingProxy
 {
-	void setLoginMethod(ILoginView loginMethod);
+	//void setLoginMethod(ILoginView loginMethod);
 	void init();
 	void init(File accoutDataFile);
 	void serialize(File accoutDataFile);
-	Number login();
+	Number login(String userEmail, String password);
 	void logout();
 	
 	

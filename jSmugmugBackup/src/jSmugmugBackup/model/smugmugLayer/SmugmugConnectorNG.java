@@ -1298,7 +1298,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
 	        	
 	            DecimalFormat df = new DecimalFormat("0.0");                            
-	            this.log.printLog("ok (" + df.format(filesizeMB) + "mb at " + df.format(uploadSpeed) + "kb/sec)");
+	            this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
 	        	//this.log.printLogLine("ok");
 	        	return jobj;
 	        }

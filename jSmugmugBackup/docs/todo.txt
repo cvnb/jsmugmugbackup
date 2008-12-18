@@ -9,7 +9,8 @@ todo:
    - persistence in xml-file
    - check md5sums
    - session info
- - verify doesn't work yet  
+ - verify doesn't work yet
+ - use global sessions, simplify call structure
  
 
  - refresh action listener doesn't make much sense, maybe merge functionality

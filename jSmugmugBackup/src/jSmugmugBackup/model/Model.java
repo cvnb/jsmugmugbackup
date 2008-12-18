@@ -3,7 +3,7 @@ package jSmugmugBackup.model;
 import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
-import jSmugmugBackup.view.login.*;
+
 
 import java.io.*;
 import java.text.*;
@@ -31,23 +31,32 @@ public class Model
     	this.startTime = date.getTime();
     }    
 
-    public void login(ILoginView loginMethod)
+    public void login(ILoginDialogResult loginDialogResult)
     {
-    	this.accListing.setLoginMethod(loginMethod);
-    	
+        //this.view.showLoginDialog();
+
+        //String userEmail = this.config.popRtconfigLoginUsername();
+		//String password = this.config.popRtconfigLoginPassword();
+
+    	//this.accListing.setLoginMethod(loginMethod);
+
+        
+
     	//make a maximum of 3 login attempts
     	this.view.showBusyStart("logging in");
+        Helper.pause(500);
+
     	Number userId = null;
     	for (int i=0; i < 3; i++)
     	{
-    		userId = this.accListing.login();
+    		userId = this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
     		if (userId != null) { break; }
     	}
     	if (userId == null) { this.quitApplication(); }
     	this.view.showBusyStop();
     	
     	//this.view.showBusyStart("getting data");
-    	this.accListing.init();
+    	//this.accListing.init();
     	//this.view.showBusyStop();
     }
     
