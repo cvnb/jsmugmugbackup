@@ -137,7 +137,8 @@ public class SwingViewNGLoginDialog extends javax.swing.JDialog implements ILogi
         //making form invisible
         this.setVisible(false);
 
-        this.loginDialogResult = new LoginDialogResult(null, null);
+        //this.loginDialogResult = new LoginDialogResult(null, null);
+        this.loginDialogResult = null;
 
         //clear input fields
         this.usernameTextField.setText("");

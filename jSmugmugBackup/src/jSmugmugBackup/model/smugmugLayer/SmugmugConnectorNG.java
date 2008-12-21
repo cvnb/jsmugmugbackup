@@ -1246,7 +1246,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	private JSONObject smugmug_images_upload(int albumID, File fileName)
 	{	
-		this.log.printLog(Helper.getCurrentTimeString() + " uploading: " + fileName.getAbsolutePath() + " ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " upload: " + fileName.getAbsolutePath() + " ... ");
 		
 		String methodName = "smugmug.images.upload";
 		//System.out.print(methodName + " ...");
