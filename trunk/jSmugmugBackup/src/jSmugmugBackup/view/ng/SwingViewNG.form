@@ -14,13 +14,16 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="accountScrollPane" min="-2" pref="152" max="-2" attributes="0"/>
                   <EmptySpace pref="37" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="loginButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="logtextareaScrollPane" min="-2" pref="318" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="loginButton" alignment="1" min="-2" pref="57" max="-2" attributes="1"/>
+                              <Component id="listButton" alignment="1" min="-2" pref="57" max="-2" attributes="1"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -31,10 +34,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="142" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                           <Component id="loginButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="138" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="listButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="208" max="32767" attributes="0"/>
                           <Component id="logtextareaScrollPane" min="-2" pref="108" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -90,6 +95,12 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="listButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="listButton.text"/>
+            <Property name="name" type="java.lang.String" value="listButton" noResource="true"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JMenuBar" name="menuBar">

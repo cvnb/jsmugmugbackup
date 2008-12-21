@@ -20,7 +20,7 @@ public interface IView
 	void start();
 	
 	//ILoginView getLoginMethod();
-	void refreshFileListing(IRootElement smugmugRoot);
+	void updateFileListing(IRootElement smugmugRoot);
 	
     ILoginDialogResult showLoginDialog();
     ITransferDialogResult showListDialog();
@@ -35,7 +35,7 @@ public interface IView
 	void showBusyStop();
 	
 	void addLoginButtonListener(ActionListener listener);
-	void addRefreshButtonListener(ActionListener listener);
+	void addListButtonListener(ActionListener listener);
 	void addSortButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addUploadStartButtonListener(ActionListener listener);

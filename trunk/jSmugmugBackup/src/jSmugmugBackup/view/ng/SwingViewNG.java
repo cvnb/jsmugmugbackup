@@ -115,6 +115,7 @@ public class SwingViewNG extends FrameView implements IView
         logTextArea = new javax.swing.JTextArea();
         accountScrollPane = new javax.swing.JScrollPane();
         accountTree = new javax.swing.JTree();
+        listButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -145,6 +146,9 @@ public class SwingViewNG extends FrameView implements IView
         accountTree.setName("accountTree"); // NOI18N
         accountScrollPane.setViewportView(accountTree);
 
+        listButton.setText(resourceMap.getString("listButton.text")); // NOI18N
+        listButton.setName("listButton"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -153,22 +157,26 @@ public class SwingViewNG extends FrameView implements IView
                 .addContainerGap()
                 .addComponent(accountScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(loginButton)
-                        .addGap(82, 82, 82))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                         .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(listButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
-                        .addGap(142, 142, 142)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGap(37, 37, 37)
                         .addComponent(loginButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(listButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
                         .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
@@ -249,6 +257,7 @@ public class SwingViewNG extends FrameView implements IView
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane accountScrollPane;
     private javax.swing.JTree accountTree;
+    private javax.swing.JButton listButton;
     private javax.swing.JTextArea logTextArea;
     private javax.swing.JButton loginButton;
     private javax.swing.JMenuItem loginMenuItem;
@@ -297,7 +306,7 @@ public class SwingViewNG extends FrameView implements IView
 //        return loginToken;
 //    }
 
-    public void refreshFileListing(IRootElement smugmugRoot)
+    public void updateFileListing(IRootElement smugmugRoot)
     {
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("account");
 
@@ -350,8 +359,10 @@ public class SwingViewNG extends FrameView implements IView
         return dialog.getLoginDialogResult();
     }
 
-    public ITransferDialogResult showListDialog() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ITransferDialogResult showListDialog()
+    {
+        // listing everything by default
+        return new TransferDialogResult(null, null, null, null);
     }
 
     public ITransferDialogResult showSortDialog() {
@@ -418,7 +429,7 @@ public class SwingViewNG extends FrameView implements IView
         this.loginMenuItem.addActionListener(listener);
     }
 
-    public void addRefreshButtonListener(ActionListener listener)
+    public void addListButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
