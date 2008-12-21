@@ -104,6 +104,8 @@ public class Model
 
 	public void upload(ITransferDialogResult transferDialogResult)
     {
+        if (transferDialogResult == null) { return; }
+
     	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
 
 		

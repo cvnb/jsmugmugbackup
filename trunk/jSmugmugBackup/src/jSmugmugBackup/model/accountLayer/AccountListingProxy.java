@@ -195,6 +195,8 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
 	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
 		
     	//this.log.printLogLine("-----------------------------------------------");
     	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
@@ -328,6 +330,9 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)
 	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
 		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
 		
 		int downloadCount = 0;
@@ -357,6 +362,9 @@ public class AccountListingProxy implements IAccountListingProxy
 	
     public void verifyAlbum(int albumID, String targetBaseDir)
     {
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
 		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
     	this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
 
@@ -478,6 +486,9 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void resortCategoryAlbums(int categoryID)
 	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
 		this.log.printLogLine("resortCategoryAlbums(name=" + this.getCategory(categoryID).getName() + ")");
 		
 		//find category
@@ -521,6 +532,9 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void resortSubcategoryAlbums(int subcategoryID)
 	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
 		this.log.printLogLine("resortSubcategoryAlbums(name=" + this.getSubcategory(subcategoryID).getName() + ")");
 		
 		//find category
@@ -560,6 +574,9 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	public void startProcessingQueue()
 	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        
 		// start syncronous processing
 		this.transferQueue.startSyncProcessing();
 		

@@ -2,7 +2,7 @@
 <jSmugmugBackup>
     <config>
         <logfile>jSmugmugBackup.log</logfile>
-        <checkMD5Sums>true</checkMD5Sums>
+        <checkMD5Sums>false</checkMD5Sums>
     </config>
 </jSmugmugBackup>
 

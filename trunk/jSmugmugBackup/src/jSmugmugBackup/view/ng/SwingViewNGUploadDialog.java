@@ -35,6 +35,7 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        folderFileChooser = new javax.swing.JFileChooser();
         folderLabel = new javax.swing.JLabel();
         folderTextField = new javax.swing.JTextField();
         folderButton = new javax.swing.JButton();
@@ -53,6 +54,9 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
+        folderFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        folderFileChooser.setName("folderFileChooser"); // NOI18N
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(jSmugmugBackup.view.ng.SwingViewNGStarterApp.class).getContext().getResourceMap(SwingViewNGUploadDialog.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
@@ -66,6 +70,11 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
 
         folderButton.setText(resourceMap.getString("folderButton.text")); // NOI18N
         folderButton.setName("folderButton"); // NOI18N
+        folderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                folderButtonActionPerformed(evt);
+            }
+        });
 
         uploadToLabel.setText(resourceMap.getString("uploadToLabel.text")); // NOI18N
         uploadToLabel.setName("uploadToLabel"); // NOI18N
@@ -75,7 +84,7 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
         categoryLabel.setText(resourceMap.getString("categoryLabel.text")); // NOI18N
         categoryLabel.setName("categoryLabel"); // NOI18N
 
-        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>", " " }));
+        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
         categoryComboBox.setName("categoryComboBox"); // NOI18N
 
         subcategoryLabel.setText(resourceMap.getString("subcategoryLabel.text")); // NOI18N
@@ -222,6 +231,14 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
         //...
     }//GEN-LAST:event_okButtonActionPerformed
 
+    private void folderButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_folderButtonActionPerformed
+    {//GEN-HEADEREND:event_folderButtonActionPerformed
+        // TODO add your handling code here:
+        this.folderFileChooser.showOpenDialog(this);
+
+        this.folderTextField.setText( this.folderFileChooser.getSelectedFile().getAbsolutePath() );
+    }//GEN-LAST:event_folderButtonActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -246,6 +263,7 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox categoryComboBox;
     private javax.swing.JLabel categoryLabel;
     private javax.swing.JButton folderButton;
+    private javax.swing.JFileChooser folderFileChooser;
     private javax.swing.JLabel folderLabel;
     private javax.swing.JTextField folderTextField;
     private javax.swing.JScrollPane jScrollPane1;
