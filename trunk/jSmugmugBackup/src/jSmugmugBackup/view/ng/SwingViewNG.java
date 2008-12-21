@@ -4,6 +4,7 @@
 
 package jSmugmugBackup.view.ng;
 
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
@@ -22,6 +23,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 
 /**
  * The application's main frame.
@@ -116,6 +119,7 @@ public class SwingViewNG extends FrameView implements IView
         accountScrollPane = new javax.swing.JScrollPane();
         accountTree = new javax.swing.JTree();
         listButton = new javax.swing.JButton();
+        uploadButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -149,38 +153,41 @@ public class SwingViewNG extends FrameView implements IView
         listButton.setText(resourceMap.getString("listButton.text")); // NOI18N
         listButton.setName("listButton"); // NOI18N
 
+        uploadButton.setText(resourceMap.getString("uploadButton.text")); // NOI18N
+        uploadButton.setName("uploadButton"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(accountScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(listButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
+                .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(uploadButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loginButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                        .addComponent(listButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
+                    .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(37, 37, 37)
                         .addComponent(loginButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(listButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
-                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(uploadButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -268,6 +275,7 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JButton uploadButton;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
@@ -279,7 +287,8 @@ public class SwingViewNG extends FrameView implements IView
     private JDialog aboutBox;
 
     //-------------- IView Implementation -----------------------------------
-	private Logger log = null;
+	private GlobalConfig config = null;
+    private Logger log = null;
 	private Model model = null;
 
     private SwingViewNGWaitDialog waitDialog = null;
@@ -287,11 +296,18 @@ public class SwingViewNG extends FrameView implements IView
     // called by the constructor
     public void init(Model model)
     {
+        this.config = GlobalConfig.getInstance();
         this.model = model;
 		this.model.setView(this);
 		this.log = Logger.getInstance();
 		this.log.registerView(this);
 
+
+        this.getFrame().setTitle("jSmugmugBackup v" + this.config.getConstantVersion() + " (experimental GUI)");
+
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<click \'list\' to update>");
+        DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+        this.accountTree.setModel(treeModel);
 
     }
 
@@ -342,11 +358,11 @@ public class SwingViewNG extends FrameView implements IView
 			rootNode.add(categoryTreeNode);
 		}
 
-        this.accountTree.setModel((TreeModel) rootNode);
+        this.accountTree.setModel( new DefaultTreeModel(rootNode) );
 
 
 		//expand the tree
-		for (int row=0; row < this.accountTree.getRowCount(); row++)
+		for (int row=0; row < this.accountTree.getRowCount()-1; row++)
 		{
 			this.accountTree.expandRow(row);
 		}
@@ -354,9 +370,9 @@ public class SwingViewNG extends FrameView implements IView
 
     public ILoginDialogResult showLoginDialog()
     {
-        SwingViewNGLoginDialog dialog = new SwingViewNGLoginDialog( this.getFrame(), true );
-		dialog.setVisible(true);
-        return dialog.getLoginDialogResult();
+        SwingViewNGLoginDialog loginDialog = new SwingViewNGLoginDialog( this.getFrame(), true );
+		loginDialog.setVisible(true);
+        return loginDialog.getLoginDialogResult();
     }
 
     public ITransferDialogResult showListDialog()
@@ -365,11 +381,14 @@ public class SwingViewNG extends FrameView implements IView
         return new TransferDialogResult(null, null, null, null);
     }
 
-    public ITransferDialogResult showSortDialog() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ITransferDialogResult showUploadDialog()
+    {
+        SwingViewNGUploadDialog uploadDialog = new SwingViewNGUploadDialog(this.getFrame(), true);
+        uploadDialog.setVisible(true);
+        return uploadDialog.getUploadDialogResult();
     }
 
-    public ITransferDialogResult showUploadDialog() {
+    public ITransferDialogResult showSortDialog() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -431,7 +450,12 @@ public class SwingViewNG extends FrameView implements IView
 
     public void addListButtonListener(ActionListener listener)
     {
-        /* todo: nothing to register yet */
+        this.listButton.addActionListener(listener);
+    }
+
+    public void addUploadDialogButtonListener(ActionListener listener)
+    {
+        this.uploadButton.addActionListener(listener);
     }
 
     public void addSortButtonListener(ActionListener listener)
@@ -439,10 +463,6 @@ public class SwingViewNG extends FrameView implements IView
         /* todo: nothing to register yet */
     }
 
-    public void addUploadDialogButtonListener(ActionListener listener)
-    {
-        /* todo: nothing to register yet */
-    }
 
     public void addUploadStartButtonListener(ActionListener listener)
     {

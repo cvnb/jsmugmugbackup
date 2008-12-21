@@ -64,7 +64,7 @@ public class TransferQueueProcessor implements Runnable
 			long elapsedTime = (new Date()).getTime() - startTime;
 			double estimatedTotalTime = (double)elapsedTime / ( (double)currTransferedBytes / (double)this.queue_size_byte );
 			long estimatedRemainingTime = (long)estimatedTotalTime - elapsedTime;
-			this.log.printLogLine(" ... queue: item " + itemCount + "/" + itemTotalNumber + ", " + Helper.getDurationTimeString(estimatedRemainingTime) + " left");
+			this.log.printLogLine(" ... item " + itemCount + "/" + itemTotalNumber + ", " + Helper.getDurationTimeString(estimatedRemainingTime) + " left");
 			
 			//get next item
 			item = this.queue.poll();

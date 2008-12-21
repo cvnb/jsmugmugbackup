@@ -41,7 +41,7 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-            view.showBusyStart("downloading account data ...");
+            view.showBusyStart("logging in ...");
 			model.login(view.showLoginDialog());
             ////view.showBusyStop();
 
@@ -56,7 +56,9 @@ public class Controller
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+            view.showBusyStart("downloading account data ...");
 			model.list(view.showListDialog());
+            view.showBusyStop();
 		}
 	}
 	
