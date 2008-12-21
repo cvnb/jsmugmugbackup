@@ -101,12 +101,12 @@ public class CmdView implements IView
 	public void addVerifyStartButtonListener(ActionListener listener)    { this.verifyStartButtonListener = listener; }
 	public void addDeleteDialogButtonListener(ActionListener listener)   { this.deleteDialogButtonListener = listener; }
 	public void addDeleteStartButtonListener(ActionListener listener)    { this.deleteStartButtonListener = listener; }
-	public void addRefreshButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
+	public void addListButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
 	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
 	
 
-	public void refreshFileListing(IRootElement smugmugRoot)
+	public void updateFileListing(IRootElement smugmugRoot)
 	{		
 		//display listing on console
 		//this.log.printLogLine("Nickname: " + accountListing.getNickName());

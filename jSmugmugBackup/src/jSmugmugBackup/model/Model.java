@@ -98,7 +98,7 @@ public class Model
     
     public void list(ITransferDialogResult transferDialogResult)
     {
-    	this.view.refreshFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
+    	this.view.updateFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
 
 

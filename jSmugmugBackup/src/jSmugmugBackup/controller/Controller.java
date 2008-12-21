@@ -20,7 +20,7 @@ public class Controller
         
         //... Add listeners to the view.
         this.view.addLoginButtonListener(new LoginButtonListener());
-        this.view.addRefreshButtonListener(new RefreshButtonListener());
+        this.view.addListButtonListener(new ListButtonListener());
         this.view.addSortButtonListener(new SortButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         this.view.addUploadStartButtonListener(new UploadStartButtonListener());
@@ -43,16 +43,16 @@ public class Controller
 		{
             view.showBusyStart("downloading account data ...");
 			model.login(view.showLoginDialog());
-            //view.showBusyStop();
+            ////view.showBusyStop();
 
 
-            //view.showBusyStart("downloading account data ...");
-            model.list(new TransferDialogResult(null, null, null, null));
+            ////view.showBusyStart("downloading account data ...");
+            //model.list(new TransferDialogResult(null, null, null, null));
             view.showBusyStop();
 		}
 	}
 	
-	class RefreshButtonListener implements ActionListener
+	class ListButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
