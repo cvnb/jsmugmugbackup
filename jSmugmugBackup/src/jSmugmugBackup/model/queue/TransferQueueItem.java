@@ -7,6 +7,7 @@
 package jSmugmugBackup.model.queue;
 
 
+import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.*;
 
@@ -16,6 +17,7 @@ import java.io.*;
 
 public class TransferQueueItem implements ITransferQueueItem
 {
+    private GlobalConfig config = null;
 	private Logger log = null;
 	private ISmugmugConnectorNG smugmugConnector = null;
 	private TransferQueueItemActionEnum action = null;
@@ -35,6 +37,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	
 	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor)
 	{
+        this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
 		//this.log.printLogLine("new TransferQueueItem()");
 		
@@ -72,8 +75,9 @@ public class TransferQueueItem implements ITransferQueueItem
 		
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
 		{
-			//this.result_successful = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor);
-			this.smugmugConnector.relogin();
+            // performing relogin for each queue item might improve stability during long lasting queue operations
+            if ( this.config.getConstantHeavyRelogin() ) { this.smugmugConnector.relogin(); }
+
 			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor);
 			
 			//this should be safe to assume
