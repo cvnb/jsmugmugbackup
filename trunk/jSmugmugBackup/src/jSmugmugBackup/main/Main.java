@@ -35,7 +35,7 @@ public class Main {
             // start new Swing view, designed with NetBeans
             SwingViewNGStarterApp.launch(SwingViewNGStarterApp.class, args);
             
-            Helper.pause(1000); // wait a sec until gui is initialized
+            Helper.pause(2000); // wait a sec until gui is initialized
             SwingViewNGStarterApp.getView().init(model);
             view = SwingViewNGStarterApp.getView();
         }

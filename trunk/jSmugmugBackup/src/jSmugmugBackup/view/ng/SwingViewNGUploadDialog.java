@@ -13,6 +13,12 @@ package jSmugmugBackup.view.ng;
 
 import jSmugmugBackup.model.ITransferDialogResult;
 import jSmugmugBackup.model.TransferDialogResult;
+import jSmugmugBackup.model.accountLayer.IAlbum;
+import jSmugmugBackup.model.accountLayer.ICategory;
+import jSmugmugBackup.model.accountLayer.IRootElement;
+import jSmugmugBackup.model.accountLayer.ISubcategory;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -21,7 +27,8 @@ import jSmugmugBackup.model.TransferDialogResult;
 public class SwingViewNGUploadDialog extends javax.swing.JDialog {
 
     /** Creates new form SwingViewNGUploadDialog */
-    public SwingViewNGUploadDialog(java.awt.Frame parent, boolean modal) {
+    public SwingViewNGUploadDialog(java.awt.Frame parent, boolean modal)
+    {
         super(parent, modal);
         initComponents();
     }
@@ -280,6 +287,49 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
 
     //--------------------------------------------------------------------------
     private ITransferDialogResult uploadDialogResult = null;
+
+    public void initTransferFilter(IRootElement smugmugRoot)
+    {
+
+        DefaultComboBoxModel categoryComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            categoryComboBoxModel.addElement(c.getName());
+        }
+        categoryComboBoxModel.addElement("<auto>");
+        this.categoryComboBox.setModel(categoryComboBoxModel);
+
+        DefaultComboBoxModel subcategoryComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            for (ISubcategory s : c.getSubcategoryList())
+            {
+                subcategoryComboBoxModel.addElement(s.getName());
+            }
+        }
+        subcategoryComboBoxModel.addElement("<auto>");
+        this.subcategoryComboBox.setModel(subcategoryComboBoxModel);
+
+        DefaultComboBoxModel albumComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            for (ISubcategory s : c.getSubcategoryList())
+            {
+                for (IAlbum a : s.getAlbumList())
+                {
+                    albumComboBoxModel.addElement(a.getName());
+                }
+            }
+
+            for (IAlbum a : c.getAlbumList())
+            {
+                albumComboBoxModel.addElement(a.getName());
+            }
+        }
+        albumComboBoxModel.addElement("<auto>");
+        this.albumComboBox.setModel(albumComboBoxModel);
+
+    }
 
     public ITransferDialogResult getUploadDialogResult()
     {
