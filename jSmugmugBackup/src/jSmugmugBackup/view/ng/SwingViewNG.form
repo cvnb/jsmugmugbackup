@@ -96,12 +96,14 @@
         <Component class="javax.swing.JButton" name="listButton">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="listButton.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="listButton" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="uploadButton">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="uploadButton.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="uploadButton" noResource="true"/>
           </Properties>
         </Component>

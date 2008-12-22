@@ -4,6 +4,7 @@ import jSmugmugBackup.model.Model;
 import jSmugmugBackup.model.TransferDialogResult;
 import jSmugmugBackup.view.*;
 
+import jSmugmugBackup.view.ng.SwingViewNG;
 import java.awt.event.*;
 
 public class Controller
@@ -43,11 +44,16 @@ public class Controller
 		{
             view.showBusyStart("logging in ...");
 			model.login(view.showLoginDialog());
-            ////view.showBusyStop();
 
+            //dirty hack
+            if (view instanceof SwingViewNG)
+            {
+                view.showBusyStop();
 
-            ////view.showBusyStart("downloading account data ...");
-            //model.list(new TransferDialogResult(null, null, null, null));
+                view.showBusyStart("downloading account data ...");
+                model.list(new TransferDialogResult(null, null, null, null));
+            }
+
             view.showBusyStop();
 		}
 	}
@@ -57,9 +63,10 @@ public class Controller
 		public void actionPerformed(ActionEvent e)
 		{
             view.showBusyStart("downloading account data ...");
-			model.list(view.showListDialog());
+            model.list(view.showListDialog());
             view.showBusyStop();
 		}
+
 	}
 	
 	class SortButtonListener implements ActionListener

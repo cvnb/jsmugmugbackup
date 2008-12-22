@@ -152,9 +152,11 @@ public class SwingViewNG extends FrameView implements IView
         accountScrollPane.setViewportView(accountTree);
 
         listButton.setText(resourceMap.getString("listButton.text")); // NOI18N
+        listButton.setEnabled(false);
         listButton.setName("listButton"); // NOI18N
 
         uploadButton.setText(resourceMap.getString("uploadButton.text")); // NOI18N
+        uploadButton.setEnabled(false);
         uploadButton.setName("uploadButton"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -294,6 +296,8 @@ public class SwingViewNG extends FrameView implements IView
 
     private SwingViewNGWaitDialog waitDialog = null;
 
+    private IRootElement smugmugRoot = null;
+
     // called by the constructor
     public void init(Model model)
     {
@@ -306,7 +310,7 @@ public class SwingViewNG extends FrameView implements IView
 
         this.getFrame().setTitle("jSmugmugBackup v" + this.config.getConstantVersion() + " (experimental GUI)");
 
-        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<click \'list\' to update>");
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<empty>");
         DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
         this.accountTree.setModel(treeModel);
 
@@ -325,9 +329,11 @@ public class SwingViewNG extends FrameView implements IView
 
     public void updateFileListing(IRootElement smugmugRoot)
     {
+        this.smugmugRoot = smugmugRoot;
+
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("account");
 
-        for (ICategory c : smugmugRoot.getCategoryList())
+        for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			DefaultMutableTreeNode categoryTreeNode = new DefaultMutableTreeNode(c.getName());
 
@@ -362,11 +368,16 @@ public class SwingViewNG extends FrameView implements IView
         this.accountTree.setModel( new DefaultTreeModel(rootNode) );
 
 
+        /*
 		//expand the tree
 		for (int row=0; row < this.accountTree.getRowCount()-1; row++)
 		{
 			this.accountTree.expandRow(row);
 		}
+        */
+
+        // enable upload button
+        this.uploadButton.setEnabled(true);
     }
 
     public ILoginDialogResult showLoginDialog()
@@ -379,12 +390,19 @@ public class SwingViewNG extends FrameView implements IView
     public ITransferDialogResult showListDialog()
     {
         // listing everything by default
-        return new TransferDialogResult(null, null, null, null);
+        //return new TransferDialogResult(null, null, null, null);
+
+        return null;
     }
 
     public ITransferDialogResult showUploadDialog()
     {
+        // we need the tree structure from the account to initialize the upload dialog
+        // todo: maybe a messagebox saying "you need to login and list your account first" would be nice
+        if (this.smugmugRoot == null) return null;
+
         SwingViewNGUploadDialog uploadDialog = new SwingViewNGUploadDialog(this.getFrame(), true);
+        uploadDialog.initTransferFilter(this.smugmugRoot);
         uploadDialog.setVisible(true);
         return uploadDialog.getUploadDialogResult();
     }

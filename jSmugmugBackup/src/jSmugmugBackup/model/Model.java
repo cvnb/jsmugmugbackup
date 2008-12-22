@@ -98,6 +98,8 @@ public class Model
     
     public void list(ITransferDialogResult transferDialogResult)
     {
+        if (transferDialogResult == null) { return; }
+
     	this.view.updateFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
 
