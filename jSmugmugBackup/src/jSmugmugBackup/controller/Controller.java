@@ -57,6 +57,7 @@ public class Controller
             view.showBusyStop();
 		}
 	}
+
 	
 	class ListButtonListener implements ActionListener
 	{

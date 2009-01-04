@@ -17,6 +17,7 @@ import jSmugmugBackup.model.accountLayer.IAlbum;
 import jSmugmugBackup.model.accountLayer.ICategory;
 import jSmugmugBackup.model.accountLayer.IRootElement;
 import jSmugmugBackup.model.accountLayer.ISubcategory;
+import jSmugmugBackup.view.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
@@ -93,12 +94,22 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
 
         categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
         categoryComboBox.setName("categoryComboBox"); // NOI18N
+        categoryComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                categoryComboBoxItemStateChanged(evt);
+            }
+        });
 
         subcategoryLabel.setText(resourceMap.getString("subcategoryLabel.text")); // NOI18N
         subcategoryLabel.setName("subcategoryLabel"); // NOI18N
 
         subcategoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
         subcategoryComboBox.setName("subcategoryComboBox"); // NOI18N
+        subcategoryComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                subcategoryComboBoxItemStateChanged(evt);
+            }
+        });
 
         albumLabel.setText(resourceMap.getString("albumLabel.text")); // NOI18N
         albumLabel.setName("albumLabel"); // NOI18N
@@ -246,6 +257,18 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
         this.folderTextField.setText( this.folderFileChooser.getSelectedFile().getAbsolutePath() );
     }//GEN-LAST:event_folderButtonActionPerformed
 
+    private void categoryComboBoxItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_categoryComboBoxItemStateChanged
+    {//GEN-HEADEREND:event_categoryComboBoxItemStateChanged
+        // TODO add your handling code here:
+        this.log = Logger.getInstance();
+        this.log.printLogLine((String)evt.getItem());
+    }//GEN-LAST:event_categoryComboBoxItemStateChanged
+
+    private void subcategoryComboBoxItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_subcategoryComboBoxItemStateChanged
+    {//GEN-HEADEREND:event_subcategoryComboBoxItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_subcategoryComboBoxItemStateChanged
+
     /**
     * @param args the command line arguments
     */
@@ -286,10 +309,14 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
 
 
     //--------------------------------------------------------------------------
+    private Logger log = null;
     private ITransferDialogResult uploadDialogResult = null;
 
-    public void initTransferFilter(IRootElement smugmugRoot)
+    private IRootElement smugmugRoot = null;
+
+    private void updateUploadDestinationComboBoxes(String categoryFilter, String subcategoryFilter)
     {
+
 
         DefaultComboBoxModel categoryComboBoxModel = new DefaultComboBoxModel();
         for (ICategory c : smugmugRoot.getCategoryList())
@@ -299,36 +326,55 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
         categoryComboBoxModel.addElement("<auto>");
         this.categoryComboBox.setModel(categoryComboBoxModel);
 
+
+
         DefaultComboBoxModel subcategoryComboBoxModel = new DefaultComboBoxModel();
         for (ICategory c : smugmugRoot.getCategoryList())
         {
-            for (ISubcategory s : c.getSubcategoryList())
+            if ( (categoryFilter == null) | (categoryFilter.equals(c.getName())) )
             {
-                subcategoryComboBoxModel.addElement(s.getName());
+                for (ISubcategory s : c.getSubcategoryList())
+                {
+                    subcategoryComboBoxModel.addElement(s.getName());
+                }
             }
         }
         subcategoryComboBoxModel.addElement("<auto>");
         this.subcategoryComboBox.setModel(subcategoryComboBoxModel);
 
+
+
         DefaultComboBoxModel albumComboBoxModel = new DefaultComboBoxModel();
         for (ICategory c : smugmugRoot.getCategoryList())
         {
-            for (ISubcategory s : c.getSubcategoryList())
+            if ( (categoryFilter == null) | (categoryFilter.equals(c.getName())) )
             {
-                for (IAlbum a : s.getAlbumList())
+                for (ISubcategory s : c.getSubcategoryList())
+                {
+                    if ( (subcategoryFilter == null) | (subcategoryFilter.equals(s.getName())) )
+                    {
+                        for (IAlbum a : s.getAlbumList())
+                        {
+                            albumComboBoxModel.addElement(a.getName());
+                        }
+                    }
+                }
+
+                for (IAlbum a : c.getAlbumList())
                 {
                     albumComboBoxModel.addElement(a.getName());
                 }
             }
-
-            for (IAlbum a : c.getAlbumList())
-            {
-                albumComboBoxModel.addElement(a.getName());
-            }
         }
         albumComboBoxModel.addElement("<auto>");
         this.albumComboBox.setModel(albumComboBoxModel);
+    }
 
+    public void initTransferFilter(IRootElement smugmugRoot)
+    {
+        this.smugmugRoot = smugmugRoot;
+
+        this.updateUploadDestinationComboBoxes(null, null);
     }
 
     public ITransferDialogResult getUploadDialogResult()

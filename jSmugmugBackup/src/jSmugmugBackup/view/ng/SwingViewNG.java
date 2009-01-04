@@ -331,7 +331,7 @@ public class SwingViewNG extends FrameView implements IView
     {
         this.smugmugRoot = smugmugRoot;
 
-        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("account");
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(this.smugmugRoot.getName());
 
         for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
@@ -390,9 +390,7 @@ public class SwingViewNG extends FrameView implements IView
     public ITransferDialogResult showListDialog()
     {
         // listing everything by default
-        //return new TransferDialogResult(null, null, null, null);
-
-        return null;
+        return new TransferDialogResult(null, null, null, null);
     }
 
     public ITransferDialogResult showUploadDialog()
