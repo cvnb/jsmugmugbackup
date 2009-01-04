@@ -72,7 +72,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a long time) ... ");
 		
-		IRootElement smugmugRoot = new RootElement(this.login_nickname);
+		IRootElement smugmugRoot = new RootElement(SmugmugConnectorNG.login_nickname);
 		
 		JSONObject tree = this.smugmug_users_getTree();
 		//this.printJSONObject(tree);

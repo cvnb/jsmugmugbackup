@@ -10,6 +10,7 @@ import java.util.Vector;
 
 public class RootElement extends SmugmugObject implements IRootElement
 {
+    private String nickname = null;
 	private Vector<ICategory> categoryList = null;
 
 	public RootElement(String name)
@@ -21,8 +22,8 @@ public class RootElement extends SmugmugObject implements IRootElement
 
 	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_ROOT; }
 
-	
-	public void addCategory(ICategory category)
+
+    public void addCategory(ICategory category)
 	{
 		this.categoryList.add(category);
 	}
@@ -31,6 +32,8 @@ public class RootElement extends SmugmugObject implements IRootElement
 	{
 		return this.categoryList;
 	}
+
+
 
 
 }
