@@ -68,7 +68,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.connector.logout();
 	}
 
-	public Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
+	private Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
 	{
 		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
 		
@@ -273,7 +273,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else
                 {
-    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i]);
+    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i], fileList[i].length());
     				this.transferQueue.add(item);
                     uploadCount++;
                 }
@@ -352,7 +352,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			File imageFile = new File(targetDir + image.getName());
 			
-			ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile);
+			ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize());
 			this.transferQueue.add(item);
 			downloadCount++;
 		}   

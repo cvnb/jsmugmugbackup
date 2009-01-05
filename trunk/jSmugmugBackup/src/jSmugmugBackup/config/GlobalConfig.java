@@ -69,7 +69,8 @@ public class GlobalConfig
 	    "   create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"\n" +
 	    " - uploaded albums are by default private, not searchable through smugmug and not searchable\n" +
 	    "   through google ... right now, the only way to change that is the smugmug website\n" +
-	    " - <to be continued>\n";
+	    " - when downloading, existing files will be overriden without notice\n" +
+        " - <to be continued>\n";
 
    // constant objects
    private final FilenameFilter constantSupportedFileTypesFilter = new FilenameFilter()

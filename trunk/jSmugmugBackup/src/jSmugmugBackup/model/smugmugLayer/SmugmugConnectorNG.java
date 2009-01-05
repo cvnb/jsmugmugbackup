@@ -357,9 +357,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             
             // for statistics
         	this.transferedBytes += fileName.length();
+            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
             
-            DecimalFormat df = new DecimalFormat("0.0");                            
-            this.log.printLogLine("ok (" + df.format(downloadSpeed) + " kb/sec)");
+            DecimalFormat df = new DecimalFormat("0.0");            
+            this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(downloadSpeed) + "kb/s)");
 			//this.log.printLogLine("ok");
 		}
 		catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -473,7 +474,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=smugmug.login.withPassword&";
-		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
+		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "EmailAddress=" + userEmail + "&";
 		url = url + "Password=" + password + "&";
 
@@ -528,7 +529,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=smugmug.login.withHash&";
-		url = url + "APIKey=EfDnSBoFGKoK2PGgVQEdwksoVw04JLkb&";
+		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
 		url = url + "PasswordHash=" + SmugmugConnectorNG.login_passwordHash + "&";
 
@@ -589,7 +590,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
-		url = url + "method=smugmug.users.getTree&";
+		url = url + "method=smugmug.users.getTree&";        
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		//url = url + "NickName=" + this.login_nickname + "&"; //optional
 		url = url + "Heavy=0&"; //optional
