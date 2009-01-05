@@ -62,8 +62,8 @@ public class TransferQueueProcessor implements Runnable
 			long currTransferedBytes = 0;
 			for (ITransferQueueItem processedItem : this.processedItemList) { currTransferedBytes += processedItem.getFileSize(); }
 			long elapsedTime = (new Date()).getTime() - startTime;
-			double estimatedTotalTime = (double)elapsedTime / ( (double)currTransferedBytes / (double)this.queue_size_byte );
-			long estimatedRemainingTime = (long)estimatedTotalTime - elapsedTime;
+            double estimatedTotalTime = (double)elapsedTime / ( (double)currTransferedBytes / (double)this.queue_size_byte );
+	        long estimatedRemainingTime = (long)estimatedTotalTime - elapsedTime;
 			this.log.printLogLine(" ... item " + itemCount + "/" + itemTotalNumber + ", " + Helper.getDurationTimeString(estimatedRemainingTime) + " left");
 			
 			//get next item

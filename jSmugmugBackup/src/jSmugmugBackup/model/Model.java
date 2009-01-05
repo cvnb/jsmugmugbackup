@@ -333,28 +333,97 @@ public class Model
     public void download(ITransferDialogResult transferDialogResult)
     {
 		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
-		
-		Vector<IAlbum> selectedAlbums = this.accListing.matchAlbums(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-		if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
-		
-		for (IAlbum a : selectedAlbums)
+
+        IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+
+        //add all albums, since they have already been filtered above
+        Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            for (ISubcategory s : c.getSubcategoryList())
+            {
+                for (IAlbum a : s.getAlbumList()) { selectedAlbums.add(a); }
+            }
+
+            for (IAlbum a : c.getAlbumList()) { selectedAlbums.add(a); }
+        }
+        if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+
+        for (IAlbum a : selectedAlbums)
 		{
 			this.accListing.enqueueAlbumForDownload(a.getID(), transferDialogResult.getDir());
 		}
+
+//        this.log.printLogLine("category   : " + transferDialogResult.getCategoryName());
+//        this.log.printLogLine("subcategory: " + transferDialogResult.getSubCategoryName());
+//		Vector<IAlbum> selectedAlbums = this.accListing.matchAlbums(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+//		if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+//
+//		for (IAlbum a : selectedAlbums)
+//		{
+//			this.accListing.enqueueAlbumForDownload(a.getID(), transferDialogResult.getDir());
+//		}
     }
     
     public void verify(ITransferDialogResult transferDialogResult)
     {
-    	//todo: what about missing local dirs?
-    	this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
-    	
-		Vector<IAlbum> selectedAlbums = this.accListing.matchAlbums(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-		if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
-    	
-    	for (IAlbum a : selectedAlbums)
-    	{
-    		this.accListing.verifyAlbum(a.getID(), transferDialogResult.getDir());
-    	}
+        this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
+
+        IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+
+        //add all albums, since they have already been filtered above
+        Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            for (ISubcategory s : c.getSubcategoryList())
+            {
+                for (IAlbum a : s.getAlbumList())
+                {
+                    selectedAlbums.add(a);
+                }
+            }
+
+            for (IAlbum a : c.getAlbumList())
+            {
+                selectedAlbums.add(a);
+            }
+        }
+        if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+
+        
+        //compute target base dir
+        String targetBaseDir = transferDialogResult.getDir();
+        //this.log.printLogLine("targetBaseDir: " + targetBaseDir);
+        if (transferDialogResult.getCategoryName() != null)
+        {
+            if (transferDialogResult.getSubCategoryName() != null)
+            {
+                if (transferDialogResult.getAlbumName() != null)
+                {
+                    targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getAlbumName()) );
+                }
+                targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getSubCategoryName()) );
+            }
+            targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getCategoryName()) );
+        }
+        //this.log.printLogLine("targetBaseDir: " + targetBaseDir);
+        
+
+        for (IAlbum a : selectedAlbums)
+		{
+            this.accListing.verifyAlbum(a.getID(), targetBaseDir);
+        }
+
+//    	//todo: what about missing local dirs?
+//    	this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
+//
+//		Vector<IAlbum> selectedAlbums = this.accListing.matchAlbums(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+//		if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
+//
+//    	for (IAlbum a : selectedAlbums)
+//    	{
+//    		this.accListing.verifyAlbum(a.getID(), transferDialogResult.getDir());
+//    	}
     }
     
     public void sort(ITransferDialogResult transferDialogResult)

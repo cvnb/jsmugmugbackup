@@ -177,7 +177,6 @@ public class CmdView implements IView
     		loginView = new ConsoleViewLogin_1_6(account_email, account_password);
     	}
 
-
     	return loginView.getLoginDialogResult();
 	}
 

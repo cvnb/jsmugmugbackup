@@ -25,7 +25,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private int albumID;
 	private int imageID;
 	private File fileDescriptor = null;
-	
+	private long fileSize = 0; // needed for pretty output
 
 	
 	private boolean result_processed;
@@ -35,7 +35,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor)
+	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor, long fileSize)
 	{
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
@@ -56,6 +56,7 @@ public class TransferQueueItem implements ITransferQueueItem
 		this.result_transferedBytes = 0;
 		
 		this.fileDescriptor = fileDescriptor;
+        this.fileSize = fileSize;
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
 		{
 			this.albumID = id;						
@@ -86,6 +87,9 @@ public class TransferQueueItem implements ITransferQueueItem
 		}
 		else if (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD))
 		{
+            // performing relogin for each queue item might improve stability during long lasting queue operations
+            if ( this.config.getConstantHeavyRelogin() ) { this.smugmugConnector.relogin(); }
+
 			//this.result_successful = this.smugmugConnector.downloadFile(this.imageID, this.fileName);
 			this.smugmugConnector.downloadFile(this.imageID, this.fileDescriptor);
 		}
@@ -109,6 +113,6 @@ public class TransferQueueItem implements ITransferQueueItem
 
 	public long getFileSize()
 	{
-		return this.fileDescriptor.length();
+        return this.fileSize;
 	}
 }

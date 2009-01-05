@@ -21,7 +21,7 @@ public interface IAccountListingProxy
 	void logout();
 	
 	
-	Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName);
+	//Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName);
 
 	//Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName);
 	IRootElement getAccountListing(String categoryName, String subcategoryName, String albumName);
