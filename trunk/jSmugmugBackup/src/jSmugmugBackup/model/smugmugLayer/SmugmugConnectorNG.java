@@ -112,7 +112,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					//System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
 					IAlbum album = new Album(subcategory, albumID.intValue(), albumName);
 					subcategory.addAlbum(album);
-					
+
+                    
 					//iterate over images
 					JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 					int imageIndex = 0;
@@ -137,6 +138,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 						imageIndex++;
 						jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 					}
+                    
 					
 					albumIndex++;
 					jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
@@ -161,7 +163,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				//System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
 				IAlbum album = new Album(category, albumID.intValue(), albumName);
 				category.addAlbum(album);
-				
+
+                
 				//iterate over images
 				JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 				int imageIndex = 0;
@@ -187,6 +190,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 				}
 				
+                
 				albumIndex++;
 				jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
 			}
@@ -426,6 +430,28 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
             	repeat = true;
+
+
+                //if (e.getMessage().equals("Broken pipe"))
+
+                //check if it's a video
+                boolean isVideo = false;
+                String fileName = httpRequest.getHeaders("X-Smug-FileName")[0].getValue();
+                int albumID = Integer.parseInt(httpRequest.getHeaders("X-Smug-AlbumID")[0].getValue());
+                //this.log.printLog("(" + fileName + ", " + albumID + ")");
+                for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                {
+                    if (fileName.toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                }
+
+                if (isVideo)
+                {
+                    this.log.printLog("special (socket exception with video): checking if the video is already there ... ");
+                    Helper.pause(this.config.getConstantRetryWait() * 6);
+                    JSONObject jobj_imageList = this.smugmug_images_get(albumID);
+                    this.printJSONObject(jobj_imageList);
+                }
+
             }
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
             {
@@ -1327,6 +1353,22 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        
 	        	//return jobj;
 
+                //check if it's a video
+                boolean isVideo = false;
+                for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                {
+                    if (fileName.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                }
+
+                if (isVideo)
+                {
+                    this.log.printLog("special (truncated video): checking if the video is already there ... ");
+                    Helper.pause(this.config.getConstantRetryWait() * 6);
+                    JSONObject jobj_imageList = this.smugmug_images_get(albumID);
+                    this.printJSONObject(jobj_imageList);
+                }
+
+
             	this.log.printLog("waiting ... ");
             	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
@@ -1453,7 +1495,22 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	encodedStr = encodedStr.replace("+", "%2B");
     	encodedStr = encodedStr.replace("<", "%3C");
     	encodedStr = encodedStr.replace(">", "%3E");
+        encodedStr = encodedStr.replace("[", "%5B");
+    	encodedStr = encodedStr.replace("]", "%5D");
     	encodedStr = encodedStr.replace("?", "%3F");
+
+        /*
+        //encoding german special characters
+        encodedStr = encodedStr.replace("ß", "%DF");
+        encodedStr = encodedStr.replace("ä", "%E4");
+        encodedStr = encodedStr.replace("Ä", "%C4");
+        encodedStr = encodedStr.replace("ö", "%F6");
+        encodedStr = encodedStr.replace("Ö", "%D6");
+        encodedStr = encodedStr.replace("ü", "%FC");
+        encodedStr = encodedStr.replace("Ü", "%DC");
+        */
+
+        //todo: french characters
     	
     	//this.log.printLogLine("encodeForURL: " + str + " --> " + encodedStr);
     	

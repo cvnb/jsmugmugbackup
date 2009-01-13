@@ -484,28 +484,32 @@ public class AccountListingProxy implements IAccountListingProxy
     	}
     }
 
-	public void resortCategoryAlbums(int categoryID)
-	{
-        //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+    public void sort(String categoryName, String subcategoryName)
+    {
+        //find matching albums
+		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, null);
 
-		this.log.printLogLine("resortCategoryAlbums(name=" + this.getCategory(categoryID).getName() + ")");
-		
-		//find category
-		ICategory c = this.getCategory(categoryID);
+        //put albums into an array
+        int index = 0;
+        IAlbum[] albumArray = new IAlbum[albumList.size()];
+        for (IAlbum a : albumList)
+        {
+            albumArray[index] = a;
+            index++;
+        }
 
-		int index = 0;
-		IAlbum[] albumArray = new IAlbum[c.getAlbumList().size()];
-		for (IAlbum a : c.getAlbumList())
-		{
-			albumArray[index] = a;
-			index++;
-		}
-		
-		Arrays.sort(albumArray);
-		
+        //sort the array
+        Arrays.sort(albumArray);
 
-		//add one pixel image to each album
+        this.sortAlbums(albumArray);
+
+        //this line is not too useful
+		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
+    }
+
+    public void sortAlbums(IAlbum[] albumArray)
+    {
+  		//add one pixel image to each album
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
@@ -525,51 +529,103 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			this.connector.deleteFile(imageIDArray[i]);
 		}
-		
-		//this line is not too useful
-		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
-	}
+    }
 
-	public void resortSubcategoryAlbums(int subcategoryID)
-	{
-        //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
 
-		this.log.printLogLine("resortSubcategoryAlbums(name=" + this.getSubcategory(subcategoryID).getName() + ")");
-		
-		//find category
-		ISubcategory s = this.getSubcategory(subcategoryID);
+//	public void resortCategoryAlbums(int categoryID)
+//	{
+//        //initialize Tree is nesseciary
+//        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+//
+//		this.log.printLogLine("resortCategoryAlbums(name=" + this.getCategory(categoryID).getName() + ")");
+//
+//		//find category
+//		ICategory c = this.getCategory(categoryID);
+//
+//		int index = 0;
+//		IAlbum[] albumArray = new IAlbum[c.getAlbumList().size()];
+//		for (IAlbum a : c.getAlbumList())
+//		{
+//			albumArray[index] = a;
+//			index++;
+//		}
+//
+//		Arrays.sort(albumArray);
+//
+//        this.sortAlbums(albumArray);
+//
+//        /*
+//		//add one pixel image to each album
+//		int[] imageIDArray = new int[albumArray.length];
+//		for (int i = 0 ; i < albumArray.length; i++)
+//		{
+//			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
+//            this.log.printLog("\n");
+//		}
+//
+//		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
+//		Helper.pause(this.config.getConstantRetryWait());
+//		this.log.printLogLine("ok");
+//
+//		this.connector.relogin();
+//		//this.pause(30000);
+//
+//		//delete image again
+//		for (int i = 0 ; i < albumArray.length; i++)
+//		{
+//			this.connector.deleteFile(imageIDArray[i]);
+//		}
+//		*/
+//
+//		//this line is not too useful
+//		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
+//	}
 
-		int index = 0;
-		IAlbum[] albumArray = new IAlbum[s.getAlbumList().size()];
-		for (IAlbum a : s.getAlbumList())
-		{
-			albumArray[index] = a;
-			index++;
-		}
-		
-		Arrays.sort(albumArray);
-		
-		//add one pixel image
-		int[] imageIDArray = new int[albumArray.length];
-		for (int i = 0 ; i < albumArray.length; i++)
-		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
-		}
-		
-		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
-		Helper.pause(this.config.getConstantRetryWait());
-		this.log.printLogLine("ok");
-		
-		this.connector.relogin();
-		//this.pause(30000);
-		
-		//delete image again
-		for (int i = 0 ; i < albumArray.length; i++)
-		{
-			this.connector.deleteFile(imageIDArray[i]);
-		}
-	}
+    
+//	public void resortSubcategoryAlbums(int subcategoryID)
+//	{
+//        //initialize Tree is nesseciary
+//        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+//
+//		this.log.printLogLine("resortSubcategoryAlbums(name=" + this.getSubcategory(subcategoryID).getName() + ")");
+//
+//		//find category
+//		ISubcategory s = this.getSubcategory(subcategoryID);
+//
+//		int index = 0;
+//		IAlbum[] albumArray = new IAlbum[s.getAlbumList().size()];
+//		for (IAlbum a : s.getAlbumList())
+//		{
+//			albumArray[index] = a;
+//			index++;
+//		}
+//
+//		Arrays.sort(albumArray);
+//
+//        this.sortAlbums(albumArray);
+//
+//        /*
+//		//add one pixel image
+//		int[] imageIDArray = new int[albumArray.length];
+//		for (int i = 0 ; i < albumArray.length; i++)
+//		{
+//			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
+//		}
+//
+//		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
+//		Helper.pause(this.config.getConstantRetryWait());
+//		this.log.printLogLine("ok");
+//
+//		this.connector.relogin();
+//		//this.pause(30000);
+//
+//		//delete image again
+//		for (int i = 0 ; i < albumArray.length; i++)
+//		{
+//			this.connector.deleteFile(imageIDArray[i]);
+//		}
+//        */
+//	}
 	
 	
 	public void startProcessingQueue()
