@@ -28,9 +28,9 @@ public interface IAccountListingProxy
 	void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
-	
-	void resortCategoryAlbums(int categoryID);
-	void resortSubcategoryAlbums(int subcategoryID);
+	void sort(String categoryName, String subcategoryName);
+	//void resortCategoryAlbums(int categoryID);
+	//void resortSubcategoryAlbums(int subcategoryID);
 	
 	void startProcessingQueue();
 	long getTransferedBytes();

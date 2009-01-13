@@ -430,7 +430,12 @@ public class Model
     {
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
     	this.log.printLogLine("preparing to sort albums");
+
+        if (transferDialogResult.getAlbumName() == null) { this.log.printLogLine("WARNING: you specified an album name, which will be ignored! We're rearranging albums here, not images within albums!"); }
     	
+        this.accListing.sort(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName());
+        
+        /*
     	IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
     	//this.log.printLogLine("model: categoryList.size()=" + categoryList.size());
     	
@@ -445,6 +450,7 @@ public class Model
     			this.accListing.resortSubcategoryAlbums(s.getID());
     		}
     	}
+        */
     }
     
     public void delete(ITransferDialogResult transferDialogResult)
