@@ -79,7 +79,7 @@ public class TransferQueueItem implements ITransferQueueItem
             // performing relogin for each queue item might improve stability during long lasting queue operations
             if ( this.config.getConstantHeavyRelogin() ) { this.smugmugConnector.relogin(); }
 
-			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor);
+			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor, null, null);
 			
 			//this should be safe to assume
 			if (this.result_id == 0) { this.result_successful = false; }
