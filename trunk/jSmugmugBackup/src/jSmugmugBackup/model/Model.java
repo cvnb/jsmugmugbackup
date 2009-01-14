@@ -100,7 +100,7 @@ public class Model
     {
         if (transferDialogResult == null) { return; }
 
-    	this.view.updateFileListing( this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
+    	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
 
 
@@ -334,7 +334,7 @@ public class Model
     {
 		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
 
-        IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
 
         //add all albums, since they have already been filtered above
         Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
@@ -369,7 +369,7 @@ public class Model
     {
         this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
 
-        IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
 
         //add all albums, since they have already been filtered above
         Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
@@ -431,26 +431,9 @@ public class Model
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
     	this.log.printLogLine("preparing to sort albums");
 
-        if (transferDialogResult.getAlbumName() == null) { this.log.printLogLine("WARNING: you specified an album name, which will be ignored! We're rearranging albums here, not images within albums!"); }
+        if (transferDialogResult.getAlbumName() != null) { this.log.printLogLine("WARNING: you specified an album name, which will be ignored! We're rearranging albums here, not images within albums!"); }
     	
         this.accListing.sort(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName());
-        
-        /*
-    	IRootElement smugmugRoot = this.accListing.getAccountListing(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-    	//this.log.printLogLine("model: categoryList.size()=" + categoryList.size());
-    	
-    	for (ICategory c : smugmugRoot.getCategoryList())
-    	{
-    		//this.log.printLogLine("model: c.getName()=" + c.getName());
-    		this.accListing.resortCategoryAlbums(c.getID());
-    		
-    		for (ISubcategory s : c.getSubcategoryList())
-    		{
-    			//this.log.printLogLine("model: s.getName()=" + s.getName());
-    			this.accListing.resortSubcategoryAlbums(s.getID());
-    		}
-    	}
-        */
     }
     
     public void delete(ITransferDialogResult transferDialogResult)

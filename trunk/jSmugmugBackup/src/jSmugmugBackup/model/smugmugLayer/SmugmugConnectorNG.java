@@ -113,7 +113,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					IAlbum album = new Album(subcategory, albumID.intValue(), albumName);
 					subcategory.addAlbum(album);
 
-                    
 					//iterate over images
 					JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 					int imageIndex = 0;
@@ -138,7 +137,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 						imageIndex++;
 						jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 					}
-                    
 					
 					albumIndex++;
 					jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
@@ -164,7 +162,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				IAlbum album = new Album(category, albumID.intValue(), albumName);
 				category.addAlbum(album);
 
-                
 				//iterate over images
 				JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 				int imageIndex = 0;
@@ -189,7 +186,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					imageIndex++;
 					jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 				}
-				
                 
 				albumIndex++;
 				jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
@@ -516,7 +512,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        {
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
-	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
+	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.NickName");
 	        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
 	        	this.log.printLogLine("ok");
 	        	//return true;
@@ -527,7 +523,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        {
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
-	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.Nickname");
+	        	SmugmugConnectorNG.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.NickName");
 	        	SmugmugConnectorNG.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
 	        	this.log.printLogLine("failed");
 	        	
@@ -619,7 +615,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=smugmug.users.getTree&";        
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		//url = url + "NickName=" + this.login_nickname + "&"; //optional
-		url = url + "Heavy=0&"; //optional
+		url = url + "Heavy=1&"; //optional, the extra info might be useful at a later time
 		//url = url + "SitePassword=????&"; //optional
 		
 		do

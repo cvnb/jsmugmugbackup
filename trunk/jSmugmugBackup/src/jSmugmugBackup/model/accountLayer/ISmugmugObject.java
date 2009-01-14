@@ -10,6 +10,7 @@ public interface ISmugmugObject extends Cloneable, Comparable<ISmugmugObject>
 {
 	int getID();
 	String getName();
+    String getFullName();
 	
 	SmugmugTypeEnum getSmugmugType();
 	ISmugmugObject getParent();	

@@ -16,12 +16,17 @@ public class RootElement extends SmugmugObject implements IRootElement
 	public RootElement(String name)
 	{
 		super(null, 0, name);
-		
+
+        this.nickname = name;
 		this.categoryList = new Vector<ICategory>();
 	}
 
 	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_ROOT; }
 
+    public String getNickname()
+    {
+        return this.nickname;
+    }
 
     public void addCategory(ICategory category)
 	{

@@ -68,72 +68,8 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.connector.logout();
 	}
 
-	private Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
-	{
-		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
-		
-		//decend to all album lists of all Subcategories and Categories
-		for (ICategory c : this.smugmugRoot.getCategoryList())
-		{
-			for (ISubcategory s : c.getSubcategoryList())
-			{
-				for (IAlbum a : s.getAlbumList())
-				{
-					
-					//here, we should walk over all albums that belong to all subcategories
-					//note: if a parameter is null, we assume it's a wildcard
-					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
-					{
-						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
-						{
-							if ( (albumName == null) || (a.getName().equals(albumName)) )
-							{
-								/*
-								String album_dir;
-								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
-								
-								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
-								this.log.printLogLine("  matched album: " + album_dir);
-								selectedAlbumHashtable.put(a.getGUID(), album_dir);
-								*/
-								selectedAlbums.add(a);
-							}
-						}
-					}
-					
-				}
-			}
-			
-			for (IAlbum a : c.getAlbumList())
-			{
-				//here, we walk over all albums which have no subcategory
-				if (subcategoryName == null) //hence, subcategoryName must be null
-				{
-					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
-					{
-						if ( (albumName == null) || (a.getName().equals(albumName)) )
-						{
-							/*
-							String album_dir;
-							album_dir = c.getName() + "/" + a.getName();
-							
-							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
-							selectedAlbumHashtable.put(a.getGUID(), album_dir);
-							*/
-							selectedAlbums.add(a);
-						}
-					}
-				}
 
-			}
-		}
-		
-		//this.log.printLogLine("matched albums: " + selectedAlbums.size() );
-		
-		return selectedAlbums;		
-	}
-
-	public IRootElement getAccountListing(String categoryName, String subcategoryName, String albumName)
+	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName)
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
@@ -489,6 +425,9 @@ public class AccountListingProxy implements IAccountListingProxy
         //find matching albums
 		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, null);
 
+        this.log.printLogLine("The following albums will be rearranged:");
+        for (IAlbum a : albumList) { this.log.printLogLine( "      " + a.getFullName()); }
+
         //put albums into an array
         int index = 0;
         IAlbum[] albumArray = new IAlbum[albumList.size()];
@@ -501,132 +440,17 @@ public class AccountListingProxy implements IAccountListingProxy
         //sort the array
         Arrays.sort(albumArray);
 
+        this.log.printLogLine("WARNING: sorting should not be interuped while in progress - there will be nasty leftovers in your albums!");
+        this.log.printLog("WARNING: beginning to sort in 30 sec - abort NOW if you need to ... ");
+        Helper.pause(30000);
+        this.log.printLogLine("ok");
+
         this.sortAlbums(albumArray);
 
         //this line is not too useful
 		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
     }
 
-    public void sortAlbums(IAlbum[] albumArray)
-    {
-  		//add one pixel image to each album
-		int[] imageIDArray = new int[albumArray.length];
-		for (int i = 0 ; i < albumArray.length; i++)
-		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
-            this.log.printLog("\n");
-		}
-		
-		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
-		Helper.pause(this.config.getConstantRetryWait());
-		this.log.printLogLine("ok");
-		
-		this.connector.relogin();
-		//this.pause(30000);
-		
-		//delete image again
-		for (int i = 0 ; i < albumArray.length; i++)
-		{
-			this.connector.deleteFile(imageIDArray[i]);
-		}
-    }
-
-
-//	public void resortCategoryAlbums(int categoryID)
-//	{
-//        //initialize Tree is nesseciary
-//        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
-//
-//		this.log.printLogLine("resortCategoryAlbums(name=" + this.getCategory(categoryID).getName() + ")");
-//
-//		//find category
-//		ICategory c = this.getCategory(categoryID);
-//
-//		int index = 0;
-//		IAlbum[] albumArray = new IAlbum[c.getAlbumList().size()];
-//		for (IAlbum a : c.getAlbumList())
-//		{
-//			albumArray[index] = a;
-//			index++;
-//		}
-//
-//		Arrays.sort(albumArray);
-//
-//        this.sortAlbums(albumArray);
-//
-//        /*
-//		//add one pixel image to each album
-//		int[] imageIDArray = new int[albumArray.length];
-//		for (int i = 0 ; i < albumArray.length; i++)
-//		{
-//			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
-//            this.log.printLog("\n");
-//		}
-//
-//		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
-//		Helper.pause(this.config.getConstantRetryWait());
-//		this.log.printLogLine("ok");
-//
-//		this.connector.relogin();
-//		//this.pause(30000);
-//
-//		//delete image again
-//		for (int i = 0 ; i < albumArray.length; i++)
-//		{
-//			this.connector.deleteFile(imageIDArray[i]);
-//		}
-//		*/
-//
-//		//this line is not too useful
-//		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
-//	}
-
-    
-//	public void resortSubcategoryAlbums(int subcategoryID)
-//	{
-//        //initialize Tree is nesseciary
-//        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
-//
-//		this.log.printLogLine("resortSubcategoryAlbums(name=" + this.getSubcategory(subcategoryID).getName() + ")");
-//
-//		//find category
-//		ISubcategory s = this.getSubcategory(subcategoryID);
-//
-//		int index = 0;
-//		IAlbum[] albumArray = new IAlbum[s.getAlbumList().size()];
-//		for (IAlbum a : s.getAlbumList())
-//		{
-//			albumArray[index] = a;
-//			index++;
-//		}
-//
-//		Arrays.sort(albumArray);
-//
-//        this.sortAlbums(albumArray);
-//
-//        /*
-//		//add one pixel image
-//		int[] imageIDArray = new int[albumArray.length];
-//		for (int i = 0 ; i < albumArray.length; i++)
-//		{
-//			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
-//		}
-//
-//		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
-//		Helper.pause(this.config.getConstantRetryWait());
-//		this.log.printLogLine("ok");
-//
-//		this.connector.relogin();
-//		//this.pause(30000);
-//
-//		//delete image again
-//		for (int i = 0 ; i < albumArray.length; i++)
-//		{
-//			this.connector.deleteFile(imageIDArray[i]);
-//		}
-//        */
-//	}
-	
 	
 	public void startProcessingQueue()
 	{
@@ -673,6 +497,97 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	
 	//----------- private ----------
+	private Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
+	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
+        //match albums ...
+
+		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
+
+		//decend to all album lists of all Subcategories and Categories
+		for (ICategory c : this.smugmugRoot.getCategoryList())
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+
+					//here, we should walk over all albums that belong to all subcategories
+					//note: if a parameter is null, we assume it's a wildcard
+					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+					{
+						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
+						{
+							if ( (albumName == null) || (a.getName().equals(albumName)) )
+							{
+								/*
+								String album_dir;
+								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
+
+								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
+								this.log.printLogLine("  matched album: " + album_dir);
+								selectedAlbumHashtable.put(a.getGUID(), album_dir);
+								*/
+								selectedAlbums.add(a);
+							}
+						}
+					}
+
+				}
+			}
+
+			for (IAlbum a : c.getAlbumList())
+			{
+				//here, we walk over all albums which have no subcategory
+				if (subcategoryName == null) //hence, subcategoryName must be null
+				{
+					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+					{
+						if ( (albumName == null) || (a.getName().equals(albumName)) )
+						{
+							/*
+							String album_dir;
+							album_dir = c.getName() + "/" + a.getName();
+
+							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
+							selectedAlbumHashtable.put(a.getGUID(), album_dir);
+							*/
+							selectedAlbums.add(a);
+						}
+					}
+				}
+
+			}
+		}
+
+		//this.log.printLogLine("matched albums: " + selectedAlbums.size() );
+
+		return selectedAlbums;
+	}
+
+    private void sortAlbums(IAlbum[] albumArray)
+    {
+  		//add one pixel image to each album
+		int[] imageIDArray = new int[albumArray.length];
+		for (int i = 0 ; i < albumArray.length; i++)
+		{
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
+            this.log.printLog("\n");
+		}
+
+		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs ...");
+		Helper.pause(this.config.getConstantRetryWait());
+		this.log.printLogLine("ok");
+
+		this.connector.relogin();
+
+		//delete image again
+		for (int i = 0 ; i < albumArray.length; i++) { this.connector.deleteFile(imageIDArray[i]); }
+    }
+
+
 //	private Vector<ICategory> getCategoryList()
 //	{
 //		return this.smugmugRoot.getCategoryList();
