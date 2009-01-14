@@ -127,7 +127,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
 		//iterate over categories
-        double statCurrCompletionStep = 0.01;
+        double statCurrCompletionStep = 0.05;
         int statImageCount = 0;
 		int categoryIndex = 0;
 		JSONObject jsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + categoryIndex + "]");
@@ -192,7 +192,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 						if (currCompletion > statCurrCompletionStep)
                         {
                             this.log.printLog( (int)(statCurrCompletionStep*100) + "%...");
-                            statCurrCompletionStep += 0.01;
+                            statCurrCompletionStep += 0.05;
                         }
 
 						imageIndex++;
@@ -250,7 +250,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     if (currCompletion > statCurrCompletionStep)
                     {
                         this.log.printLog( (int)(statCurrCompletionStep*100) + "%...");
-                        statCurrCompletionStep += 0.01;
+                        statCurrCompletionStep += 0.05;
                     }
 
 					imageIndex++;
