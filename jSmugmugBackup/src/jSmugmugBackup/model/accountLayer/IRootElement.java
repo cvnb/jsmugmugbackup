@@ -10,6 +10,7 @@ import java.util.Vector;
 
 public interface IRootElement extends ISmugmugObject
 {
+    String getNickname();
 	void addCategory(ICategory category);
 	Vector<ICategory> getCategoryList();
 

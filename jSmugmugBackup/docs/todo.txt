@@ -2,7 +2,6 @@ todo:
  - GUI
    - common transfer dialog, which can be parametrized
  - fmc
- - speedup account info dowload: store account data on disk, serializable >>jSmugmug.<nickname>.dat
  - global config singleton
    - case-sensitive image/album names (yes/no)
    - upload options (public/unlisted/...)
@@ -22,7 +21,6 @@ todo:
  - GUI: show pretty waiting animation 
  - speedup in AccountListingProxy by making use of the "parent"-relation 
  - deleting ???
- - document handling of non-unique names
  - make login singleton - http://en.wikipedia.org/wiki/Singleton_pattern
  - supported file types - are all videos of type "MP4"?
  - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html

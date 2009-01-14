@@ -29,6 +29,20 @@ public abstract class SmugmugObject implements ISmugmugObject
 	{
 		return this.name;
 	}
+
+    public String getFullName()
+    {
+        String fullName = this.name;
+
+        ISmugmugObject ancestor = this.getParent();
+        while (ancestor != null)
+        {
+            fullName = ancestor.getName() + "." + fullName;
+            ancestor = ancestor.getParent();
+        }
+
+        return fullName;
+    }
 	
 	public ISmugmugObject getParent()
 	{
