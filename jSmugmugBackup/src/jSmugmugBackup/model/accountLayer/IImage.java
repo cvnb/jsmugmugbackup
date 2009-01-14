@@ -6,10 +6,12 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
+import java.util.Vector;
+
 public interface IImage extends ISmugmugObject
 {
 	String getCaption();
-	String getKeywords();
+	Vector<String> getTags();
 	String getFormat();
 	int getHeight();
 	int getWidth();

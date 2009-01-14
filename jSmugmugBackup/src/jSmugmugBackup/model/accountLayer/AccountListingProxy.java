@@ -569,11 +569,14 @@ public class AccountListingProxy implements IAccountListingProxy
 
     private void sortAlbums(IAlbum[] albumArray)
     {
+
   		//add one pixel image to each album
+        Vector<String> tags = new Vector<String>();
+        tags.add("jSmugmugBackup_internal");
 		int[] imageIDArray = new int[albumArray.length];
 		for (int i = 0 ; i < albumArray.length; i++)
 		{
-			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()));
+			imageIDArray[i] = this.connector.uploadFile(albumArray[i].getID(), new File(this.config.getConstantPixelFilename()), null, tags);
             this.log.printLog("\n");
 		}
 

@@ -6,10 +6,13 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
+import java.util.Stack;
+import java.util.Vector;
+
 public class Image extends SmugmugObject implements IImage
 {
 	private String caption = null;
-	private String keywords = null;
+	private Vector<String> tags = null;
 	private String format = null;
 	private int height = 0;
 	private int width = 0;
@@ -26,8 +29,19 @@ public class Image extends SmugmugObject implements IImage
 	{
 		super(parentAlbum, id, name);
 		this.caption = caption;
-		this.keywords = keywords;
-		this.format = format;
+
+        //handle tags
+        if (keywords == null) { this.tags = null; }
+        else
+        {
+            //this.tags = new Vector<String>();
+            //StringTokenizer ... but how are the keywords separated??
+
+            //for the moment
+            keywords = null;
+        }
+
+        this.format = format;
 		this.height = height;
 		this.width = width;
 		this.size = size;
@@ -39,7 +53,7 @@ public class Image extends SmugmugObject implements IImage
 
 	
 	public String getCaption() { return this.caption; }
-	public String getKeywords() { return this.keywords; }
+	public Vector<String> getTags() { return this.tags; }
 	public String getFormat() { return this.format; }
 	public int getHeight() { return this.height; }
 	public int getWidth() { return this.width; }

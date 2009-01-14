@@ -10,6 +10,7 @@ todo:
    - session info
  - verify doesn't work yet
  - use global sessions, simplify call structure
+ - tag support - Images.java, SmugmugConnectorNG.java
  
 
  - refresh action listener doesn't make much sense, maybe merge functionality
