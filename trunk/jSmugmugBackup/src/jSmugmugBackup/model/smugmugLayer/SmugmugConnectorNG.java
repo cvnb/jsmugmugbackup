@@ -77,6 +77,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		JSONObject tree = this.smugmug_users_getTree();
 		//this.printJSONObject(tree);
 
+
         
         //statistics: walk over the tree and count the number of files
         //note: the estimated count seems to be slightly lower than the real count, but is sufficient for an approximation
@@ -122,12 +123,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
         }
         //this.log.printLogLine("totalAlbumCount: " + totalAlbumCount);
-        this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ") ... "); // too low!!
+        //this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ") ... "); // too low!!
 
 
 
         //init progress statistics
-        final double statStep = 0.05;
+        final double statStep = 0.1;
         double statCurrCompletionStep = statStep;
         int statImageCount = 0;
 
@@ -160,10 +161,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				JSONObject jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
 				while (jsonAlbum != null)
 				{
-					Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
-					String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
+					Number albumID       = (Number)this.getJSONValue(jsonAlbum, "id");
+					String albumName     = (String)this.getJSONValue(jsonAlbum, "Title");
+                    String albumKeywords = (String)this.getJSONValue(jsonAlbum, "Keywords");
 					//System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
-					IAlbum album = new Album(subcategory, albumID.intValue(), albumName);
+					IAlbum album = new Album(subcategory, albumID.intValue(), albumName, albumKeywords);
 					subcategory.addAlbum(album);
 
                     
@@ -210,10 +212,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			JSONObject jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
 			while (jsonAlbum != null)
 			{
-				Number albumID = (Number)this.getJSONValue(jsonAlbum, "id");
-				String albumName = (String)this.getJSONValue(jsonAlbum, "Title");
+				Number albumID       = (Number)this.getJSONValue(jsonAlbum, "id");
+				String albumName     = (String)this.getJSONValue(jsonAlbum, "Title");
+                String albumKeywords = (String)this.getJSONValue(jsonAlbum, "Keywords");
 				//System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
-				IAlbum album = new Album(category, albumID.intValue(), albumName);
+				IAlbum album = new Album(category, albumID.intValue(), albumName, albumKeywords);
 				category.addAlbum(album);
 
                 
@@ -255,6 +258,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		
 
+        /*
         int totalAlbumCount = 0;
         int totalImageCount = 0;
         for (ICategory c : smugmugRoot.getCategoryList())
@@ -275,6 +279,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         }
         //this.log.printLogLine("checkAlbumCount: " + checkAlbumCount);
         this.log.printLog("(totalImageCount: " + totalImageCount + ") ... ");
+        */
 
 
         this.log.printLogLine("ok");
@@ -320,9 +325,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return subcategoryID;
 	}
 
-	public int createAlbum(int categoryID, int subCategoryID, String name)
+	public int createAlbum(int categoryID, int subCategoryID, String name, Vector<String> albumTags)
 	{
-		JSONObject jobj = this.smugmug_albums_create(name, categoryID, subCategoryID);
+        String albumKeywords = Helper.getKeywords(albumTags);
+
+		JSONObject jobj = this.smugmug_albums_create(name, categoryID, subCategoryID, albumKeywords);
 		//this.printJSONObject(jobj);
 		int albumID = ((Number)this.getJSONValue(jobj, "Album.id")).intValue();
 		
@@ -367,15 +374,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("uploading ... ");
 
         //prepare tags
-        String keywords;
-        if (tags == null) { keywords = null; }
-        else
-        {
-            keywords = "";
-            for (String tag : tags) { keywords += "; " + tag; }
-            keywords = keywords.substring(2); //remove the leading two characters
-        }
+        String keywords = Helper.getKeywords(tags);
 
+        
     	JSONObject jobj = this.smugmug_images_upload(albumID, file, caption, keywords);
     	//this.printJSONObject(jobj);
     	Object obj = this.getJSONValue(jobj, "Image.id");
@@ -957,7 +958,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
     }
 
-	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID)
+	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID, String albumKeywords)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " creating album ... ");
 		
@@ -976,6 +977,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0		
 		//url = url + "Description=&"; //string, optional
 		//url = url + "Keywords=&"; //string, optional
+        if (albumKeywords != null) { url = url + "Keywords=" + this.encodeForURL(albumKeywords) + "&"; }//string, optional
 		//url = url + "Geography=&"; //boolean, optional, default: 1
 		//url = url + "HighlightID=&"; //integer, optional
 		//url = url + "Position=&"; //integer, optional

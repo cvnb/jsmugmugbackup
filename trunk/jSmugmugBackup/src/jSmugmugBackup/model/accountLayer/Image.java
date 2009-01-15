@@ -6,6 +6,7 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
+import jSmugmugBackup.model.Helper;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -31,15 +32,7 @@ public class Image extends SmugmugObject implements IImage
 		this.caption = caption;
 
         //handle tags
-        if ((keywords == null) || (keywords.equals(""))) { this.tags = null; }
-        else
-        {
-            String[] tagsArray = keywords.split("; ");
-            this.tags = new Vector<String>();
-
-            //copy array into a Vector
-            for (int i=0; i < tagsArray.length; i++) { this.tags.add(tagsArray[i]); }
-        }
+        this.tags = Helper.getTags(keywords);
 
         this.format = format;
 		this.height = height;

@@ -69,7 +69,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 
 
-	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName)
+	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords)
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
@@ -77,7 +77,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		IRootElement result = new RootElement("");
 		
 		//find matching albums
-		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName);
+		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName, albumKeywords);
 		
 		// for all albums in the albumList:
 		// - find it's parent category
@@ -128,10 +128,15 @@ public class AccountListingProxy implements IAccountListingProxy
 		return result;
 	}
 
-	public Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName)
+	public Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName, String albumKeywords)
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
+        //prepare tags
+        Vector<String> albumTags = Helper.getTags(albumKeywords);
+        //todo: match with album tags
+
 
         //match albums ...
 
@@ -153,15 +158,19 @@ public class AccountListingProxy implements IAccountListingProxy
 						{
 							if ( (albumName == null) || (a.getName().equals(albumName)) )
 							{
-								/*
-								String album_dir;
-								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
+                                if ( (albumTags == null) || (this.matchTags(albumTags, a.getTags())) )
+                                {
+                                    /*
+                                    String album_dir;
+                                    album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
 
-								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
-								this.log.printLogLine("  matched album: " + album_dir);
-								selectedAlbumHashtable.put(a.getGUID(), album_dir);
-								*/
-								selectedAlbums.add(a);
+                                    //this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
+                                    this.log.printLogLine("  matched album: " + album_dir);
+                                    selectedAlbumHashtable.put(a.getGUID(), album_dir);
+                                    */
+                                    selectedAlbums.add(a);
+                                }
+
 							}
 						}
 					}
@@ -199,7 +208,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	}
 
 
-	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
+	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords)
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
@@ -207,6 +216,8 @@ public class AccountListingProxy implements IAccountListingProxy
     	//this.log.printLogLine("-----------------------------------------------");
     	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
 		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + pics_dir + ")");
+
+        Vector<String> albumTags = Helper.getTags(albumKeywords);
 
     	int uploadCount = 0;
     	int skippedCount = 0;
@@ -246,8 +257,8 @@ public class AccountListingProxy implements IAccountListingProxy
         albumID = this.getAlbumID(categoryID, subCategoryID, albumName);
         if (albumID == 0) //album doesn't exist, so create one
         {
-        	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumName);
-        	this.addAlbum(categoryID, subCategoryID, albumID, albumName);
+        	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumName, albumTags);
+        	this.addAlbum(categoryID, subCategoryID, albumID, albumName, albumKeywords);
         }
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
@@ -493,7 +504,7 @@ public class AccountListingProxy implements IAccountListingProxy
     public void sort(String categoryName, String subcategoryName)
     {
         //find matching albums
-		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, null);
+		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, null, null);
 
         this.log.printLogLine("The following albums will be rearranged:");
         for (IAlbum a : albumList) { this.log.printLogLine( "      " + a.getFullName()); }
@@ -590,6 +601,21 @@ public class AccountListingProxy implements IAccountListingProxy
 		for (int i = 0 ; i < albumArray.length; i++) { this.connector.deleteFile(imageIDArray[i]); }
     }
 
+    private boolean matchTags(Vector<String> tagList1, Vector<String> tagList2)
+    {
+        //return true if there is at least one tag that exists in both lists
+
+        for(String tag1 : tagList1)
+        {
+            for (String tag2 : tagList2)
+            {
+                if (tag1.equals(tag2)) { return true; }
+            }
+        }
+
+        return false;
+    }
+
 
 //	private Vector<ICategory> getCategoryList()
 //	{
@@ -614,9 +640,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addSubcategory: ERROR!");
 	}
-	private void addAlbum(int categoryID, int subcategoryID, int id, String name)
+	private void addAlbum(int categoryID, int subcategoryID, int id, String name, String albumKeywords)
 	{
-		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name); return; }
+		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name, albumKeywords); return; }
 		
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
@@ -626,7 +652,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (s.getID() == subcategoryID)
 					{
-						s.addAlbum( new Album(s, id, name) );
+						s.addAlbum( new Album(s, id, name, albumKeywords) );
 						return;
 					}
 				}
@@ -635,13 +661,13 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addAlbum: ERROR!");		
 	}
-	private void addAlbum(int categoryID, int id, String name)
+	private void addAlbum(int categoryID, int id, String name, String albumKeywords)
 	{
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
-				c.addAlbum( new Album(c, id, name) );
+				c.addAlbum( new Album(c, id, name, albumKeywords) );
 				return;
 			}
 		}

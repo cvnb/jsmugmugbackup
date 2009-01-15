@@ -12,13 +12,15 @@ public class TransferDialogResult implements ITransferDialogResult
 	private String subCategoryName;
 	private String albumName;
 	private String targetDir;
+    private String albumKeywords;
 	
-	public TransferDialogResult(String categoryName, String subCategoryName, String albumName, String targetDir)
+	public TransferDialogResult(String categoryName, String subCategoryName, String albumName, String targetDir, String albumKeywords)
 	{
 		this.categoryName = categoryName;
 		this.subCategoryName = subCategoryName;
 		this.albumName = albumName;
 		this.targetDir = targetDir;
+        this.albumKeywords = albumKeywords;
 	}
 
 
@@ -33,4 +35,6 @@ public class TransferDialogResult implements ITransferDialogResult
 	
 	//@Override
 	public String getDir() { return this.targetDir; }
+
+    public String getAlbumKeywords() { return this.albumKeywords; }
 }

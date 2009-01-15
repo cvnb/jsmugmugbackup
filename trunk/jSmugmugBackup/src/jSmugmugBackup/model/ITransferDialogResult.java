@@ -12,4 +12,5 @@ public interface ITransferDialogResult
 	String getSubCategoryName();
 	String getAlbumName();
 	String getDir();
+    String getAlbumKeywords();
 }

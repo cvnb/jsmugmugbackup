@@ -24,7 +24,7 @@ public interface ISmugmugConnectorNG
 	
 	int createCategory(String name);
 	int createSubcategory(int categoryID, String name);
-	int createAlbum(int categoryID, int subCategoryID, String name);
+	int createAlbum(int categoryID, int subCategoryID, String name, Vector<String> albumTags);
 	
 	/*
 	void renameCategory(int categoryID, String newName);

@@ -390,7 +390,7 @@ public class SwingViewNG extends FrameView implements IView
     public ITransferDialogResult showListDialog()
     {
         // listing everything by default
-        return new TransferDialogResult(null, null, null, null);
+        return new TransferDialogResult(null, null, null, null, null);
     }
 
     public ITransferDialogResult showUploadDialog()

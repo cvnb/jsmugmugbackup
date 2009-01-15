@@ -243,7 +243,7 @@ public class SwingViewNGUploadDialog extends javax.swing.JDialog {
         //making form invisible
         this.setVisible(false);
 
-        this.uploadDialogResult = new TransferDialogResult(null, null, null, null);
+        this.uploadDialogResult = new TransferDialogResult(null, null, null, null, null);
 
         //clear input fields
         //...
