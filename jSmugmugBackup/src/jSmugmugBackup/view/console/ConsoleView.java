@@ -269,7 +269,7 @@ public class ConsoleView implements IView
 			this.console.printf("INPUT WARNING: incorrect number of parameters, try \"help <action>\"\n");
 		}
 		
-		return new TransferDialogResult(category, subCategory, album, null);
+		return new TransferDialogResult(category, subCategory, album, null, null);
 	}
 	
 	public ITransferDialogResult showSortDialog()
@@ -301,7 +301,7 @@ public class ConsoleView implements IView
 			this.model.quitApplication();
 		}
 		
-		return new TransferDialogResult(category, subCategory, album, dir);
+		return new TransferDialogResult(category, subCategory, album, dir, null);
 	}
 	
 	public ITransferDialogResult showDownloadDialog()

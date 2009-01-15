@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 public class Helper
 {
@@ -63,5 +64,36 @@ public class Helper
     {
     	try { Thread.sleep(millisecs); }
     	catch (InterruptedException e) {}
+    }
+
+    public static String getKeywords(Vector<String> tags)
+    {
+        String keywords;
+        if (tags == null) { keywords = null; }
+        else
+        {
+            keywords = "";
+            for (String tag : tags) { keywords += "; " + tag; }
+            keywords = keywords.substring(2); //remove the leading two characters
+        }
+
+        return keywords;
+    }
+
+    public static Vector<String> getTags(String keywords)
+    {
+        Vector<String> tags = null;
+
+        if ((keywords == null) || (keywords.equals(""))) { tags = null; }
+        else
+        {
+            String[] tagsArray = keywords.split("; ");
+            tags = new Vector<String>();
+
+            //copy array into a Vector
+            for (int i=0; i < tagsArray.length; i++) { tags.add(tagsArray[i]); }
+        }
+
+        return tags;
     }
 }

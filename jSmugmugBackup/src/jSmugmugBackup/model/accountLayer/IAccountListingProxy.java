@@ -21,10 +21,10 @@ public interface IAccountListingProxy
 	void logout();
 	
 
-	IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName);
-    Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName);
+	IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords);
+    Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName, String albumKeywords);
 
-    void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
+    void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords);
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);

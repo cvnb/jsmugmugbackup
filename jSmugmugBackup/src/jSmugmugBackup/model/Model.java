@@ -68,7 +68,7 @@ public class Model
     {
         if (transferDialogResult == null) { return; }
 
-    	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
+    	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords()) );
     }
 
 	public void upload(ITransferDialogResult transferDialogResult)
@@ -81,6 +81,7 @@ public class Model
 		String category    = transferDialogResult.getCategoryName();
 		String subcategory = transferDialogResult.getSubCategoryName();
 		String album       = transferDialogResult.getAlbumName();
+        String keywords    = transferDialogResult.getAlbumKeywords();
 		
 		if ( (transferDialogResult.getCategoryName()    == null) && 
 		     (transferDialogResult.getSubCategoryName() == null) &&
@@ -107,7 +108,7 @@ public class Model
 							category = "Other";
 							subcategory = null;
 							album = subDirFile.getName();								
-							this.upload_prepare_albumDir(category, subcategory, album, subDirFile);
+							this.upload_prepare_albumDir(category, subcategory, album, subDirFile, keywords);
 						}
 						else //search in sub-sub-directories
 						{
@@ -122,7 +123,7 @@ public class Model
 										category    = subSubDirFile.getParentFile().getName();
 										subcategory = null;
 										album       = subSubDirFile.getName();
-										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile);
+										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile, keywords);
 									}
 									else //search in sub-sub-sub-directories
 									{
@@ -137,7 +138,7 @@ public class Model
 													category    = subSubSubDirFile.getParentFile().getParentFile().getName();
 													subcategory = subSubSubDirFile.getParentFile().getName();
 													album       = subSubSubDirFile.getName();
-													this.upload_prepare_albumDir(category, subcategory, album, subSubSubDirFile);
+													this.upload_prepare_albumDir(category, subcategory, album, subSubSubDirFile, keywords);
 												}
 												else
 												{
@@ -183,7 +184,7 @@ public class Model
 							//category is defined above
 							subcategory = null;
 							album = subDirFile.getName();								
-							this.upload_prepare_albumDir(category, subcategory, album, subDirFile);
+							this.upload_prepare_albumDir(category, subcategory, album, subDirFile, keywords);
 						}
 						else //search in sub-sub-directories
 						{
@@ -198,7 +199,7 @@ public class Model
 										//category is defined above
 										subcategory = subSubDirFile.getParentFile().getName();
 										album       = subSubDirFile.getName();
-										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile);
+										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile, keywords);
 									}
 									else
 									{
@@ -241,7 +242,7 @@ public class Model
 							//category is defined above
 							//subcategory is defined above
 							album = subDirFile.getName();								
-							this.upload_prepare_albumDir(category, subcategory, album, subDirFile);
+							this.upload_prepare_albumDir(category, subcategory, album, subDirFile, keywords);
 						}
 						else
 						{
@@ -269,7 +270,7 @@ public class Model
 					//subcategory is defined above
 					//album is defined above
 					
-					this.upload_prepare_albumDir(category, subcategory, album, rootDir);
+					this.upload_prepare_albumDir(category, subcategory, album, rootDir, keywords);
 				}
 	        }
 			else
@@ -289,7 +290,7 @@ public class Model
     {
 		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
 
-        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
 
         //add all albums, since they have already been filtered above
         Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
@@ -343,7 +344,7 @@ public class Model
 //                selectedAlbums.add(a);
 //            }
 //        }
-        Vector<IAlbum> selectedAlbums = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+        Vector<IAlbum> selectedAlbums = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
         if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
 
         
@@ -475,7 +476,7 @@ public class Model
     	return result;
     }
     
-	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir)
+	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir, String keywords)
 	{
 //		this.log.printLogLine("DEBUG: enqueuing ...");
 //		this.log.printLogLine("DEBUG:      category    : " + category);
@@ -483,6 +484,6 @@ public class Model
 //		this.log.printLogLine("DEBUG:      album       : " + album);
 //		this.log.printLogLine("DEBUG:      dir         : " + dir);
 
-		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir);
+		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir, keywords);
 	}
 }

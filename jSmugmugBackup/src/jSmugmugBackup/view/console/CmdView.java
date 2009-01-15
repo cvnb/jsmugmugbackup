@@ -119,33 +119,28 @@ public class CmdView implements IView
 				this.log.printLogLine("        subCategory: " + sc.getName());
 				for (IAlbum a : sc.getAlbumList())
 				{
-					this.log.printLogLine("            album: " + a.getName());
+					this.log.printLog("            album: " + a.getName());
+                    if (a.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(a.getTags()) + ")" ); }
+                    this.log.printLog("\n"); //finish this line
 					for (IImage i : a.getImageList())
 					{
 						this.log.printLog("                image: " + i.getName());
-
-                        //print tags
-                        if (i.getTags() != null)
-                        {
-                            String s = " (";
-                            Vector<String> tags = i.getTags();
-                            for (String tag : tags) { s += tag + "; "; }
-                            s = s.substring(0, s.length()-3);
-                            s += ")";
-                            this.log.printLog(s);
-                        }
-                        
-                        this.log.printLogLine(""); //finish this line
+                        if (i.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(i.getTags()) + ")" ); }
+                        this.log.printLog("\n"); //finish this line
 					}
 				}
 			}
 			
 			for (IAlbum a : c.getAlbumList())
 			{
-				this.log.printLogLine("        album: " + a.getName());
+				this.log.printLog("        album: " + a.getName());
+                if (a.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(a.getTags()) + ")" ); }
+                this.log.printLog("\n"); //finish this line
 				for (IImage i : a.getImageList())
 				{
-					this.log.printLogLine("            image: " + i.getName());
+					this.log.printLog("            image: " + i.getName());
+                    if (i.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(i.getTags()) + ")" ); }
+                    this.log.printLog("\n"); //finish this line
 				}
 			}
 		}
@@ -198,8 +193,9 @@ public class CmdView implements IView
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
+        String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		
-		return new TransferDialogResult(category, subCategory, album, null);
+		return new TransferDialogResult(category, subCategory, album, null, albumKeywords);
 	}
 	
 	public ITransferDialogResult showSortDialog()
@@ -221,9 +217,10 @@ public class CmdView implements IView
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
+        String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		String pics_dir = this.extractDirectoryFromCommandline();
 		
-		return new TransferDialogResult(category, subCategory, album, pics_dir);
+		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords);
 	}
 	
 	public ITransferDialogResult showDownloadDialog()
@@ -293,6 +290,7 @@ public class CmdView implements IView
 		this.log.printLogLine("     --category={name}     : perform the given action only on the given category (optional)");
 		this.log.printLogLine("     --subcategory={name}  : perform the given action only on the given subcategory (optional)");
 		this.log.printLogLine("     --album={name}        : perform the given action only on the given album (optional)");
+        this.log.printLogLine("     --albumKeywords={keywords} : perform the given action only using the given keywords, separated by \"; \" (optional)");
 		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
 		this.log.printLogLine("");
 		this.log.printLogLine(this.config.getConstantHelpNotes());
