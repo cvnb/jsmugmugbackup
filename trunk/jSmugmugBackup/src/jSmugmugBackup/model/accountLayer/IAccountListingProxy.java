@@ -20,12 +20,11 @@ public interface IAccountListingProxy
 	Number login(String userEmail, String password);
 	void logout();
 	
-	
-	//Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName);
 
-	//Vector<ICategory> getAccountListing(String categoryName, String subcategoryName, String albumName);
 	IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName);
-	void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
+    Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName);
+
+    void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir);
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);

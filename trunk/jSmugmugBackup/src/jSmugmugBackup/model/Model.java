@@ -60,40 +60,8 @@ public class Model
     }
 
     public void login(ILoginDialogResult loginDialogResult)
-    {
-        //this.view.showLoginDialog();
-
-        //String userEmail = this.config.popRtconfigLoginUsername();
-		//String password = this.config.popRtconfigLoginPassword();
-
-    	//this.accListing.setLoginMethod(loginMethod);
-
-        
-
-    	//make a maximum of 3 login attempts
-    	//this.view.showBusyStart("logging in");
-
-//    	Number userId = null;
-//    	for (int i=0; i < 3; i++)
-//    	{
-//    		userId = this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
-//    		if (userId != null) { break; }
-//    	}
-//    	if (userId == null) { this.quitApplication(); }
-    	//this.view.showBusyStop();
-    	
-    	//this.view.showBusyStart("getting data");
-    	//this.accListing.init();
-    	//this.view.showBusyStop();
-
-
-        
+    {        
         this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
-
-
-        //this.view.showBusyStart("getting data");
-    	//this.accListing.init();
-    	//this.view.showBusyStop();
     }
     
     public void list(ITransferDialogResult transferDialogResult)
@@ -102,7 +70,6 @@ public class Model
 
     	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName()) );
     }
-
 
 	public void upload(ITransferDialogResult transferDialogResult)
     {
@@ -317,18 +284,6 @@ public class Model
 		}
 
     }
-	
-	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir)
-	{
-//		this.log.printLogLine("DEBUG: enqueuing ...");
-//		this.log.printLogLine("DEBUG:      category    : " + category);
-//		this.log.printLogLine("DEBUG:      subcategory : " + subcategory);
-//		this.log.printLogLine("DEBUG:      album       : " + album);
-//		this.log.printLogLine("DEBUG:      dir         : " + dir);
-		
-		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir);
-	}
-
     
     public void download(ITransferDialogResult transferDialogResult)
     {
@@ -369,25 +324,26 @@ public class Model
     {
         this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
 
-        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
-
-        //add all albums, since they have already been filtered above
-        Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
-        for (ICategory c : smugmugRoot.getCategoryList())
-        {
-            for (ISubcategory s : c.getSubcategoryList())
-            {
-                for (IAlbum a : s.getAlbumList())
-                {
-                    selectedAlbums.add(a);
-                }
-            }
-
-            for (IAlbum a : c.getAlbumList())
-            {
-                selectedAlbums.add(a);
-            }
-        }
+//        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+//
+//        //add all albums, since they have already been filtered above
+//        Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
+//        for (ICategory c : smugmugRoot.getCategoryList())
+//        {
+//            for (ISubcategory s : c.getSubcategoryList())
+//            {
+//                for (IAlbum a : s.getAlbumList())
+//                {
+//                    selectedAlbums.add(a);
+//                }
+//            }
+//
+//            for (IAlbum a : c.getAlbumList())
+//            {
+//                selectedAlbums.add(a);
+//            }
+//        }
+        Vector<IAlbum> selectedAlbums = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
         if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
 
         
@@ -482,7 +438,6 @@ public class Model
 //    		this.log.printLogLine("no matching category was found on your SmugMug Account");
 //    	}
     }
-
     
     public void startProcessingQueue()
     {
@@ -520,5 +475,14 @@ public class Model
     	return result;
     }
     
+	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir)
+	{
+//		this.log.printLogLine("DEBUG: enqueuing ...");
+//		this.log.printLogLine("DEBUG:      category    : " + category);
+//		this.log.printLogLine("DEBUG:      subcategory : " + subcategory);
+//		this.log.printLogLine("DEBUG:      album       : " + album);
+//		this.log.printLogLine("DEBUG:      dir         : " + dir);
 
+		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir);
+	}
 }

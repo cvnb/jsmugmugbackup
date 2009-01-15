@@ -122,7 +122,20 @@ public class CmdView implements IView
 					this.log.printLogLine("            album: " + a.getName());
 					for (IImage i : a.getImageList())
 					{
-						this.log.printLogLine("                image: " + i.getName());
+						this.log.printLog("                image: " + i.getName());
+
+                        //print tags
+                        if (i.getTags() != null)
+                        {
+                            String s = " (";
+                            Vector<String> tags = i.getTags();
+                            for (String tag : tags) { s += tag + "; "; }
+                            s = s.substring(0, s.length()-3);
+                            s += ")";
+                            this.log.printLog(s);
+                        }
+                        
+                        this.log.printLogLine(""); //finish this line
 					}
 				}
 			}
