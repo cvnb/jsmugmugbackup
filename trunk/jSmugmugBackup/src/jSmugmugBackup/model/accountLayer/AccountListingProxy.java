@@ -604,6 +604,7 @@ public class AccountListingProxy implements IAccountListingProxy
     private boolean matchTags(Vector<String> tagList1, Vector<String> tagList2)
     {
         //return true if there is at least one tag that exists in both lists
+        if ((tagList1 == null) || (tagList2 == null)) { return false; }
 
         for(String tag1 : tagList1)
         {
