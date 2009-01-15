@@ -31,14 +31,14 @@ public class Image extends SmugmugObject implements IImage
 		this.caption = caption;
 
         //handle tags
-        if (keywords == null) { this.tags = null; }
+        if ((keywords == null) || (keywords.equals(""))) { this.tags = null; }
         else
         {
-            //this.tags = new Vector<String>();
-            //StringTokenizer ... but how are the keywords separated??
+            String[] tagsArray = keywords.split("; ");
+            this.tags = new Vector<String>();
 
-            //for the moment
-            keywords = null;
+            //copy array into a Vector
+            for (int i=0; i < tagsArray.length; i++) { this.tags.add(tagsArray[i]); }
         }
 
         this.format = format;

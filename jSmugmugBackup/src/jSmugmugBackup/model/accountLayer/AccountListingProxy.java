@@ -77,7 +77,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		IRootElement result = new RootElement("");
 		
 		//find matching albums
-		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, albumName);
+		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName);
 		
 		// for all albums in the albumList:
 		// - find it's parent category
@@ -127,7 +127,77 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return result;
 	}
-	
+
+	public Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName)
+	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
+        //match albums ...
+
+		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
+
+		//decend to all album lists of all Subcategories and Categories
+		for (ICategory c : this.smugmugRoot.getCategoryList())
+		{
+			for (ISubcategory s : c.getSubcategoryList())
+			{
+				for (IAlbum a : s.getAlbumList())
+				{
+
+					//here, we should walk over all albums that belong to all subcategories
+					//note: if a parameter is null, we assume it's a wildcard
+					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+					{
+						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
+						{
+							if ( (albumName == null) || (a.getName().equals(albumName)) )
+							{
+								/*
+								String album_dir;
+								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
+
+								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
+								this.log.printLogLine("  matched album: " + album_dir);
+								selectedAlbumHashtable.put(a.getGUID(), album_dir);
+								*/
+								selectedAlbums.add(a);
+							}
+						}
+					}
+
+				}
+			}
+
+			for (IAlbum a : c.getAlbumList())
+			{
+				//here, we walk over all albums which have no subcategory
+				if (subcategoryName == null) //hence, subcategoryName must be null
+				{
+					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
+					{
+						if ( (albumName == null) || (a.getName().equals(albumName)) )
+						{
+							/*
+							String album_dir;
+							album_dir = c.getName() + "/" + a.getName();
+
+							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
+							selectedAlbumHashtable.put(a.getGUID(), album_dir);
+							*/
+							selectedAlbums.add(a);
+						}
+					}
+				}
+
+			}
+		}
+
+		//this.log.printLogLine("matched albums: " + selectedAlbums.size() );
+
+		return selectedAlbums;
+	}
+
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir)
 	{
@@ -423,7 +493,7 @@ public class AccountListingProxy implements IAccountListingProxy
     public void sort(String categoryName, String subcategoryName)
     {
         //find matching albums
-		Vector<IAlbum> albumList = this.matchAlbums(categoryName, subcategoryName, null);
+		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, null);
 
         this.log.printLogLine("The following albums will be rearranged:");
         for (IAlbum a : albumList) { this.log.printLogLine( "      " + a.getFullName()); }
@@ -497,76 +567,6 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	
 	//----------- private ----------
-	private Vector<IAlbum> matchAlbums(String categoryName, String subcategoryName, String albumName)
-	{
-        //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
-
-        //match albums ...
-
-		Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
-
-		//decend to all album lists of all Subcategories and Categories
-		for (ICategory c : this.smugmugRoot.getCategoryList())
-		{
-			for (ISubcategory s : c.getSubcategoryList())
-			{
-				for (IAlbum a : s.getAlbumList())
-				{
-
-					//here, we should walk over all albums that belong to all subcategories
-					//note: if a parameter is null, we assume it's a wildcard
-					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
-					{
-						if ( (subcategoryName == null) || (s.getName().equals(subcategoryName)) )
-						{
-							if ( (albumName == null) || (a.getName().equals(albumName)) )
-							{
-								/*
-								String album_dir;
-								album_dir = c.getName() + "/" + s.getName() + "/" + a.getName();
-
-								//this.log.printLogLine("  matched album: " + a.getName() + " - " + album_dir);
-								this.log.printLogLine("  matched album: " + album_dir);
-								selectedAlbumHashtable.put(a.getGUID(), album_dir);
-								*/
-								selectedAlbums.add(a);
-							}
-						}
-					}
-
-				}
-			}
-
-			for (IAlbum a : c.getAlbumList())
-			{
-				//here, we walk over all albums which have no subcategory
-				if (subcategoryName == null) //hence, subcategoryName must be null
-				{
-					if ( (categoryName == null) || (c.getName().equals(categoryName)) )
-					{
-						if ( (albumName == null) || (a.getName().equals(albumName)) )
-						{
-							/*
-							String album_dir;
-							album_dir = c.getName() + "/" + a.getName();
-
-							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
-							selectedAlbumHashtable.put(a.getGUID(), album_dir);
-							*/
-							selectedAlbums.add(a);
-						}
-					}
-				}
-
-			}
-		}
-
-		//this.log.printLogLine("matched albums: " + selectedAlbums.size() );
-
-		return selectedAlbums;
-	}
-
     private void sortAlbums(IAlbum[] albumArray)
     {
 
