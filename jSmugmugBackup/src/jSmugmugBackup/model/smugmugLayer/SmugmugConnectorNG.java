@@ -825,7 +825,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Name=" + this.encodeForURL(name) + "&";
+		url = url + "Name=" + Helper.encodeForURL(name) + "&";
 		
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -860,7 +860,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "CategoryID=" + categoryID + "&";
-		url = url + "Name=" + this.encodeForURL(newName) + "&";
+		url = url + "Name=" + Helper.encodeForURL(newName) + "&";
 		
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -895,7 +895,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Name=" + this.encodeForURL(name) + "&";
+		url = url + "Name=" + Helper.encodeForURL(name) + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
 		HttpGet httpget = new HttpGet(url);
@@ -933,7 +933,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "SubCategoryID=" + subcategoryID + "&";
-		url = url + "Name=" + this.encodeForURL(newName) + "&";
+		url = url + "Name=" + Helper.encodeForURL(newName) + "&";
 		
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -969,7 +969,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Title=" + this.encodeForURL(title) + "&";
+		url = url + "Title=" + Helper.encodeForURL(title) + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		
 		//essentials
@@ -977,7 +977,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0		
 		//url = url + "Description=&"; //string, optional
 		//url = url + "Keywords=&"; //string, optional
-        if (albumKeywords != null) { url = url + "Keywords=" + this.encodeForURL(albumKeywords) + "&"; }//string, optional
+        if (albumKeywords != null) { url = url + "Keywords=" + Helper.encodeForURL(albumKeywords) + "&"; }//string, optional
 		//url = url + "Geography=&"; //boolean, optional, default: 1
 		//url = url + "HighlightID=&"; //integer, optional
 		//url = url + "Position=&"; //integer, optional
@@ -1107,7 +1107,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		
 		//essentials
-		url = url + "Title=" + this.encodeForURL(newTitle) + "&";
+		url = url + "Title=" + Helper.encodeForURL(newTitle) + "&";
 		//url = url + "CategoryID=" + categoryID + "&";
 		//url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0		
 		//url = url + "Description=&"; //string, optional
@@ -1368,8 +1368,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//System.out.print(methodName + " ...");
 		
 		//build url
-		String url = "http://upload.smugmug.com/" + this.encodeForURL(fileName.getName());
+		String url = "http://upload.smugmug.com/" + Helper.encodeForURL(fileName.getName());
 		
+        //this.log.printLogLine("upload url: " + url);
+
 		do
 		{	
 	        HttpPut httpPut = new HttpPut(url);
@@ -1382,10 +1384,15 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        httpPut.addHeader("X-Smug-ResponseType", "JSON");
 	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
 	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
-	        httpPut.addHeader("X-Smug-FileName", this.encodeForURL(fileName.getName())); //optional
-	        if (caption != null)  { httpPut.addHeader("X-Smug-Caption", this.encodeForURL(caption)); } //optional
-	        if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", this.encodeForURL(keywords)); } //optional
-	        //httpPut.addHeader("X-Smug-Latitude", ""); //optional
+	        
+            //httpPut.addHeader("X-Smug-FileName", Helper.encodeForURL(fileName.getName())); //optional
+            //if (caption != null)  { httpPut.addHeader("X-Smug-Caption", Helper.encodeForURL(caption)); } //optional
+	        //if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", Helper.encodeForURL(keywords)); } //optional
+            httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
+            if (caption != null)  { httpPut.addHeader("X-Smug-Caption", caption); } //optional
+	        if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", keywords); } //optional
+
+            //httpPut.addHeader("X-Smug-Latitude", ""); //optional
 	        //httpPut.addHeader("X-Smug-Longitude", ""); //optional
 	        //httpPut.addHeader("X-Smug-Altitude", ""); //optional
 	
@@ -1575,46 +1582,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
 
-    private String encodeForURL(String str)
-    {
-    	
-    	String encodedStr = str;
-    	
-    	encodedStr = encodedStr.replace("%", "%25"); //do this first    	
-    	
-    	encodedStr = encodedStr.replace(" ", "%20"); //space character
-    	encodedStr = encodedStr.replace("#", "%23"); //not sure, if it is nesseciary
-    	encodedStr = encodedStr.replace("+", "%2B");
-    	encodedStr = encodedStr.replace("<", "%3C");
-    	encodedStr = encodedStr.replace(">", "%3E");
-        encodedStr = encodedStr.replace("[", "%5B");
-    	encodedStr = encodedStr.replace("]", "%5D");
-    	encodedStr = encodedStr.replace("?", "%3F");
-        encodedStr = encodedStr.replace("&", "%26");
-        encodedStr = encodedStr.replace("$", "%24");
-        encodedStr = encodedStr.replace(",", "%2C");
-        encodedStr = encodedStr.replace(";", "%3B");
-        encodedStr = encodedStr.replace(":", "%3A");
-        encodedStr = encodedStr.replace("/", "%2F");
-        encodedStr = encodedStr.replace("=", "%3D");
-        encodedStr = encodedStr.replace("@", "%40");
 
-        
-        //encoding german special characters
-        encodedStr = encodedStr.replace("ß", "%DF");
-        encodedStr = encodedStr.replace("ä", "%E4");
-        encodedStr = encodedStr.replace("Ä", "%C4");
-        encodedStr = encodedStr.replace("ö", "%F6");
-        encodedStr = encodedStr.replace("Ö", "%D6");
-        encodedStr = encodedStr.replace("ü", "%FC");
-        encodedStr = encodedStr.replace("Ü", "%DC");
-        
-
-        //todo: french characters
-    	
-    	//this.log.printLogLine("encodeForURL: " + str + " --> " + encodedStr);
-    	
-    	return encodedStr;
-    }
 
 }

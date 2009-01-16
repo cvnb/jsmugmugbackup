@@ -12,15 +12,16 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="accountScrollPane" pref="238" max="32767" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="accountScrollPane" pref="250" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="logtextareaScrollPane" alignment="1" min="-2" pref="251" max="-2" attributes="0"/>
+                      <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
                           <Component id="uploadButton" alignment="1" max="32767" attributes="0"/>
                           <Component id="loginButton" alignment="1" pref="57" max="32767" attributes="1"/>
                           <Component id="listButton" alignment="1" pref="57" max="32767" attributes="1"/>
+                          <Component id="downloadButton" alignment="1" min="-2" max="-2" attributes="1"/>
                       </Group>
-                      <Component id="logtextareaScrollPane" alignment="1" min="-2" pref="251" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -41,7 +42,9 @@
                           <Component id="listButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="uploadButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="179" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="downloadButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="150" max="32767" attributes="0"/>
                           <Component id="logtextareaScrollPane" min="-2" pref="108" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -105,6 +108,12 @@
             <Property name="text" type="java.lang.String" resourceKey="uploadButton.text"/>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="uploadButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="downloadButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="downloadButton.text"/>
+            <Property name="name" type="java.lang.String" value="downloadButton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -240,6 +249,106 @@
         <Component class="javax.swing.JProgressBar" name="progressBar">
           <Properties>
             <Property name="name" type="java.lang.String" value="progressBar" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JDialog" name="downloadDialog">
+      <Properties>
+        <Property name="modal" type="boolean" value="true"/>
+        <Property name="name" type="java.lang.String" value="downloadDialog" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jSeparator1" alignment="0" pref="349" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="folderLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="folderTextField" min="-2" pref="181" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="folderButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
+                          <Component id="okButton" min="-2" pref="53" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="folderLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="folderTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="folderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="245" max="-2" attributes="0"/>
+                          <Component id="okButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="69" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="folderLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="folderLabel.text"/>
+            <Property name="name" type="java.lang.String" value="folderLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="folderTextField">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="folderTextField.text"/>
+            <Property name="name" type="java.lang.String" value="folderTextField" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="folderButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="folderButton.text"/>
+            <Property name="name" type="java.lang.String" value="folderButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSeparator" name="jSeparator1">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="jSeparator1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="okButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="okButton.text"/>
+            <Property name="name" type="java.lang.String" value="okButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="cancelButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="cancelButton.text"/>
+            <Property name="name" type="java.lang.String" value="cancelButton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
