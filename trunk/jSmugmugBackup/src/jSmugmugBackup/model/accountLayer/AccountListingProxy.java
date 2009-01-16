@@ -187,14 +187,17 @@ public class AccountListingProxy implements IAccountListingProxy
 					{
 						if ( (albumName == null) || (a.getName().equals(albumName)) )
 						{
-							/*
-							String album_dir;
-							album_dir = c.getName() + "/" + a.getName();
+                            if ( (albumTags == null) || (this.matchTags(albumTags, a.getTags())) )
+                            {
+                                /*
+                                String album_dir;
+                                album_dir = c.getName() + "/" + a.getName();
 
-							this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
-							selectedAlbumHashtable.put(a.getGUID(), album_dir);
-							*/
-							selectedAlbums.add(a);
+                                this.log.printLogLine("Model.matchAlbumsOnSmugmug() -    selecting album: " + a.getName() + " - " + album_dir);
+                                selectedAlbumHashtable.put(a.getGUID(), album_dir);
+                                */
+                                selectedAlbums.add(a);
+                            }
 						}
 					}
 				}

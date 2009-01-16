@@ -121,6 +121,7 @@ public class SwingViewNG extends FrameView implements IView
         accountTree = new javax.swing.JTree();
         listButton = new javax.swing.JButton();
         uploadButton = new javax.swing.JButton();
+        downloadButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -132,6 +133,13 @@ public class SwingViewNG extends FrameView implements IView
         statusMessageLabel = new javax.swing.JLabel();
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
+        downloadDialog = new javax.swing.JDialog();
+        folderLabel = new javax.swing.JLabel();
+        folderTextField = new javax.swing.JTextField();
+        folderButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -159,20 +167,24 @@ public class SwingViewNG extends FrameView implements IView
         uploadButton.setEnabled(false);
         uploadButton.setName("uploadButton"); // NOI18N
 
+        downloadButton.setText(resourceMap.getString("downloadButton.text")); // NOI18N
+        downloadButton.setName("downloadButton"); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(uploadButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(loginButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                        .addComponent(listButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
-                    .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(listButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                        .addComponent(downloadButton, javax.swing.GroupLayout.Alignment.TRAILING)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -189,7 +201,9 @@ public class SwingViewNG extends FrameView implements IView
                         .addComponent(listButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(uploadButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 179, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(downloadButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
                         .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -259,6 +273,70 @@ public class SwingViewNG extends FrameView implements IView
                 .addGap(3, 3, 3))
         );
 
+        downloadDialog.setModal(true);
+        downloadDialog.setName("downloadDialog"); // NOI18N
+
+        folderLabel.setText(resourceMap.getString("folderLabel.text")); // NOI18N
+        folderLabel.setName("folderLabel"); // NOI18N
+
+        folderTextField.setText(resourceMap.getString("folderTextField.text")); // NOI18N
+        folderTextField.setName("folderTextField"); // NOI18N
+
+        folderButton.setText(resourceMap.getString("folderButton.text")); // NOI18N
+        folderButton.setName("folderButton"); // NOI18N
+
+        jSeparator1.setName("jSeparator1"); // NOI18N
+
+        okButton.setText(resourceMap.getString("okButton.text")); // NOI18N
+        okButton.setName("okButton"); // NOI18N
+
+        cancelButton.setText(resourceMap.getString("cancelButton.text")); // NOI18N
+        cancelButton.setName("cancelButton"); // NOI18N
+
+        javax.swing.GroupLayout downloadDialogLayout = new javax.swing.GroupLayout(downloadDialog.getContentPane());
+        downloadDialog.getContentPane().setLayout(downloadDialogLayout);
+        downloadDialogLayout.setHorizontalGroup(
+            downloadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(downloadDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(downloadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(downloadDialogLayout.createSequentialGroup()
+                        .addGroup(downloadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                            .addGroup(downloadDialogLayout.createSequentialGroup()
+                                .addComponent(folderLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(folderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(folderButton)))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, downloadDialogLayout.createSequentialGroup()
+                        .addComponent(cancelButton)
+                        .addGap(78, 78, 78)
+                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70))))
+        );
+        downloadDialogLayout.setVerticalGroup(
+            downloadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(downloadDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(downloadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(folderLabel)
+                    .addComponent(folderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(folderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(downloadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(downloadDialogLayout.createSequentialGroup()
+                        .addGap(245, 245, 245)
+                        .addComponent(okButton)
+                        .addContainerGap(69, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, downloadDialogLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cancelButton)
+                        .addGap(48, 48, 48))))
+        );
+
         setComponent(mainPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
@@ -267,6 +345,13 @@ public class SwingViewNG extends FrameView implements IView
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane accountScrollPane;
     private javax.swing.JTree accountTree;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton downloadButton;
+    private javax.swing.JDialog downloadDialog;
+    private javax.swing.JButton folderButton;
+    private javax.swing.JLabel folderLabel;
+    private javax.swing.JTextField folderTextField;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton listButton;
     private javax.swing.JTextArea logTextArea;
     private javax.swing.JButton loginButton;
@@ -274,6 +359,7 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JScrollPane logtextareaScrollPane;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JButton okButton;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
@@ -393,6 +479,7 @@ public class SwingViewNG extends FrameView implements IView
         return new TransferDialogResult(null, null, null, null, null);
     }
 
+
     public ITransferDialogResult showUploadDialog()
     {
         // we need the tree structure from the account to initialize the upload dialog
@@ -409,9 +496,16 @@ public class SwingViewNG extends FrameView implements IView
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public ITransferDialogResult showDownloadDialog() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ITransferDialogResult showDownloadDialog()
+    {
+        
+        //this.log.printLogLine("yes");
+        this.downloadDialog.setSize(200, 200);
+        this.downloadDialog.setVisible(true);
+
+        return null;
     }
+    
 
     public ITransferDialogResult showVerifyDialog() {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -488,7 +582,7 @@ public class SwingViewNG extends FrameView implements IView
 
     public void addDownloadDialogButtonListener(ActionListener listener)
     {
-        /* todo: nothing to register yet */
+        this.downloadButton.addActionListener(listener);
     }
 
     public void addDownloadStartButtonListener(ActionListener listener)
@@ -520,4 +614,6 @@ public class SwingViewNG extends FrameView implements IView
     {
         /* todo: nothing to register yet */
     }
+
+
 }
