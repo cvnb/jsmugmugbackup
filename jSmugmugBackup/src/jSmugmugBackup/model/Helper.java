@@ -99,6 +99,7 @@ public class Helper
 
     public static String encodeForURL(String str)
     {
+        //todo: generalize
 
     	String encodedStr = str;
 
@@ -137,6 +138,70 @@ public class Helper
     	//this.log.printLogLine("encodeForURL: " + str + " --> " + encodedStr);
 
     	return encodedStr;
+    }
+
+//    public static boolean containsUSASCII(String s)
+//    {
+//        /*
+//        // a little hack to check if a string contains any weired characters
+//        try { s.getBytes("US-ASCII"); return true; }
+//        catch (UnsupportedEncodingException ex) { return false; }
+//        */
+//        if ( s.contains("ä") || s.contains("Ä") ||
+//             s.contains("ö") || s.contains("Ö") ||
+//             s.contains("ü") || s.contains("Ü")  )
+//        {
+//            return false;
+//        }
+//
+//        return true;
+//    }
+
+    public static String encodeAsASCII(String str)
+    {
+        String encodedStr = str;
+
+        //encoding german special characters
+        encodedStr = encodedStr.replace("ß", "ss");
+        encodedStr = encodedStr.replace("ä", "ae");
+        encodedStr = encodedStr.replace("Ä", "Ae");
+        encodedStr = encodedStr.replace("ö", "oe");
+        encodedStr = encodedStr.replace("Ö", "Oe");
+        encodedStr = encodedStr.replace("ü", "ue");
+        encodedStr = encodedStr.replace("Ü", "Ue");
+
+        //encoding french special characters
+        encodedStr = encodedStr.replace("é", "e");
+        encodedStr = encodedStr.replace("É", "E");
+        encodedStr = encodedStr.replace("è", "e");
+        encodedStr = encodedStr.replace("È", "E");
+        encodedStr = encodedStr.replace("à", "a");
+        encodedStr = encodedStr.replace("À", "A");
+        encodedStr = encodedStr.replace("ù", "u");
+        encodedStr = encodedStr.replace("Ù", "U");
+        encodedStr = encodedStr.replace("â", "a");
+        encodedStr = encodedStr.replace("Â", "A");
+        encodedStr = encodedStr.replace("ê", "e");
+        encodedStr = encodedStr.replace("Ê", "E");
+        encodedStr = encodedStr.replace("î", "i");
+        encodedStr = encodedStr.replace("Î", "I");
+        encodedStr = encodedStr.replace("ô", "o");
+        encodedStr = encodedStr.replace("Ô", "O");
+        encodedStr = encodedStr.replace("û", "u");
+        encodedStr = encodedStr.replace("Û", "U");
+        encodedStr = encodedStr.replace("ë", "e");
+        encodedStr = encodedStr.replace("Ë", "E");
+        encodedStr = encodedStr.replace("ï", "i");
+        encodedStr = encodedStr.replace("Ï", "I");
+        encodedStr = encodedStr.replace("ç", "c");
+        encodedStr = encodedStr.replace("Ç", "C");
+        encodedStr = encodedStr.replace("æ", "ae");
+        encodedStr = encodedStr.replace("Æ", "Ae");
+        encodedStr = encodedStr.replace("œ", "oe");
+        encodedStr = encodedStr.replace("Œ", "Oe");
+
+
+        return encodedStr;
     }
 
     /*
