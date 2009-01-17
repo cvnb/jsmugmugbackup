@@ -376,7 +376,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //prepare tags
         String keywords = Helper.getKeywords(tags);
 
-        
+        //if ( !Helper.containsUSASCII(file.getName()) ) { this.log.printLog("(non us-ascii filename)"); }
+
     	JSONObject jobj = this.smugmug_images_upload(albumID, file, caption, keywords);
     	//this.printJSONObject(jobj);
     	Object obj = this.getJSONValue(jobj, "Image.id");
@@ -1089,7 +1090,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //return null;
     }
 
-	
+
 	private JSONObject smugmug_albums_changeSettings_title(int albumID, String newTitle)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (title) ... ");
@@ -1388,7 +1389,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             //httpPut.addHeader("X-Smug-FileName", Helper.encodeForURL(fileName.getName())); //optional
             //if (caption != null)  { httpPut.addHeader("X-Smug-Caption", Helper.encodeForURL(caption)); } //optional
 	        //if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", Helper.encodeForURL(keywords)); } //optional
-            httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
+            httpPut.addHeader("X-Smug-FileName", Helper.encodeAsASCII(fileName.getName())); //optional, seems like smugmug prefers this parameter over the url name
             if (caption != null)  { httpPut.addHeader("X-Smug-Caption", caption); } //optional
 	        if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", keywords); } //optional
 

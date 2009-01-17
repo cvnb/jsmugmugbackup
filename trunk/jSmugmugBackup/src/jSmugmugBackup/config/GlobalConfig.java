@@ -70,6 +70,9 @@ public class GlobalConfig
 	    " - uploaded albums are by default private, not searchable through smugmug and not searchable\n" +
 	    "   through google ... right now, the only way to change that is the smugmug website\n" +
 	    " - when downloading, existing files will be overriden without notice\n" +
+        " - it seems like Smugmug can only handle filenames with ASCII characters\n" +
+        "   german (Umlaute) and french special characters are beeing converted, but\n" +
+        "   when downloading these images again, the special characters are lost\n" +
         " - <to be continued>\n";
 
    // constant objects

@@ -270,7 +270,8 @@ public class AccountListingProxy implements IAccountListingProxy
         for (int i=0; i<fileList.length; i++)
         {        	
         	int imageID;
-        	imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
+        	//imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
+            imageID = this.getImageID(categoryID, subCategoryID, albumID, Helper.encodeAsASCII(fileList[i].getName()));
         	if (imageID == 0) //image doesn't exist on smugmug (no need for md5 check, since we have nothing to compare to)
         	{
                 // check if file is not empty
