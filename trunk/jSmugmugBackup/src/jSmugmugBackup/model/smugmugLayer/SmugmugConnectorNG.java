@@ -376,7 +376,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //prepare tags
         String keywords = Helper.getKeywords(tags);
 
-        //if ( !Helper.containsUSASCII(file.getName()) ) { this.log.printLog("(non us-ascii filename)"); }
 
     	JSONObject jobj = this.smugmug_images_upload(albumID, file, caption, keywords);
     	//this.printJSONObject(jobj);
@@ -1370,8 +1369,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		//build url
 		String url = "http://upload.smugmug.com/" + Helper.encodeForURL(fileName.getName());
-		
-        //this.log.printLogLine("upload url: " + url);
 
 		do
 		{	
@@ -1386,7 +1383,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
 	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
 	        
-            //httpPut.addHeader("X-Smug-FileName", Helper.encodeForURL(fileName.getName())); //optional
+            //httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
             //if (caption != null)  { httpPut.addHeader("X-Smug-Caption", Helper.encodeForURL(caption)); } //optional
 	        //if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", Helper.encodeForURL(keywords)); } //optional
             httpPut.addHeader("X-Smug-FileName", Helper.encodeAsASCII(fileName.getName())); //optional, seems like smugmug prefers this parameter over the url name

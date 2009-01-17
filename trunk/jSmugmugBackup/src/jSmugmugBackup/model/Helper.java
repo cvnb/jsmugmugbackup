@@ -159,6 +159,13 @@ public class Helper
 
     public static String encodeAsASCII(String str)
     {
+//        /*
+//        // a little hack to check if a string contains any weired characters
+//        try { s.getBytes("US-ASCII"); return true; }
+//        catch (UnsupportedEncodingException ex) { return false; }
+//        */
+
+
         String encodedStr = str;
 
         //encoding german special characters
@@ -203,51 +210,5 @@ public class Helper
 
         return encodedStr;
     }
-
-    /*
-    public static String decodeFromURL(String str)
-    {
-
-    	String decodedStr = str;
-
-
-    	decodedStr = decodedStr.replace("%20", " "); //space character
-    	decodedStr = decodedStr.replace("%23", "#"); //not sure, if it is nesseciary
-    	decodedStr = decodedStr.replace("%2B", "+");
-    	decodedStr = decodedStr.replace("%3C", "<");
-    	decodedStr = decodedStr.replace("%3E", ">");
-        decodedStr = decodedStr.replace("%5B", "[");
-    	decodedStr = decodedStr.replace("%5D", "]");
-    	decodedStr = decodedStr.replace("%3F", "?");
-        decodedStr = decodedStr.replace("%26", "&");
-        decodedStr = decodedStr.replace("%24", "$");
-        decodedStr = decodedStr.replace("%2C", ",");
-        decodedStr = decodedStr.replace("%3B", ";");
-        decodedStr = decodedStr.replace("%3A", ":");
-        decodedStr = decodedStr.replace("%2F", "/");
-        decodedStr = decodedStr.replace("%3D", "=");
-        decodedStr = decodedStr.replace("%40", "@");
-
-
-        //encoding german special characters
-        decodedStr = decodedStr.replace("%DF", "ß");
-        decodedStr = decodedStr.replace("%E4", "ä");
-        decodedStr = decodedStr.replace("%C4", "Ä");
-        decodedStr = decodedStr.replace("%F6", "ö");
-        decodedStr = decodedStr.replace("%D6", "Ö");
-        decodedStr = decodedStr.replace("%FC", "ü");
-        decodedStr = decodedStr.replace("%DC", "Ü");
-
-
-        //todo: french characters
-
-
-
-    	decodedStr = decodedStr.replace("%25", "%"); //do this last
-
-
-    	return decodedStr;
-    }
-    */
 
 }
