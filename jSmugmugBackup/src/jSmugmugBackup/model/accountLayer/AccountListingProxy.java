@@ -271,6 +271,7 @@ public class AccountListingProxy implements IAccountListingProxy
         {        	
         	int imageID;
         	//imageID = this.getImageID(categoryID, subCategoryID, albumID, fileList[i].getName());
+            // since filename are uploaded with filenames convertey to ascii we have to do the same here in order to find the correct file
             imageID = this.getImageID(categoryID, subCategoryID, albumID, Helper.encodeAsASCII(fileList[i].getName()));
         	if (imageID == 0) //image doesn't exist on smugmug (no need for md5 check, since we have nothing to compare to)
         	{
@@ -472,7 +473,7 @@ public class AccountListingProxy implements IAccountListingProxy
     				//compare files
 			    	//this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
     				compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
-					if ( localFileMD5Sum.equals(image.getMD5()) )
+					if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
 					{
 						//this.log.printLogLine("ok");
 						compareDelayedOutputString += "ok" + "\n";
@@ -483,10 +484,25 @@ public class AccountListingProxy implements IAccountListingProxy
 						//this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
 						//this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
 
-						compareOK = false;
-						compareDelayedOutputString += "failed" + "\n";
-						compareDelayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
-						compareDelayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
+                        
+                        //check if it's a video
+                        boolean isVideo = false;
+                        for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                        {
+                            if (image.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                        }
+
+                        if (isVideo)
+                        {
+                            compareDelayedOutputString += "failed - this is normal for a video" + "\n";
+                        }
+                        else //standard case, it's an image
+                        {
+                            compareOK = false;
+                            compareDelayedOutputString += "failed" + "\n";
+                            compareDelayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
+                            compareDelayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
+                        }
 					}
     			}
       		}

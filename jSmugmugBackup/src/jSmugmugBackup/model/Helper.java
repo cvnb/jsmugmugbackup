@@ -140,22 +140,7 @@ public class Helper
     	return encodedStr;
     }
 
-//    public static boolean containsUSASCII(String s)
-//    {
-//        /*
-//        // a little hack to check if a string contains any weired characters
-//        try { s.getBytes("US-ASCII"); return true; }
-//        catch (UnsupportedEncodingException ex) { return false; }
-//        */
-//        if ( s.contains("ä") || s.contains("Ä") ||
-//             s.contains("ö") || s.contains("Ö") ||
-//             s.contains("ü") || s.contains("Ü")  )
-//        {
-//            return false;
-//        }
-//
-//        return true;
-//    }
+
 
     public static String encodeAsASCII(String str)
     {

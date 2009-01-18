@@ -520,25 +520,32 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	repeat = true;
 
 
-                //if (e.getMessage().equals("Broken pipe"))
-
-                //check if it's a video
-                boolean isVideo = false;
-                String fileName = httpRequest.getHeaders("X-Smug-FileName")[0].getValue();
-                int albumID = Integer.parseInt(httpRequest.getHeaders("X-Smug-AlbumID")[0].getValue());
-                //this.log.printLog("(" + fileName + ", " + albumID + ")");
-                for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                //check if this was an upload request - all other requests don't have any but the standard headers
+                if (httpRequest.containsHeader("X-Smug-SessionID"))
                 {
-                    if (fileName.toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                    this.log.printLog("special case (in development) ...");
+
+                    //if (e.getMessage().equals("Broken pipe"))
+
+                    //check if it's a video
+                    boolean isVideo = false;
+                    String fileName = httpRequest.getHeaders("X-Smug-FileName")[0].getValue();
+                    int albumID = Integer.parseInt(httpRequest.getHeaders("X-Smug-AlbumID")[0].getValue());
+                    //this.log.printLog("(" + fileName + ", " + albumID + ")");
+                    for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                    {
+                        if (fileName.toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                    }
+
+                    if (isVideo)
+                    {
+                        this.log.printLog("special (socket exception with video): checking if the video is already there ... ");
+                        Helper.pause(this.config.getConstantRetryWait() * 6);
+                        JSONObject jobj_imageList = this.smugmug_images_get(albumID);
+                        this.printJSONObject(jobj_imageList);
+                    }
                 }
 
-                if (isVideo)
-                {
-                    this.log.printLog("special (socket exception with video): checking if the video is already there ... ");
-                    Helper.pause(this.config.getConstantRetryWait() * 6);
-                    JSONObject jobj_imageList = this.smugmug_images_get(albumID);
-                    this.printJSONObject(jobj_imageList);
-                }
 
             }
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
@@ -1386,6 +1393,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             //httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
             //if (caption != null)  { httpPut.addHeader("X-Smug-Caption", Helper.encodeForURL(caption)); } //optional
 	        //if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", Helper.encodeForURL(keywords)); } //optional
+            // only ASCII characters are allowed in headers, so we convert eventually non conform characters
             httpPut.addHeader("X-Smug-FileName", Helper.encodeAsASCII(fileName.getName())); //optional, seems like smugmug prefers this parameter over the url name
             if (caption != null)  { httpPut.addHeader("X-Smug-Caption", caption); } //optional
 	        if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", keywords); } //optional
