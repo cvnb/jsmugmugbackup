@@ -9,10 +9,7 @@ todo:
    - check md5sums
    - session info
  - use global sessions, simplify call structure
- - Umlaute
-   - 1st option: java string character encoding / charAt ???
-   - 2nd option: encode/decode filename functions
-   - 3rd option: check if it contains non US-ASCII characters and if yes: rename it after upload
+
 
  - refresh action listener doesn't make much sense, maybe merge functionality
    with login and throw out "refresh"
