@@ -419,7 +419,7 @@ public class AccountListingProxy implements IAccountListingProxy
         	if ( fileList.length > imageList.size() )
         	{
         		//some files have not been uploaded
-        		countDelayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
+        		countDelayedOutputString += "   ERROR: some files have not been uploaded (they might have an ignore tag, for instance)" + "\n";
         		countDelayedOutputString += "   listing local files (" + (fileList.length - imageList.size())  + ") ... " + "\n";
         		for (int i=0; i<fileList.length; i++)
         		{
@@ -435,8 +435,8 @@ public class AccountListingProxy implements IAccountListingProxy
         	else //if ( fileList.length < imageList.size() )
         	{
         		//some local files are missing
-        		countDelayedOutputString += "   ERROR: some local files are missing" + "\n";
-        		countDelayedOutputString += "   listing remote files (" + imageList.size() + ") ... " + "\n";
+        		countDelayedOutputString += "   ERROR: some local files are missing (if the following list is empty, it might indicate that the same file has been uploaded twice)" + "\n";
+        		countDelayedOutputString += "   listing remote files (" + (imageList.size() - fileList.length) + ") ... " + "\n";
         		for (IImage image : imageList)
         		{
         			boolean match = false;
