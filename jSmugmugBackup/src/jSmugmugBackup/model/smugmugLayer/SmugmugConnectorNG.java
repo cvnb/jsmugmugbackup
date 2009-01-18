@@ -123,7 +123,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
         }
         //this.log.printLogLine("totalAlbumCount: " + totalAlbumCount);
-        //this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ") ... "); // too low!!
+        this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ") ... "); // too low!!
 
 
 
@@ -258,7 +258,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		
 
-        /*
+        // statistics only
         int totalAlbumCount = 0;
         int totalImageCount = 0;
         for (ICategory c : smugmugRoot.getCategoryList())
@@ -279,7 +279,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         }
         //this.log.printLogLine("checkAlbumCount: " + checkAlbumCount);
         this.log.printLog("(totalImageCount: " + totalImageCount + ") ... ");
-        */
+        
 
 
         this.log.printLogLine("ok");
