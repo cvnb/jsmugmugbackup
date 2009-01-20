@@ -80,7 +80,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         
         //statistics: walk over the tree and count the number of files
-        //note: the estimated count seems to be slightly lower than the real count, but is sufficient for an approximation
+        //note: the estimated count seems to be slightly (at least 3) lower than the real count, but is sufficient for an approximation
         int estimatedImageCount = 0;
         int estimatedAlbumCount = 0;
 		int statCategoryIndex = 0;
@@ -520,14 +520,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             	repeat = true;
 
 
-                //check if this was an upload request - all other requests don't have any but the standard headers
+                //special: this routine should identify cases where there was an exception thrown, but the video has been successfully uploaded anyway
+                //         ... this is due the the time smugmug needs to process a video properly
+                //first: check if this was an upload request - all other requests don't have any but the standard headers
                 if (httpRequest.containsHeader("X-Smug-SessionID"))
                 {
                     this.log.printLog("special case (in development) ...");
 
                     //if (e.getMessage().equals("Broken pipe"))
 
-                    //check if it's a video
+                    //now check if it's a video
                     boolean isVideo = false;
                     String fileName = httpRequest.getHeaders("X-Smug-FileName")[0].getValue();
                     int albumID = Integer.parseInt(httpRequest.getHeaders("X-Smug-AlbumID")[0].getValue());
@@ -540,9 +542,29 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     if (isVideo)
                     {
                         this.log.printLog("special (socket exception with video): checking if the video is already there ... ");
-                        Helper.pause(this.config.getConstantRetryWait() * 6);
+                        this.log.printLog("special (waiting a little) ... ");
+                        Helper.pause(this.config.getConstantRetryWait() * 10);
                         JSONObject jobj_imageList = this.smugmug_images_get(albumID);
-                        this.printJSONObject(jobj_imageList);
+                        //this.printJSONObject(jobj_imageList);
+
+                        //iterate over images - trying to find out if the image is already listed on smugmug
+                        int imageIndex = 0;
+                        JSONObject jsonImage = (JSONObject)this.getJSONValue(jobj_imageList, "Images[" + imageIndex + "]");
+                        while (jsonImage != null)
+                        {
+                            String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
+
+                            if (imageName.equals(fileName))
+                            {
+                                this.log.printLog("special (success: we've found the video, no need to upload it again!)");
+                                repeat = false;
+                            }
+
+                            imageIndex++;
+                            jsonImage = (JSONObject)this.getJSONValue(jobj_imageList, "Images[" + imageIndex + "]");
+                        }
+
+                        if (repeat) { this.log.printLog("end of special (the video wasn't found :-( ) ... "); }
                     }
                 }
 
