@@ -542,8 +542,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     if (isVideo)
                     {
                         this.log.printLog("special (socket exception with video): checking if the video is already there ... ");
-                        this.log.printLog("special (waiting a little) ... ");
-                        Helper.pause(this.config.getConstantRetryWait() * 10);
+                        this.log.printLog("special (waiting 20min) ... ");
+                        Helper.pause(1200 * 1000); // 1200s = 20min
                         JSONObject jobj_imageList = this.smugmug_images_get(albumID);
                         //this.printJSONObject(jobj_imageList);
 
