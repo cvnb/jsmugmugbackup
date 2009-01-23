@@ -419,7 +419,7 @@ public class AccountListingProxy implements IAccountListingProxy
         	if ( fileList.length > imageList.size() )
         	{
         		//some files have not been uploaded
-        		countDelayedOutputString += "   ERROR: some files have not been uploaded (they might have an ignore tag, for instance)" + "\n";
+        		countDelayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
         		countDelayedOutputString += "   listing local files (" + (fileList.length - imageList.size())  + ") ... " + "\n";
         		for (int i=0; i<fileList.length; i++)
         		{
@@ -428,7 +428,16 @@ public class AccountListingProxy implements IAccountListingProxy
         			{
         				if (fileList[i].getName().equals(image.getName())) { match = true; }
         			}
-        			if (match == false) { countDelayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
+        			if (match == false)
+                    {
+                        countDelayedOutputString += "  " + fileList[i].getAbsolutePath();
+                        
+                        //check if ignore tag exists and state a message
+                        File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
+                        if (ignoreTagFile.exists()) { countDelayedOutputString += " (ignore tag is present)"; }
+                        
+                        countDelayedOutputString += "\n";
+                    }
         		}
         		
         	}
