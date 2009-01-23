@@ -1477,6 +1477,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        
 	        	//return jobj;
 
+                /*
+                 * special treatment for videos is not nesseciary here, since we've recieved a valid JSON response - if
+                 * the video would be uploaded we would have gotten another response
                 //check if it's a video
                 boolean isVideo = false;
                 for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
@@ -1491,6 +1494,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     JSONObject jobj_imageList = this.smugmug_images_get(albumID);
                     this.printJSONObject(jobj_imageList);
                 }
+                */
 
 
             	this.log.printLog("waiting ... ");

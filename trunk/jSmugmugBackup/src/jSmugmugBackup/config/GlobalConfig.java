@@ -73,6 +73,9 @@ public class GlobalConfig
         " - it seems like Smugmug can only handle filenames with ASCII characters\n" +
         "   german (Umlaute) and french special characters are beeing converted, but\n" +
         "   when downloading these images again, the special characters are lost\n" +
+        " - verify only reports md5 checksum errors if they occur with an image, checksum errors\n" +
+        "   with videos are not reported because videos are converted by smugmug after uploading\n" +
+        "   which makes md5 checks fail on all videos\n" +
         " - <to be continued>\n";
 
    // constant objects
