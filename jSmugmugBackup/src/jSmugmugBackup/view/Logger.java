@@ -71,4 +71,18 @@ public class Logger
     {
     	this.printLog(text + "\n");
     }
+
+    /*
+    // Verbose logging is disabled for the moment
+    public void printVerboseLog(String text)
+    {
+        if (this.config.getConstantVerboseLogging()) { this.printLog(text); }
+    }
+
+    public void printVerboseLogLine(String text)
+    {
+        if (this.config.getConstantVerboseLogging()) { this.printLogLine(text); }
+    }
+    */
+
 }

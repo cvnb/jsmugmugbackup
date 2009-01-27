@@ -348,20 +348,25 @@ public class Model
         if (selectedAlbums.size() == 0) { this.log.printLogLine("no matching album was found on your SmugMug Account"); }
 
         
-        //compute target base dir
+        // compute target base dir
+        // convienience: cut off category, subcategory and album dir if they exist
         String targetBaseDir = transferDialogResult.getDir();
         //this.log.printLogLine("targetBaseDir: " + targetBaseDir);
+
+        //check if a category has been given
         if (transferDialogResult.getCategoryName() != null)
         {
             if (transferDialogResult.getSubCategoryName() != null)
             {
                 if (transferDialogResult.getAlbumName() != null)
                 {
-                    targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getAlbumName()) );
+                    if (targetBaseDir.lastIndexOf(transferDialogResult.getAlbumName()) != -1) { targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getAlbumName()) ); }
                 }
-                targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getSubCategoryName()) );
+
+                if (targetBaseDir.lastIndexOf(transferDialogResult.getSubCategoryName()) != -1) { targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getSubCategoryName()) ); }
             }
-            targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getCategoryName()) );
+
+            if (targetBaseDir.lastIndexOf(transferDialogResult.getCategoryName()) != -1) { targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getCategoryName()) ); }
         }
         //this.log.printLogLine("targetBaseDir: " + targetBaseDir);
         
