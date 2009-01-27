@@ -50,6 +50,7 @@ public class GlobalConfig
    private final String constantSmugmugAPIVersion       = "1.2.0";
    private final int    constantRetryWait               = 20000; //time to wait before retrying
    private final boolean constantHeavyRelogin           = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
+   //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit     = 512*1024*1024; //512MB
    private final String constantUploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename           = "res/pixel.jpg";
@@ -183,6 +184,7 @@ public class GlobalConfig
    public String   getConstantSmugmugAPIVersion()         { return this.constantSmugmugAPIVersion; }
    public int      getConstantRetryWait()                 { return this.constantRetryWait; }
    public boolean  getConstantHeavyRelogin()              { return this.constantHeavyRelogin; }
+   //public boolean  getConstantVerboseLogging()            { return this.constantVerboseLogging; } //disabled for the moment
    public int      getConstantUploadFileSizeLimit()       { return this.constantUploadFileSizeLimit; }
    public String   getConstantUploadIgnoreFilePostfix()   { return this.constantUploadIgnoreFilePostfix; }
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }
