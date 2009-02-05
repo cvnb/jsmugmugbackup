@@ -353,6 +353,108 @@
         </Component>
       </SubComponents>
     </Container>
+    <Container class="javax.swing.JDialog" name="loginDialog">
+      <Properties>
+        <Property name="modal" type="boolean" value="true"/>
+        <Property name="name" type="java.lang.String" value="loginDialog" noResource="true"/>
+        <Property name="resizable" type="boolean" value="false"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="loginUsernameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="loginPasswordLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="loginPasswordPasswordField" alignment="0" max="32767" attributes="1"/>
+                              <Component id="loginUsernameTextField" alignment="0" pref="144" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="loginCancelButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="loginOkButton" min="-2" pref="53" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="loginUsernameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="loginUsernameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="loginPasswordLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="loginPasswordPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="loginOkButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="loginCancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="loginUsernameLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="loginUsernameLabel.text"/>
+            <Property name="name" type="java.lang.String" value="loginUsernameLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="loginPasswordLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="loginPasswordLabel.text"/>
+            <Property name="name" type="java.lang.String" value="loginPasswordLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="loginUsernameTextField">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="loginUsernameTextField.text"/>
+            <Property name="name" type="java.lang.String" value="loginUsernameTextField" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="loginPasswordPasswordField">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="loginPasswordPasswordField.text"/>
+            <Property name="name" type="java.lang.String" value="loginPasswordPasswordField" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="loginCancelButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="jSmugmugBackup.view.ng.SwingViewNG" id="loginCancelButtonActionPerformed" methodName="loginCancelButtonActionPerformed"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="loginCancelButton.text"/>
+            <Property name="name" type="java.lang.String" value="loginCancelButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="loginOkButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="jSmugmugBackup.view.ng.SwingViewNG" id="loginOkButtonActionPerformend" methodName="loginOkButtonActionPerformend"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="loginOkButton.text"/>
+            <Property name="name" type="java.lang.String" value="loginOkButton" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </NonVisualComponents>
   <Properties>
     <Property name="component" type="javax.swing.JComponent" editor="org.netbeans.modules.form.ComponentChooserEditor">

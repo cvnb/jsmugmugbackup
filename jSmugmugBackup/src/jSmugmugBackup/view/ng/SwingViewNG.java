@@ -140,6 +140,13 @@ public class SwingViewNG extends FrameView implements IView
         jSeparator1 = new javax.swing.JSeparator();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
+        loginDialog = new javax.swing.JDialog();
+        loginUsernameLabel = new javax.swing.JLabel();
+        loginPasswordLabel = new javax.swing.JLabel();
+        loginUsernameTextField = new javax.swing.JTextField();
+        loginPasswordPasswordField = new javax.swing.JPasswordField();
+        loginCancelButton = new javax.swing.JButton();
+        loginOkButton = new javax.swing.JButton();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -337,6 +344,69 @@ public class SwingViewNG extends FrameView implements IView
                         .addGap(48, 48, 48))))
         );
 
+        loginDialog.setModal(true);
+        loginDialog.setName("loginDialog"); // NOI18N
+        loginDialog.setResizable(false);
+
+        loginUsernameLabel.setText(resourceMap.getString("loginUsernameLabel.text")); // NOI18N
+        loginUsernameLabel.setName("loginUsernameLabel"); // NOI18N
+
+        loginPasswordLabel.setText(resourceMap.getString("loginPasswordLabel.text")); // NOI18N
+        loginPasswordLabel.setName("loginPasswordLabel"); // NOI18N
+
+        loginUsernameTextField.setText(resourceMap.getString("loginUsernameTextField.text")); // NOI18N
+        loginUsernameTextField.setName("loginUsernameTextField"); // NOI18N
+
+        loginPasswordPasswordField.setText(resourceMap.getString("loginPasswordPasswordField.text")); // NOI18N
+        loginPasswordPasswordField.setName("loginPasswordPasswordField"); // NOI18N
+
+        loginCancelButton.setAction(actionMap.get("loginCancelButtonActionPerformed")); // NOI18N
+        loginCancelButton.setText(resourceMap.getString("loginCancelButton.text")); // NOI18N
+        loginCancelButton.setName("loginCancelButton"); // NOI18N
+
+        loginOkButton.setAction(actionMap.get("loginOkButtonActionPerformend")); // NOI18N
+        loginOkButton.setText(resourceMap.getString("loginOkButton.text")); // NOI18N
+        loginOkButton.setName("loginOkButton"); // NOI18N
+
+        javax.swing.GroupLayout loginDialogLayout = new javax.swing.GroupLayout(loginDialog.getContentPane());
+        loginDialog.getContentPane().setLayout(loginDialogLayout);
+        loginDialogLayout.setHorizontalGroup(
+            loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(loginDialogLayout.createSequentialGroup()
+                        .addGroup(loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(loginUsernameLabel)
+                            .addComponent(loginPasswordLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(loginPasswordPasswordField)
+                            .addComponent(loginUsernameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, loginDialogLayout.createSequentialGroup()
+                        .addComponent(loginCancelButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(loginOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+        loginDialogLayout.setVerticalGroup(
+            loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginUsernameLabel)
+                    .addComponent(loginUsernameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginPasswordLabel)
+                    .addComponent(loginPasswordPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(loginDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginOkButton)
+                    .addComponent(loginCancelButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         setComponent(mainPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
@@ -355,7 +425,14 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JButton listButton;
     private javax.swing.JTextArea logTextArea;
     private javax.swing.JButton loginButton;
+    private javax.swing.JButton loginCancelButton;
+    private javax.swing.JDialog loginDialog;
     private javax.swing.JMenuItem loginMenuItem;
+    private javax.swing.JButton loginOkButton;
+    private javax.swing.JLabel loginPasswordLabel;
+    private javax.swing.JPasswordField loginPasswordPasswordField;
+    private javax.swing.JLabel loginUsernameLabel;
+    private javax.swing.JTextField loginUsernameTextField;
     private javax.swing.JScrollPane logtextareaScrollPane;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
@@ -466,11 +543,17 @@ public class SwingViewNG extends FrameView implements IView
         this.uploadButton.setEnabled(true);
     }
 
+    @Action
     public ILoginDialogResult showLoginDialog()
     {
-        SwingViewNGLoginDialog loginDialog = new SwingViewNGLoginDialog( this.getFrame(), true );
-		loginDialog.setVisible(true);
-        return loginDialog.getLoginDialogResult();
+//        SwingViewNGLoginDialog loginDialog = new SwingViewNGLoginDialog( this.getFrame(), true );
+//		loginDialog.setVisible(true);
+//        return loginDialog.getLoginDialogResult();
+
+        this.loginDialog.setSize(250, 125);
+        this.loginDialog.setVisible(true);
+
+        return this.loginGetLoginDialogResult();
     }
 
     public ITransferDialogResult showListDialog()
@@ -615,5 +698,41 @@ public class SwingViewNG extends FrameView implements IView
         /* todo: nothing to register yet */
     }
 
+
+
+    //----------------------- login dialog -------------------------------------
+    private ILoginDialogResult loginLoginDialogResult = null;
+
+    public ILoginDialogResult loginGetLoginDialogResult()
+    {
+        return this.loginLoginDialogResult;
+    }
+
+    private void loginResetLoginDialog()
+    {
+        //making form invisible
+        this.loginDialog.setVisible(false);
+
+        //clear input fields
+        this.loginUsernameTextField.setText("");
+        this.loginPasswordPasswordField.setText("");
+    }
+
+    @Action
+    public void loginOkButtonActionPerformend()
+    {
+        //storing username and password
+        this.loginLoginDialogResult = new LoginDialogResult(this.loginUsernameTextField.getText(), this.loginPasswordPasswordField.getText());
+
+        this.loginResetLoginDialog();
+    }
+
+    @Action
+    public void loginCancelButtonActionPerformed()
+    {
+        this.loginLoginDialogResult = null;
+
+        this.loginResetLoginDialog();
+    }
 
 }
