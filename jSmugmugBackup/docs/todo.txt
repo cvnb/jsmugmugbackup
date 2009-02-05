@@ -9,6 +9,7 @@ todo:
    - check md5sums
    - session info
  - use global sessions, simplify call structure
+ - verify: what if missing files and left over files neutralize each other???
 
 
  - refresh action listener doesn't make much sense, maybe merge functionality
