@@ -573,10 +573,6 @@ public class SwingViewNG extends FrameView implements IView
     @Action
     public ILoginDialogResult showLoginDialog()
     {
-//        SwingViewNGLoginDialog loginDialog = new SwingViewNGLoginDialog( this.getFrame(), true );
-//		loginDialog.setVisible(true);
-//        return loginDialog.getLoginDialogResult();
-
         this.loginDialog.setSize(250, 150);
         this.loginDialog.setVisible(true);
 
@@ -636,20 +632,6 @@ public class SwingViewNG extends FrameView implements IView
 
     public void showBusyStart(String waitingMessage)
     {
-//        //disable frame, so no mouse events will be recieved
-//        this.getFrame().setEnabled(false);
-//
-//        //set message in statusbar
-//        this.statusMessageLabel.setText(waitingMessage);
-//
-//        //display waiting dialog
-//        this.waitDialog = new SwingViewNGWaitDialog(this.getFrame(), false, waitingMessage);
-//        ////this.waitDialog.setMessage("please wait ...", waitingMessage);
-//        this.waitDialog.setVisible(true);
-//        this.waitDialog.validate();
-//
-//        this.getFrame().validate();
-
         //disable frame, so no mouse events will be recieved
         this.getFrame().setEnabled(false);
 
@@ -665,15 +647,6 @@ public class SwingViewNG extends FrameView implements IView
 
     public void showBusyStop()
     {        
-//        this.waitDialog.setVisible(false);
-//        this.waitDialog = null;
-//
-//        this.statusMessageLabel.setText("");
-//
-//        //enable frame
-//        this.getFrame().setEnabled(true);
-//        this.getFrame().validate();
-
         this.waitDialog.setVisible(false);
         this.waitSetMessage("please wait ...", "<empty>");
 
