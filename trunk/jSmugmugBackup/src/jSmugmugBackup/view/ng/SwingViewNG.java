@@ -147,6 +147,8 @@ public class SwingViewNG extends FrameView implements IView
         loginPasswordPasswordField = new javax.swing.JPasswordField();
         loginCancelButton = new javax.swing.JButton();
         loginOkButton = new javax.swing.JButton();
+        waitDialog = new javax.swing.JDialog();
+        waitMessageLabel = new javax.swing.JLabel();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -407,6 +409,29 @@ public class SwingViewNG extends FrameView implements IView
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        waitDialog.setName("waitDialog"); // NOI18N
+        waitDialog.setResizable(false);
+
+        waitMessageLabel.setText(resourceMap.getString("waitMessageLabel.text")); // NOI18N
+        waitMessageLabel.setName("waitMessageLabel"); // NOI18N
+
+        javax.swing.GroupLayout waitDialogLayout = new javax.swing.GroupLayout(waitDialog.getContentPane());
+        waitDialog.getContentPane().setLayout(waitDialogLayout);
+        waitDialogLayout.setHorizontalGroup(
+            waitDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(waitDialogLayout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(waitMessageLabel)
+                .addContainerGap(239, Short.MAX_VALUE))
+        );
+        waitDialogLayout.setVerticalGroup(
+            waitDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(waitDialogLayout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(waitMessageLabel)
+                .addContainerGap(107, Short.MAX_VALUE))
+        );
+
         setComponent(mainPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
@@ -442,6 +467,8 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JButton uploadButton;
+    private javax.swing.JDialog waitDialog;
+    private javax.swing.JLabel waitMessageLabel;
     // End of variables declaration//GEN-END:variables
 
     private final Timer messageTimer;
@@ -457,7 +484,7 @@ public class SwingViewNG extends FrameView implements IView
     private Logger log = null;
 	private Model model = null;
 
-    private SwingViewNGWaitDialog waitDialog = null;
+//    private SwingViewNGWaitDialog waitDialog = null;
 
     private IRootElement smugmugRoot = null;
 
@@ -550,7 +577,7 @@ public class SwingViewNG extends FrameView implements IView
 //		loginDialog.setVisible(true);
 //        return loginDialog.getLoginDialogResult();
 
-        this.loginDialog.setSize(250, 125);
+        this.loginDialog.setSize(250, 150);
         this.loginDialog.setVisible(true);
 
         return this.loginGetLoginDialogResult();
@@ -609,6 +636,20 @@ public class SwingViewNG extends FrameView implements IView
 
     public void showBusyStart(String waitingMessage)
     {
+//        //disable frame, so no mouse events will be recieved
+//        this.getFrame().setEnabled(false);
+//
+//        //set message in statusbar
+//        this.statusMessageLabel.setText(waitingMessage);
+//
+//        //display waiting dialog
+//        this.waitDialog = new SwingViewNGWaitDialog(this.getFrame(), false, waitingMessage);
+//        ////this.waitDialog.setMessage("please wait ...", waitingMessage);
+//        this.waitDialog.setVisible(true);
+//        this.waitDialog.validate();
+//
+//        this.getFrame().validate();
+
         //disable frame, so no mouse events will be recieved
         this.getFrame().setEnabled(false);
 
@@ -616,24 +657,30 @@ public class SwingViewNG extends FrameView implements IView
         this.statusMessageLabel.setText(waitingMessage);
 
         //display waiting dialog
-        this.waitDialog = new SwingViewNGWaitDialog(this.getFrame(), false, waitingMessage);
-        ////this.waitDialog.setMessage("please wait ...", waitingMessage);
+        this.waitSetMessage("please wait ...", waitingMessage);
+        this.waitDialog.setSize(200, 150);
         this.waitDialog.setVisible(true);
-        this.waitDialog.validate();
 
-        this.getFrame().validate();
     }
 
     public void showBusyStop()
     {        
+//        this.waitDialog.setVisible(false);
+//        this.waitDialog = null;
+//
+//        this.statusMessageLabel.setText("");
+//
+//        //enable frame
+//        this.getFrame().setEnabled(true);
+//        this.getFrame().validate();
+
         this.waitDialog.setVisible(false);
-        this.waitDialog = null;
+        this.waitSetMessage("please wait ...", "<empty>");
 
         this.statusMessageLabel.setText("");
-        
+
         //enable frame
         this.getFrame().setEnabled(true);
-        this.getFrame().validate();
     }
 
     public void addLoginButtonListener(ActionListener listener)
@@ -735,4 +782,10 @@ public class SwingViewNG extends FrameView implements IView
         this.loginResetLoginDialog();
     }
 
+    //--------------- wait dialog ----------------------------------------------
+    public void waitSetMessage(String title, String message)
+	{
+		this.waitDialog.setTitle(title);
+        this.waitMessageLabel.setText(message);
+	}
 }
