@@ -17,9 +17,11 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -149,6 +151,25 @@ public class SwingViewNG extends FrameView implements IView
         loginOkButton = new javax.swing.JButton();
         waitDialog = new javax.swing.JDialog();
         waitMessageLabel = new javax.swing.JLabel();
+        uploadDialog = new javax.swing.JDialog();
+        uploadFolderLabel = new javax.swing.JLabel();
+        uploadFolderTextField = new javax.swing.JTextField();
+        uploadFolderjButton = new javax.swing.JButton();
+        uploadSeparator1 = new javax.swing.JSeparator();
+        uploadUploadToLabel = new javax.swing.JLabel();
+        uploadCategoryLabel = new javax.swing.JLabel();
+        uploadCategoryComboBox = new javax.swing.JComboBox();
+        uploadSubcategoryLabel = new javax.swing.JLabel();
+        uploadSubcategoryComboBox = new javax.swing.JComboBox();
+        uploadAlbumLabel = new javax.swing.JLabel();
+        uploadAlbumComboBox = new javax.swing.JComboBox();
+        uploadScrollPane = new javax.swing.JScrollPane();
+        uploadTree = new javax.swing.JTree();
+        uploadSeparator2 = new javax.swing.JSeparator();
+        uploadOptionsLabel = new javax.swing.JLabel();
+        uploadCancelButton = new javax.swing.JButton();
+        uploadOkButton = new javax.swing.JButton();
+        uploadFileChooser = new javax.swing.JFileChooser();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -432,10 +453,154 @@ public class SwingViewNG extends FrameView implements IView
                 .addContainerGap(107, Short.MAX_VALUE))
         );
 
+        uploadDialog.setName("uploadDialog"); // NOI18N
+
+        uploadFolderLabel.setText(resourceMap.getString("uploadFolderLabel.text")); // NOI18N
+        uploadFolderLabel.setName("uploadFolderLabel"); // NOI18N
+
+        uploadFolderTextField.setText(resourceMap.getString("uploadFolderTextField.text")); // NOI18N
+        uploadFolderTextField.setName("uploadFolderTextField"); // NOI18N
+
+        uploadFolderjButton.setAction(actionMap.get("uploadSelectFolderButtonActionPerformend")); // NOI18N
+        uploadFolderjButton.setText(resourceMap.getString("uploadFolderjButton.text")); // NOI18N
+        uploadFolderjButton.setName("uploadFolderjButton"); // NOI18N
+
+        uploadSeparator1.setName("uploadSeparator1"); // NOI18N
+
+        uploadUploadToLabel.setText(resourceMap.getString("uploadUploadToLabel.text")); // NOI18N
+        uploadUploadToLabel.setName("uploadUploadToLabel"); // NOI18N
+
+        uploadCategoryLabel.setText(resourceMap.getString("uploadCategoryLabel.text")); // NOI18N
+        uploadCategoryLabel.setName("uploadCategoryLabel"); // NOI18N
+
+        uploadCategoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
+        uploadCategoryComboBox.setName("uploadCategoryComboBox"); // NOI18N
+        uploadCategoryComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                uploadCategoryComboBoxItemStateChanged(evt);
+            }
+        });
+
+        uploadSubcategoryLabel.setText(resourceMap.getString("uploadSubcategoryLabel.text")); // NOI18N
+        uploadSubcategoryLabel.setName("uploadSubcategoryLabel"); // NOI18N
+
+        uploadSubcategoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
+        uploadSubcategoryComboBox.setName("uploadSubcategoryComboBox"); // NOI18N
+
+        uploadAlbumLabel.setText(resourceMap.getString("uploadAlbumLabel.text")); // NOI18N
+        uploadAlbumLabel.setName("uploadAlbumLabel"); // NOI18N
+
+        uploadAlbumComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
+        uploadAlbumComboBox.setName("uploadAlbumComboBox"); // NOI18N
+
+        uploadScrollPane.setName("uploadScrollPane"); // NOI18N
+
+        uploadTree.setName("uploadTree"); // NOI18N
+        uploadScrollPane.setViewportView(uploadTree);
+
+        uploadSeparator2.setName("uploadSeparator2"); // NOI18N
+
+        uploadOptionsLabel.setText(resourceMap.getString("uploadOptionsLabel.text")); // NOI18N
+        uploadOptionsLabel.setName("uploadOptionsLabel"); // NOI18N
+
+        uploadCancelButton.setAction(actionMap.get("uploadCancelButtonActionPerformed")); // NOI18N
+        uploadCancelButton.setText(resourceMap.getString("uploadCancelButton.text")); // NOI18N
+        uploadCancelButton.setName("uploadCancelButton"); // NOI18N
+
+        uploadOkButton.setAction(actionMap.get("uploadOkButtonActionPerformed")); // NOI18N
+        uploadOkButton.setText(resourceMap.getString("uploadOkButton.text")); // NOI18N
+        uploadOkButton.setName("uploadOkButton"); // NOI18N
+
+        javax.swing.GroupLayout uploadDialogLayout = new javax.swing.GroupLayout(uploadDialog.getContentPane());
+        uploadDialog.getContentPane().setLayout(uploadDialogLayout);
+        uploadDialogLayout.setHorizontalGroup(
+            uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(uploadDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(uploadSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                    .addGroup(uploadDialogLayout.createSequentialGroup()
+                        .addComponent(uploadFolderLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(uploadFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(uploadFolderjButton))
+                    .addComponent(uploadSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                    .addComponent(uploadUploadToLabel)
+                    .addGroup(uploadDialogLayout.createSequentialGroup()
+                        .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(uploadScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, uploadDialogLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(uploadSubcategoryLabel)
+                                    .addComponent(uploadAlbumLabel)
+                                    .addComponent(uploadCategoryLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(uploadAlbumComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(uploadSubcategoryComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(uploadCategoryComboBox, 0, 190, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE))
+                    .addComponent(uploadOptionsLabel)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, uploadDialogLayout.createSequentialGroup()
+                        .addComponent(uploadCancelButton)
+                        .addGap(31, 31, 31)
+                        .addComponent(uploadOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)))
+                .addContainerGap())
+        );
+        uploadDialogLayout.setVerticalGroup(
+            uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(uploadDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uploadFolderLabel)
+                    .addComponent(uploadFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(uploadFolderjButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(uploadSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(uploadUploadToLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uploadCategoryLabel)
+                    .addComponent(uploadCategoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uploadSubcategoryLabel)
+                    .addComponent(uploadSubcategoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uploadAlbumLabel)
+                    .addComponent(uploadAlbumComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(uploadScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(uploadSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(uploadOptionsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                .addGroup(uploadDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uploadOkButton)
+                    .addComponent(uploadCancelButton))
+                .addContainerGap())
+        );
+
+        uploadFileChooser.setDialogTitle(resourceMap.getString("uploadFileChooser.dialogTitle")); // NOI18N
+        uploadFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        uploadFileChooser.setName("uploadFileChooser"); // NOI18N
+
         setComponent(mainPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void uploadCategoryComboBoxItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_uploadCategoryComboBoxItemStateChanged
+    {//GEN-HEADEREND:event_uploadCategoryComboBoxItemStateChanged
+        // TODO add your handling code here:
+        this.log.printLogLine((String)evt.getItem());
+    }//GEN-LAST:event_uploadCategoryComboBoxItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane accountScrollPane;
@@ -466,7 +631,26 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JComboBox uploadAlbumComboBox;
+    private javax.swing.JLabel uploadAlbumLabel;
     private javax.swing.JButton uploadButton;
+    private javax.swing.JButton uploadCancelButton;
+    private javax.swing.JComboBox uploadCategoryComboBox;
+    private javax.swing.JLabel uploadCategoryLabel;
+    private javax.swing.JDialog uploadDialog;
+    private javax.swing.JFileChooser uploadFileChooser;
+    private javax.swing.JLabel uploadFolderLabel;
+    private javax.swing.JTextField uploadFolderTextField;
+    private javax.swing.JButton uploadFolderjButton;
+    private javax.swing.JButton uploadOkButton;
+    private javax.swing.JLabel uploadOptionsLabel;
+    private javax.swing.JScrollPane uploadScrollPane;
+    private javax.swing.JSeparator uploadSeparator1;
+    private javax.swing.JSeparator uploadSeparator2;
+    private javax.swing.JComboBox uploadSubcategoryComboBox;
+    private javax.swing.JLabel uploadSubcategoryLabel;
+    private javax.swing.JTree uploadTree;
+    private javax.swing.JLabel uploadUploadToLabel;
     private javax.swing.JDialog waitDialog;
     private javax.swing.JLabel waitMessageLabel;
     // End of variables declaration//GEN-END:variables
@@ -591,6 +775,10 @@ public class SwingViewNG extends FrameView implements IView
         // we need the tree structure from the account to initialize the upload dialog
         // todo: maybe a messagebox saying "you need to login and list your account first" would be nice
         if (this.smugmugRoot == null) return null;
+
+        this.uploadDialog.setSize(300, 300);
+        this.uploadDialog.setVisible(true);
+
 
         SwingViewNGUploadDialog uploadDialog = new SwingViewNGUploadDialog(this.getFrame(), true);
         uploadDialog.initTransferFilter(this.smugmugRoot);
@@ -723,7 +911,7 @@ public class SwingViewNG extends FrameView implements IView
     //----------------------- login dialog -------------------------------------
     private ILoginDialogResult loginLoginDialogResult = null;
 
-    public ILoginDialogResult loginGetLoginDialogResult()
+    private ILoginDialogResult loginGetLoginDialogResult()
     {
         return this.loginLoginDialogResult;
     }
@@ -756,9 +944,119 @@ public class SwingViewNG extends FrameView implements IView
     }
 
     //--------------- wait dialog ----------------------------------------------
-    public void waitSetMessage(String title, String message)
+    private void waitSetMessage(String title, String message)
 	{
 		this.waitDialog.setTitle(title);
         this.waitMessageLabel.setText(message);
 	}
+
+
+
+    //---------------- upload dialog -------------------------------------------
+    private ITransferDialogResult uploadDialogResult = null;
+
+    @Action
+    public void uploadSelectFolderButtonActionPerformed()
+    {
+        this.uploadFileChooser.showOpenDialog(this.getFrame());
+
+        this.uploadFolderTextField.setText( this.uploadFileChooser.getSelectedFile().getAbsolutePath() );
+    }
+
+    @Action
+    public void uploadOkButtonActionPerformed()
+    {
+        //making form invisible
+        this.uploadDialog.setVisible(false);
+
+        this.uploadDialogResult = new TransferDialogResult(null, null, null, null, null);
+
+        //clear input fields
+        //...
+    }
+
+    @Action
+    public void uploadCancelButtonActionPerformed()
+    {
+        //making form invisible
+        this.uploadDialog.setVisible(false);
+
+        this.uploadDialogResult = null;
+
+        //clear input fields
+        //...
+    }
+
+    private void uploadUpdateUploadDestinationComboBoxes(String categoryFilter, String subcategoryFilter)
+    {
+
+
+        DefaultComboBoxModel categoryComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            categoryComboBoxModel.addElement(c.getName());
+        }
+        categoryComboBoxModel.addElement("<auto>");
+        this.uploadCategoryComboBox.setModel(categoryComboBoxModel);
+
+
+
+        DefaultComboBoxModel subcategoryComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            if ( (categoryFilter == null) | (categoryFilter.equals(c.getName())) )
+            {
+                for (ISubcategory s : c.getSubcategoryList())
+                {
+                    subcategoryComboBoxModel.addElement(s.getName());
+                }
+            }
+        }
+        subcategoryComboBoxModel.addElement("<auto>");
+        this.uploadSubcategoryComboBox.setModel(subcategoryComboBoxModel);
+
+
+
+        DefaultComboBoxModel albumComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            if ( (categoryFilter == null) | (categoryFilter.equals(c.getName())) )
+            {
+                for (ISubcategory s : c.getSubcategoryList())
+                {
+                    if ( (subcategoryFilter == null) | (subcategoryFilter.equals(s.getName())) )
+                    {
+                        for (IAlbum a : s.getAlbumList())
+                        {
+                            albumComboBoxModel.addElement(a.getName());
+                        }
+                    }
+                }
+
+                for (IAlbum a : c.getAlbumList())
+                {
+                    albumComboBoxModel.addElement(a.getName());
+                }
+            }
+        }
+        albumComboBoxModel.addElement("<auto>");
+        this.uploadAlbumComboBox.setModel(albumComboBoxModel);
+    }
+
+    private void uploadInitTransferFilter(IRootElement smugmugRoot)
+    {
+        this.smugmugRoot = smugmugRoot;
+
+        this.uploadUpdateUploadDestinationComboBoxes(null, null);
+    }
+
+    private ITransferDialogResult uploadGetUploadDialogResult()
+    {
+        return this.uploadDialogResult;
+    }
+
+
+
+
+
 }

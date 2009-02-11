@@ -490,6 +490,239 @@
         </Component>
       </SubComponents>
     </Container>
+    <Container class="javax.swing.JDialog" name="uploadDialog">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="uploadDialog" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="uploadSeparator2" alignment="0" pref="404" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="uploadFolderLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="uploadFolderTextField" min="-2" pref="224" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="uploadFolderjButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="uploadSeparator1" alignment="1" pref="404" max="32767" attributes="0"/>
+                      <Component id="uploadUploadToLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="uploadScrollPane" alignment="0" max="32767" attributes="1"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="uploadSubcategoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="uploadAlbumLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="uploadCategoryLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="uploadAlbumComboBox" max="32767" attributes="1"/>
+                                      <Component id="uploadSubcategoryComboBox" alignment="0" max="32767" attributes="1"/>
+                                      <Component id="uploadCategoryComboBox" alignment="0" pref="190" max="32767" attributes="1"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <EmptySpace pref="112" max="32767" attributes="0"/>
+                      </Group>
+                      <Component id="uploadOptionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="uploadCancelButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                          <Component id="uploadOkButton" min="-2" pref="52" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="uploadFolderLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="uploadFolderTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="uploadFolderjButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="uploadSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="uploadUploadToLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="uploadCategoryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="uploadCategoryComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="uploadSubcategoryLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="uploadSubcategoryComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="uploadAlbumLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="uploadAlbumComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="uploadScrollPane" min="-2" pref="100" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="uploadSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="uploadOptionsLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="69" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="uploadOkButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="uploadCancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="uploadFolderLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadFolderLabel.text"/>
+            <Property name="name" type="java.lang.String" value="uploadFolderLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="uploadFolderTextField">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadFolderTextField.text"/>
+            <Property name="name" type="java.lang.String" value="uploadFolderTextField" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="uploadFolderjButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="jSmugmugBackup.view.ng.SwingViewNG" id="uploadSelectFolderButtonActionPerformend" methodName="uploadSelectFolderButtonActionPerformend"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="uploadFolderjButton.text"/>
+            <Property name="name" type="java.lang.String" value="uploadFolderjButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JSeparator" name="uploadSeparator1">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="uploadSeparator1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="uploadUploadToLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadUploadToLabel.text"/>
+            <Property name="name" type="java.lang.String" value="uploadUploadToLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="uploadCategoryLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadCategoryLabel.text"/>
+            <Property name="name" type="java.lang.String" value="uploadCategoryLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="uploadCategoryComboBox">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="1">
+                <StringItem index="0" value="&lt;auto&gt;"/>
+              </StringArray>
+            </Property>
+            <Property name="name" type="java.lang.String" value="uploadCategoryComboBox" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="uploadCategoryComboBoxItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="uploadSubcategoryLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadSubcategoryLabel.text"/>
+            <Property name="name" type="java.lang.String" value="uploadSubcategoryLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="uploadSubcategoryComboBox">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="1">
+                <StringItem index="0" value="&lt;auto&gt;"/>
+              </StringArray>
+            </Property>
+            <Property name="name" type="java.lang.String" value="uploadSubcategoryComboBox" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="uploadAlbumLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadAlbumLabel.text"/>
+            <Property name="name" type="java.lang.String" value="uploadAlbumLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="uploadAlbumComboBox">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="1">
+                <StringItem index="0" value="&lt;auto&gt;"/>
+              </StringArray>
+            </Property>
+            <Property name="name" type="java.lang.String" value="uploadAlbumComboBox" noResource="true"/>
+          </Properties>
+        </Component>
+        <Container class="javax.swing.JScrollPane" name="uploadScrollPane">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="uploadScrollPane" noResource="true"/>
+          </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTree" name="uploadTree">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="uploadTree" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JSeparator" name="uploadSeparator2">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="uploadSeparator2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="uploadOptionsLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="uploadOptionsLabel.text"/>
+            <Property name="name" type="java.lang.String" value="uploadOptionsLabel" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="uploadCancelButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="jSmugmugBackup.view.ng.SwingViewNG" id="uploadCancelButtonActionPerformed" methodName="uploadCancelButtonActionPerformed"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="uploadCancelButton.text"/>
+            <Property name="name" type="java.lang.String" value="uploadCancelButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="uploadOkButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="jSmugmugBackup.view.ng.SwingViewNG" id="uploadOkButtonActionPerformed" methodName="uploadOkButtonActionPerformed"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="uploadOkButton.text"/>
+            <Property name="name" type="java.lang.String" value="uploadOkButton" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JFileChooser" name="uploadFileChooser">
+      <Properties>
+        <Property name="dialogTitle" type="java.lang.String" resourceKey="uploadFileChooser.dialogTitle"/>
+        <Property name="fileSelectionMode" type="int" value="1"/>
+        <Property name="name" type="java.lang.String" value="uploadFileChooser" noResource="true"/>
+      </Properties>
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="component" type="javax.swing.JComponent" editor="org.netbeans.modules.form.ComponentChooserEditor">
