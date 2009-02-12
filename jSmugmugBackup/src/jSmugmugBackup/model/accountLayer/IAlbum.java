@@ -15,4 +15,7 @@ public interface IAlbum extends ISmugmugObject
 
 	void addImage(IImage image);
 	Vector<IImage> getImageList();
+
+    int getImageCount();
+    String getLastUpdatedString();
 }

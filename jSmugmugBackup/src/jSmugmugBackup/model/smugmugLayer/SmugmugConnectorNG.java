@@ -28,6 +28,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 {
     private GlobalConfig config = null;
 	private Logger log = null;
+    private SmugmugLocalAlbumCache albumCache = null;
 	
 	// hack: there should be a better way to handle multiple instances of
 	//       the connector without having to ask for username and password again
@@ -70,7 +71,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	public IRootElement getTree()
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a long time) ... ");
+		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a while) ... ");
+
+        if (this.config.getPersistentCacheAccountInfo())
+        {
+            this.albumCache = new SmugmugLocalAlbumCache(login_userID.toString());
+            this.albumCache.loadCacheFromDisk();
+        }
 
 		IRootElement smugmugRoot = new RootElement(SmugmugConnectorNG.login_nickname);
 		
@@ -78,7 +85,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.printJSONObject(tree);
 
 
-        
+        //loop over the tree
+        //cache: validate if albums in cache are still valid
         //statistics: walk over the tree and count the number of files
         //note: the estimated count seems to be slightly (at least 3) lower than the real count, but is sufficient for an approximation
         int estimatedImageCount = 0;
@@ -95,9 +103,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				JSONObject statJsonAlbum = (JSONObject)this.getJSONValue(statJsonSubcategory, "Albums[" + statAlbumIndex + "]");
 				while (statJsonAlbum != null)
 				{
-                    Number albumImageCount = (Number)this.getJSONValue(statJsonAlbum, "ImageCount");
+                    Number albumID          = (Number)this.getJSONValue(statJsonAlbum, "id");
+                    Number albumImageCount  = (Number)this.getJSONValue(statJsonAlbum, "ImageCount");
+                    String albumLastUpdated = (String)this.getJSONValue(statJsonAlbum, "LastUpdated");
                     estimatedImageCount += albumImageCount.intValue();
                     estimatedAlbumCount++;
+
+                    if (this.config.getPersistentCacheAccountInfo())
+                    {
+                        this.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
+                    }
 
                     statAlbumIndex++;
                     statJsonAlbum = (JSONObject)this.getJSONValue(statJsonSubcategory, "Albums[" + statAlbumIndex + "]");
@@ -111,9 +126,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			JSONObject _jsonAlbum = (JSONObject)this.getJSONValue(statJsonCategory, "Albums[" + _albumIndex + "]");
 			while (_jsonAlbum != null)
 			{
-                Number albumImageCount = (Number)this.getJSONValue(_jsonAlbum, "ImageCount");
+                Number albumID          = (Number)this.getJSONValue(_jsonAlbum, "id");
+                Number albumImageCount  = (Number)this.getJSONValue(_jsonAlbum, "ImageCount");
+                String albumLastUpdated = (String)this.getJSONValue(_jsonAlbum, "LastUpdated");
                 estimatedImageCount += albumImageCount.intValue();
                 estimatedAlbumCount++;
+
+                if (this.config.getPersistentCacheAccountInfo())
+                {
+                    this.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
+                }
 
                 _albumIndex++;
 				_jsonAlbum = (JSONObject)this.getJSONValue(statJsonCategory, "Albums[" + _albumIndex + "]");
@@ -123,7 +145,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
         }
         //this.log.printLogLine("totalAlbumCount: " + totalAlbumCount);
-        this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ") ... "); // too low!!
+        this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ", estimatedAlbumCount: " + estimatedAlbumCount + ") ... "); // too low!!
 
 
 
@@ -131,6 +153,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         final double statStep = 0.1;
         double statCurrCompletionStep = statStep;
         int statImageCount = 0;
+
+        int cacheHits = 0;
 
 
 		//iterate over categories
@@ -164,39 +188,58 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 					Number albumID       = (Number)this.getJSONValue(jsonAlbum, "id");
 					String albumName     = (String)this.getJSONValue(jsonAlbum, "Title");
                     String albumKeywords = (String)this.getJSONValue(jsonAlbum, "Keywords");
+                    String albumLastUpdated = (String)this.getJSONValue(jsonAlbum, "LastUpdated");
 					//System.out.println("      albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
-					IAlbum album = new Album(subcategory, albumID.intValue(), albumName, albumKeywords);
-					subcategory.addAlbum(album);
 
-                    
-					//iterate over images
-					JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
-					int imageIndex = 0;
-					JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-					while (jsonImage != null)
-					{
-						Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
-						//String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
-						String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
-						String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
-						String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords");
-						String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
-						Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
-						Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
-						Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
-						String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
-						String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
-						IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
-						album.addImage(image);
+                    IAlbum album = null;
+                    if (this.config.getPersistentCacheAccountInfo())
+                    {
+                        if (this.albumCache.exists(albumID.intValue()))
+                        {
+                            album = new Album(subcategory, this.albumCache.getCachedAlbum(albumID.intValue()));
+                            subcategory.addAlbum(album);
+                            cacheHits++;
+                        }
+                    }
 
-                        //progress stats
-                        statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
-                        if (currCompletion > statCurrCompletionStep) { this.log.printLog( (int)(statCurrCompletionStep*100) + "%..."); statCurrCompletionStep += statStep; }
+                    if (album == null)
+                    {
+                        album = new Album(subcategory, albumID.intValue(), albumName, albumKeywords, albumLastUpdated);
+                        subcategory.addAlbum(album);
 
-						imageIndex++;
-						jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-					}
-					
+                        //iterate over images
+                        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
+                        int imageIndex = 0;
+                        JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+                        while (jsonImage != null)
+                        {
+                            Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
+                            //String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
+                            String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
+                            String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
+                            String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords");
+                            String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
+                            Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
+                            Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
+                            Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
+                            String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
+                            String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
+                            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+                            album.addImage(image);
+
+                            //progress stats
+                            statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
+                            if (currCompletion > statCurrCompletionStep) { this.log.printLog( (int)(statCurrCompletionStep*100) + "%..."); statCurrCompletionStep += statStep; }
+
+                            imageIndex++;
+                            jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+                        }
+
+                        if (this.config.getPersistentCacheAccountInfo())
+                        {
+                            this.albumCache.putAlbum(album);
+                        }
+                    }
 
 					albumIndex++;
 					jsonAlbum = (JSONObject)this.getJSONValue(jsonSubcategory, "Albums[" + albumIndex + "]");
@@ -215,38 +258,59 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 				Number albumID       = (Number)this.getJSONValue(jsonAlbum, "id");
 				String albumName     = (String)this.getJSONValue(jsonAlbum, "Title");
                 String albumKeywords = (String)this.getJSONValue(jsonAlbum, "Keywords");
+                String albumLastUpdated = (String)this.getJSONValue(jsonAlbum, "LastUpdated");
 				//System.out.println("   albumIndex=" + albumIndex + ": id=" + albumID.intValue() + ", name=" + albumName);
-				IAlbum album = new Album(category, albumID.intValue(), albumName, albumKeywords);
-				category.addAlbum(album);
 
-                
-				//iterate over images
-				JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
-				int imageIndex = 0;
-				JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-				while (jsonImage != null)
-				{
-					Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
-					//String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
-					String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
-					String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
-					String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords");
-					String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
-					Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
-					Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
-					Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
-					String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
-					String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
-					IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
-					album.addImage(image);
+                IAlbum album = null;
+                if (this.config.getPersistentCacheAccountInfo())
+                {
+                    if (this.albumCache.exists(albumID.intValue()))
+                    {
+                        album = new Album(category, this.albumCache.getCachedAlbum(albumID.intValue()));
+                        category.addAlbum(album);
+                        cacheHits++;
+                    }
+                }
+
+                if (album == null)
+                {
+                    album = new Album(category, albumID.intValue(), albumName, albumKeywords, albumLastUpdated);
+                    category.addAlbum(album);
+
+
+                    //iterate over images
+                    JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
+                    int imageIndex = 0;
+                    JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+                    while (jsonImage != null)
+                    {
+                        Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
+                        //String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
+                        String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
+                        String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
+                        String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords");
+                        String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
+                        Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
+                        Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
+                        Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
+                        String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
+                        String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
+                        IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+                        album.addImage(image);
+
+                        //progress stats
+                        statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
+                        if (currCompletion > statCurrCompletionStep) { this.log.printLog( (int)(statCurrCompletionStep*100) + "%..."); statCurrCompletionStep += statStep; }
+
+                        imageIndex++;
+                        jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+                    }
                     
-                    //progress stats
-                    statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
-                    if (currCompletion > statCurrCompletionStep) { this.log.printLog( (int)(statCurrCompletionStep*100) + "%..."); statCurrCompletionStep += statStep; }
-
-					imageIndex++;
-					jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-				}                
+                    if (this.config.getPersistentCacheAccountInfo())
+                    {
+                        this.albumCache.putAlbum(album);
+                    }
+                }
                 
 				albumIndex++;
 				jsonAlbum = (JSONObject)this.getJSONValue(jsonCategory, "Albums[" + albumIndex + "]");
@@ -278,9 +342,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             }
         }
         //this.log.printLogLine("checkAlbumCount: " + checkAlbumCount);
-        this.log.printLog("(totalImageCount: " + totalImageCount + ") ... ");
-        
+        this.log.printLog("(totalImageCount: " + totalImageCount + ", totalAlbumCount: " + totalAlbumCount + ", cacheHits: " + cacheHits + ") ... ");
 
+        this.albumCache.saveCacheToDisk();
 
         this.log.printLogLine("ok");
 

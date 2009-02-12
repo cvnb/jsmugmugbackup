@@ -6,7 +6,9 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
-public abstract class SmugmugObject implements ISmugmugObject
+import java.io.Serializable;
+
+public abstract class SmugmugObject implements ISmugmugObject, Serializable
 {
 	private ISmugmugObject parent = null;
 	private int id = -1;

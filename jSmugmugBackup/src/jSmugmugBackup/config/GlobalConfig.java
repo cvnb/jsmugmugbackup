@@ -43,17 +43,18 @@ public class GlobalConfig
    private final String internconstantXMLConfigFilename = "config.xml";
 
    // constants --> getter
-   private final String constantVersion                 = "0.7 (dev)";
-   private final String constantSmugmugUserAgentString  = "jSmugmugBackup/v" + this.constantVersion;
-   private final String constantSmugmugServerURL        = "https://api.smugmug.com/hack/json/1.2.0/";
-   private final String constantSmugmugAPIKey           = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
-   private final String constantSmugmugAPIVersion       = "1.2.0";
-   private final int    constantRetryWait               = 20000; //time to wait before retrying
-   private final boolean constantHeavyRelogin           = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
+   private final String constantVersion                     = "0.7 (dev)";
+   private final String constantSmugmugUserAgentString      = "jSmugmugBackup/v" + this.constantVersion;
+   private final String constantSmugmugServerURL            = "https://api.smugmug.com/hack/json/1.2.0/";
+   private final String constantSmugmugAPIKey               = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
+   private final String constantSmugmugAPIVersion           = "1.2.0";
+   private final int    constantRetryWait                   = 20000; //time to wait before retrying
+   private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
-   private final int    constantUploadFileSizeLimit     = 512*1024*1024; //512MB
-   private final String constantUploadIgnoreFilePostfix = ".jSmugmugBackup-upload-ignore.tag";
-   private final String constantPixelFilename           = "res/pixel.jpg";
+   private final int    constantUploadFileSizeLimit         = 512*1024*1024; //512MB
+   private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
+   private final String constantPixelFilename               = "res/pixel.jpg";
+   private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
    private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp"}; //...hope thats all possible types
    private final String constantHelpNotes =
@@ -127,8 +128,9 @@ public class GlobalConfig
 
 
    // persistent options --> getter, xml
-   private String persistentLogfile = null;
+   private String  persistentLogfile = null;
    private boolean persistentCheckMD5Sums;
+   private boolean persistentCacheAccountInfo;
    //private String  persistentDefaultUsername = ""; //don't activate this yet
    //private boolean persistentCaseSensitiveImageNames = true;
    //private boolean persistentCaseSensitiveFolderNames = true;
@@ -169,6 +171,12 @@ public class GlobalConfig
        this.persistentCheckMD5Sums = Boolean.parseBoolean(nodes.item(0).getTextContent());
        //System.out.println("persistentCheckMD5Sums: " + this.persistentCheckMD5Sums);
 
+       // persistentCachefilePrefix
+       nodes = doc.getElementsByTagName("cacheAccountInfo");
+       if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
+       this.persistentCacheAccountInfo = Boolean.parseBoolean(nodes.item(0).getTextContent());
+       //System.out.println("persistentCachefilePrefix: " + this.persistentCachefilePrefix);
+
    }
 
    private void storeConfig()
@@ -188,6 +196,7 @@ public class GlobalConfig
    public int      getConstantUploadFileSizeLimit()       { return this.constantUploadFileSizeLimit; }
    public String   getConstantUploadIgnoreFilePostfix()   { return this.constantUploadIgnoreFilePostfix; }
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }
+   public String   getConstantAlbumCacheFilenamePrefix()  { return this.constantAlbumCacheFilenamePrefix; }
    public String[] getConstantSupportedFileTypes_Images() { return this.constantSupportedFileTypes_Images; }
    public String[] getConstantSupportedFileTypes_Videos() { return this.constantSupportedFileTypes_Videos; }
    public String   getConstantHelpNotes()                 { return this.constantHelpNotes; }
@@ -200,6 +209,7 @@ public class GlobalConfig
    //persistant getter
    public boolean getPersistentCheckMD5Sums() { return this.persistentCheckMD5Sums; }
    public String getPersistentLogfile() { return persistentLogfile; }
+   public boolean getPersistentCacheAccountInfo() { return this.persistentCacheAccountInfo; }
 
 
    //runtime getters and setters

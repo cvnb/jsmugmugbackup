@@ -3,6 +3,7 @@
     <config>
         <logfile>jSmugmugBackup.log</logfile>
         <checkMD5Sums>false</checkMD5Sums>
+        <cacheAccountInfo>true</cacheAccountInfo>
     </config>
 </jSmugmugBackup>
 
