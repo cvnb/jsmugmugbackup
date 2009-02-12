@@ -261,7 +261,7 @@ public class AccountListingProxy implements IAccountListingProxy
         if (albumID == 0) //album doesn't exist, so create one
         {
         	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumName, albumTags);
-        	this.addAlbum(categoryID, subCategoryID, albumID, albumName, albumKeywords);
+        	this.addAlbum(categoryID, subCategoryID, albumID, albumName, albumKeywords, "<internally created>");
         }
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
@@ -670,9 +670,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addSubcategory: ERROR!");
 	}
-	private void addAlbum(int categoryID, int subcategoryID, int id, String name, String albumKeywords)
+	private void addAlbum(int categoryID, int subcategoryID, int id, String name, String albumKeywords, String lastUpdatedString)
 	{
-		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name, albumKeywords); return; }
+		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name, albumKeywords, lastUpdatedString); return; }
 		
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
@@ -682,7 +682,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (s.getID() == subcategoryID)
 					{
-						s.addAlbum( new Album(s, id, name, albumKeywords) );
+						s.addAlbum( new Album(s, id, name, albumKeywords, lastUpdatedString) );
 						return;
 					}
 				}
@@ -691,13 +691,13 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addAlbum: ERROR!");		
 	}
-	private void addAlbum(int categoryID, int id, String name, String albumKeywords)
+	private void addAlbum(int categoryID, int id, String name, String albumKeywords, String lastUpdatedString)
 	{
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
-				c.addAlbum( new Album(c, id, name, albumKeywords) );
+				c.addAlbum( new Album(c, id, name, albumKeywords, lastUpdatedString) );
 				return;
 			}
 		}

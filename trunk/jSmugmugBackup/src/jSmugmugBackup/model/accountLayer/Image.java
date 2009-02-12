@@ -7,10 +7,11 @@
 package jSmugmugBackup.model.accountLayer;
 
 import jSmugmugBackup.model.Helper;
+import java.io.Serializable;
 import java.util.Stack;
 import java.util.Vector;
 
-public class Image extends SmugmugObject implements IImage
+public class Image extends SmugmugObject implements IImage, Serializable
 {
 	private String caption = null;
 	private Vector<String> tags = null;
@@ -41,6 +42,13 @@ public class Image extends SmugmugObject implements IImage
 		this.md5 = md5;
 		this.originalURL = originalURL;
 	}
+
+    //special copy constructor
+    public Image(IAlbum parentAlbum, IImage image)
+    {
+        this(parentAlbum, image.getID(), image.getName(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), image.getMD5(), image.getOriginalURL());
+    }
+
 
 	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_IMAGE; }
 
