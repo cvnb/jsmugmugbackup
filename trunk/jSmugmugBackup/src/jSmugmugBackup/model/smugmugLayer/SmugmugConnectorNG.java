@@ -71,6 +71,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	public IRootElement getTree()
 	{
+        if (SmugmugConnectorNG.login_sessionID == null) { return null; }
+        
+
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a while) ... ");
 
         if (this.config.getPersistentCacheAccountInfo())

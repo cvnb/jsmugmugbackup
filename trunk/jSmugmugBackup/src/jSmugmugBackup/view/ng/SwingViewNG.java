@@ -7,6 +7,7 @@ package jSmugmugBackup.view.ng;
 import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.*;
 import jSmugmugBackup.model.accountLayer.*;
+import jSmugmugBackup.model.queue.TransferQueueItemActionEnum;
 import jSmugmugBackup.view.*;
 
 import javax.swing.tree.TreeModel;
@@ -116,14 +117,14 @@ public class SwingViewNG extends FrameView implements IView
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        loginButton = new javax.swing.JButton();
-        logtextareaScrollPane = new javax.swing.JScrollPane();
+        mainLoginButton = new javax.swing.JButton();
+        mainLogtextareaScrollPane = new javax.swing.JScrollPane();
         logTextArea = new javax.swing.JTextArea();
-        accountScrollPane = new javax.swing.JScrollPane();
-        accountTree = new javax.swing.JTree();
-        listButton = new javax.swing.JButton();
-        uploadButton = new javax.swing.JButton();
-        downloadButton = new javax.swing.JButton();
+        mainAccountScrollPane = new javax.swing.JScrollPane();
+        mainAccountTree = new javax.swing.JTree();
+        mainUploadButton = new javax.swing.JButton();
+        mainDownloadButton = new javax.swing.JButton();
+        mainExitButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -170,35 +171,59 @@ public class SwingViewNG extends FrameView implements IView
         uploadCancelButton = new javax.swing.JButton();
         uploadOkButton = new javax.swing.JButton();
         uploadFileChooser = new javax.swing.JFileChooser();
+        transferDialog = new javax.swing.JDialog();
+        transferActionLabel = new javax.swing.JLabel();
+        transferFolderLabel = new javax.swing.JLabel();
+        transferFolderTextField = new javax.swing.JTextField();
+        transferSelectFolderButton = new javax.swing.JButton();
+        transferSeparator1 = new javax.swing.JSeparator();
+        transferToLabel = new javax.swing.JLabel();
+        transferCategoryLabel = new javax.swing.JLabel();
+        transferSubcategoryLabel = new javax.swing.JLabel();
+        transferAlbumLabel = new javax.swing.JLabel();
+        transferSubcategoryComboBox = new javax.swing.JComboBox();
+        transferCategoryComboBox = new javax.swing.JComboBox();
+        transferAlbumComboBox = new javax.swing.JComboBox();
+        transferScrollPane = new javax.swing.JScrollPane();
+        transferTree = new javax.swing.JTree();
+        transferSeparator2 = new javax.swing.JSeparator();
+        transferOptionsLabel = new javax.swing.JLabel();
+        transferCancelButton = new javax.swing.JButton();
+        transferOkButton = new javax.swing.JButton();
+        transferFileChooser = new javax.swing.JFileChooser();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(jSmugmugBackup.view.ng.SwingViewNGStarterApp.class).getContext().getResourceMap(SwingViewNG.class);
-        loginButton.setText(resourceMap.getString("loginButton.text")); // NOI18N
-        loginButton.setName("loginButton"); // NOI18N
+        mainLoginButton.setText(resourceMap.getString("mainLoginButton.text")); // NOI18N
+        mainLoginButton.setName("mainLoginButton"); // NOI18N
 
-        logtextareaScrollPane.setName("logtextareaScrollPane"); // NOI18N
+        mainLogtextareaScrollPane.setName("mainLogtextareaScrollPane"); // NOI18N
 
         logTextArea.setColumns(20);
         logTextArea.setRows(5);
         logTextArea.setName("logTextArea"); // NOI18N
-        logtextareaScrollPane.setViewportView(logTextArea);
+        mainLogtextareaScrollPane.setViewportView(logTextArea);
 
-        accountScrollPane.setName("accountScrollPane"); // NOI18N
+        mainAccountScrollPane.setName("mainAccountScrollPane"); // NOI18N
 
-        accountTree.setName("accountTree"); // NOI18N
-        accountScrollPane.setViewportView(accountTree);
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
+        mainAccountTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        mainAccountTree.setName("mainAccountTree"); // NOI18N
+        mainAccountScrollPane.setViewportView(mainAccountTree);
 
-        listButton.setText(resourceMap.getString("listButton.text")); // NOI18N
-        listButton.setEnabled(false);
-        listButton.setName("listButton"); // NOI18N
+        mainUploadButton.setText(resourceMap.getString("mainUploadButton.text")); // NOI18N
+        mainUploadButton.setEnabled(false);
+        mainUploadButton.setName("mainUploadButton"); // NOI18N
 
-        uploadButton.setText(resourceMap.getString("uploadButton.text")); // NOI18N
-        uploadButton.setEnabled(false);
-        uploadButton.setName("uploadButton"); // NOI18N
+        mainDownloadButton.setText(resourceMap.getString("mainDownloadButton.text")); // NOI18N
+        mainDownloadButton.setEnabled(false);
+        mainDownloadButton.setName("mainDownloadButton"); // NOI18N
 
-        downloadButton.setText(resourceMap.getString("downloadButton.text")); // NOI18N
-        downloadButton.setName("downloadButton"); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(jSmugmugBackup.view.ng.SwingViewNGStarterApp.class).getContext().getActionMap(SwingViewNG.class, this);
+        mainExitButton.setAction(actionMap.get("mainExitButtonActionPerformed")); // NOI18N
+        mainExitButton.setText(resourceMap.getString("mainExitButton.text")); // NOI18N
+        mainExitButton.setName("mainExitButton"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -206,15 +231,15 @@ public class SwingViewNG extends FrameView implements IView
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addComponent(mainAccountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mainLogtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(uploadButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loginButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                        .addComponent(listButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                        .addComponent(downloadButton, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addComponent(mainDownloadButton, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE)
+                        .addComponent(mainUploadButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(mainLoginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                        .addComponent(mainExitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -223,18 +248,18 @@ public class SwingViewNG extends FrameView implements IView
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(accountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
+                        .addComponent(mainAccountScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(37, 37, 37)
-                        .addComponent(loginButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(listButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(uploadButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(downloadButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
-                        .addComponent(logtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(mainLoginButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(mainUploadButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(mainDownloadButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(mainExitButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                        .addComponent(mainLogtextareaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -249,7 +274,6 @@ public class SwingViewNG extends FrameView implements IView
         loginMenuItem.setName("loginMenuItem"); // NOI18N
         fileMenu.add(loginMenuItem);
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(jSmugmugBackup.view.ng.SwingViewNGStarterApp.class).getContext().getActionMap(SwingViewNG.class, this);
         exitMenuItem.setAction(actionMap.get("quit")); // NOI18N
         exitMenuItem.setName("exitMenuItem"); // NOI18N
         fileMenu.add(exitMenuItem);
@@ -591,6 +615,157 @@ public class SwingViewNG extends FrameView implements IView
         uploadFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         uploadFileChooser.setName("uploadFileChooser"); // NOI18N
 
+        transferDialog.setTitle(resourceMap.getString("transferDialog.title")); // NOI18N
+        transferDialog.setModal(true);
+        transferDialog.setName("transferDialog"); // NOI18N
+
+        transferActionLabel.setText(resourceMap.getString("transferActionLabel.text")); // NOI18N
+        transferActionLabel.setName("transferActionLabel"); // NOI18N
+
+        transferFolderLabel.setText(resourceMap.getString("transferFolderLabel.text")); // NOI18N
+        transferFolderLabel.setName("transferFolderLabel"); // NOI18N
+
+        transferFolderTextField.setText(resourceMap.getString("transferFolderTextField.text")); // NOI18N
+        transferFolderTextField.setName("transferFolderTextField"); // NOI18N
+
+        transferSelectFolderButton.setAction(actionMap.get("transferSelectFolderButtonActionPerformed")); // NOI18N
+        transferSelectFolderButton.setText(resourceMap.getString("transferSelectFolderButton.text")); // NOI18N
+        transferSelectFolderButton.setName("transferSelectFolderButton"); // NOI18N
+
+        transferSeparator1.setName("transferSeparator1"); // NOI18N
+
+        transferToLabel.setText(resourceMap.getString("transferToLabel.text")); // NOI18N
+        transferToLabel.setName("transferToLabel"); // NOI18N
+
+        transferCategoryLabel.setText(resourceMap.getString("transferCategoryLabel.text")); // NOI18N
+        transferCategoryLabel.setName("transferCategoryLabel"); // NOI18N
+
+        transferSubcategoryLabel.setText(resourceMap.getString("transferSubcategoryLabel.text")); // NOI18N
+        transferSubcategoryLabel.setName("transferSubcategoryLabel"); // NOI18N
+
+        transferAlbumLabel.setText(resourceMap.getString("transferAlbumLabel.text")); // NOI18N
+        transferAlbumLabel.setName("transferAlbumLabel"); // NOI18N
+
+        transferSubcategoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
+        transferSubcategoryComboBox.setName("transferSubcategoryComboBox"); // NOI18N
+        transferSubcategoryComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                transferSubcategoryComboBoxItemStateChanged(evt);
+            }
+        });
+
+        transferCategoryComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
+        transferCategoryComboBox.setName("transferCategoryComboBox"); // NOI18N
+        transferCategoryComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                transferCategoryComboBoxItemStateChanged(evt);
+            }
+        });
+
+        transferAlbumComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "<auto>" }));
+        transferAlbumComboBox.setName("transferAlbumComboBox"); // NOI18N
+
+        transferScrollPane.setName("transferScrollPane"); // NOI18N
+
+        transferTree.setName("transferTree"); // NOI18N
+        transferScrollPane.setViewportView(transferTree);
+
+        transferSeparator2.setName("transferSeparator2"); // NOI18N
+
+        transferOptionsLabel.setText(resourceMap.getString("transferOptionsLabel.text")); // NOI18N
+        transferOptionsLabel.setName("transferOptionsLabel"); // NOI18N
+
+        transferCancelButton.setAction(actionMap.get("transferCancelButtonActionPerformed")); // NOI18N
+        transferCancelButton.setText(resourceMap.getString("transferCancelButton.text")); // NOI18N
+        transferCancelButton.setName("transferCancelButton"); // NOI18N
+
+        transferOkButton.setAction(actionMap.get("transferOkButtonActionPerformed")); // NOI18N
+        transferOkButton.setText(resourceMap.getString("transferOkButton.text")); // NOI18N
+        transferOkButton.setName("transferOkButton"); // NOI18N
+
+        javax.swing.GroupLayout transferDialogLayout = new javax.swing.GroupLayout(transferDialog.getContentPane());
+        transferDialog.getContentPane().setLayout(transferDialogLayout);
+        transferDialogLayout.setHorizontalGroup(
+            transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(transferDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(transferSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                    .addComponent(transferSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
+                    .addComponent(transferActionLabel)
+                    .addComponent(transferToLabel)
+                    .addGroup(transferDialogLayout.createSequentialGroup()
+                        .addComponent(transferFolderLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(transferFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(transferSelectFolderButton))
+                    .addGroup(transferDialogLayout.createSequentialGroup()
+                        .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(transferScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, transferDialogLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(transferSubcategoryLabel)
+                                    .addComponent(transferCategoryLabel)
+                                    .addComponent(transferAlbumLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(transferCategoryComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(transferAlbumComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(transferSubcategoryComboBox, 0, 174, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE))
+                    .addComponent(transferOptionsLabel))
+                .addContainerGap())
+            .addGroup(transferDialogLayout.createSequentialGroup()
+                .addGap(62, 62, 62)
+                .addComponent(transferCancelButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
+                .addComponent(transferOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(118, 118, 118))
+        );
+        transferDialogLayout.setVerticalGroup(
+            transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(transferDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(transferActionLabel)
+                .addGap(18, 18, 18)
+                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(transferFolderLabel)
+                    .addComponent(transferFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(transferSelectFolderButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(transferSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(transferToLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(transferCategoryLabel)
+                    .addComponent(transferCategoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(transferSubcategoryLabel)
+                    .addComponent(transferSubcategoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(transferAlbumLabel)
+                    .addComponent(transferAlbumComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(transferScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(transferSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(transferOptionsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(transferCancelButton)
+                    .addComponent(transferOkButton))
+                .addGap(29, 29, 29))
+        );
+
+        transferFileChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        transferFileChooser.setName("transferFileChooser"); // NOI18N
+
         setComponent(mainPanel);
         setMenuBar(menuBar);
         setStatusBar(statusPanel);
@@ -602,19 +777,37 @@ public class SwingViewNG extends FrameView implements IView
         this.log.printLogLine((String)evt.getItem());
     }//GEN-LAST:event_uploadCategoryComboBoxItemStateChanged
 
+    private void transferCategoryComboBoxItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_transferCategoryComboBoxItemStateChanged
+    {//GEN-HEADEREND:event_transferCategoryComboBoxItemStateChanged
+        // TODO add your handling code here:
+        
+        //this.log.printLogLine((String)evt.getItem());
+        this.log.printLogLine("selected: " + (String)this.transferCategoryComboBox.getSelectedItem() + "." + (String)this.transferSubcategoryComboBox.getSelectedItem() + "." + (String)this.transferAlbumComboBox.getSelectedItem());
+
+        String categoryFilter = (String)this.transferCategoryComboBox.getSelectedItem();
+        String subcategoryFilter = (String)this.transferSubcategoryComboBox.getSelectedItem();
+        this.transferUpdateTransferDestinationComboBoxes(categoryFilter, this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement);
+    }//GEN-LAST:event_transferCategoryComboBoxItemStateChanged
+
+    private void transferSubcategoryComboBoxItemStateChanged(java.awt.event.ItemEvent evt)//GEN-FIRST:event_transferSubcategoryComboBoxItemStateChanged
+    {//GEN-HEADEREND:event_transferSubcategoryComboBoxItemStateChanged
+        // TODO add your handling code here:
+        //this.log.printLogLine((String)evt.getItem());
+        this.log.printLogLine("selected: " + (String)this.transferCategoryComboBox.getSelectedItem() + "." + (String)this.transferSubcategoryComboBox.getSelectedItem() + "." + (String)this.transferAlbumComboBox.getSelectedItem());
+
+        String categoryFilter = (String)this.transferCategoryComboBox.getSelectedItem();
+        String subcategoryFilter = (String)this.transferSubcategoryComboBox.getSelectedItem();
+        this.transferUpdateTransferDestinationComboBoxes(categoryFilter, subcategoryFilter, this.transferComboBoxWildcardElement);
+    }//GEN-LAST:event_transferSubcategoryComboBoxItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane accountScrollPane;
-    private javax.swing.JTree accountTree;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JButton downloadButton;
     private javax.swing.JDialog downloadDialog;
     private javax.swing.JButton folderButton;
     private javax.swing.JLabel folderLabel;
     private javax.swing.JTextField folderTextField;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JButton listButton;
     private javax.swing.JTextArea logTextArea;
-    private javax.swing.JButton loginButton;
     private javax.swing.JButton loginCancelButton;
     private javax.swing.JDialog loginDialog;
     private javax.swing.JMenuItem loginMenuItem;
@@ -623,17 +816,42 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JPasswordField loginPasswordPasswordField;
     private javax.swing.JLabel loginUsernameLabel;
     private javax.swing.JTextField loginUsernameTextField;
-    private javax.swing.JScrollPane logtextareaScrollPane;
+    private javax.swing.JScrollPane mainAccountScrollPane;
+    private javax.swing.JTree mainAccountTree;
+    private javax.swing.JButton mainDownloadButton;
+    private javax.swing.JButton mainExitButton;
+    private javax.swing.JButton mainLoginButton;
+    private javax.swing.JScrollPane mainLogtextareaScrollPane;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JButton mainUploadButton;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JButton okButton;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JLabel transferActionLabel;
+    private javax.swing.JComboBox transferAlbumComboBox;
+    private javax.swing.JLabel transferAlbumLabel;
+    private javax.swing.JButton transferCancelButton;
+    private javax.swing.JComboBox transferCategoryComboBox;
+    private javax.swing.JLabel transferCategoryLabel;
+    private javax.swing.JDialog transferDialog;
+    private javax.swing.JFileChooser transferFileChooser;
+    private javax.swing.JLabel transferFolderLabel;
+    private javax.swing.JTextField transferFolderTextField;
+    private javax.swing.JButton transferOkButton;
+    private javax.swing.JLabel transferOptionsLabel;
+    private javax.swing.JScrollPane transferScrollPane;
+    private javax.swing.JButton transferSelectFolderButton;
+    private javax.swing.JSeparator transferSeparator1;
+    private javax.swing.JSeparator transferSeparator2;
+    private javax.swing.JComboBox transferSubcategoryComboBox;
+    private javax.swing.JLabel transferSubcategoryLabel;
+    private javax.swing.JLabel transferToLabel;
+    private javax.swing.JTree transferTree;
     private javax.swing.JComboBox uploadAlbumComboBox;
     private javax.swing.JLabel uploadAlbumLabel;
-    private javax.swing.JButton uploadButton;
     private javax.swing.JButton uploadCancelButton;
     private javax.swing.JComboBox uploadCategoryComboBox;
     private javax.swing.JLabel uploadCategoryLabel;
@@ -686,7 +904,7 @@ public class SwingViewNG extends FrameView implements IView
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<empty>");
         DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
-        this.accountTree.setModel(treeModel);
+        this.mainAccountTree.setModel(treeModel);
 
     }
 
@@ -701,8 +919,16 @@ public class SwingViewNG extends FrameView implements IView
 //        return loginToken;
 //    }
 
+    @Action
+    public void mainExitButtonActionPerformed()
+    {
+        this.model.quitApplication();
+    }
+
     public void updateFileListing(IRootElement smugmugRoot)
     {
+        if (smugmugRoot == null) { return; }
+
         this.smugmugRoot = smugmugRoot;
 
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(this.smugmugRoot.getName());
@@ -739,7 +965,7 @@ public class SwingViewNG extends FrameView implements IView
 			rootNode.add(categoryTreeNode);
 		}
 
-        this.accountTree.setModel( new DefaultTreeModel(rootNode) );
+        this.mainAccountTree.setModel( new DefaultTreeModel(rootNode) );
 
 
         /*
@@ -750,14 +976,16 @@ public class SwingViewNG extends FrameView implements IView
 		}
         */
 
-        // enable upload button
-        this.uploadButton.setEnabled(true);
+        // enable buttons
+        this.mainUploadButton.setEnabled(true);
+        this.mainDownloadButton.setEnabled(true);
     }
 
     @Action
     public ILoginDialogResult showLoginDialog()
     {
-        this.loginDialog.setSize(250, 150);
+        this.loginDialog.setBounds(this.getFrame().getX()+100, this.getFrame().getY()+100, 250, 150);
+        //this.loginDialog.setSize(250, 150);
         this.loginDialog.setVisible(true);
 
         return this.loginGetLoginDialogResult();
@@ -780,6 +1008,7 @@ public class SwingViewNG extends FrameView implements IView
         this.uploadDialog.setVisible(true);
 
 
+
         SwingViewNGUploadDialog uploadDialog = new SwingViewNGUploadDialog(this.getFrame(), true);
         uploadDialog.initTransferFilter(this.smugmugRoot);
         uploadDialog.setVisible(true);
@@ -793,11 +1022,15 @@ public class SwingViewNG extends FrameView implements IView
     public ITransferDialogResult showDownloadDialog()
     {
         
-        //this.log.printLogLine("yes");
-        this.downloadDialog.setSize(200, 200);
-        this.downloadDialog.setVisible(true);
+        //this.downloadDialog.setSize(200, 200);
+        //this.downloadDialog.setVisible(true);
 
-        return null;
+        this.transferCustomizeTransferDialog(TransferQueueItemActionEnum.DOWNLOAD);
+        this.transferInitTransferFilter();
+        this.transferDialog.setSize(410, 480);
+        this.transferDialog.setVisible(true);
+
+        return this.transferGetTransferDialogResult();
     }
     
 
@@ -846,18 +1079,20 @@ public class SwingViewNG extends FrameView implements IView
 
     public void addLoginButtonListener(ActionListener listener)
     {
-        this.loginButton.addActionListener(listener);
+        this.mainLoginButton.addActionListener(listener);
         this.loginMenuItem.addActionListener(listener);
     }
 
     public void addListButtonListener(ActionListener listener)
     {
-        this.listButton.addActionListener(listener);
+        /* todo: nothing to register yet */
+
+        //this.listButton.addActionListener(listener);
     }
 
     public void addUploadDialogButtonListener(ActionListener listener)
     {
-        this.uploadButton.addActionListener(listener);
+        this.mainUploadButton.addActionListener(listener);
     }
 
     public void addSortButtonListener(ActionListener listener)
@@ -873,7 +1108,7 @@ public class SwingViewNG extends FrameView implements IView
 
     public void addDownloadDialogButtonListener(ActionListener listener)
     {
-        this.downloadButton.addActionListener(listener);
+        this.mainDownloadButton.addActionListener(listener);
     }
 
     public void addDownloadStartButtonListener(ActionListener listener)
@@ -1056,6 +1291,129 @@ public class SwingViewNG extends FrameView implements IView
     }
 
 
+    //--------------------- transfer Dialog ------------------------------------
+    private ITransferDialogResult transferDialogResult = null;
+    private String transferComboBoxWildcardElement = "<empty>";
+
+    private void transferCustomizeTransferDialog(TransferQueueItemActionEnum action)
+    {
+        if (action.equals(TransferQueueItemActionEnum.DOWNLOAD))
+        {
+            this.transferActionLabel.setText("download:");
+            this.transferFolderLabel.setText("target:");
+            this.transferToLabel.setText("download:");
+            this.transferOptionsLabel.setText("download options:");
+
+            //this.transferComboBoxWildcardElement = "<all>";
+
+        }
+        else if (action.equals(TransferQueueItemActionEnum.UPLOAD))
+        {
+            //todo:
+
+        }
+
+        //this.transferInitTransferFilter();
+    }
+
+    @Action
+    public void transferSelectFolderButtonActionPerformed()
+    {
+        this.transferFileChooser.showOpenDialog(this.getFrame());
+        this.transferFolderTextField.setText(this.transferFileChooser.getSelectedFile().getAbsolutePath());
+    }
+
+    @Action
+    public void transferOkButtonActionPerformed()
+    {
+        //making form invisible
+        this.transferDialog.setVisible(false);
+
+        this.transferDialogResult = new TransferDialogResult( (String)this.transferCategoryComboBox.getSelectedItem(),
+                                                              (String)this.transferSubcategoryComboBox.getSelectedItem(),
+                                                              (String)this.transferAlbumComboBox.getSelectedItem(),
+                                                              this.transferFolderTextField.getText(),
+                                                              null );
+
+        //clear input fields
+        //...
+    }
+
+    @Action
+    public void transferCancelButtonActionPerformed()
+    {
+        //making form invisible
+        this.transferDialog.setVisible(false);
+
+        this.transferDialogResult = null;
+
+        //clear input fields
+        //...
+    }
+
+    private void transferUpdateTransferDestinationComboBoxes(String categoryFilter, String subcategoryFilter, String albumFilter)
+    {
+
+        DefaultComboBoxModel categoryComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            categoryComboBoxModel.addElement(c.getName());
+        }
+        categoryComboBoxModel.addElement(this.transferComboBoxWildcardElement);
+        categoryComboBoxModel.setSelectedItem(categoryFilter);
+        this.transferCategoryComboBox.setModel(categoryComboBoxModel);
+
+
+
+        DefaultComboBoxModel subcategoryComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            if ( (categoryFilter.equals(this.transferComboBoxWildcardElement)) || (categoryFilter.equals(c.getName())) )
+            {
+                for (ISubcategory s : c.getSubcategoryList()) { subcategoryComboBoxModel.addElement(s.getName()); }
+            }
+        }
+        subcategoryComboBoxModel.addElement(this.transferComboBoxWildcardElement);
+        subcategoryComboBoxModel.setSelectedItem(subcategoryFilter);
+        this.transferSubcategoryComboBox.setModel(subcategoryComboBoxModel);
+
+
+
+        DefaultComboBoxModel albumComboBoxModel = new DefaultComboBoxModel();
+        for (ICategory c : smugmugRoot.getCategoryList())
+        {
+            if ( (categoryFilter.equals(this.transferComboBoxWildcardElement)) || (categoryFilter.equals(c.getName())) )
+            {
+                for (ISubcategory s : c.getSubcategoryList())
+                {
+                    if ( (subcategoryFilter.equals(this.transferComboBoxWildcardElement)) || (subcategoryFilter.equals(s.getName())) )
+                    {
+                        for (IAlbum a : s.getAlbumList()) { albumComboBoxModel.addElement(a.getName()); }
+                    }
+                }
+
+                if (subcategoryFilter.equals(this.transferComboBoxWildcardElement))
+                {
+                    for (IAlbum a : c.getAlbumList()) { albumComboBoxModel.addElement(a.getName()); }
+                }
+            }
+
+        }
+        albumComboBoxModel.addElement(this.transferComboBoxWildcardElement);
+        albumComboBoxModel.setSelectedItem(albumFilter);
+        this.transferAlbumComboBox.setModel(albumComboBoxModel);
+    }
+
+
+    private void transferInitTransferFilter()
+    {
+        this.transferUpdateTransferDestinationComboBoxes(this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement);
+    }
+
+    private ITransferDialogResult transferGetTransferDialogResult()
+    {
+        return this.transferDialogResult;
+    }
 
 
 

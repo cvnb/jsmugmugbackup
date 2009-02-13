@@ -60,8 +60,11 @@ public class Model
     }
 
     public void login(ILoginDialogResult loginDialogResult)
-    {        
+    {
+        if (loginDialogResult == null) { return; }
+
         this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
+                
     }
     
     public void list(ITransferDialogResult transferDialogResult)
