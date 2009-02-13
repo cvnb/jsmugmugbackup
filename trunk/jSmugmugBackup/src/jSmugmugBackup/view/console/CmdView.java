@@ -23,16 +23,17 @@ public class CmdView implements IView
 	
 	private ActionListener loginButtonListener = null;
 	private ActionListener uploadDialogButtonListener = null;
-	private ActionListener uploadStartButtonListener = null;
+	//private ActionListener uploadStartButtonListener = null;
 	private ActionListener downloadDialogButtonListener = null;
-	private ActionListener downloadStartButtonListener = null;
+	//private ActionListener downloadStartButtonListener = null;
 	private ActionListener verifyDialogButtonListener = null;
-	private ActionListener verifyStartButtonListener = null;
+	//private ActionListener verifyStartButtonListener = null;
 	private ActionListener deleteDialogButtonListener = null;
-	private ActionListener deleteStartButtonListener = null;
+	//private ActionListener deleteStartButtonListener = null;
 	private ActionListener refreshButtonListener = null;
 	private ActionListener sortButtonListener = null;
 	private ActionListener quitButtonListener = null;
+    private ActionListener processQueueButtonListener = null;
 	
 	
 	public CmdView(Model model, String[] cmd_args)
@@ -65,25 +66,29 @@ public class CmdView implements IView
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.uploadDialogButtonListener.actionPerformed(null);
-			this.uploadStartButtonListener.actionPerformed(null);
+			//this.uploadStartButtonListener.actionPerformed(null);
+            this.processQueueButtonListener.actionPerformed(null);
 		}
 		else if ( this.cmd_args[0].equals("--download") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.downloadDialogButtonListener.actionPerformed(null);
-			this.downloadStartButtonListener.actionPerformed(null);
+			//this.downloadStartButtonListener.actionPerformed(null);
+            this.processQueueButtonListener.actionPerformed(null);
 		}
 		else if ( this.cmd_args[0].equals("--verify") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.verifyDialogButtonListener.actionPerformed(null);
-			this.verifyStartButtonListener.actionPerformed(null);
+			//this.verifyStartButtonListener.actionPerformed(null);
+            this.processQueueButtonListener.actionPerformed(null);
 		}
 		else if ( this.cmd_args[0].equals("--recursive-delete") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.deleteDialogButtonListener.actionPerformed(null);
-			this.deleteStartButtonListener.actionPerformed(null);
+			//this.deleteStartButtonListener.actionPerformed(null);
+            this.processQueueButtonListener.actionPerformed(null);
 		}
 
 		else this.printHelp();
@@ -94,17 +99,18 @@ public class CmdView implements IView
 
 	public void addLoginButtonListener(ActionListener listener)          { this.loginButtonListener = listener; }
 	public void addUploadDialogButtonListener(ActionListener listener)   { this.uploadDialogButtonListener = listener; }
-	public void addUploadStartButtonListener(ActionListener listener)    { this.uploadStartButtonListener = listener; }
+	//public void addUploadStartButtonListener(ActionListener listener)    { this.uploadStartButtonListener = listener; }
 	public void addDownloadDialogButtonListener(ActionListener listener) { this.downloadDialogButtonListener = listener; }
-	public void addDownloadStartButtonListener(ActionListener listener)  { this.downloadStartButtonListener = listener; }
+	//public void addDownloadStartButtonListener(ActionListener listener)  { this.downloadStartButtonListener = listener; }
 	public void addVerifyDialogButtonListener(ActionListener listener)   { this.verifyDialogButtonListener = listener; }
-	public void addVerifyStartButtonListener(ActionListener listener)    { this.verifyStartButtonListener = listener; }
+	//public void addVerifyStartButtonListener(ActionListener listener)    { this.verifyStartButtonListener = listener; }
 	public void addDeleteDialogButtonListener(ActionListener listener)   { this.deleteDialogButtonListener = listener; }
-	public void addDeleteStartButtonListener(ActionListener listener)    { this.deleteStartButtonListener = listener; }
+	//public void addDeleteStartButtonListener(ActionListener listener)    { this.deleteStartButtonListener = listener; }
 	public void addListButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
 	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
-	
+	public void addProcessQueueButtonListener(ActionListener listener)   { this.processQueueButtonListener = listener; }
+
 
 	public void updateFileListing(IRootElement smugmugRoot)
 	{		

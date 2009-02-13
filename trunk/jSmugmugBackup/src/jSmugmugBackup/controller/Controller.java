@@ -24,15 +24,16 @@ public class Controller
         this.view.addListButtonListener(new ListButtonListener());
         this.view.addSortButtonListener(new SortButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
-        this.view.addUploadStartButtonListener(new UploadStartButtonListener());
+        //this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
-        this.view.addDownloadStartButtonListener(new DownloadStartButtonListener());
+        //this.view.addDownloadStartButtonListener(new DownloadStartButtonListener());
         this.view.addVerifyDialogButtonListener(new VerifyDialogButtonListener());
-        this.view.addVerifyStartButtonListener(new VerifyStartButtonListener());
+        //this.view.addVerifyStartButtonListener(new VerifyStartButtonListener());
         this.view.addDeleteDialogButtonListener(new DeleteDialogButtonListener());
-        this.view.addDeleteStartButtonListener(new DeleteStartButtonListener());
+        //this.view.addDeleteStartButtonListener(new DeleteStartButtonListener());
         this.view.addQuitButtonListener(new QuitButtonListener());
-        
+        this.view.addProcessQueueButtonListener(new ProcessQueueButtonListener());
+
         // rotten hack: the Listers must be registered before the CmdView can start
         //              to work. When constructing the object this is not yet the case.
         this.view.start();
@@ -86,13 +87,13 @@ public class Controller
 		}
 	}
 	
-	class UploadStartButtonListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e)
-		{
-			model.startProcessingQueue();
-		}
-	}
+//	class UploadStartButtonListener implements ActionListener
+//	{
+//		public void actionPerformed(ActionEvent e)
+//		{
+//			model.startProcessingQueue();
+//		}
+//	}
 	
 	class DownloadDialogButtonListener implements ActionListener
 	{
@@ -102,13 +103,13 @@ public class Controller
 		}		
 	}
 	
-	class DownloadStartButtonListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e)
-		{
-			model.startProcessingQueue();
-		}		
-	}
+//	class DownloadStartButtonListener implements ActionListener
+//	{
+//		public void actionPerformed(ActionEvent e)
+//		{
+//			model.startProcessingQueue();
+//		}
+//	}
 
 	class VerifyDialogButtonListener implements ActionListener
 	{
@@ -118,13 +119,13 @@ public class Controller
 		}		
 	}
 	
-	class VerifyStartButtonListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e)
-		{
-			//model.startProcessingQueue();
-		}		
-	}	
+//	class VerifyStartButtonListener implements ActionListener
+//	{
+//		public void actionPerformed(ActionEvent e)
+//		{
+//			//model.startProcessingQueue();
+//		}
+//	}
 	
 	class DeleteDialogButtonListener implements ActionListener
 	{
@@ -134,13 +135,13 @@ public class Controller
 		}		
 	}
 	
-	class DeleteStartButtonListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e)
-		{
-			model.startProcessingQueue();
-		}		
-	}
+//	class DeleteStartButtonListener implements ActionListener
+//	{
+//		public void actionPerformed(ActionEvent e)
+//		{
+//			model.startProcessingQueue();
+//		}
+//	}
 	
 	class QuitButtonListener implements ActionListener
 	{
@@ -149,6 +150,14 @@ public class Controller
 			model.quitApplication();			
 		}		
 	}
+
+    class ProcessQueueButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+		{
+			model.startProcessingQueue();
+		}
+    }
 	
     
 }
