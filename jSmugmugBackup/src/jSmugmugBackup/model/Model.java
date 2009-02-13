@@ -291,6 +291,8 @@ public class Model
     
     public void download(ITransferDialogResult transferDialogResult)
     {
+        if (transferDialogResult == null) { return; }
+
 		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
 
         IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());

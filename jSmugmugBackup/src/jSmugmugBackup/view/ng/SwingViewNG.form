@@ -758,20 +758,13 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="transferSeparator2" alignment="0" pref="445" max="32767" attributes="0"/>
-                      <Component id="transferSeparator1" alignment="0" pref="445" max="32767" attributes="1"/>
                       <Component id="transferActionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="transferToLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="transferFolderLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="transferFolderTextField" min="-2" pref="196" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="transferSelectFolderButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="transferScrollPane" alignment="0" max="32767" attributes="1"/>
+                      <Component id="transferOptionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="transferSeparator2" alignment="0" pref="410" max="32767" attributes="0"/>
+                              <Component id="transferScrollPane" alignment="0" pref="410" max="32767" attributes="1"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="12" pref="12" max="12" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -780,25 +773,33 @@
                                       <Component id="transferAlbumLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="transferCategoryComboBox" max="32767" attributes="1"/>
-                                      <Component id="transferAlbumComboBox" alignment="0" max="32767" attributes="1"/>
-                                      <Component id="transferSubcategoryComboBox" alignment="0" pref="174" max="32767" attributes="1"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="transferCategoryComboBox" pref="308" max="32767" attributes="1"/>
+                                      <Component id="transferAlbumComboBox" alignment="0" pref="308" max="32767" attributes="1"/>
+                                      <Component id="transferSubcategoryComboBox" alignment="0" pref="308" max="32767" attributes="1"/>
                                   </Group>
                               </Group>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="transferSeparator1" alignment="0" max="32767" attributes="1"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="transferFolderLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="transferFolderTextField" min="-2" pref="176" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="transferSelectFolderButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="transferOkButton" alignment="1" min="-2" pref="54" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="169" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="transferOptionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="62" max="-2" attributes="0"/>
                   <Component id="transferCancelButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="172" max="32767" attributes="0"/>
-                  <Component id="transferOkButton" min="-2" pref="54" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="118" max="-2" attributes="0"/>
+                  <EmptySpace pref="380" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -836,9 +837,9 @@
                   <Component id="transferScrollPane" min="-2" pref="100" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="transferSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="transferOptionsLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
+                  <EmptySpace pref="44" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="transferCancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="transferOkButton" alignment="3" min="-2" max="-2" attributes="0"/>
