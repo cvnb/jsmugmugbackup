@@ -72,7 +72,11 @@ public class AccountListingProxy implements IAccountListingProxy
 	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords)
 	{
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null)
+        {
+            this.smugmugRoot = this.connector.getTree();
+            if (this.smugmugRoot == null) { return null; }
+        }
 
 		IRootElement result = new RootElement("");
 		
