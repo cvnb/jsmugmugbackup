@@ -13,14 +13,22 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="mainAccountScrollPane" pref="250" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="mainLogtextareaScrollPane" alignment="1" min="-2" pref="251" max="-2" attributes="0"/>
-                      <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="mainDownloadButton" alignment="1" min="0" pref="0" max="32767" attributes="1"/>
-                          <Component id="mainUploadButton" alignment="1" max="32767" attributes="1"/>
-                          <Component id="mainLoginButton" alignment="0" pref="82" max="32767" attributes="1"/>
-                          <Component id="mainExitButton" alignment="0" max="32767" attributes="1"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="mainLogtextareaScrollPane" alignment="1" min="-2" pref="251" max="-2" attributes="0"/>
+                              <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="mainDownloadButton" alignment="1" min="0" pref="0" max="32767" attributes="1"/>
+                                  <Component id="mainUploadButton" alignment="1" max="32767" attributes="1"/>
+                                  <Component id="mainLoginButton" alignment="0" pref="82" max="32767" attributes="1"/>
+                                  <Component id="mainExitButton" alignment="0" max="32767" attributes="1"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="90" max="-2" attributes="0"/>
+                          <Component id="mainProcessQueueButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -44,7 +52,9 @@
                           <Component id="mainDownloadButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="mainExitButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="120" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                          <Component id="mainProcessQueueButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="49" max="32767" attributes="0"/>
                           <Component id="mainLogtextareaScrollPane" min="-2" pref="108" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -120,6 +130,12 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="mainExitButton.text"/>
             <Property name="name" type="java.lang.String" value="mainExitButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="mainProcessQueueButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="mainProcessQueueButton.text"/>
+            <Property name="name" type="java.lang.String" value="mainProcessQueueButton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

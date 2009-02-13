@@ -1,29 +1,24 @@
 todo:
- - GUI
-   - common transfer dialog, which can be parametrized
+
  - fmc
  - global config singleton
    - case-sensitive image/album names (yes/no)
    - upload options (public/unlisted/...)
-   - persistence in xml-file
-   - check md5sums
    - session info
  - use global sessions, simplify call structure
  - verify: what if missing files and left over files neutralize each other???
+ - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html
 
 
  - refresh action listener doesn't make much sense, maybe merge functionality
    with login and throw out "refresh"
  - search for tags
  - store password hash
- - SmugmugObject
-   - reimplements clone() ... make deep copies, rearrange parent links
  - GUI: show pretty waiting animation 
  - speedup in AccountListingProxy by making use of the "parent"-relation 
  - deleting ???
  - make login singleton - http://en.wikipedia.org/wiki/Singleton_pattern
  - supported file types - are all videos of type "MP4"?
- - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html
  - ... and all the things i didn't even think about yet
 
 
