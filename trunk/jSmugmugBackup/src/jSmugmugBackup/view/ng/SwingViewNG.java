@@ -18,12 +18,14 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -701,19 +703,13 @@ public class SwingViewNG extends FrameView implements IView
             .addGroup(transferDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(transferSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
-                    .addComponent(transferSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
                     .addComponent(transferActionLabel)
                     .addComponent(transferToLabel)
-                    .addGroup(transferDialogLayout.createSequentialGroup()
-                        .addComponent(transferFolderLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(transferFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(transferSelectFolderButton))
-                    .addGroup(transferDialogLayout.createSequentialGroup()
-                        .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(transferScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(transferOptionsLabel)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, transferDialogLayout.createSequentialGroup()
+                        .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(transferSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                            .addComponent(transferScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, transferDialogLayout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -721,19 +717,25 @@ public class SwingViewNG extends FrameView implements IView
                                     .addComponent(transferCategoryLabel)
                                     .addComponent(transferAlbumLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(transferCategoryComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(transferAlbumComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(transferSubcategoryComboBox, 0, 174, Short.MAX_VALUE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE))
-                    .addComponent(transferOptionsLabel))
+                                .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(transferCategoryComboBox, 0, 308, Short.MAX_VALUE)
+                                    .addComponent(transferAlbumComboBox, 0, 308, Short.MAX_VALUE)
+                                    .addComponent(transferSubcategoryComboBox, 0, 308, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(transferSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, transferDialogLayout.createSequentialGroup()
+                                    .addComponent(transferFolderLabel)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(transferFolderTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(transferSelectFolderButton)))
+                            .addComponent(transferOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(71, 71, 71)))
                 .addContainerGap())
             .addGroup(transferDialogLayout.createSequentialGroup()
                 .addGap(62, 62, 62)
                 .addComponent(transferCancelButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
-                .addComponent(transferOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(118, 118, 118))
+                .addContainerGap(380, Short.MAX_VALUE))
         );
         transferDialogLayout.setVerticalGroup(
             transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -765,9 +767,9 @@ public class SwingViewNG extends FrameView implements IView
                 .addComponent(transferScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(transferSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(transferOptionsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addGroup(transferDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(transferCancelButton)
                     .addComponent(transferOkButton))
@@ -1320,13 +1322,17 @@ public class SwingViewNG extends FrameView implements IView
             this.transferToLabel.setText("download:");
             this.transferOptionsLabel.setText("download options:");
 
-            //this.transferComboBoxWildcardElement = "<all>";
+            this.transferComboBoxWildcardElement = "<all>";
 
         }
         else if (action.equals(TransferQueueItemActionEnum.UPLOAD))
         {
-            //todo:
+            this.transferActionLabel.setText("upload:");
+            this.transferFolderLabel.setText("source:");
+            this.transferToLabel.setText("upload to:");
+            this.transferOptionsLabel.setText("upload options:");
 
+            this.transferComboBoxWildcardElement = "<auto>";
         }
 
         //this.transferInitTransferFilter();
@@ -1342,17 +1348,25 @@ public class SwingViewNG extends FrameView implements IView
     @Action
     public void transferOkButtonActionPerformed()
     {
-        //making form invisible
-        this.transferDialog.setVisible(false);
+        if ( (!this.transferFolderTextField.getText().equals("")) &&  ((new File(this.transferFolderTextField.getText())).exists()) )
+        {
+            //making form invisible
+            this.transferDialog.setVisible(false);
 
-        this.transferDialogResult = new TransferDialogResult( (String)this.transferCategoryComboBox.getSelectedItem(),
-                                                              (String)this.transferSubcategoryComboBox.getSelectedItem(),
-                                                              (String)this.transferAlbumComboBox.getSelectedItem(),
-                                                              this.transferFolderTextField.getText(),
-                                                              null );
+            this.transferDialogResult = new TransferDialogResult( (String)this.transferCategoryComboBox.getSelectedItem(),
+                                                                  (String)this.transferSubcategoryComboBox.getSelectedItem(),
+                                                                  (String)this.transferAlbumComboBox.getSelectedItem(),
+                                                                  this.transferFolderTextField.getText(),
+                                                                  null );
 
-        //clear input fields
-        //...
+            //clear input fields
+            //...
+        }
+        else
+        {
+            JOptionPane jop = new JOptionPane();
+            jop.showMessageDialog(this.transferDialog, "sorry, you have to select a valid folder");
+        }
     }
 
     @Action
