@@ -103,14 +103,6 @@ public class Controller
 		}		
 	}
 	
-//	class DownloadStartButtonListener implements ActionListener
-//	{
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			model.startProcessingQueue();
-//		}
-//	}
-
 	class VerifyDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -119,14 +111,6 @@ public class Controller
 		}		
 	}
 	
-//	class VerifyStartButtonListener implements ActionListener
-//	{
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			//model.startProcessingQueue();
-//		}
-//	}
-	
 	class DeleteDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -134,14 +118,6 @@ public class Controller
 			model.delete(view.showDeleteDialog());
 		}		
 	}
-	
-//	class DeleteStartButtonListener implements ActionListener
-//	{
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			model.startProcessingQueue();
-//		}
-//	}
 	
 	class QuitButtonListener implements ActionListener
 	{
