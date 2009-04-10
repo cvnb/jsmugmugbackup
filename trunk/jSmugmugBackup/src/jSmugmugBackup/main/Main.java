@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.main;
 
-import jSmugmugBackup.view.console.ConsoleView;
+//import jSmugmugBackup.view.console.ConsoleView;
 import jSmugmugBackup.view.console.CmdView;
 import jSmugmugBackup.controller.Controller;
 import jSmugmugBackup.model.*;
@@ -39,7 +39,7 @@ public class Main {
             SwingViewNGStarterApp.getView().init(model);
             view = SwingViewNGStarterApp.getView();
         }
-        else if (args[0].equals("--console")) { view = new ConsoleView(model); }
+        //else if (args[0].equals("--console")) { view = new ConsoleView(model); }
         else { view = new CmdView(model, args); }
         
         

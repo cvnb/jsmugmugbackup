@@ -284,7 +284,7 @@ public class CmdView implements IView
 		this.log.printLogLine("... up- and downloading files from Smugmug.com");
 		this.log.printLogLine("usage:");
 		this.log.printLogLine("     jSmugmugBackup                          : gui interface");
-		this.log.printLogLine("     jSmugmugBackup --console                : console interface (Java 1.6 only)");
+		//this.log.printLogLine("     jSmugmugBackup --console                : console interface (Java 1.6 only)");
 		this.log.printLogLine("     jSmugmugBackup [action] [options ... ]  : commandline interface");
 		this.log.printLogLine("");
 		this.log.printLogLine("actions:");

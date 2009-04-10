@@ -59,6 +59,8 @@ public class GlobalConfig
    private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp"}; //...hope thats all possible types
    private final String constantHelpNotes =
 		"notes:\n" +
+        " - It is strongly suggestend to stick with the commandline view, since the GUI is currently\n" +
+        "   V E R Y buggy!\n" +
 	    " - Names on smugmug are handled as if they were unique, although it is for instance\n" +
 	    "   possible to have two albums with the same name on smugmug. jSmugmugBackup will\n" +
 	    "   always use the first name the matches and ignore the second entity.\n" +
@@ -75,6 +77,8 @@ public class GlobalConfig
         " - it seems like Smugmug can only handle filenames with ASCII characters\n" +
         "   german (Umlaute) and french special characters are beeing converted, but\n" +
         "   when downloading these images again, the special characters are lost\n" +
+        " - there is no support for international characters other than german and frech (might not\n" +
+        "   be complete)\n" +
         " - verify only reports md5 checksum errors if they occur with an image, checksum errors\n" +
         "   with videos are not reported because videos are converted by smugmug after uploading\n" +
         "   which makes md5 checks fail on all videos\n" +
