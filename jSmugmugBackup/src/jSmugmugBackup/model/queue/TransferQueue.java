@@ -8,6 +8,7 @@ package jSmugmugBackup.model.queue;
 
 import jSmugmugBackup.view.Logger;
 
+import java.awt.event.ActionListener;
 import java.util.Vector;
 import java.util.concurrent.*;
 
@@ -17,13 +18,33 @@ public class TransferQueue implements ITransferQueue
 	private Thread queueProcessorThread;
 	private LinkedBlockingQueue<ITransferQueueItem> queue = null;
 	private Vector<ITransferQueueItem> processedItemList = null;
+    private ActionListener asyncProcessQueueFinishedListener = null;
 
-	public TransferQueue()
+    // Protected constructor is sufficient to suppress unauthorized calls to the constructor
+	protected TransferQueue()
 	{
 		this.log = Logger.getInstance();
 		this.queue = new LinkedBlockingQueue<ITransferQueueItem>();
 		this.processedItemList = new Vector<ITransferQueueItem>();
 	}
+
+    /**
+	 * SingletonHolder is loaded on the first execution of Singleton.getInstance()
+	 * or the first access to SingletonHolder.instance , not before.
+	 */
+	private static class TransferQueueHolder
+	{
+	  private final static TransferQueue INSTANCE = new TransferQueue();
+	}
+
+	public static TransferQueue getInstance()
+	{
+	  return TransferQueueHolder.INSTANCE;
+    }
+
+    public void addASyncProcessQueueFinishedListener(ActionListener listener)   { this.asyncProcessQueueFinishedListener = listener; }
+    //--------------------------------------------------------------------------
+
 	
 	public void add(ITransferQueueItem item)
 	{
@@ -47,7 +68,7 @@ public class TransferQueue implements ITransferQueue
 
 	public void startAsyncProcessing()
 	{
-		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList));
+		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, this.asyncProcessQueueFinishedListener));
 		this.queueProcessorThread.start();
 
 	}
@@ -56,7 +77,7 @@ public class TransferQueue implements ITransferQueue
 	{
 		this.log.printLogLine("TransferQueue.startSyncProcessing()");
 		
-		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList));
+		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, null));
 		this.queueProcessorThread.start();
 		try { this.queueProcessorThread.join(); }
 		catch (InterruptedException e) { e.printStackTrace(); }

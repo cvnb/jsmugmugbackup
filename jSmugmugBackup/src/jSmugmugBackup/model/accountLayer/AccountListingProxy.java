@@ -33,8 +33,8 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
+        this.transferQueue = TransferQueue.getInstance();
 		this.connector = new SmugmugConnectorNG();
-		this.transferQueue = new TransferQueue();
 	}
 	
 //	public void setLoginMethod(ILoginView loginToken)
@@ -566,7 +566,7 @@ public class AccountListingProxy implements IAccountListingProxy
     }
 
 	
-	public void startProcessingQueue()
+	public void startSyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
@@ -606,7 +606,56 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine("ok");
 		
 	}
-	
+
+    public void startASyncProcessingQueue()
+	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
+		// start asyncronous processing
+		this.transferQueue.startAsyncProcessing();
+
+	}
+
+	public void finishASyncProcessingQueue()
+	{
+        //initialize Tree is nesseciary
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+
+		// wait a few secs
+		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs for smugmug to process the images ... ");
+		Helper.pause(this.config.getConstantRetryWait());
+		this.log.printLogLine("ok");
+
+		//collect Results
+		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
+		this.connector.relogin(); //probably not nessceary
+		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+		for (ITransferQueueItem item : processedItemList)
+		{
+			this.transferedBytes += item.getResults().getTransferedBytes();
+
+			// uploaded images:
+			// if item.getAction == upload then add imageid to local data
+			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
+			{
+				//this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
+				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
+
+				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
+				int imageID = Integer.parseInt( imageInfo.get("ImageID") );
+				String imageName = imageInfo.get("ImageName");
+
+				//this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
+
+				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
+			}
+		}
+		this.log.printLogLine("ok");
+
+	}
+
+
 	public long getTransferedBytes() { return this.transferedBytes; }
 	
 	

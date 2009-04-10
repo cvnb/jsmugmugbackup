@@ -23,17 +23,14 @@ public class CmdView implements IView
 	
 	private ActionListener loginButtonListener = null;
 	private ActionListener uploadDialogButtonListener = null;
-	//private ActionListener uploadStartButtonListener = null;
 	private ActionListener downloadDialogButtonListener = null;
-	//private ActionListener downloadStartButtonListener = null;
 	private ActionListener verifyDialogButtonListener = null;
-	//private ActionListener verifyStartButtonListener = null;
 	private ActionListener deleteDialogButtonListener = null;
-	//private ActionListener deleteStartButtonListener = null;
 	private ActionListener refreshButtonListener = null;
 	private ActionListener sortButtonListener = null;
 	private ActionListener quitButtonListener = null;
-    private ActionListener processQueueButtonListener = null;
+    private ActionListener syncProcessQueueButtonListener = null;
+    private ActionListener asyncProcessQueueStartButtonListener = null;
 	
 	
 	public CmdView(Model model, String[] cmd_args)
@@ -51,44 +48,47 @@ public class CmdView implements IView
 		this.log.printLogLine("jSmugmugBackup v" + this.config.getConstantVersion());
 		
 		if ( this.cmd_args.length == 0 ) this.printHelp();
-		else if ( this.cmd_args[0].equals("--help") ) this.printHelp();
-		else if ( this.cmd_args[0].equals("--list") )
+		else if ( this.findArgumentFromCommandline("help") ) this.printHelp();
+		else if ( this.findArgumentFromCommandline("list") )
 		{
 			this.loginButtonListener.actionPerformed(null);	//trigger the login-button action listener
 			this.refreshButtonListener.actionPerformed(null);
 		}
-		else if ( this.cmd_args[0].equals("--sort") )
+		else if ( this.findArgumentFromCommandline("sort") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.sortButtonListener.actionPerformed(null);
 		}
-		else if ( this.cmd_args[0].equals("--upload") )
+		else if ( this.findArgumentFromCommandline("upload") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.uploadDialogButtonListener.actionPerformed(null);
 			//this.uploadStartButtonListener.actionPerformed(null);
-            this.processQueueButtonListener.actionPerformed(null);
+            this.syncProcessQueueButtonListener.actionPerformed(null);
+            //this.asyncProcessQueueStartButtonListener.actionPerformed(null);
 		}
-		else if ( this.cmd_args[0].equals("--download") )
+		else if ( this.findArgumentFromCommandline("download") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.downloadDialogButtonListener.actionPerformed(null);
 			//this.downloadStartButtonListener.actionPerformed(null);
-            this.processQueueButtonListener.actionPerformed(null);
+            this.syncProcessQueueButtonListener.actionPerformed(null);
+            //this.asyncProcessQueueStartButtonListener.actionPerformed(null);
 		}
-		else if ( this.cmd_args[0].equals("--verify") )
+		else if ( this.findArgumentFromCommandline("verify") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.verifyDialogButtonListener.actionPerformed(null);
 			//this.verifyStartButtonListener.actionPerformed(null);
-            this.processQueueButtonListener.actionPerformed(null);
+            this.syncProcessQueueButtonListener.actionPerformed(null);
+            //this.asyncProcessQueueStartButtonListener.actionPerformed(null);
 		}
-		else if ( this.cmd_args[0].equals("--recursive-delete") )
+		else if ( this.findArgumentFromCommandline("recursive-delete") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.deleteDialogButtonListener.actionPerformed(null);
 			//this.deleteStartButtonListener.actionPerformed(null);
-            this.processQueueButtonListener.actionPerformed(null);
+            this.syncProcessQueueButtonListener.actionPerformed(null);
 		}
 
 		else this.printHelp();
@@ -99,18 +99,22 @@ public class CmdView implements IView
 
 	public void addLoginButtonListener(ActionListener listener)          { this.loginButtonListener = listener; }
 	public void addUploadDialogButtonListener(ActionListener listener)   { this.uploadDialogButtonListener = listener; }
-	//public void addUploadStartButtonListener(ActionListener listener)    { this.uploadStartButtonListener = listener; }
 	public void addDownloadDialogButtonListener(ActionListener listener) { this.downloadDialogButtonListener = listener; }
-	//public void addDownloadStartButtonListener(ActionListener listener)  { this.downloadStartButtonListener = listener; }
 	public void addVerifyDialogButtonListener(ActionListener listener)   { this.verifyDialogButtonListener = listener; }
-	//public void addVerifyStartButtonListener(ActionListener listener)    { this.verifyStartButtonListener = listener; }
 	public void addDeleteDialogButtonListener(ActionListener listener)   { this.deleteDialogButtonListener = listener; }
-	//public void addDeleteStartButtonListener(ActionListener listener)    { this.deleteStartButtonListener = listener; }
 	public void addListButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
 	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
-	public void addProcessQueueButtonListener(ActionListener listener)   { this.processQueueButtonListener = listener; }
+	public void addSyncProcessQueueButtonListener(ActionListener listener)   { this.syncProcessQueueButtonListener = listener; }
 
+    public void addASyncProcessQueueStartButtonListener(ActionListener listener)   { /*this.asyncProcessQueueStartButtonListener = listener;*/ }
+    //public void addASyncProcessQueueFinishedListener(ActionListener listener)   { /* ... */ }
+
+    public void notifyASyncProcessQueueFinished()
+    {
+        //throw new UnsupportedOperationException("Not supported yet.");
+        this.log.printLogLine("(asyncchronous) queue processing finished");
+    }
 
 	public void updateFileListing(IRootElement smugmugRoot)
 	{		
@@ -291,6 +295,7 @@ public class CmdView implements IView
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
 		this.log.printLogLine("options:");
+        //this.log.printLogLine("     --pretend             : don't change anything on smugmug, just print what would be done");
 		this.log.printLogLine("     --email={username}    : specify the email-address or the username used to log into smugmug (optional)");
 		this.log.printLogLine("     --password={password} : specify the password used to log into smugmug, optional (optional)");
 		this.log.printLogLine("     --category={name}     : perform the given action only on the given category (optional)");
@@ -311,7 +316,7 @@ public class CmdView implements IView
 		//this.log.printLogLine("     jSmugmugBackup --recursive-delete [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}]");
 	}
 	
-	private boolean extractArgumentFromCommandline(String argumentName)
+	private boolean findArgumentFromCommandline(String argumentName)
 	{
 		for (String arg : this.cmd_args)
 		{
@@ -369,6 +374,5 @@ public class CmdView implements IView
 		
 		return dir;
 	}
-
 
 }

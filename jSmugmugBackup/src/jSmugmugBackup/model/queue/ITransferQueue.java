@@ -6,10 +6,14 @@
  */
 package jSmugmugBackup.model.queue;
 
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 public interface ITransferQueue
 {
+    void addASyncProcessQueueFinishedListener(ActionListener listener);
+
+
 	void add(ITransferQueueItem item);
 	boolean remove(ITransferQueueItem item);	
 	
@@ -17,6 +21,7 @@ public interface ITransferQueue
 	void startAsyncProcessing();
 	void stopAsyncProcessing();
 	boolean isProcessing();
-	
+
+    //Vector<ITransferQueueItem> getItemList();
 	Vector<ITransferQueueItem> getProcessedItemList();
 }
