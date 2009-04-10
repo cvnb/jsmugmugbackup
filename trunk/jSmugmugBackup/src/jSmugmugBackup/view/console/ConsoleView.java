@@ -39,7 +39,8 @@ public class ConsoleView implements IView
 	private ActionListener refreshButtonListener = null;
 	private ActionListener sortButtonListener = null;
 	private ActionListener quitButtonListener = null;
-    private ActionListener processQueueButtonListener = null;
+    private ActionListener syncProcessQueueButtonListener = null;
+    private ActionListener asyncProcessQueueStartButtonListener = null;
 	
 	public ConsoleView(Model model)
 	{
@@ -131,21 +132,21 @@ public class ConsoleView implements IView
 					//this.loginButtonListener.actionPerformed(null);
 					this.uploadDialogButtonListener.actionPerformed(null);
 					//this.uploadStartButtonListener.actionPerformed(null);
-                    this.processQueueButtonListener.actionPerformed(null);
+                    this.syncProcessQueueButtonListener.actionPerformed(null);
 				}
 				else if (action.equals("download"))
 				{
 					//this.loginButtonListener.actionPerformed(null);
 					this.downloadDialogButtonListener.actionPerformed(null);
 					//this.downloadStartButtonListener.actionPerformed(null);
-                    this.processQueueButtonListener.actionPerformed(null);
+                    this.syncProcessQueueButtonListener.actionPerformed(null);
 				}
 				else if (action.equals("verify"))
 				{
 					//this.loginButtonListener.actionPerformed(null);
 					this.verifyDialogButtonListener.actionPerformed(null);
 					//this.verifyStartButtonListener.actionPerformed(null);
-                    this.processQueueButtonListener.actionPerformed(null);
+                    this.syncProcessQueueButtonListener.actionPerformed(null);
 				}
 				else if (action.equals("quit"))
 				{
@@ -172,9 +173,14 @@ public class ConsoleView implements IView
 	public void addListButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
 	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
-    public void addProcessQueueButtonListener(ActionListener listener)    { this.processQueueButtonListener = listener; }
+    public void addSyncProcessQueueButtonListener(ActionListener listener)    { this.syncProcessQueueButtonListener = listener; }
 	
+    public void addASyncProcessQueueStartButtonListener(ActionListener listener)   { this.asyncProcessQueueStartButtonListener = listener; }
 
+    public void notifyASyncProcessQueueFinished()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 
 	public void printLog(String text)

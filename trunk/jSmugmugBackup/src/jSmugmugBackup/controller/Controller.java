@@ -1,7 +1,7 @@
 package jSmugmugBackup.controller;
 
-import jSmugmugBackup.model.Model;
-import jSmugmugBackup.model.TransferDialogResult;
+import jSmugmugBackup.model.*;
+import jSmugmugBackup.model.queue.*;
 import jSmugmugBackup.view.*;
 
 import jSmugmugBackup.view.ng.SwingViewNG;
@@ -18,6 +18,7 @@ public class Controller
 	{
         this.model = model;
         this.view  = view;
+
         
         //... Add listeners to the view.
         this.view.addLoginButtonListener(new LoginButtonListener());
@@ -32,7 +33,12 @@ public class Controller
         this.view.addDeleteDialogButtonListener(new DeleteDialogButtonListener());
         //this.view.addDeleteStartButtonListener(new DeleteStartButtonListener());
         this.view.addQuitButtonListener(new QuitButtonListener());
-        this.view.addProcessQueueButtonListener(new ProcessQueueButtonListener());
+        this.view.addSyncProcessQueueButtonListener(new SyncProcessQueueButtonListener());
+
+        this.view.addASyncProcessQueueStartButtonListener(new ASyncProcessQueueStartButtonListener());
+        
+        ITransferQueue transferQueue = TransferQueue.getInstance();
+        transferQueue.addASyncProcessQueueFinishedListener(new ASyncProcessQueueFinishedListener());
 
         // rotten hack: the Listers must be registered before the CmdView can start
         //              to work. When constructing the object this is not yet the case.
@@ -58,7 +64,6 @@ public class Controller
             view.showBusyStop();
 		}
 	}
-
 	
 	class ListButtonListener implements ActionListener
 	{
@@ -86,14 +91,6 @@ public class Controller
 			model.upload(view.showUploadDialog());
 		}
 	}
-	
-//	class UploadStartButtonListener implements ActionListener
-//	{
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			model.startProcessingQueue();
-//		}
-//	}
 	
 	class DownloadDialogButtonListener implements ActionListener
 	{
@@ -127,14 +124,33 @@ public class Controller
 		}		
 	}
 
-    class ProcessQueueButtonListener implements ActionListener
+    class SyncProcessQueueButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
 		{
-			model.startProcessingQueue();
+			model.startSyncProcessingQueue();
 		}
     }
-	
+
+    class ASyncProcessQueueStartButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+		{
+            model.startASyncProcessingQueue();
+		}
+    }
+
+    class ASyncProcessQueueFinishedListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+		{
+
+
+            model.finishASyncProcessingQuene();
+            view.notifyASyncProcessQueueFinished();
+
+		}
+    }
     
 }
 

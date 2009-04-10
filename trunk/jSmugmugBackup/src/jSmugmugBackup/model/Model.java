@@ -1,6 +1,6 @@
 package jSmugmugBackup.model;
 
-import jSmugmugBackup.config.GlobalConfig;
+import jSmugmugBackup.config.*;
 import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.view.*;
 
@@ -14,6 +14,7 @@ public class Model
 {
     private GlobalConfig config = null;
 	private IAccountListingProxy accListing = null;
+
     private IView view = null;
     private Logger log = null;
     private long startTime;
@@ -450,11 +451,26 @@ public class Model
 //    	}
     }
     
-    public void startProcessingQueue()
+    public void startSyncProcessingQueue()
     {
-    	this.accListing.startProcessingQueue();
+        this.log.printLogLine("accListing.startSyncProcessingQueue()");
+
+    	this.accListing.startSyncProcessingQueue();
     	
     	this.quitApplication();
+    }
+
+    public void startASyncProcessingQueue()
+    {
+        this.log.printLogLine("accListing.startASyncProcessingQueue()");
+
+    	this.accListing.startASyncProcessingQueue();
+    }
+
+    public void finishASyncProcessingQuene()
+    {
+        this.log.printLogLine("accListing.finishASyncProcessingQueue()");
+        this.accListing.finishASyncProcessingQueue();
     }
     
     

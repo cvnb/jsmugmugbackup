@@ -17,14 +17,17 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="mainAccountScrollPane" min="-2" pref="359" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="mainDownloadButton" alignment="0" max="32767" attributes="1"/>
-                              <Component id="mainUploadButton" alignment="0" max="32767" attributes="1"/>
-                              <Component id="mainLoginButton" alignment="0" pref="130" max="32767" attributes="1"/>
-                              <Component id="mainExitButton" alignment="0" max="32767" attributes="1"/>
-                              <Component id="mainProcessQueueButton" alignment="0" pref="116" max="32767" attributes="1"/>
-                              <Component id="mainVerifyButton" alignment="0" max="32767" attributes="1"/>
-                              <Component id="mainSortButton" alignment="0" max="32767" attributes="1"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="mainExitButton" pref="130" max="32767" attributes="1"/>
+                              <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="mainDownloadButton" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="mainUploadButton" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="mainLoginButton" alignment="0" pref="130" max="32767" attributes="1"/>
+                                  <Component id="mainSyncProcessQueueButton" alignment="0" pref="116" max="32767" attributes="1"/>
+                                  <Component id="mainVerifyButton" alignment="0" max="32767" attributes="1"/>
+                                  <Component id="mainSortButton" alignment="0" max="32767" attributes="1"/>
+                              </Group>
+                              <Component id="mainAsyncProcessQueueButton" alignment="0" pref="130" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -36,8 +39,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="mainAccountScrollPane" min="-2" pref="335" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="1">
                           <Component id="mainLoginButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="mainUploadButton" min="-2" max="-2" attributes="0"/>
@@ -48,13 +55,14 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="mainSortButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                          <Component id="mainProcessQueueButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                          <Component id="mainSyncProcessQueueButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="mainAsyncProcessQueueButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="mainExitButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="mainAccountScrollPane" min="-2" pref="335" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="mainLogtextareaScrollPane" pref="110" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -130,10 +138,10 @@
             <Property name="name" type="java.lang.String" value="mainExitButton" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="mainProcessQueueButton">
+        <Component class="javax.swing.JButton" name="mainSyncProcessQueueButton">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="mainProcessQueueButton.text"/>
-            <Property name="name" type="java.lang.String" value="mainProcessQueueButton" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="mainSyncProcessQueueButton.text"/>
+            <Property name="name" type="java.lang.String" value="mainSyncProcessQueueButton" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="mainVerifyButton">
@@ -148,6 +156,15 @@
             <Property name="text" type="java.lang.String" resourceKey="mainSortButton.text"/>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="mainSortButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="mainAsyncProcessQueueButton">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="jSmugmugBackup.view.ng.SwingViewNG" id="mainProcessQueueButtonActionPerformed" methodName="mainProcessQueueButtonActionPerformed"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="mainAsyncProcessQueueButton.text"/>
+            <Property name="name" type="java.lang.String" value="mainAsyncProcessQueueButton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

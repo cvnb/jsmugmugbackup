@@ -13,9 +13,6 @@ import java.util.Vector;
 
 public interface IAccountListingProxy
 {
-	//void setLoginMethod(ILoginView loginMethod);
-//	void init();
-//	void init(File accoutDataFile);
 	void serialize(File accoutDataFile);
 	Number login(String userEmail, String password);
 	void logout();
@@ -28,9 +25,11 @@ public interface IAccountListingProxy
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);
-	//void resortCategoryAlbums(int categoryID);
-	//void resortSubcategoryAlbums(int subcategoryID);
 	
-	void startProcessingQueue();
-	long getTransferedBytes();
+	void startSyncProcessingQueue();
+
+    void startASyncProcessingQueue();
+    void finishASyncProcessingQueue();
+
+    long getTransferedBytes();
 }

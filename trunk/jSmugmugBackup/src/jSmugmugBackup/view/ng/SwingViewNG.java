@@ -127,9 +127,10 @@ public class SwingViewNG extends FrameView implements IView
         mainUploadButton = new javax.swing.JButton();
         mainDownloadButton = new javax.swing.JButton();
         mainExitButton = new javax.swing.JButton();
-        mainProcessQueueButton = new javax.swing.JButton();
+        mainSyncProcessQueueButton = new javax.swing.JButton();
         mainVerifyButton = new javax.swing.JButton();
         mainSortButton = new javax.swing.JButton();
+        mainAsyncProcessQueueButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -211,8 +212,8 @@ public class SwingViewNG extends FrameView implements IView
         mainExitButton.setText(resourceMap.getString("mainExitButton.text")); // NOI18N
         mainExitButton.setName("mainExitButton"); // NOI18N
 
-        mainProcessQueueButton.setText(resourceMap.getString("mainProcessQueueButton.text")); // NOI18N
-        mainProcessQueueButton.setName("mainProcessQueueButton"); // NOI18N
+        mainSyncProcessQueueButton.setText(resourceMap.getString("mainSyncProcessQueueButton.text")); // NOI18N
+        mainSyncProcessQueueButton.setName("mainSyncProcessQueueButton"); // NOI18N
 
         mainVerifyButton.setText(resourceMap.getString("mainVerifyButton.text")); // NOI18N
         mainVerifyButton.setEnabled(false);
@@ -221,6 +222,10 @@ public class SwingViewNG extends FrameView implements IView
         mainSortButton.setText(resourceMap.getString("mainSortButton.text")); // NOI18N
         mainSortButton.setEnabled(false);
         mainSortButton.setName("mainSortButton"); // NOI18N
+
+        mainAsyncProcessQueueButton.setAction(actionMap.get("mainProcessQueueButtonActionPerformed")); // NOI18N
+        mainAsyncProcessQueueButton.setText(resourceMap.getString("mainAsyncProcessQueueButton.text")); // NOI18N
+        mainAsyncProcessQueueButton.setName("mainAsyncProcessQueueButton"); // NOI18N
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -233,21 +238,26 @@ public class SwingViewNG extends FrameView implements IView
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanelLayout.createSequentialGroup()
                         .addComponent(mainAccountScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(mainDownloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainUploadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainLoginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                            .addComponent(mainExitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainProcessQueueButton, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
-                            .addComponent(mainVerifyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mainSortButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mainExitButton, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(mainDownloadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(mainUploadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(mainLoginButton, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                .addComponent(mainSyncProcessQueueButton, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                                .addComponent(mainVerifyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(mainSortButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(mainAsyncProcessQueueButton, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))))
                 .addGap(55, 55, 55))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(mainAccountScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(mainLoginButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -259,11 +269,12 @@ public class SwingViewNG extends FrameView implements IView
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(mainSortButton)
                         .addGap(54, 54, 54)
-                        .addComponent(mainProcessQueueButton)
-                        .addGap(50, 50, 50)
-                        .addComponent(mainExitButton))
-                    .addComponent(mainAccountScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mainSyncProcessQueueButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mainAsyncProcessQueueButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(mainExitButton)
+                        .addGap(21, 21, 21)))
                 .addComponent(mainLogtextareaScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -696,13 +707,14 @@ public class SwingViewNG extends FrameView implements IView
     private javax.swing.JTextField loginUsernameTextField;
     private javax.swing.JScrollPane mainAccountScrollPane;
     private javax.swing.JTree mainAccountTree;
+    private javax.swing.JButton mainAsyncProcessQueueButton;
     private javax.swing.JButton mainDownloadButton;
     private javax.swing.JButton mainExitButton;
     private javax.swing.JButton mainLoginButton;
     private javax.swing.JScrollPane mainLogtextareaScrollPane;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JButton mainProcessQueueButton;
     private javax.swing.JButton mainSortButton;
+    private javax.swing.JButton mainSyncProcessQueueButton;
     private javax.swing.JButton mainUploadButton;
     private javax.swing.JButton mainVerifyButton;
     private javax.swing.JMenuBar menuBar;
@@ -986,11 +998,27 @@ public class SwingViewNG extends FrameView implements IView
         /* todo: nothing to register yet */
     }
 
-    public void addProcessQueueButtonListener(ActionListener listener)
+    public void addSyncProcessQueueButtonListener(ActionListener listener)
     {
-        this.mainProcessQueueButton.addActionListener(listener);
+        this.mainSyncProcessQueueButton.addActionListener(listener);
     }
 
+    public void addASyncProcessQueueStartButtonListener(ActionListener listener)
+    {
+        this.mainAsyncProcessQueueButton.addActionListener(listener);
+    }
+
+    public void notifyASyncProcessQueueFinished()
+    {
+        this.mainAsyncProcessQueueButton.setEnabled(true);
+    }
+
+    //----------------------- main frame ---------------------------------------
+    @Action
+    public void mainProcessQueueButtonActionPerformed()
+    {
+        this.mainAsyncProcessQueueButton.setEnabled(false);
+    }
 
     //----------------------- login dialog -------------------------------------
     private ILoginDialogResult loginLoginDialogResult = null;
@@ -1249,6 +1277,10 @@ public class SwingViewNG extends FrameView implements IView
     {
         return this.transferDialogResult;
     }
+
+
+
+
 
 
 

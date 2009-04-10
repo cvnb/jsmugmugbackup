@@ -38,14 +38,14 @@ public interface IView
 	void addListButtonListener(ActionListener listener);
 	void addSortButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
-	//void addUploadStartButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);
-	//void addDownloadStartButtonListener(ActionListener listener);
 	void addVerifyDialogButtonListener(ActionListener listener);
-	//void addVerifyStartButtonListener(ActionListener listener);
 	void addDeleteDialogButtonListener(ActionListener listener);
-	//void addDeleteStartButtonListener(ActionListener listener);
 	void addQuitButtonListener(ActionListener listener);
-    void addProcessQueueButtonListener(ActionListener listener);
+    void addSyncProcessQueueButtonListener(ActionListener listener);
+
+    void addASyncProcessQueueStartButtonListener(ActionListener listener);
+    //void addASyncProcessQueueFinishedListener(ActionListener listener);
+    void notifyASyncProcessQueueFinished();
 
 }

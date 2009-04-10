@@ -9,6 +9,7 @@ package jSmugmugBackup.model.queue;
 import jSmugmugBackup.model.Helper;
 import jSmugmugBackup.view.Logger;
 
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Vector;
@@ -21,12 +22,14 @@ public class TransferQueueProcessor implements Runnable
 	private Vector<ITransferQueueItem> processedItemList = null;
 	private long queue_size_byte;
 	private long startTime;
+    private ActionListener asyncProcessQueueFinishedListener = null;
 	
-	public TransferQueueProcessor(LinkedBlockingQueue<ITransferQueueItem> queue, Vector<ITransferQueueItem> processedItemList)
+	public TransferQueueProcessor(LinkedBlockingQueue<ITransferQueueItem> queue, Vector<ITransferQueueItem> processedItemList, ActionListener finishListener)
 	{
 		this.log = Logger.getInstance();
 		this.queue = queue;
 		this.processedItemList = processedItemList;
+        this.asyncProcessQueueFinishedListener = finishListener;
 		
 		// compute queue size
 		this.queue_size_byte = 0;
@@ -69,6 +72,12 @@ public class TransferQueueProcessor implements Runnable
 			//get next item
 			item = this.queue.poll();
 		}
+
+        //notify the controller
+        if (this.asyncProcessQueueFinishedListener != null)
+        {
+            this.asyncProcessQueueFinishedListener.actionPerformed(null);
+        }
 	}
 
 }
