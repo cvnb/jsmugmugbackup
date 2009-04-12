@@ -150,6 +150,8 @@ public class Helper
 //        catch (UnsupportedEncodingException ex) { return false; }
 //        */
 
+        if (str == null) return null;
+
 
         String encodedStr = str;
 

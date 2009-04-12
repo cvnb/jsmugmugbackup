@@ -817,6 +817,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	           	 (this.getJSONValue(jobj, "method").equals("smugmug.users.getTree")) )
 	        {        	
 	        	//this.log.printLogLine("ok");
+                //this.printJSONObject(jobj);
 	           	return jobj;
 	        }
 	        else
