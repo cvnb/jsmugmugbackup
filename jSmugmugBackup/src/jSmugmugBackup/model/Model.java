@@ -112,7 +112,7 @@ public class Model
 							category = "Other";
 							subcategory = null;
 							album = subDirFile.getName();								
-							this.upload_prepare_albumDir(category, subcategory, album, subDirFile, keywords);
+							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
 						}
 						else //search in sub-sub-directories
 						{
@@ -127,7 +127,7 @@ public class Model
 										category    = subSubDirFile.getParentFile().getName();
 										subcategory = null;
 										album       = subSubDirFile.getName();
-										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile, keywords);
+										this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDirFile, keywords);
 									}
 									else //search in sub-sub-sub-directories
 									{
@@ -142,7 +142,7 @@ public class Model
 													category    = subSubSubDirFile.getParentFile().getParentFile().getName();
 													subcategory = subSubSubDirFile.getParentFile().getName();
 													album       = subSubSubDirFile.getName();
-													this.upload_prepare_albumDir(category, subcategory, album, subSubSubDirFile, keywords);
+													this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubSubDirFile, keywords);
 												}
 												else
 												{
@@ -188,7 +188,7 @@ public class Model
 							//category is defined above
 							subcategory = null;
 							album = subDirFile.getName();								
-							this.upload_prepare_albumDir(category, subcategory, album, subDirFile, keywords);
+							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
 						}
 						else //search in sub-sub-directories
 						{
@@ -203,7 +203,7 @@ public class Model
 										//category is defined above
 										subcategory = subSubDirFile.getParentFile().getName();
 										album       = subSubDirFile.getName();
-										this.upload_prepare_albumDir(category, subcategory, album, subSubDirFile, keywords);
+										this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDirFile, keywords);
 									}
 									else
 									{
@@ -246,7 +246,7 @@ public class Model
 							//category is defined above
 							//subcategory is defined above
 							album = subDirFile.getName();								
-							this.upload_prepare_albumDir(category, subcategory, album, subDirFile, keywords);
+							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
 						}
 						else
 						{
@@ -274,7 +274,7 @@ public class Model
 					//subcategory is defined above
 					//album is defined above
 					
-					this.upload_prepare_albumDir(category, subcategory, album, rootDir, keywords);
+					this.accListing.enqueueAlbumForUpload(category, subcategory, album, rootDir, keywords);
 				}
 	        }
 			else
@@ -453,8 +453,6 @@ public class Model
     
     public void startSyncProcessingQueue()
     {
-        this.log.printLogLine("accListing.startSyncProcessingQueue()");
-
     	this.accListing.startSyncProcessingQueue();
     	
     	this.quitApplication();
@@ -462,14 +460,11 @@ public class Model
 
     public void startASyncProcessingQueue()
     {
-        this.log.printLogLine("accListing.startASyncProcessingQueue()");
-
     	this.accListing.startASyncProcessingQueue();
     }
 
     public void finishASyncProcessingQuene()
     {
-        this.log.printLogLine("accListing.finishASyncProcessingQueue()");
         this.accListing.finishASyncProcessingQueue();
     }
     
@@ -502,14 +497,14 @@ public class Model
     	return result;
     }
     
-	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir, String keywords)
-	{
-//		this.log.printLogLine("DEBUG: enqueuing ...");
-//		this.log.printLogLine("DEBUG:      category    : " + category);
-//		this.log.printLogLine("DEBUG:      subcategory : " + subcategory);
-//		this.log.printLogLine("DEBUG:      album       : " + album);
-//		this.log.printLogLine("DEBUG:      dir         : " + dir);
-
-		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir, keywords);
-	}
+//	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir, String keywords)
+//	{
+////		this.log.printLogLine("DEBUG: enqueuing ...");
+////		this.log.printLogLine("DEBUG:      category    : " + category);
+////		this.log.printLogLine("DEBUG:      subcategory : " + subcategory);
+////		this.log.printLogLine("DEBUG:      album       : " + album);
+////		this.log.printLogLine("DEBUG:      dir         : " + dir);
+//
+//		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir, keywords);
+//	}
 }

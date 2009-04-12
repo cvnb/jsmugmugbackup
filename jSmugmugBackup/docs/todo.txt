@@ -6,11 +6,11 @@ todo:
    - upload options (public/unlisted/...)
    - session info
  - use global sessions, simplify call structure
- - verify: what if missing files and left over files neutralize each other???
+ - verify: what if missing files and left over files neutralize each other (in file count) ???
  - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html
 
 
-- "pretend" switch on commandline
+ - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality
    with login and throw out "refresh"
  - search for tags

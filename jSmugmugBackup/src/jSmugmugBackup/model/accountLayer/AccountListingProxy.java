@@ -217,12 +217,24 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords)
 	{
+//		this.log.printLogLine("DEBUG: enqueuing ...");
+//		this.log.printLogLine("DEBUG:      category    : " + categoryName);
+//		this.log.printLogLine("DEBUG:      subcategory : " + subcategoryName);
+//		this.log.printLogLine("DEBUG:      album       : " + albumName);
+//		this.log.printLogLine("DEBUG:      dir         : " + pics_dir);
+//		this.log.printLogLine("DEBUG:      keywords    : " + albumKeywords);
+
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
-		
+
+        // convert names to ascii, since smugmug sometimes seems to have problems with non-ascii characters
+        String categoryAsciiName = Helper.encodeAsASCII(categoryName);
+        String subcategoryAsciiName = Helper.encodeAsASCII(subcategoryName);
+        String albumAsciiName = Helper.encodeAsASCII(albumName);
+
     	//this.log.printLogLine("-----------------------------------------------");
     	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
-		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " (" + pics_dir + ")");
+		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album: " + categoryAsciiName + "/" + subcategoryAsciiName + "/" + albumAsciiName + " (" + pics_dir + ")");
 
         Vector<String> albumTags = Helper.getTags(albumKeywords);
 
@@ -239,33 +251,33 @@ public class AccountListingProxy implements IAccountListingProxy
 
     	//get or create category
         int categoryID;
-        categoryID = this.getCategoryID(categoryName);
+        categoryID = this.getCategoryID(categoryAsciiName);
         if (categoryID == 0) //category doesn't exist, so we create one
         {
-        	categoryID = this.connector.createCategory(categoryName); //create on smugmug
+        	categoryID = this.connector.createCategory(categoryAsciiName); //create on smugmug
         	//this.addCategory(categoryID, categoryName); //add to local structure
-        	this.smugmugRoot.addCategory( new Category(this.smugmugRoot, categoryID, categoryName) );
+        	this.smugmugRoot.addCategory( new Category(this.smugmugRoot, categoryID, categoryAsciiName) );
         }
         
         //get or create subcategory
         int subCategoryID = 0;
-        if (subcategoryName != null)
+        if (subcategoryAsciiName != null)
         {
-	        subCategoryID = this.getSubcategoryID(categoryID, subcategoryName);
+	        subCategoryID = this.getSubcategoryID(categoryID, subcategoryAsciiName);
 	        if (subCategoryID == 0) //subcategory doesn't exist, so we create one
 	        {
-	        	subCategoryID = this.connector.createSubcategory(categoryID, subcategoryName); //create on smugmug
-	        	this.addSubcategory(categoryID, subCategoryID, subcategoryName); //add to local structure
+	        	subCategoryID = this.connector.createSubcategory(categoryID, subcategoryAsciiName); //create on smugmug
+	        	this.addSubcategory(categoryID, subCategoryID, subcategoryAsciiName); //add to local structure
 	        }
         }
         
         //get or create album
         int albumID;
-        albumID = this.getAlbumID(categoryID, subCategoryID, albumName);
+        albumID = this.getAlbumID(categoryID, subCategoryID, albumAsciiName);
         if (albumID == 0) //album doesn't exist, so create one
         {
-        	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumName, albumTags);
-        	this.addAlbum(categoryID, subCategoryID, albumID, albumName, albumKeywords, "<internally created>");
+        	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumAsciiName, albumTags);
+        	this.addAlbum(categoryID, subCategoryID, albumID, albumAsciiName, albumKeywords, "<internally created>");
         }
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
@@ -900,7 +912,8 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return 0;
 	}
-	
+
+
 	private ICategory getAlbumCategory(int albumID)
 	{
 		//find the Category that contains the album, i.e. find the parent category
