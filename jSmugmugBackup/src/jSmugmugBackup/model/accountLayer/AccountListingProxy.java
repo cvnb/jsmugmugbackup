@@ -687,7 +687,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 
         //this line is not too useful
-		this.log.printLogLine(" ... tagged " + albumList.size() + " albums");
+		this.log.printLogLine(" ok (tagged " + albumList.size() + " albums)");
     }
 	
 	public void startSyncProcessingQueue()

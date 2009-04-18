@@ -1394,14 +1394,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
 	        	//this.log.printLogLine("ok");
-                this.log.printLogLine("+");
+                this.log.printLog("+");
 	           	return jobj;
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	        		  (this.getJSONValue(jobj, "code").equals(new Long(5))) )
 	        {
 	        	//this.log.printLogLine("nothing changed");
-                this.log.printLogLine(".");
+                this.log.printLog(".");
 	        	return jobj;
 	        }
 	        else
