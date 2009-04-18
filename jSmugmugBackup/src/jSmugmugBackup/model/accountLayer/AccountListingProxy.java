@@ -631,7 +631,7 @@ public class AccountListingProxy implements IAccountListingProxy
             this.log.printLog(Helper.getCurrentTimeString() + " tagging album: " + a.getFullName());
             this.log.printLog(" (tags: ");
             for (String tag : autotags) { this.log.printLog(tag + ";"); }
-            this.log.printLogLine(")");
+            this.log.printLogLine(") ... ");
 
             for (IImage image : a.getImageList())
             {
@@ -687,7 +687,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 
         //this line is not too useful
-		this.log.printLogLine("  ... tagged " + albumList.size() + " albums");
+		this.log.printLogLine(" ... tagged " + albumList.size() + " albums");
     }
 	
 	public void startSyncProcessingQueue()

@@ -29,8 +29,8 @@ public class ConsoleViewLogin_1_5 implements ILoginView
 
     public ILoginDialogResult getLoginDialogResult()
     {
-        this.requestUserEmail();
-        this.requestPassword();
+        this.initUserEmail = this.requestUserEmail();
+        this.initPassword  = this.requestPassword();
 
         return new LoginDialogResult(this.initUserEmail, this.initPassword);
     }
