@@ -1365,7 +1365,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	private JSONObject smugmug_images_changeSettings(int imageID, String keywords)
 	{
-        this.log.printLog(Helper.getCurrentTimeString() + " changing image settings: id=" + imageID + " keywords=" + keywords + " ... ");
+        //this.log.printLog(Helper.getCurrentTimeString() + " changing image settings: id=" + imageID + " keywords=" + keywords + " ... ");
 
 		String methodName = "smugmug.images.changeSettings";
 		//this.log.printLog("smugmug.images.changeSettings ... ");
@@ -1393,13 +1393,15 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	this.log.printLogLine("ok");
+	        	//this.log.printLogLine("ok");
+                this.log.printLogLine("+");
 	           	return jobj;
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	        		  (this.getJSONValue(jobj, "code").equals(new Long(5))) )
 	        {
-	        	this.log.printLogLine("nothing changed");
+	        	//this.log.printLogLine("nothing changed");
+                this.log.printLogLine(".");
 	        	return jobj;
 	        }
 	        else
