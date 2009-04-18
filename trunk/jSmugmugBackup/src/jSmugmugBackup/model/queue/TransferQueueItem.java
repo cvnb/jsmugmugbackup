@@ -12,6 +12,7 @@ import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.*;
 
 import java.io.*;
+import java.util.Vector;
 
 
 
@@ -26,6 +27,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private int imageID;
 	private File fileDescriptor = null;
 	private long fileSize = 0; // needed for pretty output
+    private Vector<String> tags = null;
 
 	
 	private boolean result_processed;
@@ -35,7 +37,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor, long fileSize)
+	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor, long fileSize, Vector<String> tags)
 	{
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
@@ -57,6 +59,7 @@ public class TransferQueueItem implements ITransferQueueItem
 		
 		this.fileDescriptor = fileDescriptor;
         this.fileSize = fileSize;
+        this.tags = tags;
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
 		{
 			this.albumID = id;						
@@ -79,7 +82,7 @@ public class TransferQueueItem implements ITransferQueueItem
             // performing relogin for each queue item might improve stability during long lasting queue operations
             if ( this.config.getConstantHeavyRelogin() ) { this.smugmugConnector.relogin(); }
 
-			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor, null, null);
+			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor, null, this.tags);
 			
 			//this should be safe to assume
 			if (this.result_id == 0) { this.result_successful = false; }

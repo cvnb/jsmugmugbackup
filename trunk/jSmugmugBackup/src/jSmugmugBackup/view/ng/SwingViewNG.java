@@ -898,6 +898,11 @@ public class SwingViewNG extends FrameView implements IView
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    public ITransferDialogResult showAutotagDialog()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     public ITransferDialogResult showDownloadDialog()
     {
         
@@ -974,6 +979,11 @@ public class SwingViewNG extends FrameView implements IView
     }
 
     public void addSortButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
+    }
+
+    public void addAutotagButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }

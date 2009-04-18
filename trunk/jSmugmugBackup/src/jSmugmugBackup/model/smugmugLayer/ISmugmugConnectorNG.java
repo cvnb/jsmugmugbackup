@@ -21,6 +21,7 @@ public interface ISmugmugConnectorNG
 	IRootElement getTree();
 	void getImages(int albumID); //???
 	Hashtable<String, String> getImageInfo(int imageID);
+    void setImageKeywords(int albumID, int imageID, String keywords);
 	
 	int createCategory(String name);
 	int createSubcategory(int categoryID, String name);

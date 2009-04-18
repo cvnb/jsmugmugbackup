@@ -73,8 +73,8 @@ public class Helper
         else
         {
             keywords = "";
-            for (String tag : tags) { keywords += "; " + tag; }
-            keywords = keywords.substring(2); //remove the leading two characters
+            for (String tag : tags) { keywords += "; " + Helper.encodeAsASCII(tag); }
+            if (keywords.length() > 2) { keywords = keywords.substring(2); } //remove the leading two characters
         }
 
         return keywords;

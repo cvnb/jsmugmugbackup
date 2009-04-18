@@ -14,6 +14,7 @@ import jSmugmugBackup.view.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class AccountListingProxy implements IAccountListingProxy
 {
@@ -281,7 +282,32 @@ public class AccountListingProxy implements IAccountListingProxy
         }
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
-        
+
+
+        //prepare tags
+        Vector<String> tags = null;
+//        if (this.config.getPersistentAutoImageKeywords() == true)
+//        {
+//            tags = new Vector<String>();
+//            String[] tagsArray = albumAsciiName.split("[ ,;]");
+//
+//            //copy array into a Vector
+//            for (int i=0; i < tagsArray.length; i++)
+//            {
+//                if ( (Pattern.matches("\\d{4}-\\d{2}-\\d{2}|\\d{4}-\\d{2}", tagsArray[i]) == false) &&
+//                     (tagsArray[i].equals("-") == false) &&
+//                     (tagsArray[i].equals("") == false) )
+//                {
+//                    tags.add(tagsArray[i]);
+//                }
+//            }
+//
+//            this.log.printLog("DEBUG: tags: ");
+//            for (String tag : tags) { this.log.printLog(tag + ";"); }
+//            this.log.printLogLine("");
+//        }
+
+
         //add album files to the queue
         for (int i=0; i<fileList.length; i++)
         {        	
@@ -311,7 +337,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else
                 {
-    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i], fileList[i].length());
+    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i], fileList[i].length(), tags);
     				this.transferQueue.add(item);
                     uploadCount++;
                 }
@@ -390,7 +416,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		{
 			File imageFile = new File(targetDir + image.getName());
 			
-			ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize());
+			ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
 			this.transferQueue.add(item);
 			downloadCount++;
 		}   
@@ -577,6 +603,92 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
     }
 
+    public void autotag(String categoryName, String subcategoryName, String albumName)
+    {
+        //find matching albums
+		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName, null);
+
+        this.log.printLogLine("Images in the following albums will be tagged:");
+        for (IAlbum a : albumList) { this.log.printLogLine( "      " + a.getFullName()); }
+
+        for (IAlbum a : albumList)
+        {
+            //prepare tags
+            Vector<String> autotags = new Vector<String>();
+            String[] tagsArray = a.getName().split("[ ,;]");
+
+            //copy array into a Vector
+            for (int i=0; i < tagsArray.length; i++)
+            {
+                if ( (Pattern.matches("\\d{4}-\\d{2}-\\d{2}\\.\\d|\\d{4}-\\d{2}-\\d{2}|\\d{4}-\\d{2}|\\d{4}", tagsArray[i]) == false) &&
+                     (tagsArray[i].equals("-") == false) &&
+                     (tagsArray[i].equals("") == false) )
+                {
+                    autotags.add(tagsArray[i]);
+                }
+            }
+
+            this.log.printLog(Helper.getCurrentTimeString() + " tagging album: " + a.getFullName());
+            this.log.printLog(" (tags: ");
+            for (String tag : autotags) { this.log.printLog(tag + ";"); }
+            this.log.printLogLine(")");
+
+            for (IImage image : a.getImageList())
+            {
+                //this.log.printLog("DEBUG:    image: " + image.getName());
+                //this.log.printLog(" (");
+                //if (image.getTags() != null) { for (String itag : image.getTags()) { this.log.printLog(itag + ";"); } }
+                //this.log.printLogLine(")");
+
+                //merge autotags and existing tags
+                Vector<String> merged_tags = new Vector<String>();
+                if (image.getTags() != null) { for (String itag : image.getTags()) { merged_tags.add(itag); } }
+                for (String tag : autotags)
+                {
+                    if (merged_tags.contains(tag) == false) { merged_tags.add(tag); }
+                }
+
+//                this.log.printLog("DEBUG:       merged tags  : ");
+//                for (String tag : merged_tags) { this.log.printLog(tag + ";"); }
+//                this.log.printLogLine("");
+
+                this.connector.setImageKeywords(a.getID(), image.getID(), Helper.getKeywords(merged_tags));
+
+                //update cache
+                /*
+                //collect Results
+                this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
+                this.connector.relogin(); //probably not nessceary
+                Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+                for (ITransferQueueItem item : processedItemList)
+                {
+                    this.transferedBytes += item.getResults().getTransferedBytes();
+
+                    // uploaded images:
+                    // if item.getAction == upload then add imageid to local data
+                    if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
+                    {
+                        //this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
+                        Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
+
+                        int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
+                        int imageID = Integer.parseInt( imageInfo.get("ImageID") );
+                        String imageName = imageInfo.get("ImageName");
+
+                        //this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
+
+                        if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
+                    }
+                }
+                this.log.printLogLine("ok");
+                */
+            }
+        }
+
+
+        //this line is not too useful
+		this.log.printLogLine("  ... tagged " + albumList.size() + " albums");
+    }
 	
 	public void startSyncProcessingQueue()
 	{
@@ -594,28 +706,34 @@ public class AccountListingProxy implements IAccountListingProxy
 		//collect Results
 		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
 		this.connector.relogin(); //probably not nessceary
-		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
-		for (ITransferQueueItem item : processedItemList)
-		{
-			this.transferedBytes += item.getResults().getTransferedBytes();
-			
-			// uploaded images:
-			// if item.getAction == upload then add imageid to local data
-			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
-			{
-				//this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
-				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
-				
-				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
-				int imageID = Integer.parseInt( imageInfo.get("ImageID") );
-				String imageName = imageInfo.get("ImageName");
-			
-				//this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
-
-				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
-			}
-		}
-		this.log.printLogLine("ok");
+//		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+//		for (ITransferQueueItem item : processedItemList)
+//		{
+//			this.transferedBytes += item.getResults().getTransferedBytes();
+//
+//			// uploaded images:
+//			// if item.getAction == upload then add imageid to local data
+//			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
+//			{
+//                if (item.getResults().getID() != 0)
+//                {
+//                    //this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
+//                    Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
+//
+//                    int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
+//                    int imageID = Integer.parseInt( imageInfo.get("ImageID") );
+//                    String imageName = imageInfo.get("ImageName");
+//
+//                    //this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
+//
+//                    if (imageID != 0) { this.addImage(albumID, imageID, imageName); } //guess this should usually be true, since we already checked before
+//                }
+//			}
+//		}
+        //discard current root object, and download treedata again (this would be horrobly slow without caching)
+        this.smugmugRoot = null;
+        this.smugmugRoot = this.connector.getTree();
+        this.log.printLogLine("ok");
 		
 	}
 
@@ -642,27 +760,30 @@ public class AccountListingProxy implements IAccountListingProxy
 		//collect Results
 		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
 		this.connector.relogin(); //probably not nessceary
-		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
-		for (ITransferQueueItem item : processedItemList)
-		{
-			this.transferedBytes += item.getResults().getTransferedBytes();
-
-			// uploaded images:
-			// if item.getAction == upload then add imageid to local data
-			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
-			{
-				//this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
-				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
-
-				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
-				int imageID = Integer.parseInt( imageInfo.get("ImageID") );
-				String imageName = imageInfo.get("ImageName");
-
-				//this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
-
-				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
-			}
-		}
+//		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+//		for (ITransferQueueItem item : processedItemList)
+//		{
+//			this.transferedBytes += item.getResults().getTransferedBytes();
+//
+//			// uploaded images:
+//			// if item.getAction == upload then add imageid to local data
+//			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
+//			{
+//				//this.log.printLogLine("getting info for imageID=" + item.getResults().getID());
+//				Hashtable<String, String> imageInfo = this.connector.getImageInfo(item.getResults().getID());
+//
+//				int albumID = Integer.parseInt( imageInfo.get("AlbumID") );
+//				int imageID = Integer.parseInt( imageInfo.get("ImageID") );
+//				String imageName = imageInfo.get("ImageName");
+//
+//				//this.log.printLogLine("AlbumID=" + albumID + ", ImageID=" + imageID + ", ImageName=" + imageName);
+//
+//				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
+//			}
+//		}
+        //discard current root object, and download treedata again (this would be horrobly slow without caching)
+        this.smugmugRoot = null;
+        this.smugmugRoot = this.connector.getTree();
 		this.log.printLogLine("ok");
 
 	}

@@ -47,6 +47,11 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
         this.cache.put(album.getID(), album);
     }
 
+    public void removeAlbum(int albumID)
+    {
+        if (this.exists(albumID)) { this.cache.remove(albumID); }
+    }
+
     public IAlbum getCachedAlbum(int albumID)
     {
         return this.cache.get(albumID);

@@ -18,6 +18,7 @@ public interface ISmugmugLocalAlbumCache
     void saveCacheToDisk();
 
     void putAlbum(IAlbum album);
+    void removeAlbum(int albumID);
     boolean exists(int albumID);
     IAlbum getCachedAlbum(int albumID);
     boolean validateCachedAlbum(int albumID, int imageCount, String lastUpdated);

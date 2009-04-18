@@ -25,6 +25,7 @@ public interface IAccountListingProxy
 	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
 	void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);
+    void autotag(String categoryName, String subcategoryName, String albumName);
 	
 	void startSyncProcessingQueue();
 

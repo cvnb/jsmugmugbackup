@@ -25,6 +25,7 @@ public interface IView
     ILoginDialogResult showLoginDialog();
     ITransferDialogResult showListDialog();
 	ITransferDialogResult showSortDialog();
+    ITransferDialogResult showAutotagDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
 	ITransferDialogResult showVerifyDialog();
@@ -37,6 +38,7 @@ public interface IView
 	void addLoginButtonListener(ActionListener listener);
 	void addListButtonListener(ActionListener listener);
 	void addSortButtonListener(ActionListener listener);
+    void addAutotagButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);
 	void addVerifyDialogButtonListener(ActionListener listener);
