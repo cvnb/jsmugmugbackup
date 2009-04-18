@@ -24,6 +24,7 @@ public class Controller
         this.view.addLoginButtonListener(new LoginButtonListener());
         this.view.addListButtonListener(new ListButtonListener());
         this.view.addSortButtonListener(new SortButtonListener());
+        this.view.addAutotagButtonListener(new AutotagButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         //this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
@@ -81,6 +82,14 @@ public class Controller
 		public void actionPerformed(ActionEvent e)
 		{
 			model.sort(view.showSortDialog());
+		}
+	}
+
+	class AutotagButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			model.autotag(view.showAutotagDialog());
 		}
 	}
 	

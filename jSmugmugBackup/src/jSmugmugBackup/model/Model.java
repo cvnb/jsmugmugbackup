@@ -403,7 +403,14 @@ public class Model
     	
         this.accListing.sort(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName());
     }
-    
+
+    public void autotag(ITransferDialogResult transferDialogResult)
+    {
+        if (transferDialogResult == null) { return; }
+
+        this.accListing.autotag(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+    }
+
     public void delete(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing to delete files");

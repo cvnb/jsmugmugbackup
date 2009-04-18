@@ -28,6 +28,7 @@ public class CmdView implements IView
 	private ActionListener deleteDialogButtonListener = null;
 	private ActionListener refreshButtonListener = null;
 	private ActionListener sortButtonListener = null;
+    private ActionListener autotagButtonListener = null;
 	private ActionListener quitButtonListener = null;
     private ActionListener syncProcessQueueButtonListener = null;
     private ActionListener asyncProcessQueueStartButtonListener = null;
@@ -59,7 +60,12 @@ public class CmdView implements IView
 			this.loginButtonListener.actionPerformed(null);
 			this.sortButtonListener.actionPerformed(null);
 		}
-		else if ( this.findArgumentFromCommandline("upload") )
+		else if ( this.findArgumentFromCommandline("autotag") )
+		{
+			this.loginButtonListener.actionPerformed(null);
+			this.autotagButtonListener.actionPerformed(null);
+		}
+        else if ( this.findArgumentFromCommandline("upload") )
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.uploadDialogButtonListener.actionPerformed(null);
@@ -104,6 +110,7 @@ public class CmdView implements IView
 	public void addDeleteDialogButtonListener(ActionListener listener)   { this.deleteDialogButtonListener = listener; }
 	public void addListButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
 	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
+    public void addAutotagButtonListener(ActionListener listener)           { this.autotagButtonListener = listener; }
 	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
 	public void addSyncProcessQueueButtonListener(ActionListener listener)   { this.syncProcessQueueButtonListener = listener; }
 
@@ -210,15 +217,11 @@ public class CmdView implements IView
 	
 	public ITransferDialogResult showSortDialog()
 	{
-		/*
-		String category = this.extractArgumentValueFromCommandline("category");
-		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
-		String album = this.extractArgumentValueFromCommandline("album");
-		
-		return new TransferDialogResult(category, subCategory, album, null);
-		*/
-		
-		//method is identical to the list dialog
+		return this.showListDialog();
+	}
+
+    public ITransferDialogResult showAutotagDialog()
+	{
 		return this.showListDialog();
 	}
 	
@@ -291,7 +294,8 @@ public class CmdView implements IView
 		this.log.printLogLine("     --help         : print this help");
 		this.log.printLogLine("     --list         : list contents of your smumgmug account");
 		this.log.printLogLine("     --sort         : sort categories, subcategories, albums");
-		this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
+        this.log.printLogLine("     --autotag      : assign tags based on the album name");
+        this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
 		this.log.printLogLine("options:");
