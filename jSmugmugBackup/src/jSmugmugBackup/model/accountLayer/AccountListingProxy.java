@@ -631,7 +631,7 @@ public class AccountListingProxy implements IAccountListingProxy
             this.log.printLog(Helper.getCurrentTimeString() + " tagging album: " + a.getFullName());
             this.log.printLog(" (tags: ");
             for (String tag : autotags) { this.log.printLog(tag + ";"); }
-            this.log.printLogLine(") ... ");
+            this.log.printLog(") ... ");
 
             for (IImage image : a.getImageList())
             {
@@ -652,7 +652,13 @@ public class AccountListingProxy implements IAccountListingProxy
 //                for (String tag : merged_tags) { this.log.printLog(tag + ";"); }
 //                this.log.printLogLine("");
 
-                this.connector.setImageKeywords(a.getID(), image.getID(), Helper.getKeywords(merged_tags));
+                int origImageTags = 0;
+                if (image.getTags() != null) { origImageTags = image.getTags().size(); }
+
+                if ( merged_tags.size() > origImageTags )
+                {
+                    this.connector.setImageKeywords(a.getID(), image.getID(), Helper.getKeywords(merged_tags));
+                }
 
                 //update cache
                 /*
@@ -683,11 +689,12 @@ public class AccountListingProxy implements IAccountListingProxy
                 this.log.printLogLine("ok");
                 */
             }
+            this.log.printLogLine("ok");
         }
 
 
         //this line is not too useful
-		this.log.printLogLine(" ok (tagged " + albumList.size() + " albums)");
+		this.log.printLogLine(" ... tagged " + albumList.size() + " albums");
     }
 	
 	public void startSyncProcessingQueue()
