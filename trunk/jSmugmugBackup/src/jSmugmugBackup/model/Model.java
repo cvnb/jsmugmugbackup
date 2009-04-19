@@ -397,7 +397,7 @@ public class Model
     public void sort(ITransferDialogResult transferDialogResult)
     {
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
-    	this.log.printLogLine("preparing to sort albums");
+    	//this.log.printLogLine("preparing to sort albums");
 
         if (transferDialogResult.getAlbumName() != null) { this.log.printLogLine("WARNING: you specified an album name, which will be ignored! We're rearranging albums here, not images within albums!"); }
     	
