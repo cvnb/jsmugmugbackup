@@ -577,7 +577,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //find matching albums
 		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, null, null);
 
-        this.log.printLogLine("The following albums will be rearranged:");
+        this.log.printLogLine("The following albums will be sorted by name:");
         for (IAlbum a : albumList) { this.log.printLogLine( "      " + a.getFullName()); }
 
         //put albums into an array
@@ -592,7 +592,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //sort the array
         Arrays.sort(albumArray);
 
-        this.log.printLogLine("WARNING: sorting should not be interuped while in progress - there will be nasty leftovers in your albums!");
+        this.log.printLogLine("WARNING: sorting should not be interuped while in progress, otherwise there will be nasty leftovers in your albums!");
         this.log.printLog("WARNING: beginning to sort in 30 sec - abort NOW if you need to ... ");
         Helper.pause(30000);
         this.log.printLogLine("ok");
