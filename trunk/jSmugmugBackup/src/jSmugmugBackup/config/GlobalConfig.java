@@ -135,7 +135,7 @@ public class GlobalConfig
    private String  persistentLogfile = null;
    private boolean persistentCheckMD5Sums;
    private boolean persistentCacheAccountInfo;
-   //private boolean persistentAutoImageKeywords;
+   private boolean persistentAppendLogfile;
    //private String  persistentDefaultUsername = ""; //don't activate this yet
    //private boolean persistentCaseSensitiveImageNames = true;
    //private boolean persistentCaseSensitiveFolderNames = true;
@@ -182,11 +182,11 @@ public class GlobalConfig
        this.persistentCacheAccountInfo = Boolean.parseBoolean(nodes.item(0).getTextContent());
        //System.out.println("persistentCachefilePrefix: " + this.persistentCachefilePrefix);
 
-//       // persistentAutoImageKeywords
-//       nodes = doc.getElementsByTagName("autoImageKeywords");
-//       if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
-//       this.persistentAutoImageKeywords = Boolean.parseBoolean(nodes.item(0).getTextContent());
-//       //System.out.println("persistentAutoImageKeywords: " + this.persistentAutoImageKeywords);
+       // persistentAppendLogfile
+       nodes = doc.getElementsByTagName("appendLogfile");
+       if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
+       this.persistentAppendLogfile = Boolean.parseBoolean(nodes.item(0).getTextContent());
+       //System.out.println("persistentAppendLogfile: " + this.persistentAppendLogfile);
 
    }
 
@@ -221,7 +221,7 @@ public class GlobalConfig
    public boolean getPersistentCheckMD5Sums() { return this.persistentCheckMD5Sums; }
    public String getPersistentLogfile() { return persistentLogfile; }
    public boolean getPersistentCacheAccountInfo() { return this.persistentCacheAccountInfo; }
-   //public boolean getPersistentAutoImageKeywords() { return this.persistentAutoImageKeywords; }
+   public boolean getPersistentAppendLogfile() { return this.persistentAppendLogfile; }
 
 
    //runtime getters and setters

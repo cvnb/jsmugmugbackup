@@ -46,8 +46,8 @@ public class Helper
 	public static String getCurrentTimeString()
 	{
 		Date date = new Date();
-        //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
 	}
 	

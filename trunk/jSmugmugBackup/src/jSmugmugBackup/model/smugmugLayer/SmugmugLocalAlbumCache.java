@@ -89,7 +89,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
 
         try
         {
-            fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file, false);
             out = new ObjectOutputStream(fos);
             out.writeObject(this.cache);
             out.close();

@@ -19,13 +19,17 @@ public class Logger
 	{
         this.config = GlobalConfig.getInstance();
 
-    	try
-    	{
-    		//create a new and empty logfile
-    		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), false);
-			out.close();
-		}
-    	catch (IOException e) { e.printStackTrace(); }
+
+        if (this.config.getPersistentAppendLogfile() == false)
+        {
+            try
+            {
+                //create a new and empty logfile
+                FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), false);
+                out.close();
+            }
+            catch (IOException e) { e.printStackTrace(); }
+        }
 
 	}
 	 
