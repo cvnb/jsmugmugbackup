@@ -82,6 +82,9 @@ public class GlobalConfig
         " - verify only reports md5 checksum errors if they occur with an image, checksum errors\n" +
         "   with videos are not reported because videos are converted by smugmug after uploading\n" +
         "   which makes md5 checks fail on all videos\n" +
+        " - if you want to dowwnload someones public galleries, login using his nickname and\n" +
+        "   \"anonymous\" as password (album passwords are currently not supported, sorry)\n" +
+        " - for downloading, we always download the best resolution available\n" +
         " - <to be continued>\n";
 
    // constant objects
@@ -146,6 +149,7 @@ public class GlobalConfig
    private String rtconfigLoginSessionID = "";
 //   private String rtconfigLoginUsername = null;
 //   private String rtconfigLoginPassword = null;
+   private boolean rtconfigAnonymousLogin = false;
 
 
    private void loadConfig()
@@ -227,6 +231,9 @@ public class GlobalConfig
    //runtime getters and setters
    public String getRtconfigLoginSessionID() { return this.rtconfigLoginSessionID; }
    public void setRtconfigLoginSessionID(String rtconfigLoginSessionID) { this.rtconfigLoginSessionID = rtconfigLoginSessionID; }
+
+   public boolean getRtconfigAnonymousLogin() { return this.rtconfigAnonymousLogin; }
+   public void setRtconfigAnonymousLogin(boolean rtconfigAnonymousLogin) { this.rtconfigAnonymousLogin = rtconfigAnonymousLogin; }
 
 
 //   //special accessors for username and password - can be retrieved only once

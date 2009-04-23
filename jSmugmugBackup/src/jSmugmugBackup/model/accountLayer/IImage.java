@@ -17,5 +17,10 @@ public interface IImage extends ISmugmugObject
 	int getWidth();
 	long getSize();
 	String getMD5();
+    String getMediumURL();
+    String getLargeURL();
+    String getXLargeURL();
+    String getX2LargeURL();
+    String getX3LargeURL();
 	String getOriginalURL();
 }

@@ -48,14 +48,28 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 	public Number login(String userEmail, String password)
 	{
-		return this.smugmug_login_withPassword(userEmail, password);
+        this.config.setRtconfigAnonymousLogin( password.equals("anonymous") );
+		
+        if (this.config.getRtconfigAnonymousLogin())
+        {
+            // anonymous login
+            this.smugmug_login_anonymously();
+            SmugmugConnectorNG.login_nickname = userEmail;
+            return 0;
+        }
+        else
+        {
+            // standard login
+            return this.smugmug_login_withPassword(userEmail, password);
+        }
 	}
 
 	public void relogin()
 	{
-		this.smugmug_login_withHash();
+        if (this.config.getRtconfigAnonymousLogin() == false) { this.smugmug_login_withHash(); }
+        else { /*NOOP at the moment, an anonymous login might also be a possibility*/ }
 	}
-	
+
 	public void logout()
 	{
 		if (SmugmugConnectorNG.login_sessionID != null) { this.smugmug_logout_logout(); }
@@ -78,7 +92,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         if (this.config.getPersistentCacheAccountInfo())
         {
-            this.albumCache = new SmugmugLocalAlbumCache(login_userID.toString());
+            if (this.config.getRtconfigAnonymousLogin() == false)
+            {
+                this.albumCache = new SmugmugLocalAlbumCache(SmugmugConnectorNG.login_userID.toString());
+            }
+            else
+            {
+                this.albumCache = new SmugmugLocalAlbumCache(SmugmugConnectorNG.login_nickname);
+            }
             this.albumCache.loadCacheFromDisk();
         }
 
@@ -216,19 +237,53 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                         JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
                         while (jsonImage != null)
                         {
-                            Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
-                            //String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
-                            String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
-                            String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
-                            String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords");
-                            String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
-                            Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
-                            Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
-                            Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
-                            String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
-                            String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
-                            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+                            Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
+                            //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
+                            String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
+                            String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
+                            String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
+                            String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
+                            Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
+                            Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
+                            Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
+                            String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
+                            //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
+                            //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
+                            //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
+                            //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
+                            String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
+                            String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
+                            String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
+                            String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
+                            String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
+                            String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
+                            //String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+                            //String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+                            //String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+                            //String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+
+                            //if there is no filename available, take the name from the url
+                            if (imageName == null)
+                            {
+                                String url;
+
+                                //get the largest url available:
+                                if (imageOriginalURL != null) { url = imageOriginalURL; }
+                                else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
+                                else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
+                                else if (imageXLargeURL != null) { url = imageXLargeURL; }
+                                else if (imageLargeURL != null) { url = imageLargeURL; }
+                                else if (imageMediumURL != null) { url = imageMediumURL; }
+                                else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
+
+                                imageName = Helper.extractFilenameFromURL(url);
+                            }
+
+                            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
+                                                     imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
                             album.addImage(image);
+
+
 
                             //progress stats
                             statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
@@ -287,19 +342,52 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
                     while (jsonImage != null)
                     {
-                        Number imageID          = (Number)this.getJSONValue(jsonImage, "id");
-                        //String imageKey       = (String)this.getJSONValue(jsonImage, "Key");
-                        String imageName        = (String)this.getJSONValue(jsonImage, "FileName");
-                        String imageCaption     = (String)this.getJSONValue(jsonImage, "Caption");
-                        String imageKeywords    = (String)this.getJSONValue(jsonImage, "Keywords");
-                        String imageFormat      = (String)this.getJSONValue(jsonImage, "Format");
-                        Number imageHeight      = (Number)this.getJSONValue(jsonImage, "Height");
-                        Number imageWidth       = (Number)this.getJSONValue(jsonImage, "Width");
-                        Number imageSize        = (Number)this.getJSONValue(jsonImage, "Size");
-                        String imageMD5         = (String)this.getJSONValue(jsonImage, "MD5Sum");
-                        String imageOriginalURL = (String)this.getJSONValue(jsonImage, "OriginalURL");
-                        IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5, imageOriginalURL);
+                        Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
+                        //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
+                        String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
+                        String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
+                        String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
+                        String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
+                        Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
+                        Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
+                        Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
+                        String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
+                        //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
+                        //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
+                        //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
+                        //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
+                        String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
+                        String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
+                        String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
+                        String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
+                        String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
+                        String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
+                        //String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+                        //String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+                        //String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+                        //String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+
+                        //if there is no filename available, take the name from the url
+                        if (imageName == null)
+                        {
+                            String url;
+
+                            //get the largest url available:
+                            if (imageOriginalURL != null) { url = imageOriginalURL; }
+                            else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
+                            else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
+                            else if (imageXLargeURL != null) { url = imageXLargeURL; }
+                            else if (imageLargeURL != null) { url = imageLargeURL; }
+                            else if (imageMediumURL != null) { url = imageMediumURL; }
+                            else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
+
+                            imageName = Helper.extractFilenameFromURL(url);
+                        }
+
+                        IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
+                                                 imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
                         album.addImage(image);
+
 
                         //progress stats
                         statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
@@ -470,26 +558,53 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		JSONObject jobj = this.smugmug_images_getInfo(imageID); // get image_info, including url
 		//this.printJSONObject(jobj);
 		
-		String imageFormat = (String)this.getJSONValue(jobj, "Image.Format");
-		String imageURL = null;
+//		String imageFormat = (String)this.getJSONValue(jobj, "Image.Format");
+//		String imageURL = null;
+//
+//        if (imageFormat == null)
+//        {
+//            //no format specified, guessing this is a picture
+//            imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
+//            this.printJSONObject(jobj);
+//            this.log.printLog(" ... no format specified, guessing it's a picture ...");
+//        }
+//        else if (imageFormat.equals("MP4")) // maybe there are other video types too
+//        {
+//            int video_width = ((Number)this.getJSONValue(jobj, "Image.Width")).intValue();
+//
+//            //download always the largest resolution available
+//            if (video_width == 320)       { imageURL = (String)this.getJSONValue(jobj, "Image.Video320URL"); }
+//            else if (video_width == 640)  { imageURL = (String)this.getJSONValue(jobj, "Image.Video640URL"); }
+//            else if (video_width == 960)  { imageURL = (String)this.getJSONValue(jobj, "Image.Video960URL"); }
+//            else if (video_width == 1280) { imageURL = (String)this.getJSONValue(jobj, "Image.Video1280URL"); }
+//            else { this.log.printLogLine("failed (could not retrieve video url))"); }
+//        }
+//        else
+//        {
+//        	//this is most likely a normal picture
+//        	imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
+//        }
 		
-        if (imageFormat.equals("MP4")) // maybe there are other video types too
-        {
-            int video_width = ((Number)this.getJSONValue(jobj, "Image.Width")).intValue();
-            
-            //download always the largest resolution available
-            if (video_width == 320)       { imageURL = (String)this.getJSONValue(jobj, "Image.Video320URL"); }
-            else if (video_width == 640)  { imageURL = (String)this.getJSONValue(jobj, "Image.Video640URL"); }
-            else if (video_width == 960)  { imageURL = (String)this.getJSONValue(jobj, "Image.Video960URL"); }
-            else if (video_width == 1280) { imageURL = (String)this.getJSONValue(jobj, "Image.Video1280URL"); }
-            else { this.log.printLogLine("failed (could not retrieve video url))"); }
-        }
+        String imageURL = null;
+        
+        //attempt to get the largest image/video url available
+        if (this.getJSONValue(jobj, "Image.Video1280URL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.Video1280URL"); }
+        else if (this.getJSONValue(jobj, "Image.Video960URL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.Video960URL"); }
+        else if (this.getJSONValue(jobj, "Image.Video640URL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.Video640URL"); }
+        else if (this.getJSONValue(jobj, "Image.Video320URL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.Video320URL"); }
+        else if (this.getJSONValue(jobj, "Image.OriginalURL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL"); }
+        else if (this.getJSONValue(jobj, "Image.X3LargeURL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.X3LargeURL"); }
+        else if (this.getJSONValue(jobj, "Image.X2LargeURL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.X2LargeURL"); }
+        else if (this.getJSONValue(jobj, "Image.XLargeURL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.XLargeURL"); }
+        else if (this.getJSONValue(jobj, "Image.LargeURL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.LargeURL"); }
+        else if (this.getJSONValue(jobj, "Image.MediumURL") != null) { imageURL = (String)this.getJSONValue(jobj, "Image.MediumURL"); }
         else
         {
-        	//this is most likely a normal picture
-        	imageURL = (String)this.getJSONValue(jobj, "Image.OriginalURL");
+            this.printJSONObject(jobj);
+            this.log.printLogLine("ERROR: no URL found!");
+            System.exit(1);
         }
-		
+
 		this.downloadFile(imageURL, fileName);		
 	}
 	
@@ -694,9 +809,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		this.log.printLog(Helper.getCurrentTimeString() + " logging in ... ");
 		//this.log.printLog("smugmug.login.withPassword ... ");
 		
+        String methodName = "smugmug.login.withPassword";
+
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
-		url = url + "method=smugmug.login.withPassword&";
+		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "EmailAddress=" + userEmail + "&";
 		url = url + "Password=" + password + "&";
@@ -709,7 +826,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 			
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-	        	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withPassword")) )
+	        	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	SmugmugConnectorNG.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
@@ -749,9 +866,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		//this.log.printLog("smugmug.login.withHash ... ");
 		
+        String methodName = "smugmug.login.withHash";
+
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
-		url = url + "method=smugmug.login.withHash&";
+		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "UserID=" + SmugmugConnectorNG.login_userID + "&";
 		url = url + "PasswordHash=" + SmugmugConnectorNG.login_passwordHash + "&";
@@ -765,7 +884,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 			
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-	        	 (this.getJSONValue(jobj, "method").equals("smugmug.login.withHash")) )
+	        	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
 	        	//this.log.printLogLine("ok");
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
@@ -780,7 +899,45 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 	}
-		
+
+	private void smugmug_login_anonymously()
+	{
+		this.log.printLog(Helper.getCurrentTimeString() + " logging in anonymously ... ");
+
+		//this.log.printLog("smugmug.login.withHash ... ");
+
+        String methodName = "smugmug.login.anonymously";
+
+		//build url
+		String url = this.config.getConstantSmugmugServerURL() + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
+
+
+
+		do
+		{
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+
+
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	        	 (this.getJSONValue(jobj, "method").equals(methodName)) )
+	        {
+	        	this.log.printLogLine("ok");
+	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
+	        	return;
+	        }
+	        else
+	        {
+	        	this.log.printLog("anonymous login failed, retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
+	}
+
+
 	private void smugmug_logout_logout()
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " logging out ... ");
@@ -811,11 +968,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	{
 		//this.log.printLog("smugmug.users.getTree ... ");
 		
+        String methodName = "smugmug.users.getTree";
+
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
-		url = url + "method=smugmug.users.getTree&";        
+		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		//url = url + "NickName=" + this.login_nickname + "&"; //optional
+		url = url + "NickName=" + SmugmugConnectorNG.login_nickname + "&"; //optional
 		url = url + "Heavy=1&"; //optional, the extra info might be useful at a later time
 		//url = url + "SitePassword=????&"; //optional
 		
@@ -827,7 +986,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        
 			
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-	           	 (this.getJSONValue(jobj, "method").equals("smugmug.users.getTree")) )
+	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {        	
 	        	//this.log.printLogLine("ok");
                 //this.printJSONObject(jobj);
@@ -1349,7 +1508,15 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	        		  (this.getJSONValue(jobj, "code").equals(new Long(15))) )
 	        {
+                //no images found
 	        	//this.log.printLogLine("empty");
+	        	return jobj;
+	        }
+            else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	        		  (this.getJSONValue(jobj, "code").equals(new Long(4))) )
+	        {
+                //invalid user ... probably a missing site password in conjunction with anonymous login ... ignoring this
+	        	//this.log.printLogLine("invalid user");
 	        	return jobj;
 	        }
 	        else

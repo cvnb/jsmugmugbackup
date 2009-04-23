@@ -20,6 +20,11 @@ public class Image extends SmugmugObject implements IImage, Serializable
 	private int width = 0;
 	private long size = 0;
 	private String md5 = null;
+    private String mediumURL = null;
+    private String largeURL = null;
+    private String xLargeURL = null;
+    private String x2LargeURL = null;
+    private String x3LargteURL = null;
 	private String originalURL = null;
 	
 	public Image(IAlbum parentAlbum, int id, String name)
@@ -27,7 +32,8 @@ public class Image extends SmugmugObject implements IImage, Serializable
 		super(parentAlbum, id, name);
 	}
 	
-	public Image(IAlbum parentAlbum, int id, String name, String caption, String keywords, String format, int height, int width, long size, String md5, String originalURL)
+	public Image(IAlbum parentAlbum, int id, String name, String caption, String keywords, String format, int height, int width, long size, String md5,
+                 String mediumURL, String largeURL, String xLargeURL, String x2LargeURL, String x3LargeURL, String originalURL)
 	{
 		super(parentAlbum, id, name);
 		this.caption = caption;
@@ -40,13 +46,19 @@ public class Image extends SmugmugObject implements IImage, Serializable
 		this.width = width;
 		this.size = size;
 		this.md5 = md5;
+        this.mediumURL = mediumURL;
+        this.largeURL = largeURL;
+        this.xLargeURL = xLargeURL;
+        this.x2LargeURL = x2LargeURL;
+        this.x3LargteURL = x3LargeURL;
 		this.originalURL = originalURL;
 	}
 
     //special copy constructor
     public Image(IAlbum parentAlbum, IImage image)
     {
-        this(parentAlbum, image.getID(), image.getName(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), image.getMD5(), image.getOriginalURL());
+        this(parentAlbum, image.getID(), image.getName(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), image.getMD5(),
+             image.getMediumURL(), image.getLargeURL(), image.getXLargeURL(), image.getX2LargeURL(), image.getX3LargeURL(), image.getOriginalURL());
     }
 
 
@@ -60,9 +72,11 @@ public class Image extends SmugmugObject implements IImage, Serializable
 	public int getWidth() { return this.width; }
 	public long getSize() { return this.size; }
 	public String getMD5() { return this.md5; }
+    public String getMediumURL() { return this.mediumURL; }
+    public String getLargeURL() { return this.largeURL; }
+    public String getXLargeURL() { return this.xLargeURL; }
+    public String getX2LargeURL() { return this.x2LargeURL; }
+    public String getX3LargeURL() { return this.x3LargteURL; }
 	public String getOriginalURL() { return this.originalURL; }
-
-
-
 
 }

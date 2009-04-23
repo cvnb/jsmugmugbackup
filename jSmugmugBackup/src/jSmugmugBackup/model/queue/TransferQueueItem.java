@@ -91,7 +91,7 @@ public class TransferQueueItem implements ITransferQueueItem
 		else if (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD))
 		{
             // performing relogin for each queue item might improve stability during long lasting queue operations
-            if ( this.config.getConstantHeavyRelogin() ) { this.smugmugConnector.relogin(); }
+            if ( this.config.getConstantHeavyRelogin()  ) { this.smugmugConnector.relogin(); }
 
 			//this.result_successful = this.smugmugConnector.downloadFile(this.imageID, this.fileName);
 			this.smugmugConnector.downloadFile(this.imageID, this.fileDescriptor);
