@@ -140,8 +140,6 @@ public class Helper
     	return encodedStr;
     }
 
-
-
     public static String encodeAsASCII(String str)
     {
 //        /*
@@ -198,4 +196,8 @@ public class Helper
         return encodedStr;
     }
 
+    public static String extractFilenameFromURL(String url)
+    {
+        return url.substring(url.lastIndexOf("/")+1);
+    }
 }
