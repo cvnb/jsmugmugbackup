@@ -113,8 +113,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //cache: validate if albums in cache are still valid
         //statistics: walk over the tree and count the number of files
         //note: the estimated count seems to be slightly (at least 3) lower than the real count, but is sufficient for an approximation
-        int estimatedImageCount = 0;
-        int estimatedAlbumCount = 0;
+        Statistics stat = new Statistics();
 		int statCategoryIndex = 0;
 		JSONObject statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
 		while (statJsonCategory != null)
@@ -130,8 +129,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     Number albumID          = (Number)this.getJSONValue(statJsonAlbum, "id");
                     Number albumImageCount  = (Number)this.getJSONValue(statJsonAlbum, "ImageCount");
                     String albumLastUpdated = (String)this.getJSONValue(statJsonAlbum, "LastUpdated");
-                    estimatedImageCount += albumImageCount.intValue();
-                    estimatedAlbumCount++;
+                    stat.estimatedImageCount += albumImageCount.intValue();
+                    stat.estimatedAlbumCount++;
 
                     if (this.config.getPersistentCacheAccountInfo())
                     {
@@ -153,8 +152,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                 Number albumID          = (Number)this.getJSONValue(_jsonAlbum, "id");
                 Number albumImageCount  = (Number)this.getJSONValue(_jsonAlbum, "ImageCount");
                 String albumLastUpdated = (String)this.getJSONValue(_jsonAlbum, "LastUpdated");
-                estimatedImageCount += albumImageCount.intValue();
-                estimatedAlbumCount++;
+                stat.estimatedImageCount += albumImageCount.intValue();
+                stat.estimatedAlbumCount++;
 
                 if (this.config.getPersistentCacheAccountInfo())
                 {
@@ -169,14 +168,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
         }
         //this.log.printLogLine("totalAlbumCount: " + totalAlbumCount);
-        this.log.printLog("(estimatedImageCount: " + estimatedImageCount + ", estimatedAlbumCount: " + estimatedAlbumCount + ") ... "); // too low!!
+        this.log.printLog("(estimatedImageCount: " + stat.estimatedImageCount + ", estimatedAlbumCount: " + stat.estimatedAlbumCount + ") ... "); // too low!!
 
 
 
         //init progress statistics
-        final double statStep = 0.1;
-        double statCurrCompletionStep = statStep;
-        int statImageCount = 0;
+//        final double statStep = 0.1;
+//        double statCurrCompletionStep = statStep;
+//        int statImageCount = 0;
+
+
 
         int cacheHits = 0;
 
@@ -232,69 +233,70 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                         subcategory.addAlbum(album);
 
                         //iterate over images
-                        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
-                        int imageIndex = 0;
-                        JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-                        while (jsonImage != null)
-                        {
-                            Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
-                            //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
-                            String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
-                            String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
-                            String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
-                            String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
-                            Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
-                            Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
-                            Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
-                            String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
-                            //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
-                            //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
-                            //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
-                            //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
-                            String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
-                            String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
-                            String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
-                            String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
-                            String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
-                            String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
-                            String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
-                            String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
-                            String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
-                            String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
-
-                            //if there is no filename available, take the name from the url
-                            if (imageName == null)
-                            {
-                                String url;
-
-                                //get the largest url available:
-                                if (imageVideo12800URL != null) { url = imageVideo12800URL; }
-                                else if (imageVideo960URL != null) { url = imageVideo960URL; }
-                                else if (imageVideo640URL != null) { url = imageVideo640URL; }
-                                else if (imageVideo320URL != null) { url = imageVideo320URL; }
-                                else if (imageOriginalURL != null) { url = imageOriginalURL; }
-                                else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
-                                else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
-                                else if (imageXLargeURL != null) { url = imageXLargeURL; }
-                                else if (imageLargeURL != null) { url = imageLargeURL; }
-                                else if (imageMediumURL != null) { url = imageMediumURL; }
-                                else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
-
-                                imageName = Helper.extractFilenameFromURL(url);
-                            }
-
-                            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
-                                                     imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
-                            album.addImage(image);
-
-
-                            //progress stats
-                            statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
-                            if (currCompletion > statCurrCompletionStep) { this.log.printLog( (int)(statCurrCompletionStep*100) + "%..."); statCurrCompletionStep += statStep; }
-
-                            imageIndex++;
-                            jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-                        }
+                        this.getTree_iterateImages(album, stat);
+//                        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
+//                        int imageIndex = 0;
+//                        JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+//                        while (jsonImage != null)
+//                        {
+//                            Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
+//                            //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
+//                            String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
+//                            String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
+//                            String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
+//                            String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
+//                            Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
+//                            Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
+//                            Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
+//                            String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
+//                            //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
+//                            //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
+//                            //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
+//                            //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
+//                            String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
+//                            String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
+//                            String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
+//                            String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
+//                            String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
+//                            String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
+//                            String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+//                            String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+//                            String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+//                            String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+//
+//                            //if there is no filename available, take the name from the url
+//                            if (imageName == null)
+//                            {
+//                                String url;
+//
+//                                //get the largest url available:
+//                                if (imageVideo12800URL != null) { url = imageVideo12800URL; }
+//                                else if (imageVideo960URL != null) { url = imageVideo960URL; }
+//                                else if (imageVideo640URL != null) { url = imageVideo640URL; }
+//                                else if (imageVideo320URL != null) { url = imageVideo320URL; }
+//                                else if (imageOriginalURL != null) { url = imageOriginalURL; }
+//                                else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
+//                                else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
+//                                else if (imageXLargeURL != null) { url = imageXLargeURL; }
+//                                else if (imageLargeURL != null) { url = imageLargeURL; }
+//                                else if (imageMediumURL != null) { url = imageMediumURL; }
+//                                else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
+//
+//                                imageName = Helper.extractFilenameFromURL(url);
+//                            }
+//
+//                            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
+//                                                     imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
+//                            album.addImage(image);
+//
+//
+//                            //progress stats
+//                            stat.imageCount++; double currCompletion = (double)stat.imageCount / (double) stat.estimatedImageCount;
+//                            if (currCompletion > stat.currCompletionStep) { this.log.printLog( (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
+//
+//                            imageIndex++;
+//                            jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+//                        }
 
                         if (this.config.getPersistentCacheAccountInfo())
                         {
@@ -340,69 +342,70 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
                     //iterate over images
-                    JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
-                    int imageIndex = 0;
-                    JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");                    
-                    while (jsonImage != null)
-                    {
-                        Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
-                        //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
-                        String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
-                        String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
-                        String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
-                        String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
-                        Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
-                        Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
-                        Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
-                        String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
-                        //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
-                        //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
-                        //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
-                        //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
-                        String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
-                        String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
-                        String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
-                        String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
-                        String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
-                        String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
-                        String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
-                        String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
-                        String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
-                        String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
-
-                        //if there is no filename available, take the name from the url
-                        if (imageName == null)
-                        {
-                            String url;
-
-                            //get the largest url available:
-                            if (imageVideo12800URL != null) { url = imageVideo12800URL; }
-                            else if (imageVideo960URL != null) { url = imageVideo960URL; }
-                            else if (imageVideo640URL != null) { url = imageVideo640URL; }
-                            else if (imageVideo320URL != null) { url = imageVideo320URL; }
-                            else if (imageOriginalURL != null) { url = imageOriginalURL; }
-                            else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
-                            else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
-                            else if (imageXLargeURL != null) { url = imageXLargeURL; }
-                            else if (imageLargeURL != null) { url = imageLargeURL; }
-                            else if (imageMediumURL != null) { url = imageMediumURL; }
-                            else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
-
-                            imageName = Helper.extractFilenameFromURL(url);
-                        }
-
-                        IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
-                                                 imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
-                        album.addImage(image);
-
-
-                        //progress stats
-                        statImageCount++; double currCompletion = (double)statImageCount / (double) estimatedImageCount;
-                        if (currCompletion > statCurrCompletionStep) { this.log.printLog( (int)(statCurrCompletionStep*100) + "%..."); statCurrCompletionStep += statStep; }
-
-                        imageIndex++;
-                        jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
-                    }
+                    this.getTree_iterateImages(album, stat);
+//                    JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
+//                    int imageIndex = 0;
+//                    JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+//                    while (jsonImage != null)
+//                    {
+//                        Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
+//                        //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
+//                        String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
+//                        String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
+//                        String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
+//                        String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
+//                        Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
+//                        Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
+//                        Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
+//                        String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
+//                        //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
+//                        //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
+//                        //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
+//                        //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
+//                        String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
+//                        String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
+//                        String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
+//                        String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
+//                        String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
+//                        String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
+//                        String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+//                        String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+//                        String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+//                        String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+//
+//                        //if there is no filename available, take the name from the url
+//                        if (imageName == null)
+//                        {
+//                            String url;
+//
+//                            //get the largest url available:
+//                            if (imageVideo12800URL != null) { url = imageVideo12800URL; }
+//                            else if (imageVideo960URL != null) { url = imageVideo960URL; }
+//                            else if (imageVideo640URL != null) { url = imageVideo640URL; }
+//                            else if (imageVideo320URL != null) { url = imageVideo320URL; }
+//                            else if (imageOriginalURL != null) { url = imageOriginalURL; }
+//                            else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
+//                            else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
+//                            else if (imageXLargeURL != null) { url = imageXLargeURL; }
+//                            else if (imageLargeURL != null) { url = imageLargeURL; }
+//                            else if (imageMediumURL != null) { url = imageMediumURL; }
+//                            else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
+//
+//                            imageName = Helper.extractFilenameFromURL(url);
+//                        }
+//
+//                        IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
+//                                                 imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
+//                        album.addImage(image);
+//
+//
+//                        //progress stats
+//                        stat.imageCount++; double currCompletion = (double)stat.imageCount / (double) stat.estimatedImageCount;
+//                        if (currCompletion > stat.currCompletionStep) { this.log.printLog( (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
+//
+//                        imageIndex++;
+//                        jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+//                    }
                     
                     if (this.config.getPersistentCacheAccountInfo())
                     {
@@ -448,6 +451,73 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		return smugmugRoot;
 	}
+
+    private void getTree_iterateImages(IAlbum album, Statistics stat)
+    {
+        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(album.getID());
+        int imageIndex = 0;
+        JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+        while (jsonImage != null)
+        {
+            Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
+            //String imageKey           = (String)this.getJSONValue(jsonImage, "Key");
+            String imageName          = (String)this.getJSONValue(jsonImage, "FileName");
+            String imageCaption       = (String)this.getJSONValue(jsonImage, "Caption");
+            String imageKeywords      = (String)this.getJSONValue(jsonImage, "Keywords");
+            String imageFormat        = (String)this.getJSONValue(jsonImage, "Format");
+            Number imageHeight        = (Number)this.getJSONValue(jsonImage, "Height");
+            Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
+            Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
+            String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
+            //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
+            //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
+            //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
+            //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
+            String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
+            String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
+            String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
+            String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
+            String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
+            String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
+            String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+            String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+            String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+            String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+
+            //if there is no filename available, take the name from the url
+            if (imageName == null)
+            {
+                String url;
+
+                //get the largest url available:
+                if (imageVideo12800URL != null) { url = imageVideo12800URL; }
+                else if (imageVideo960URL != null) { url = imageVideo960URL; }
+                else if (imageVideo640URL != null) { url = imageVideo640URL; }
+                else if (imageVideo320URL != null) { url = imageVideo320URL; }
+                else if (imageOriginalURL != null) { url = imageOriginalURL; }
+                else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
+                else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
+                else if (imageXLargeURL != null) { url = imageXLargeURL; }
+                else if (imageLargeURL != null) { url = imageLargeURL; }
+                else if (imageMediumURL != null) { url = imageMediumURL; }
+                else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
+
+                imageName = Helper.extractFilenameFromURL(url);
+            }
+
+            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
+                                     imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
+            album.addImage(image);
+
+
+            //progress stats
+            stat.imageCount++; double currCompletion = (double)stat.imageCount / (double) stat.estimatedImageCount;
+            if (currCompletion > stat.currCompletionStep) { this.log.printLog( (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
+
+            imageIndex++;
+            jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+        }
+    }
 
 	public void getImages(int albumID)
 	{
