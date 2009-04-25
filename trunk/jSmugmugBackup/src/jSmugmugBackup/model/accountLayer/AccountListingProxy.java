@@ -400,28 +400,70 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
 		
 		int downloadCount = 0;
-		
+		int skippedCount = 0;
+
+
 		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
 	
 		
 		//check target dir
-		this.log.printLog("  ... checking dir: " + targetDir + " ... ");
-		boolean success = (new File(targetDir)).mkdirs();
-	    if (success) { this.log.printLogLine("created"); }
-	    else { this.log.printLogLine("ok"); }
+		boolean dirIsNew = (new File(targetDir)).mkdirs();
+	    if (dirIsNew) { this.log.printLogLine("  ... created dir: " + targetDir); }
+
 	    
 	    
 		IAlbum album = this.getAlbum(albumID);
 		for (IImage image : album.getImageList())
 		{
 			File imageFile = new File(targetDir + image.getName());
-			
-			ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
-			this.transferQueue.add(item);
-			downloadCount++;
+
+            if (imageFile.exists()) //skip file
+            {
+                if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
+                {
+                    String localFileMD5 = Helper.computeMD5Hash(imageFile); //generate md5sum
+                    if (image.getMD5().equals(localFileMD5)) //exists already, but has wrong md5
+                    {
+                        //all ok, skip
+                        skippedCount++;
+                    }
+                    else
+                    {
+                        //md5 doesn't match, download again
+                        this.log.printLogLine("WARNING: image " + image.getName() + " already exists, but has wrong md5 sum ... enqueuing again");
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                        this.transferQueue.add(item);
+                        downloadCount++;
+                    }
+                    
+                }
+                else // no md5, just compare file size
+                {
+                    //todo: check filesize or md5
+                    if (image.getSize() == imageFile.length())
+                    {
+                        // file sizes match, skip
+                        skippedCount++;
+                    }
+                    else
+                    {
+                        //files sizes don't match, download again
+                        this.log.printLogLine("WARNING: image " + image.getName() + " already exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                        this.transferQueue.add(item);
+                        downloadCount++;
+                    }                    
+                }                
+            }
+            else //file doesn't exist, download
+            {
+                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                this.transferQueue.add(item);
+                downloadCount++;
+            }
 		}   
 	    
-	    this.log.printLogLine("  ... added " + downloadCount + " files (target:" + targetDir + ")");
+	    this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
 	}
 	
     public void verifyAlbum(int albumID, String targetBaseDir)

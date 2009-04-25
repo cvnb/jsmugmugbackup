@@ -257,10 +257,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                             String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
                             String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
                             String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
-                            //String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
-                            //String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
-                            //String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
-                            //String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+                            String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+                            String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+                            String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+                            String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
 
                             //if there is no filename available, take the name from the url
                             if (imageName == null)
@@ -268,7 +268,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                                 String url;
 
                                 //get the largest url available:
-                                if (imageOriginalURL != null) { url = imageOriginalURL; }
+                                if (imageVideo12800URL != null) { url = imageVideo12800URL; }
+                                else if (imageVideo960URL != null) { url = imageVideo960URL; }
+                                else if (imageVideo640URL != null) { url = imageVideo640URL; }
+                                else if (imageVideo320URL != null) { url = imageVideo320URL; }
+                                else if (imageOriginalURL != null) { url = imageOriginalURL; }
                                 else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
                                 else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
                                 else if (imageXLargeURL != null) { url = imageXLargeURL; }
@@ -282,7 +286,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                             IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
                                                      imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
                             album.addImage(image);
-
 
 
                             //progress stats
@@ -339,7 +342,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     //iterate over images
                     JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
                     int imageIndex = 0;
-                    JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+                    JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");                    
                     while (jsonImage != null)
                     {
                         Number imageID            = (Number)this.getJSONValue(jsonImage, "id");
@@ -362,10 +365,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                         String imageX2LargeURL    = (String)this.getJSONValue(jsonImage, "X2LargeURL");
                         String imageX3LargeURL    = (String)this.getJSONValue(jsonImage, "X3LargeURL");
                         String imageOriginalURL   = (String)this.getJSONValue(jsonImage, "OriginalURL");
-                        //String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
-                        //String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
-                        //String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
-                        //String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
+                        String imageVideo320URL   = (String)this.getJSONValue(jsonImage, "Video320URL");
+                        String imageVideo640URL   = (String)this.getJSONValue(jsonImage, "Video640URL");
+                        String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
+                        String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
 
                         //if there is no filename available, take the name from the url
                         if (imageName == null)
@@ -373,7 +376,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                             String url;
 
                             //get the largest url available:
-                            if (imageOriginalURL != null) { url = imageOriginalURL; }
+                            if (imageVideo12800URL != null) { url = imageVideo12800URL; }
+                            else if (imageVideo960URL != null) { url = imageVideo960URL; }
+                            else if (imageVideo640URL != null) { url = imageVideo640URL; }
+                            else if (imageVideo320URL != null) { url = imageVideo320URL; }
+                            else if (imageOriginalURL != null) { url = imageOriginalURL; }
                             else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
                             else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
                             else if (imageXLargeURL != null) { url = imageXLargeURL; }
