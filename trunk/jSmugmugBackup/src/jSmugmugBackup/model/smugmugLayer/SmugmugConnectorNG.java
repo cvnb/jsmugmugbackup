@@ -457,6 +457,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         JSONObject jsonImages = (JSONObject)this.smugmug_images_get(album.getID());
         int imageIndex = 0;
         JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
+        //this.printJSONObject(jsonImage);
         while (jsonImage != null)
         {
             Number imageID            = (Number)this.getJSONValue(jsonImage, "id");

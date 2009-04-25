@@ -84,6 +84,9 @@ public class GlobalConfig
         " - if you want to dowwnload someones public galleries, login using his nickname and\n" +
         "   \"anonymous\" as password (album passwords are currently not supported, sorry)\n" +
         " - for downloading, we always download the best resolution available\n" +
+        " - resuming downloading works (well resuming per file, not in the middle of one) as long \n" +
+        "   as there are no videos ... videos will always be downloaded a second time, no idea how\n" +
+        "   to fix that\n" +
         " - <to be continued>\n";
 
    // constant objects

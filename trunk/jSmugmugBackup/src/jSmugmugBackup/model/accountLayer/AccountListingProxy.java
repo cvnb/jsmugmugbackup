@@ -398,7 +398,7 @@ public class AccountListingProxy implements IAccountListingProxy
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
 
 		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
-		
+
 		int downloadCount = 0;
 		int skippedCount = 0;
 
@@ -419,7 +419,8 @@ public class AccountListingProxy implements IAccountListingProxy
 
             if (imageFile.exists()) //skip file
             {
-                if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
+                //md5 checking doesn't seem to work with downloads either
+                if ( (this.config.getPersistentCheckMD5Sums() == true) && (image.getMD5() != null) ) //if md5 checking is enabled in config, and we actually have an md5 (there seems to be no md5 when logging in anonymously)
                 {
                     String localFileMD5 = Helper.computeMD5Hash(imageFile); //generate md5sum
                     if (image.getMD5().equals(localFileMD5)) //exists already, but has wrong md5
@@ -439,7 +440,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else // no md5, just compare file size
                 {
-                    //todo: check filesize or md5
+                    //todo: checking filesize
                     if (image.getSize() == imageFile.length())
                     {
                         // file sizes match, skip
