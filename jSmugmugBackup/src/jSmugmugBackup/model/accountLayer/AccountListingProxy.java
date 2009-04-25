@@ -344,19 +344,21 @@ public class AccountListingProxy implements IAccountListingProxy
         	}
         	else //image already exists on smugmug
         	{
+                IImage image = this.getImage(imageID);
+
+                //check if it's a video
+                boolean isVideo = false;
+                for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                {
+                    if (image.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                }
+
+
                 if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
                 {
                     String fileMD5 = Helper.computeMD5Hash(fileList[i]); //generate md5sum
-                    if (!this.getImage(imageID).getMD5().equals(fileMD5)) //exists already, but has wrong md5
+                    if (!image.getMD5().equals(fileMD5)) //exists already, but has wrong md5
                     {
-                        //check if it's a video
-                        boolean isVideo = false;
-                        for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
-                        {
-                            if (this.getImage(imageID).getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
-                        }
-
-
                         if (isVideo)
                         {
                             //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is normal for a video ... skipping");
@@ -379,10 +381,26 @@ public class AccountListingProxy implements IAccountListingProxy
                         skippedCount++;
                     }
                 }
-                else // md5 checking ist disabled in config, check only the filename
+                else // md5 checking ist disabled in config, check the filesize
                 {
                     //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug ... skipping");
-                    skippedCount++;
+                    //skippedCount++;
+
+                    if (isVideo)
+                    {
+                        //no filesize checking on videos, skipping
+                        skippedCount++;
+                    }
+                    else
+                    {
+                        //skip anyway, but do an extra check for the filesize
+                        skippedCount++;
+
+                        if ( image.getSize() != fileList[i].length() )
+                        {
+                            this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize does not match (local: " + fileList[i].length() + ", remote: " + image.getSize() + " ... skipping anyway");
+                        }
+                    }
                 }
         	}
         }        
