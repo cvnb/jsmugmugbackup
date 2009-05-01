@@ -698,7 +698,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			long startTime = (new Date()).getTime();
 			
 			
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[65536]; //write data in 64kb chunks
 			int numRead;
 			long numWritten = 0;
 			while ((numRead = in.read(buffer)) != -1)
