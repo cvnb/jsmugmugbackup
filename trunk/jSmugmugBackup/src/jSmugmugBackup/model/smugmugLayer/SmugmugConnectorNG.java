@@ -689,11 +689,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//write url to file
 		try
 		{
-			URL url	= new URL(imageURL);
-			FileOutputStream out = new FileOutputStream(fileName);
+			URL url	= new URL(imageURL);			
+            FileOutputStream out = new FileOutputStream(fileName);
 			URLConnection conn = url.openConnection();
 			InputStream  in = conn.getInputStream();
-			
+
+
 			
 			long startTime = (new Date()).getTime();
 			
