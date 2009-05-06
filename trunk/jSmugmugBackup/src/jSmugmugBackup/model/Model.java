@@ -64,8 +64,11 @@ public class Model
     {
         if (loginDialogResult == null) { return; }
 
-        this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
-                
+        Number loginResult;
+        loginResult = this.accListing.login(loginDialogResult.getLoginUsername(), loginDialogResult.getLoginPassword());
+
+        //if login failed, quit
+        if (loginResult == null) { this.quitApplication(); }
     }
     
     public void list(ITransferDialogResult transferDialogResult)
@@ -75,197 +78,251 @@ public class Model
     	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords()) );
     }
 
-	public void upload(ITransferDialogResult transferDialogResult)
+//	public void upload(ITransferDialogResult transferDialogResult)
+//    {
+//        if (transferDialogResult == null) { return; }
+//
+//    	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
+//
+//
+//		String category    = transferDialogResult.getCategoryName();
+//		String subcategory = transferDialogResult.getSubCategoryName();
+//		String album       = transferDialogResult.getAlbumName();
+//        String keywords    = transferDialogResult.getAlbumKeywords();
+//
+//		if ( (transferDialogResult.getCategoryName()    == null) &&
+//		     (transferDialogResult.getSubCategoryName() == null) &&
+//		     (transferDialogResult.getAlbumName()       == null) )
+//		{
+//			File rootDir = new File(transferDialogResult.getDir());
+//			if (rootDir.isDirectory()) //should normally be true
+//			{
+//				if (this.containsPics(rootDir))
+//				{
+//					//print a warning - we have nowhere to put the images
+//					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+//				}
+//
+//				//go on, search for sub-directories
+//				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
+//				for (int i=0; i < subDirFileList.length; i++)
+//				{
+//					File subDirFile = subDirFileList[i];
+//					if (subDirFile.isDirectory())
+//					{
+//						if (this.containsPics(subDirFile))
+//						{
+//							category = "Other";
+//							subcategory = null;
+//							album = subDirFile.getName();
+//							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
+//						}
+//						else //search in sub-sub-directories
+//						{
+//							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, this.config.getConstantFileComparator());
+//							for (int j=0; j < subSubDirList.length; j++)
+//							{
+//								File subSubDirFile = subSubDirList[j];
+//								if (subSubDirFile.isDirectory())
+//								{
+//									if (this.containsPics(subSubDirFile))
+//									{
+//										category    = subSubDirFile.getParentFile().getName();
+//										subcategory = null;
+//										album       = subSubDirFile.getName();
+//										this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDirFile, keywords);
+//									}
+//									else //search in sub-sub-sub-directories
+//									{
+//										File[] subSubSubDirList = subSubDirFile.listFiles(); Arrays.sort(subSubSubDirList, this.config.getConstantFileComparator());
+//										for (int k=0; k < subSubSubDirList.length; k++)
+//										{
+//											File subSubSubDirFile = subSubSubDirList[k];
+//											if (subSubSubDirFile.isDirectory())
+//											{
+//												if (this.containsPics(subSubSubDirFile))
+//												{
+//													category    = subSubSubDirFile.getParentFile().getParentFile().getName();
+//													subcategory = subSubSubDirFile.getParentFile().getName();
+//													album       = subSubSubDirFile.getName();
+//													this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubSubDirFile, keywords);
+//												}
+//												else
+//												{
+//													//not going any deeper
+//												}
+//											}
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//	        }
+//			else
+//			{
+//				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+//			}
+//		}
+//		else if ( (transferDialogResult.getCategoryName()    != null) &&
+//				  (transferDialogResult.getSubCategoryName() == null) &&
+//				  (transferDialogResult.getAlbumName()       == null) )
+//		{
+//
+//			File rootDir = new File(transferDialogResult.getDir());
+//			if (rootDir.isDirectory()) //should normally be true
+//			{
+//				if (this.containsPics(rootDir))
+//				{
+//					//print a warning - we have nowhere to put the images
+//					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+//				}
+//
+//				//go on, search for sub-directories
+//				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
+//				for (int i=0; i < subDirFileList.length; i++)
+//				{
+//					File subDirFile = subDirFileList[i];
+//					if (subDirFile.isDirectory())
+//					{
+//						if (this.containsPics(subDirFile))
+//						{
+//							//category is defined above
+//							subcategory = null;
+//							album = subDirFile.getName();
+//							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
+//						}
+//						else //search in sub-sub-directories
+//						{
+//							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, this.config.getConstantFileComparator());
+//							for (int j=0; j < subSubDirList.length; j++)
+//							{
+//								File subSubDirFile = subSubDirList[j];
+//								if (subSubDirFile.isDirectory())
+//								{
+//									if (this.containsPics(subSubDirFile))
+//									{
+//										//category is defined above
+//										subcategory = subSubDirFile.getParentFile().getName();
+//										album       = subSubDirFile.getName();
+//										this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDirFile, keywords);
+//									}
+//									else
+//									{
+//										//not going any deeper
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//	        }
+//			else
+//			{
+//				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+//			}
+//		}
+//		else if ( (transferDialogResult.getCategoryName()    != null) &&
+//				  (transferDialogResult.getSubCategoryName() != null) &&
+//				  (transferDialogResult.getAlbumName()       == null) )
+//		{
+//
+//			File rootDir = new File(transferDialogResult.getDir());
+//			if (rootDir.isDirectory()) //should normally be true
+//			{
+//				if (this.containsPics(rootDir))
+//				{
+//					//print a warning - we have nowhere to put the images
+//					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+//				}
+//
+//				//go on, search for sub-directories
+//				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
+//				for (int i=0; i < subDirFileList.length; i++)
+//				{
+//					File subDirFile = subDirFileList[i];
+//					if (subDirFile.isDirectory())
+//					{
+//						if (this.containsPics(subDirFile))
+//						{
+//							//category is defined above
+//							//subcategory is defined above
+//							album = subDirFile.getName();
+//							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
+//						}
+//						else
+//						{
+//							//not going any deeper
+//						}
+//					}
+//				}
+//	        }
+//			else
+//			{
+//				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+//			}
+//		}
+//		else if (transferDialogResult.getAlbumName() != null) //handles all cases where an album name is given
+//		{
+//			if (transferDialogResult.getCategoryName() == null) { category = "Other"; }
+//			//if subcategory is null or not, doesn't matter
+//
+//			File rootDir = new File(transferDialogResult.getDir());
+//			if (rootDir.isDirectory()) //should normally be true
+//			{
+//				if (this.containsPics(rootDir))
+//				{
+//					//category is defined above
+//					//subcategory is defined above
+//					//album is defined above
+//
+//					this.accListing.enqueueAlbumForUpload(category, subcategory, album, rootDir, keywords);
+//				}
+//	        }
+//			else
+//			{
+//				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
+//			}
+//		}
+//		else
+//		{
+//			this.log.printLogLine("ERROR: this case is yet unhandled");
+//			this.quitApplication();
+//		}
+//
+//    }
+
+    public void upload(ITransferDialogResult transferDialogResult)
     {
         if (transferDialogResult == null) { return; }
 
     	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
 
-		
+
 		String category    = transferDialogResult.getCategoryName();
 		String subcategory = transferDialogResult.getSubCategoryName();
 		String album       = transferDialogResult.getAlbumName();
         String keywords    = transferDialogResult.getAlbumKeywords();
-		
-		if ( (transferDialogResult.getCategoryName()    == null) && 
-		     (transferDialogResult.getSubCategoryName() == null) &&
-		     (transferDialogResult.getAlbumName()       == null) )
-		{
-			File rootDir = new File(transferDialogResult.getDir());
-			if (rootDir.isDirectory()) //should normally be true
-			{
-				if (this.containsPics(rootDir))
-				{
-					//print a warning - we have nowhere to put the images
-					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
-				}
-				
-				//go on, search for sub-directories
-				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
-				for (int i=0; i < subDirFileList.length; i++)
-				{
-					File subDirFile = subDirFileList[i];
-					if (subDirFile.isDirectory())
-					{
-						if (this.containsPics(subDirFile))
-						{
-							category = "Other";
-							subcategory = null;
-							album = subDirFile.getName();								
-							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
-						}
-						else //search in sub-sub-directories
-						{
-							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, this.config.getConstantFileComparator());
-							for (int j=0; j < subSubDirList.length; j++)
-							{
-								File subSubDirFile = subSubDirList[j];
-								if (subSubDirFile.isDirectory())
-								{
-									if (this.containsPics(subSubDirFile))
-									{
-										category    = subSubDirFile.getParentFile().getName();
-										subcategory = null;
-										album       = subSubDirFile.getName();
-										this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDirFile, keywords);
-									}
-									else //search in sub-sub-sub-directories
-									{
-										File[] subSubSubDirList = subSubDirFile.listFiles(); Arrays.sort(subSubSubDirList, this.config.getConstantFileComparator());
-										for (int k=0; k < subSubSubDirList.length; k++)
-										{
-											File subSubSubDirFile = subSubSubDirList[k];
-											if (subSubSubDirFile.isDirectory())
-											{
-												if (this.containsPics(subSubSubDirFile))
-												{
-													category    = subSubSubDirFile.getParentFile().getParentFile().getName();
-													subcategory = subSubSubDirFile.getParentFile().getName();
-													album       = subSubSubDirFile.getName();
-													this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubSubDirFile, keywords);
-												}
-												else
-												{
-													//not going any deeper
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-	        }
-			else
-			{
-				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
-			}
-		}
-		else if ( (transferDialogResult.getCategoryName()    != null) &&
-				  (transferDialogResult.getSubCategoryName() == null) &&
-				  (transferDialogResult.getAlbumName()       == null) )
-		{
-		
-			File rootDir = new File(transferDialogResult.getDir());
-			if (rootDir.isDirectory()) //should normally be true
-			{
-				if (this.containsPics(rootDir))
-				{
-					//print a warning - we have nowhere to put the images
-					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
-				}
-				
-				//go on, search for sub-directories
-				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
-				for (int i=0; i < subDirFileList.length; i++)
-				{
-					File subDirFile = subDirFileList[i];
-					if (subDirFile.isDirectory())
-					{
-						if (this.containsPics(subDirFile))
-						{
-							//category is defined above
-							subcategory = null;
-							album = subDirFile.getName();								
-							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
-						}
-						else //search in sub-sub-directories
-						{
-							File[] subSubDirList = subDirFile.listFiles(); Arrays.sort(subSubDirList, this.config.getConstantFileComparator());
-							for (int j=0; j < subSubDirList.length; j++)
-							{
-								File subSubDirFile = subSubDirList[j];
-								if (subSubDirFile.isDirectory())
-								{
-									if (this.containsPics(subSubDirFile))
-									{
-										//category is defined above
-										subcategory = subSubDirFile.getParentFile().getName();
-										album       = subSubDirFile.getName();
-										this.accListing.enqueueAlbumForUpload(category, subcategory, album, subSubDirFile, keywords);
-									}
-									else
-									{
-										//not going any deeper
-									}
-								}
-							}
-						}
-					}
-				}
-	        }
-			else
-			{
-				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
-			}
-		}
-		else if ( (transferDialogResult.getCategoryName()    != null) &&
-				  (transferDialogResult.getSubCategoryName() != null) &&
-				  (transferDialogResult.getAlbumName()       == null) )
-		{
-		
-			File rootDir = new File(transferDialogResult.getDir());
-			if (rootDir.isDirectory()) //should normally be true
-			{
-				if (this.containsPics(rootDir))
-				{
-					//print a warning - we have nowhere to put the images
-					this.log.printLogLine("WARNING: the directory " + rootDir + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
-				}
-				
-				//go on, search for sub-directories
-				File[] subDirFileList = rootDir.listFiles(); Arrays.sort(subDirFileList, this.config.getConstantFileComparator());
-				for (int i=0; i < subDirFileList.length; i++)
-				{
-					File subDirFile = subDirFileList[i];
-					if (subDirFile.isDirectory())
-					{
-						if (this.containsPics(subDirFile))
-						{
-							//category is defined above
-							//subcategory is defined above
-							album = subDirFile.getName();								
-							this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirFile, keywords);
-						}
-						else
-						{
-							//not going any deeper
-						}
-					}
-				}
-	        }
-			else
-			{
-				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
-			}
-		}
-		else if (transferDialogResult.getAlbumName() != null) //handles all cases where an album name is given
+
+        File rootDir = new File(transferDialogResult.getDir());
+		if ((category == null) && (subcategory == null) && (album == null))
 		{			
+            this.recursiveUploadDirectorySearch(3, rootDir, category, subcategory, album, keywords);
+		}
+		else if ((category != null) && (subcategory == null) && (album == null))
+		{
+            this.recursiveUploadDirectorySearch(2, rootDir, category, subcategory, album, keywords);
+		}
+		else if ((category != null) && (subcategory != null) && (album == null))
+		{
+            this.recursiveUploadDirectorySearch(1, rootDir, category, subcategory, album, keywords);
+		}
+		else if (transferDialogResult.getAlbumName() != null) //no recursion needed, handles all cases where an album name is given
+		{
 			if (transferDialogResult.getCategoryName() == null) { category = "Other"; }
 			//if subcategory is null or not, doesn't matter
-			
-			File rootDir = new File(transferDialogResult.getDir());
+
 			if (rootDir.isDirectory()) //should normally be true
 			{
 				if (this.containsPics(rootDir))
@@ -273,21 +330,16 @@ public class Model
 					//category is defined above
 					//subcategory is defined above
 					//album is defined above
-					
+
 					this.accListing.enqueueAlbumForUpload(category, subcategory, album, rootDir, keywords);
 				}
 	        }
-			else
-			{
-				this.log.printLogLine("expected a directory, not a file (" + rootDir + ")");
-			}
-		}		
+			else { this.log.printLogLine("ERROR: expected a directory, not a file (" + rootDir + ")"); this.quitApplication(); }
+		}
 		else
 		{
-			this.log.printLogLine("ERROR: this case is yet unhandled");
-			this.quitApplication();
+			this.log.printLogLine("ERROR: Model.upload: this case is yet unhandled"); this.quitApplication();
 		}
-
     }
     
     public void download(ITransferDialogResult transferDialogResult)
@@ -514,4 +566,122 @@ public class Model
 //
 //		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir, keywords);
 //	}
+
+    private void recursiveUploadDirectorySearch(int maxRecursionLevel, File directory, String category, String subcategory, String album, String keywords)
+    {
+        //this.log.printLogLine("DEBUG: Model.recursiveUploadDirectorySearch(" + maxRecursionLevel + ", " + directory + ", " + category + ", " + subcategory + ", " + album + ", " + keywords + ")");
+
+        //check if it's a directory, not a file
+        if (!directory.isDirectory()) //should normally be false
+        {
+            this.log.printLogLine("ERROR: expected a directory, not a file (" + directory + ")");
+            this.quitApplication();
+        }
+
+        //check if someone has manually set the ignore tag ... this is probably needed only once
+        //this.log.printLogLine("checking: " + directory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
+        if ( (new File(directory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists() )
+        {
+            this.log.printLogLine("WARNING: " + directory.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
+            return;
+        }
+
+        if (this.containsPics(directory))
+        {
+            //print a warning - we have nowhere to put the images
+            this.log.printLogLine("WARNING: the directory " + directory + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+        }
+
+        File[] directoryList = directory.listFiles();
+        Arrays.sort(directoryList, this.config.getConstantFileComparator());
+
+        for (int i=0; i < directoryList.length; i++)
+        {
+            File subDirectory = directoryList[i];
+
+            // if the file is a directory and there is no ignore tag set
+            if ( subDirectory.isDirectory() &&
+                 !((new File(subDirectory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists()) )
+            {
+                if (this.containsPics(subDirectory))
+                {
+                    //this.log.printLogLine("DEBUG: \"" + subDirectory + "\" contains pictures ... info: level=" + maxRecursionLevel + " " + category + "/" + subcategory + "/" + album);
+                    if (maxRecursionLevel == 3)
+                    {
+//                        if ((category == null) && (subcategory == null) && (album == null)) //should always be true
+//                        {
+//                            category    = "Other";
+//                            subcategory = null;
+//                            album       = subDirectory.getName();
+//                        }
+//                        else
+//                        {
+//                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
+//                            this.quitApplication();
+//                        }
+                        category    = "Other";
+                        subcategory = null;
+                        album       = subDirectory.getName();
+
+                    }
+                    else if (maxRecursionLevel == 2)
+                    {
+//                        if ((subcategory == null) && (album == null)) //should always be true
+//                        {
+//                            if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+//                            subcategory = null;
+//                            album       = subDirectory.getName();
+//                        }
+//                        else
+//                        {
+//                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
+//                            this.quitApplication();
+//                        }
+                        if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+                        subcategory = null;
+                        album       = subDirectory.getName();
+
+                    }
+                    else if (maxRecursionLevel == 1)
+                    {
+//                        if (album == null) //should always be true
+//                        {
+//                            //assuming that if there is a subcategory name given, there will be category name too - should have been checked outside this method
+//                            if (category    == null) { category    = subDirectory.getParentFile().getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+//                            if (subcategory == null) { subcategory = subDirectory.getParentFile().getName(); } else { /*NOOP: subcategory is already defined*/ }
+//                            album       = subDirectory.getName();
+//                        }
+//                        else
+//                        {
+//                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
+//                            this.quitApplication();
+//                        }
+                        //assuming that if there is a subcategory name given, there will be category name too - should have been checked outside this method
+                        if (category    == null) { category    = subDirectory.getParentFile().getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+                        if (subcategory == null) { subcategory = subDirectory.getParentFile().getName(); } else { /*NOOP: subcategory is already defined*/ }
+                        album       = subDirectory.getName();
+
+                    }
+                    else { this.log.printLogLine("ERROR: undefined recursion level"); this.quitApplication(); }
+
+                    this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirectory, keywords);
+                }
+                else
+                {
+                    //recursion
+                    if (maxRecursionLevel > 1)
+                    {
+                        this.recursiveUploadDirectorySearch(maxRecursionLevel-1, subDirectory, category, subcategory, album, keywords);
+                    }
+                    else
+                    {
+                        //not going any deeper
+                    }
+
+                }
+            }
+        }
+
+    }
+
 }

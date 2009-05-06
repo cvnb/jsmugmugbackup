@@ -910,7 +910,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	//return true;
 	        	return SmugmugConnectorNG.login_userID;
 	        }
-	        if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+            else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 		       	 (this.getJSONValue(jobj, "message").equals("invalid login")) )
 	        {
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
@@ -924,10 +924,17 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	
 	        	return null;
 	        }
+            else if (this.getJSONValue(jobj, "stat").equals("fail"))
+            {
+                // generic "fail" handling ... everything except the "invalid login" which is handled above
+                this.log.printLog("login failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
+
+                //maybe we should quit here??
+            }
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("retrying ...");
+	        	this.log.printLog("retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -964,7 +971,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	return;
 	        }
-	        else
+            else if (this.getJSONValue(jobj, "stat").equals("fail"))
+            {
+                // generic "fail" handling ... everything except the "invalid login" which is handled above
+                this.log.printLog("relogin failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
+
+                //maybe we should quit here??
+            }
+            else
 	        {
 	        	//this.log.printLog(this.getTimeString() + " smugmug.login.withHash ... failed");
 	        	//this.log.printLogLine("failed");
