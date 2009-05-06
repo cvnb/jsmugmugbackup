@@ -306,6 +306,15 @@ public class Model
         String keywords    = transferDialogResult.getAlbumKeywords();
 
         File rootDir = new File(transferDialogResult.getDir());
+
+        //check if someone has manually set the ignore tag ... this is probably needed only once
+        //this.log.printLogLine("checking: " + directory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
+        if ( (new File(rootDir.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists() )
+        {
+            this.log.printLogLine("WARNING: " + rootDir.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
+            return;
+        }
+
 		if ((category == null) && (subcategory == null) && (album == null))
 		{			
             this.recursiveUploadDirectorySearch(3, rootDir, category, subcategory, album, keywords);
@@ -578,14 +587,6 @@ public class Model
             this.quitApplication();
         }
 
-        //check if someone has manually set the ignore tag ... this is probably needed only once
-        //this.log.printLogLine("checking: " + directory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
-        if ( (new File(directory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists() )
-        {
-            this.log.printLogLine("WARNING: " + directory.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
-            return;
-        }
-
         if (this.containsPics(directory))
         {
             //print a warning - we have nowhere to put the images
@@ -600,85 +601,93 @@ public class Model
             File subDirectory = directoryList[i];
 
             // if the file is a directory and there is no ignore tag set
-            if ( subDirectory.isDirectory() &&
-                 !((new File(subDirectory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists()) )
+            if ( subDirectory.isDirectory() )
             {
-                if (this.containsPics(subDirectory))
+                // if no ignore tag is present, continue processing this directory
+                if ( !((new File(subDirectory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists()) )
                 {
-                    //this.log.printLogLine("DEBUG: \"" + subDirectory + "\" contains pictures ... info: level=" + maxRecursionLevel + " " + category + "/" + subcategory + "/" + album);
-                    if (maxRecursionLevel == 3)
+                    if (this.containsPics(subDirectory))
                     {
-//                        if ((category == null) && (subcategory == null) && (album == null)) //should always be true
-//                        {
-//                            category    = "Other";
-//                            subcategory = null;
-//                            album       = subDirectory.getName();
-//                        }
-//                        else
-//                        {
-//                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
-//                            this.quitApplication();
-//                        }
-                        category    = "Other";
-                        subcategory = null;
-                        album       = subDirectory.getName();
+                        //this.log.printLogLine("DEBUG: \"" + subDirectory + "\" contains pictures ... info: level=" + maxRecursionLevel + " " + category + "/" + subcategory + "/" + album);
+                        if (maxRecursionLevel == 3)
+                        {
+    //                        if ((category == null) && (subcategory == null) && (album == null)) //should always be true
+    //                        {
+    //                            category    = "Other";
+    //                            subcategory = null;
+    //                            album       = subDirectory.getName();
+    //                        }
+    //                        else
+    //                        {
+    //                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
+    //                            this.quitApplication();
+    //                        }
+                            category    = "Other";
+                            subcategory = null;
+                            album       = subDirectory.getName();
 
-                    }
-                    else if (maxRecursionLevel == 2)
-                    {
-//                        if ((subcategory == null) && (album == null)) //should always be true
-//                        {
-//                            if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
-//                            subcategory = null;
-//                            album       = subDirectory.getName();
-//                        }
-//                        else
-//                        {
-//                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
-//                            this.quitApplication();
-//                        }
-                        if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
-                        subcategory = null;
-                        album       = subDirectory.getName();
+                        }
+                        else if (maxRecursionLevel == 2)
+                        {
+    //                        if ((subcategory == null) && (album == null)) //should always be true
+    //                        {
+    //                            if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+    //                            subcategory = null;
+    //                            album       = subDirectory.getName();
+    //                        }
+    //                        else
+    //                        {
+    //                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
+    //                            this.quitApplication();
+    //                        }
+                            if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+                            subcategory = null;
+                            album       = subDirectory.getName();
 
-                    }
-                    else if (maxRecursionLevel == 1)
-                    {
-//                        if (album == null) //should always be true
-//                        {
-//                            //assuming that if there is a subcategory name given, there will be category name too - should have been checked outside this method
-//                            if (category    == null) { category    = subDirectory.getParentFile().getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
-//                            if (subcategory == null) { subcategory = subDirectory.getParentFile().getName(); } else { /*NOOP: subcategory is already defined*/ }
-//                            album       = subDirectory.getName();
-//                        }
-//                        else
-//                        {
-//                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
-//                            this.quitApplication();
-//                        }
-                        //assuming that if there is a subcategory name given, there will be category name too - should have been checked outside this method
-                        if (category    == null) { category    = subDirectory.getParentFile().getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
-                        if (subcategory == null) { subcategory = subDirectory.getParentFile().getName(); } else { /*NOOP: subcategory is already defined*/ }
-                        album       = subDirectory.getName();
+                        }
+                        else if (maxRecursionLevel == 1)
+                        {
+    //                        if (album == null) //should always be true
+    //                        {
+    //                            //assuming that if there is a subcategory name given, there will be category name too - should have been checked outside this method
+    //                            if (category    == null) { category    = subDirectory.getParentFile().getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+    //                            if (subcategory == null) { subcategory = subDirectory.getParentFile().getName(); } else { /*NOOP: subcategory is already defined*/ }
+    //                            album       = subDirectory.getName();
+    //                        }
+    //                        else
+    //                        {
+    //                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
+    //                            this.quitApplication();
+    //                        }
+                            //assuming that if there is a subcategory name given, there will be category name too - should have been checked outside this method
+                            if (category    == null) { category    = subDirectory.getParentFile().getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+                            if (subcategory == null) { subcategory = subDirectory.getParentFile().getName(); } else { /*NOOP: subcategory is already defined*/ }
+                            album       = subDirectory.getName();
 
-                    }
-                    else { this.log.printLogLine("ERROR: undefined recursion level"); this.quitApplication(); }
+                        }
+                        else { this.log.printLogLine("ERROR: undefined recursion level"); this.quitApplication(); }
 
-                    this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirectory, keywords);
-                }
-                else
-                {
-                    //recursion
-                    if (maxRecursionLevel > 1)
-                    {
-                        this.recursiveUploadDirectorySearch(maxRecursionLevel-1, subDirectory, category, subcategory, album, keywords);
+                        this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirectory, keywords);
                     }
                     else
                     {
-                        //not going any deeper
-                    }
+                        //recursion
+                        if (maxRecursionLevel > 1)
+                        {
+                            this.recursiveUploadDirectorySearch(maxRecursionLevel-1, subDirectory, category, subcategory, album, keywords);
+                        }
+                        else
+                        {
+                            //not going any deeper
+                        }
 
+                    }
                 }
+                else // an ignore tag is present, print warning
+                {
+                    this.log.printLogLine("WARNING: " + subDirectory.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
+                }
+
             }
         }
 
