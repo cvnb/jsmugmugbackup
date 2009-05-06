@@ -33,11 +33,13 @@ public class Main {
             //view = new SwingView(model);
             
             // start new Swing view, designed with NetBeans
-            SwingViewNGStarterApp.launch(SwingViewNGStarterApp.class, args);
-            
-            Helper.pause(2000); // wait a sec until gui is initialized
-            SwingViewNGStarterApp.getView().init(model);
-            view = SwingViewNGStarterApp.getView();
+//            SwingViewNGStarterApp.launch(SwingViewNGStarterApp.class, args);
+//            Helper.pause(2000); // wait a sec until gui is initialized
+//            SwingViewNGStarterApp.getView().init(model);
+//            view = SwingViewNGStarterApp.getView();
+
+            // starting cmdview, for the time the gui is deactivated
+            view = new CmdView(model, args);
         }
         //else if (args[0].equals("--console")) { view = new ConsoleView(model); }
         else { view = new CmdView(model, args); }
