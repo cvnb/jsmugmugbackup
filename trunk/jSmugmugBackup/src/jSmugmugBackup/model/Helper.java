@@ -106,6 +106,7 @@ public class Helper
     	encodedStr = encodedStr.replace("%", "%25"); //do this first
 
     	encodedStr = encodedStr.replace(" ", "%20"); //space character
+        encodedStr = encodedStr.replace("\"", "%22"); //quotation
     	encodedStr = encodedStr.replace("#", "%23"); //not sure, if it is nesseciary
     	encodedStr = encodedStr.replace("+", "%2B");
     	encodedStr = encodedStr.replace("<", "%3C");
