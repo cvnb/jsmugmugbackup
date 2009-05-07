@@ -772,13 +772,11 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine("ok");
 		
 		//collect Results
-		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
-		this.connector.relogin(); //probably not nessceary
-//		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
-//		for (ITransferQueueItem item : processedItemList)
-//		{
-//			this.transferedBytes += item.getResults().getTransferedBytes();
-//
+		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+		for (ITransferQueueItem item : processedItemList)
+		{
+			this.transferedBytes += item.getResults().getTransferedBytes();
+
 //			// uploaded images:
 //			// if item.getAction == upload then add imageid to local data
 //			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
@@ -797,7 +795,11 @@ public class AccountListingProxy implements IAccountListingProxy
 //                    if (imageID != 0) { this.addImage(albumID, imageID, imageName); } //guess this should usually be true, since we already checked before
 //                }
 //			}
-//		}
+		}
+
+		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
+		this.connector.relogin(); //probably not nessceary
+
         //discard current root object, and download treedata again (this would be horrobly slow without caching)
         this.smugmugRoot = null;
         this.smugmugRoot = this.connector.getTree();
@@ -826,13 +828,11 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine("ok");
 
 		//collect Results
-		this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
-		this.connector.relogin(); //probably not nessceary
-//		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
-//		for (ITransferQueueItem item : processedItemList)
-//		{
-//			this.transferedBytes += item.getResults().getTransferedBytes();
-//
+		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
+		for (ITransferQueueItem item : processedItemList)
+		{
+			this.transferedBytes += item.getResults().getTransferedBytes();
+
 //			// uploaded images:
 //			// if item.getAction == upload then add imageid to local data
 //			if (item.getResults().getAction().equals(TransferQueueItemActionEnum.UPLOAD))
@@ -848,7 +848,11 @@ public class AccountListingProxy implements IAccountListingProxy
 //
 //				if (imageID != 0) { this.addImage(albumID, imageID, imageName); }
 //			}
-//		}
+		}
+		
+        this.log.printLog(Helper.getCurrentTimeString() + " updating local database ... ");
+		this.connector.relogin(); //probably not nessceary
+
         //discard current root object, and download treedata again (this would be horrobly slow without caching)
         this.smugmugRoot = null;
         this.smugmugRoot = this.connector.getTree();

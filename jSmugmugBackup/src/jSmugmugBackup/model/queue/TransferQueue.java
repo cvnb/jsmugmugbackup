@@ -68,6 +68,8 @@ public class TransferQueue implements ITransferQueue
 
 	public void startAsyncProcessing()
 	{
+        this.log.printLogLine("TransferQueue.startAsyncProcessing()");
+
 		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, this.asyncProcessQueueFinishedListener));
 		this.queueProcessorThread.start();
 
