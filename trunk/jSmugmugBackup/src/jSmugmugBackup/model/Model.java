@@ -56,7 +56,7 @@ public class Model
 
 		
 		DecimalFormat df = new DecimalFormat("0.0");
-    	this.log.printLogLine("finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, speed: " + df.format(transferSpeed) + " kb/sec)");
+    	this.log.printLogLine("finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, avg speed: " + df.format(transferSpeed) + " kb/sec)");
     	System.exit(0);
     }
 
