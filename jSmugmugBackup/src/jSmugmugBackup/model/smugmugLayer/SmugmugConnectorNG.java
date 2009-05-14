@@ -2021,8 +2021,10 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             {
                 albumCache.removeAlbum(albumID);
                 //this.log.printLogLine(Helper.getCurrentTimeString() + " removed album (id=" + albumID + ") from cache");
+
+                albumCache.saveCacheToDisk();
             }
-            albumCache.saveCacheToDisk();
+            
         }
     }
 
