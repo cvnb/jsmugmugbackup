@@ -28,7 +28,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 {
     private GlobalConfig config = null;
 	private Logger log = null;
-    //private SmugmugLocalAlbumCache albumCache = null;
+    
 	
 	// hack: there should be a better way to handle multiple instances of
 	//       the connector without having to ask for username and password again
@@ -36,6 +36,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private static Number login_userID = null;
 	private static String login_nickname = null;
 	private static String login_passwordHash = null;
+    private static SmugmugLocalAlbumCache albumCache = null; //making this static is a bit error prone, but should speed things up
 	
 	private long transferedBytes = 0;
 	
@@ -90,18 +91,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a while) ... ");
 
-        SmugmugLocalAlbumCache albumCache = null;
+        //SmugmugLocalAlbumCache albumCache = null;
+        SmugmugConnectorNG.albumCache = null;
         if (this.config.getPersistentCacheAccountInfo())
         {
             if (this.config.getRtconfigAnonymousLogin() == false)
             {
-                albumCache = new SmugmugLocalAlbumCache(SmugmugConnectorNG.login_userID.toString());
+                SmugmugConnectorNG.albumCache = new SmugmugLocalAlbumCache(SmugmugConnectorNG.login_userID.toString());
             }
             else
             {
-                albumCache = new SmugmugLocalAlbumCache(SmugmugConnectorNG.login_nickname);
+                SmugmugConnectorNG.albumCache = new SmugmugLocalAlbumCache(SmugmugConnectorNG.login_nickname);
             }
-            albumCache.loadCacheFromDisk();
+            SmugmugConnectorNG.albumCache.loadCacheFromDisk();
         }
 
 		IRootElement smugmugRoot = new RootElement(SmugmugConnectorNG.login_nickname);
@@ -135,7 +137,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
                     if (this.config.getPersistentCacheAccountInfo())
                     {
-                        albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
+                        SmugmugConnectorNG.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
                     }
 
                     statAlbumIndex++;
@@ -158,7 +160,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
                 if (this.config.getPersistentCacheAccountInfo())
                 {
-                    albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
+                    SmugmugConnectorNG.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
                 }
 
                 _albumIndex++;
@@ -220,9 +222,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     IAlbum album = null;
                     if (this.config.getPersistentCacheAccountInfo())
                     {
-                        if (albumCache.exists(albumID.intValue()))
+                        if (SmugmugConnectorNG.albumCache.exists(albumID.intValue()))
                         {
-                            album = new Album(subcategory, albumCache.getCachedAlbum(albumID.intValue()));
+                            album = new Album(subcategory, SmugmugConnectorNG.albumCache.getCachedAlbum(albumID.intValue()));
                             subcategory.addAlbum(album);
                             cacheHits++;
                         }
@@ -299,7 +301,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 //                            jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 //                        }
 
-                        if (this.config.getPersistentCacheAccountInfo()) { albumCache.putAlbum(album); }
+                        if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnectorNG.albumCache.putAlbum(album); }
                     }
 
 					albumIndex++;
@@ -325,9 +327,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                 IAlbum album = null;
                 if (this.config.getPersistentCacheAccountInfo())
                 {
-                    if (albumCache.exists(albumID.intValue()))
+                    if (SmugmugConnectorNG.albumCache.exists(albumID.intValue()))
                     {
-                        album = new Album(category, albumCache.getCachedAlbum(albumID.intValue()));
+                        album = new Album(category, SmugmugConnectorNG.albumCache.getCachedAlbum(albumID.intValue()));
                         category.addAlbum(album);
                         cacheHits++;
                     }
@@ -405,7 +407,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 //                        jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 //                    }
                     
-                    if (this.config.getPersistentCacheAccountInfo()) { albumCache.putAlbum(album); }
+                    if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnectorNG.albumCache.putAlbum(album); }
                 }
                 
 				albumIndex++;
@@ -440,7 +442,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //this.log.printLogLine("checkAlbumCount: " + checkAlbumCount);
         this.log.printLog("(totalImageCount: " + totalImageCount + ", totalAlbumCount: " + totalAlbumCount + ", cacheHits: " + cacheHits + ") ... ");
 
-        if (this.config.getPersistentCacheAccountInfo()) { albumCache.saveCacheToDisk(); }
+        if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnectorNG.albumCache.saveCacheToDisk(); }
 
         this.log.printLogLine("ok");
 
@@ -684,18 +686,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	public void downloadFile(String imageURL, File fileName)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
-		
-		
+
+        //temporary download destination, renaming afterwards
+        File tempFileName = new File(fileName.getParentFile().getAbsolutePath() + "/" + this.config.getConstantTempDownloadFilename());
+
 		//write url to file
 		try
 		{
 			URL url	= new URL(imageURL);			
-            FileOutputStream out = new FileOutputStream(fileName);
+            FileOutputStream out = new FileOutputStream(tempFileName, false);
 			URLConnection conn = url.openConnection();
 			InputStream  in = conn.getInputStream();
 
 
-			
 			long startTime = (new Date()).getTime();
 			
 			
@@ -709,7 +712,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			}
 			
 			out.close();
-			
+
+
+            //rename file
+            boolean renameResult;
+            renameResult = tempFileName.renameTo(fileName);
+            if (!renameResult) { this.log.printLogLine("ERROR: renaming temporary file to " + fileName + " failed - this might be a platform specific issue"); System.exit(1); }
+
 			
             long downloadTime = (new Date()).getTime() - startTime;
             double downloadSpeed = 0.0;
@@ -2009,20 +2018,29 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	}
 
 
-    private void cacheCleanup(int albumID)
+    private synchronized void cacheCleanup(int albumID)
     {
         if (this.config.getPersistentCacheAccountInfo())
         {
+            /*
             SmugmugLocalAlbumCache albumCache = null;
 
+            //hack: we don't have to consider anonymous login here (hence another cache filename), because
+            //      anonymous login does not allow changing anything in the account, and thus there no
+            //      need for a cache cleanup
             albumCache = new SmugmugLocalAlbumCache(login_userID.toString());
             albumCache.loadCacheFromDisk();
-            if (albumCache.exists(albumID))
+            */
+
+            //checking if cache has already been initialized
+            if (SmugmugConnectorNG.albumCache == null) { this.log.printLogLine("ERROR: album cache has not been initialized"); System.exit(1); }
+
+            if (SmugmugConnectorNG.albumCache.exists(albumID))
             {
-                albumCache.removeAlbum(albumID);
+                SmugmugConnectorNG.albumCache.removeAlbum(albumID);
                 //this.log.printLogLine(Helper.getCurrentTimeString() + " removed album (id=" + albumID + ") from cache");
 
-                albumCache.saveCacheToDisk();
+                SmugmugConnectorNG.albumCache.saveCacheToDisk();
             }
             
         }
