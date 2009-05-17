@@ -55,6 +55,7 @@ public class GlobalConfig
    private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename               = "res/pixel.jpg";
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
+   private final String constantTempDownloadFilename        = "jSmugmugBackup.download.temp";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
    private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp"}; //...hope thats all possible types
    private final String constantHelpNotes =
@@ -87,6 +88,9 @@ public class GlobalConfig
         " - resuming downloading works (well resuming per file, not in the middle of one) as long \n" +
         "   as there are no videos ... videos will always be downloaded a second time, no idea how\n" +
         "   to fix that\n" +
+        " - when downloading from users that don't allow originals, the reported download queue size\n" +
+        "   is most definitively wrong, and the remaining time counter might get confused too - no fix\n" +
+        "   for that at the moment, sorry\n" +
         " - <to be continued>\n";
 
    // constant objects
@@ -214,6 +218,7 @@ public class GlobalConfig
    public String   getConstantUploadIgnoreFilePostfix()   { return this.constantUploadIgnoreFilePostfix; }
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }
    public String   getConstantAlbumCacheFilenamePrefix()  { return this.constantAlbumCacheFilenamePrefix; }
+   public String   getConstantTempDownloadFilename()      { return this.constantTempDownloadFilename; }
    public String[] getConstantSupportedFileTypes_Images() { return this.constantSupportedFileTypes_Images; }
    public String[] getConstantSupportedFileTypes_Videos() { return this.constantSupportedFileTypes_Videos; }
    public String   getConstantHelpNotes()                 { return this.constantHelpNotes; }

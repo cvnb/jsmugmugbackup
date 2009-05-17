@@ -466,11 +466,23 @@ public class AccountListingProxy implements IAccountListingProxy
                     }
                     else
                     {
-                        //files sizes don't match, download again
-                        this.log.printLogLine("WARNING: image " + image.getName() + " already exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
-                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
-                        this.transferQueue.add(item);
-                        downloadCount++;
+                        if (image.getOriginalURL() != null)
+                        {
+                            //original url is available ... this is unusual
+                            //files sizes don't match, download again
+                            this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                            this.transferQueue.add(item);
+                            downloadCount++;
+                        }
+                        else
+                        {
+                            //no original available
+                            //files sizes don't match, in most cases this indicates that we couldn't download the original file
+                            this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - since the original url is not available, there's nothing to worry about ... skipping");
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                            skippedCount++;
+                        }
                     }                    
                 }                
             }
