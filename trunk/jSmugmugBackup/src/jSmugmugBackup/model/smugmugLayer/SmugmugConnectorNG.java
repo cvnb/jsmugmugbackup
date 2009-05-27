@@ -54,7 +54,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         if (this.config.getRtconfigAnonymousLogin())
         {
             // anonymous login
-            this.smugmug_login_anonymously();
+            this.smugmug_login_anonymously(false);
             SmugmugConnectorNG.login_nickname = userEmail;
             return 0;
         }
@@ -68,7 +68,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	public void relogin()
 	{
         if (this.config.getRtconfigAnonymousLogin() == false) { this.smugmug_login_withHash(); }
-        else { /*NOOP at the moment, an anonymous login might also be a possibility*/ }
+        else { this.smugmug_login_anonymously(true); }
 	}
 
 	public void logout()
@@ -778,11 +778,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			}
 			catch (ClientProtocolException e)
 			{
-            	this.log.printLog("caught ClientProtocolException (message:" + e.getMessage() + ") ... ");
-            	this.log.printLog("waiting ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " caught ClientProtocolException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
-            	repeat = true;
+                repeat = true;
 			}
 			catch (FileNotFoundException e)
 			{
@@ -791,19 +789,17 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			}
             catch (java.net.SocketException e)
             {
-            	this.log.printLog("caught java.net.SocketException (message:" + e.getMessage() + ") ... ");
-            	this.log.printLog("waiting ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " caught java.net.SocketException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
-            	repeat = true;
+                repeat = true;
 
 
                 //special: this routine should identify cases where there was an exception thrown, but the video has been successfully uploaded anyway
-                //         ... this is due the the time smugmug needs to process a video properly
+                //         ... this is probably due the the time smugmug needs to process a video properly
                 //first: check if this was an upload request - all other requests don't have any but the standard headers
                 if (httpRequest.containsHeader("X-Smug-SessionID"))
                 {
-                    this.log.printLog("special case (in development) ...");
+                    //this.log.printLog("special case (in development) ...");
 
                     //if (e.getMessage().equals("Broken pipe"))
 
@@ -819,9 +815,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
                     if (isVideo)
                     {
-                        this.log.printLog("special (socket exception with video): checking if the video is already there ... ");
-                        this.log.printLog("special (waiting 20min) ... ");
-                        Helper.pause(1200 * 1000); // 1200s = 20min
+                        this.log.printLog("special socket exception with video: waiting 5min and checking if the video is already there ... ");
+                        //this.log.printLog("special (waiting 5min) ... ");
+                        Helper.pause(300 * 1000); // 300s = 20min
                         JSONObject jobj_imageList = this.smugmug_images_get(albumID);
                         //this.printJSONObject(jobj_imageList);
 
@@ -834,35 +830,37 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
                             if (imageName.equals(fileName))
                             {
-                                this.log.printLog("special (success: we've found the video, no need to upload it again!)");
-                                repeat = false;
+                                this.log.printLog("success: we've found the video, no need to upload it again! ...");
+                                this.printJSONObject(jsonImage);
+                                repeat = false; // not really nesseciary, cause we're returning early
+                                JSONObject jobj = new JSONObject(); // construct a fake JSON reply
+                                jobj.put("stat", "fail");
+                                jobj.put("method", "smugmug.images.upload");
+                                jobj.put("message", "jSmugmugBackup internal (video seems to having been uploaded)");
+                                jobj.put("Image.id", (String)this.getJSONValue(jsonImage, "id"));
+                                return jobj;
                             }
 
                             imageIndex++;
                             jsonImage = (JSONObject)this.getJSONValue(jobj_imageList, "Images[" + imageIndex + "]");
                         }
 
-                        if (repeat) { this.log.printLog("end of special (the video wasn't found :-( ) ... "); }
+                        //if (repeat) { this.log.printLog("end of special (the video wasn't found :-( ) ... "); }
+                        this.log.printLog("nothing found :-(, retrying ...");
                     }
                 }
-
-
             }
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
             {
-            	this.log.printLog("caught IOException (message:" + e.getMessage() + ") ... ");
-            	this.log.printLog("waiting ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " caught IOException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
-            	repeat = true;
+                repeat = true;
             }
 			catch (java.lang.RuntimeException e)
             {
-            	this.log.printLog("caught java.lang.RuntimeException (message:" + e.getMessage() + ") ... ");
-            	this.log.printLog("waiting ... ");
+            	this.log.printLog(Helper.getCurrentTimeString() + " caught java.lang.RuntimeException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying ... ");
-            	repeat = true;
+                repeat = true;
             }
             catch (Exception e)
             {
@@ -939,12 +937,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                 this.log.printLog("login failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
 
                 //maybe we should quit here??
+
+                Helper.pause(this.config.getConstantRetryWait());
             }
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
 	        	this.log.printLog("retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
+
+                Helper.pause(this.config.getConstantRetryWait());
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 
@@ -984,6 +986,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             {
                 // generic "fail" handling ... everything except the "invalid login" which is handled above
                 this.log.printLog("relogin failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
+                Helper.pause(this.config.getConstantRetryWait());
 
                 //maybe we should quit here??
             }
@@ -993,13 +996,14 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        	//this.log.printLogLine("failed");
 	        	this.log.printLog("relogin failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
+                Helper.pause(this.config.getConstantRetryWait());
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 	}
 
-	private void smugmug_login_anonymously()
+	private void smugmug_login_anonymously(boolean beQuiet)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " logging in anonymously ... ");
+        if (!beQuiet) { this.log.printLog(Helper.getCurrentTimeString() + " logging in anonymously ... "); }
 
 		//this.log.printLog("smugmug.login.withHash ... ");
 
@@ -1022,7 +1026,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	        	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	this.log.printLogLine("ok");
+	        	if (!beQuiet) { this.log.printLogLine("ok"); }
 	        	SmugmugConnectorNG.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	return;
 	        }
@@ -1902,19 +1906,35 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                 */
 
 
-            	this.log.printLog("waiting ... ");
-            	Helper.pause(this.config.getConstantRetryWait());
             	this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
+                Helper.pause(this.config.getConstantRetryWait());
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
 	                  (((String)this.getJSONValue(jobj, "message")).startsWith("system error (invalid album id)") ))
 	        {
-	          	this.log.printLog("waiting ... ");
-	          	Helper.pause(this.config.getConstantRetryWait());
 	          	this.log.printLog(Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
-	          	
-	          	//note: this error seems not to go away, even through repetition
+	          	Helper.pause(this.config.getConstantRetryWait());
+
+	          	//note: this error seems not to go away, even through repetition ... maybe a relogin helps???
+	        }
+	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                  (this.getJSONValue(jobj, "message").equals("jSmugmugBackup internal (video seems to having been uploaded)") ))
+	        {
+                long uploadTime = (new Date()).getTime() - startTime;
+	            double uploadSpeed = 0.0;
+	            //avoid division by zero
+	            if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
+
+	            // for statistics
+	        	this.transferedBytes += fileName.length();
+	            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
+
+	            DecimalFormat df = new DecimalFormat("0.0");
+	            this.log.printLog("recovered from exception - ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
+	        	//this.log.printLogLine("ok");
+	        	return jobj;
 	        }
 	        else
 	        {

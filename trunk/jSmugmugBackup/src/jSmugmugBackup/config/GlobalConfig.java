@@ -48,7 +48,7 @@ public class GlobalConfig
    private final String constantSmugmugServerURL            = "https://api.smugmug.com/hack/json/1.2.0/";
    private final String constantSmugmugAPIKey               = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
    private final String constantSmugmugAPIVersion           = "1.2.0";
-   private final int    constantRetryWait                   = 20000; //time to wait before retrying
+   private final int    constantRetryWait                   = 20000; //time to wait before retrying (20sec)
    private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit         = 512*1024*1024; //512MB
