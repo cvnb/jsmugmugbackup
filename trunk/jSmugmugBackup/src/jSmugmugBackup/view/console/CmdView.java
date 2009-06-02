@@ -187,7 +187,7 @@ public class CmdView implements IView
 
     public ILoginDialogResult showLoginDialog()
 	{
-		String account_email    = this.extractArgumentValueFromCommandline("email");
+		String account_email    = this.extractArgumentValueFromCommandline("user");
 		String account_password = this.extractArgumentValueFromCommandline("password");
 
 		ILoginView loginView = null;
@@ -299,14 +299,14 @@ public class CmdView implements IView
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
 		this.log.printLogLine("options:");
-        //this.log.printLogLine("     --pretend             : don't change anything on smugmug, just print what would be done");
-		this.log.printLogLine("     --email={username}    : specify the email-address or the username used to log into smugmug (optional)");
-		this.log.printLogLine("     --password={password} : specify the password used to log into smugmug, optional (optional)");
-		this.log.printLogLine("     --category={name}     : perform the given action only on the given category (optional)");
-		this.log.printLogLine("     --subcategory={name}  : perform the given action only on the given subcategory (optional)");
-		this.log.printLogLine("     --album={name}        : perform the given action only on the given album (optional)");
-        this.log.printLogLine("     --albumKeywords={keywords} : perform the given action only using the given keywords, separated by \"; \" (optional)");
-		this.log.printLogLine("     --dir={directory}     : the local base dir for the actions");
+        //this.log.printLogLine("     --pretend                  : don't change anything on smugmug, just print what would be done");
+		this.log.printLogLine("     --user={username or email}  : specify the email-address or the username used to log into smugmug (optional)");
+		this.log.printLogLine("     --password={password}       : specify the password used to log into smugmug, optional (optional)");
+		this.log.printLogLine("     --category={name}           : perform the given action only on the given category (optional)");
+		this.log.printLogLine("     --subcategory={name}        : perform the given action only on the given subcategory (optional)");
+		this.log.printLogLine("     --album={name}              : perform the given action only on the given album (optional)");
+        this.log.printLogLine("     --albumKeywords={keywords}  : perform the given action only using the given keywords, separated by \"; \" (optional)");
+		this.log.printLogLine("     --dir={directory}           : the local base dir for the actions");
 		this.log.printLogLine("");
 		this.log.printLogLine(this.config.getConstantHelpNotes());
 

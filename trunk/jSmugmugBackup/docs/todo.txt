@@ -6,9 +6,12 @@ todo:
    - upload options (public/unlisted/...)
    - session info
  - use global sessions, simplify call structure
- - verify: what if missing files and left over files neutralize each other (in file count) ???
+ - verify: what if missing files and left over files neutralize each other (in file count) ??? ... api v1.2.2 ???
  - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html
-
+ - connector for api version 1.2.2
+ - support infinite directory hierarchies
+ - use OS specific dir separator
+ - downloading password protected albums (anonymous login mode)
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality
