@@ -42,7 +42,7 @@ public class ConsoleViewLogin_1_5 implements ILoginView
 		if (this.initUserEmail != null) { return this.initUserEmail; }
 		
 		String userEmail = null;
-		System.out.print("    Username (Email): ");
+		System.out.print("    Username (or email): ");
 		Scanner in = new Scanner(System.in);
 		userEmail = in.nextLine();
 		
