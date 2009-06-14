@@ -62,11 +62,11 @@ public class GlobalConfig
 		"notes:\n" +
         " - It is strongly suggestend to stick with the commandline view, since the GUI is currently\n" +
         "   V E R Y buggy!\n" +
-        " - usage examples: on linux and macos use \"jSmugmugBackup.sh\", on wndows \"jSmugmugBackup.bat\"" +
-        "      ./jSmugmugBackup.sh --upload --user=me --dir=/home/john/pics/ " +
-        "            ... uploads whole directory structure" +
-        "      ./jSmugmugBackup.sh --upload --user=me --category=public --album=\"my hollidays\" --dir=/home/john/pics/public/paris" +
-        "            ... uploads all images in /home/john/pics/public/paris to an album named \"my hollidays\" in the category \"public\"" +
+        " - usage examples: on linux and MacOS use \"jSmugmugBackup.sh\", on Windows \"jSmugmugBackup.bat\"\n" +
+        "      ./jSmugmugBackup.sh --upload --user=me --dir=/home/john/pics/\n" +
+        "            ... uploads whole directory structure\n" +
+        "      ./jSmugmugBackup.sh --upload --user=me --category=public --album=\"my hollidays\" --dir=/home/john/pics/public/paris\n" +
+        "            ... uploads all images in /home/john/pics/public/paris to an album named \"my hollidays\" in the category \"public\"\n" +
 	    " - Names on smugmug are handled as if they were unique, although it is for instance\n" +
 	    "   possible to have two albums with the same name on smugmug. jSmugmugBackup will\n" +
 	    "   always use the first name the matches and ignore the second entity.\n" +

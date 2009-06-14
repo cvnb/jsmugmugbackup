@@ -18,6 +18,7 @@
                           <Component id="mainAccountScrollPane" min="-2" pref="359" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="mainTaggingButton" pref="130" max="32767" attributes="0"/>
                               <Component id="mainExitButton" pref="130" max="32767" attributes="1"/>
                               <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="mainDownloadButton" alignment="0" max="32767" attributes="1"/>
@@ -54,7 +55,9 @@
                           <Component id="mainVerifyButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="mainSortButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="mainTaggingButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           <Component id="mainSyncProcessQueueButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="mainAsyncProcessQueueButton" min="-2" max="-2" attributes="0"/>
@@ -165,6 +168,13 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="mainAsyncProcessQueueButton.text"/>
             <Property name="name" type="java.lang.String" value="mainAsyncProcessQueueButton" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="mainTaggingButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="mainTaggingButton.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="mainTaggingButton" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

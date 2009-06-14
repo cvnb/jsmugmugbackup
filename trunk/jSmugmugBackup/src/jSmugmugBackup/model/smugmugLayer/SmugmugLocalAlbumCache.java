@@ -118,11 +118,17 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
             }
             catch (ClassNotFoundException ex)
             {
-                ex.printStackTrace();
+                //ex.printStackTrace();
+
+                this.log.printLogLine("ERROR: class not found exception thrown while loading the cache from disk, starting with an empty cache!");
+                this.cache = new Hashtable<Integer, IAlbum>();
             }
             catch (IOException ex)
             {
-                ex.printStackTrace();
+                //ex.printStackTrace();
+
+                this.log.printLogLine("ERROR: I/O exception thrown while loading the cache from disk, starting with an empty cache!");
+                this.cache = new Hashtable<Integer, IAlbum>();
             }
 
             /*
