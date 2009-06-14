@@ -301,7 +301,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 //                            jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 //                        }
 
-                        if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnectorNG.albumCache.putAlbum(album); }
+                        if (this.config.getPersistentCacheAccountInfo())
+                        {
+                            SmugmugConnectorNG.albumCache.putAlbum(album);
+                            SmugmugConnectorNG.albumCache.saveCacheToDisk(); //this might produce quite some I/O overhead, but allows resuming of account info downloads
+                        }
                     }
 
 					albumIndex++;
@@ -407,7 +411,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 //                        jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
 //                    }
                     
-                    if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnectorNG.albumCache.putAlbum(album); }
+                    if (this.config.getPersistentCacheAccountInfo())
+                    {
+                        SmugmugConnectorNG.albumCache.putAlbum(album);
+                        SmugmugConnectorNG.albumCache.saveCacheToDisk(); //this might produce quite some I/O overhead, but allows resuming of account info downloads
+                    }
                 }
                 
 				albumIndex++;
@@ -837,7 +845,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                                 jobj.put("stat", "fail");
                                 jobj.put("method", "smugmug.images.upload");
                                 jobj.put("message", "jSmugmugBackup internal (video seems to having been uploaded)");
-                                jobj.put("Image.id", (String)this.getJSONValue(jsonImage, "id"));
+                                jobj.put("Image.id", (Long)this.getJSONValue(jsonImage, "id"));
                                 return jobj;
                             }
 

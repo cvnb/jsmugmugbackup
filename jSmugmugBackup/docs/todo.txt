@@ -12,6 +12,7 @@ todo:
  - support infinite directory hierarchies
  - use OS specific dir separator
  - downloading password protected albums (anonymous login mode)
+ - for commandline: addtags and removetags parameter
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

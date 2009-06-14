@@ -218,12 +218,6 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords)
 	{
-//		this.log.printLogLine("DEBUG: enqueuing ...");
-//		this.log.printLogLine("DEBUG:      category    : " + categoryName);
-//		this.log.printLogLine("DEBUG:      subcategory : " + subcategoryName);
-//		this.log.printLogLine("DEBUG:      album       : " + albumName);
-//		this.log.printLogLine("DEBUG:      dir         : " + pics_dir);
-//		this.log.printLogLine("DEBUG:      keywords    : " + albumKeywords);
 
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
@@ -233,8 +227,6 @@ public class AccountListingProxy implements IAccountListingProxy
         String subcategoryAsciiName = Helper.encodeAsASCII(subcategoryName);
         String albumAsciiName = Helper.encodeAsASCII(albumName);
 
-    	//this.log.printLogLine("-----------------------------------------------");
-    	//this.log.printLogLine(this.getTimeString() + " enqueuing album: " + categoryName + "/" + subcategoryName + "/" + albumName + " ... dir: " + pics_dir);
 		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album: " + categoryAsciiName + "/" + subcategoryAsciiName + "/" + albumAsciiName + " (" + pics_dir + ")");
 
         Vector<String> albumTags = Helper.getTags(albumKeywords);
@@ -405,8 +397,11 @@ public class AccountListingProxy implements IAccountListingProxy
         	}
         }        
 
-        this.log.printLogLine("  ... added " + uploadCount + " files, " + skippedCount + " were skipped, " + unsupportedCount + " had an unsupported file type.");
-        
+        //reducing the output a little bit: only show this line if we added any files
+        if (uploadCount > 0)
+        {
+            this.log.printLogLine("  ... added " + uploadCount + " files, " + skippedCount + " were skipped, " + unsupportedCount + " had an unsupported file type.");
+        }
 
 	}
 
