@@ -688,10 +688,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             System.exit(1);
         }
 
-		this.downloadFile(imageURL, fileName);		
+        long expectedFileSize = (Long)this.getJSONValue(jobj, "Image.Size");
+
+		this.downloadFile(imageURL, fileName, expectedFileSize);
 	}
 	
-	public void downloadFile(String imageURL, File fileName)
+	public void downloadFile(String imageURL, File fileName, long expectedFileSize)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
 
@@ -701,25 +703,33 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//write url to file
 		try
 		{
-			URL url	= new URL(imageURL);			
-            FileOutputStream out = new FileOutputStream(tempFileName, false);
-			URLConnection conn = url.openConnection();
-			InputStream  in = conn.getInputStream();
 
+            long startTime = (new Date()).getTime(); // this might belong inside the loop ...
 
-			long startTime = (new Date()).getTime();
-			
-			
-			byte[] buffer = new byte[65536]; //write data in 64kb chunks
-			int numRead;
-			long numWritten = 0;
-			while ((numRead = in.read(buffer)) != -1)
-			{
-				out.write(buffer, 0, numRead);
-				numWritten += numRead;
-			}
-			
-			out.close();
+            do //loop until the downloaded file has the correct filesize
+            {
+                URL url	= new URL(imageURL);
+                FileOutputStream out = new FileOutputStream(tempFileName, false);
+                URLConnection conn = url.openConnection();
+                InputStream  in = conn.getInputStream();
+     
+
+                byte[] buffer = new byte[65536]; //write data in 64kb chunks
+                int numRead;
+                long numWritten = 0;
+                while ((numRead = in.read(buffer)) != -1)
+                {
+                    out.write(buffer, 0, numRead);
+                    numWritten += numRead;
+                }
+
+                out.close();
+
+                if (tempFileName.length() != expectedFileSize)
+                {
+                    this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + expectedFileSize + "), retrying ... ");
+                }
+            } while (tempFileName.length() != expectedFileSize);
 
 
             //rename file
@@ -737,6 +747,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	this.transferedBytes += fileName.length();
             double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
             
+            //debug
+            //this.log.printLog("... fileName.length=" + fileName.length() + " ...");
+
             DecimalFormat df = new DecimalFormat("0.0");            
             this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(downloadSpeed) + "kb/s)");
 			//this.log.printLogLine("ok");
@@ -744,6 +757,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		catch (FileNotFoundException e) { e.printStackTrace(); }
 		catch (MalformedURLException e) { e.printStackTrace(); }
 		catch (IOException e)           { e.printStackTrace(); }
+        catch (Exception e)           { e.printStackTrace(); } //not really nesseciary
 	}
 
 //	public void verifyFile() {

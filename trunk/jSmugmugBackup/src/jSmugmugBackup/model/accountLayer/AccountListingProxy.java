@@ -436,7 +436,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 if ( (this.config.getPersistentCheckMD5Sums() == true) && (image.getMD5() != null) ) //if md5 checking is enabled in config, and we actually have an md5 (there seems to be no md5 when logging in anonymously)
                 {
                     String localFileMD5 = Helper.computeMD5Hash(imageFile); //generate md5sum
-                    if (image.getMD5().equals(localFileMD5)) //exists already, but has wrong md5
+                    if (image.getMD5().equals(localFileMD5)) //exists already and md5 looks good
                     {
                         //all ok, skip
                         skippedCount++;
@@ -461,6 +461,13 @@ public class AccountListingProxy implements IAccountListingProxy
                     }
                     else
                     {
+                        //files sizes don't match, download again
+                        this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                        this.transferQueue.add(item);
+                        downloadCount++;
+                        
+                        /*
                         if (image.getOriginalURL() != null)
                         {
                             //original url is available ... this is unusual
@@ -478,6 +485,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
                             skippedCount++;
                         }
+                        */
                     }                    
                 }                
             }
