@@ -16,6 +16,7 @@ import java.net.*;
 import java.text.*;
 import java.util.*;
 
+import java.util.logging.Level;
 import org.apache.http.*;
 import org.apache.http.client.*;
 import org.apache.http.client.methods.*;
@@ -490,28 +491,46 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             String imageVideo960URL   = (String)this.getJSONValue(jsonImage, "Video960URL");
             String imageVideo12800URL = (String)this.getJSONValue(jsonImage, "Video12800URL");
 
-            //if there is no filename available, take the name from the url
-            if (imageName == null)
+
+            //get the largest url available:
+            String largestAvailableURL;
+            if (imageVideo12800URL != null) { largestAvailableURL = imageVideo12800URL; }
+            else if (imageVideo960URL != null) { largestAvailableURL = imageVideo960URL; }
+            else if (imageVideo640URL != null) { largestAvailableURL = imageVideo640URL; }
+            else if (imageVideo320URL != null) { largestAvailableURL = imageVideo320URL; }
+            else if (imageOriginalURL != null) { largestAvailableURL = imageOriginalURL; }
+            else if (imageX3LargeURL != null) { largestAvailableURL = imageX3LargeURL; }
+            else if (imageX2LargeURL != null) { largestAvailableURL = imageX2LargeURL; }
+            else if (imageXLargeURL != null) { largestAvailableURL = imageXLargeURL; }
+            else if (imageLargeURL != null) { largestAvailableURL = imageLargeURL; }
+            else if (imageMediumURL != null) { largestAvailableURL = imageMediumURL; }
+            else { this.printJSONObject(jsonImage); largestAvailableURL = null; } // this should never happen and will probably case a null pointer exception later
+
+            /*
+            //get content size for largest available url
+            int largestURLContentSize = 0;
+            boolean repeat = true;
+            while (repeat)
             {
-                String url;
-
-                //get the largest url available:
-                if (imageVideo12800URL != null) { url = imageVideo12800URL; }
-                else if (imageVideo960URL != null) { url = imageVideo960URL; }
-                else if (imageVideo640URL != null) { url = imageVideo640URL; }
-                else if (imageVideo320URL != null) { url = imageVideo320URL; }
-                else if (imageOriginalURL != null) { url = imageOriginalURL; }
-                else if (imageX3LargeURL != null) { url = imageX3LargeURL; }
-                else if (imageX2LargeURL != null) { url = imageX2LargeURL; }
-                else if (imageXLargeURL != null) { url = imageXLargeURL; }
-                else if (imageLargeURL != null) { url = imageLargeURL; }
-                else if (imageMediumURL != null) { url = imageMediumURL; }
-                else { this.printJSONObject(jsonImage); url = null; } // this should never happen and will probably case a null pointer exception later
-
-                imageName = Helper.extractFilenameFromURL(url);
+                URL url = null;
+                try
+                {
+                    url = new URL(largestAvailableURL);
+                    URLConnection conn = url.openConnection();
+                    largestURLContentSize = conn.getContentLength();
+                    repeat = false;
+                }
+                catch (MalformedURLException ex1) { this.log.printLog("caught MalformedURLException (" + ex1.getMessage() + "), retrying ..."); }
+                catch (IOException ex2) { this.log.printLog("caught IOException (" + ex2.getMessage() + "), retrying ..."); }
             }
+            */
 
-            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), imageMD5,
+
+            //if there is no filename available, take the name from the url
+            if (imageName == null) { imageName = Helper.extractFilenameFromURL(largestAvailableURL); }
+
+
+            IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), /*largestURLContentSize,*/ imageMD5,
                                      imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
             album.addImage(image);
 
@@ -635,7 +654,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	else return 0;
 	}
 		
-	public void downloadFile(int imageID, File fileName)
+	public void downloadFile(int imageID, File fileName/*, long expectedFilesize*/)
 	{
     	//JSONObject jobj = this.smugmug_images_getURLs(imageID); //retrieves just the urls
 		JSONObject jobj = this.smugmug_images_getInfo(imageID); // get image_info, including url
@@ -688,12 +707,12 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             System.exit(1);
         }
 
-        long expectedFileSize = (Long)this.getJSONValue(jobj, "Image.Size");
+        //long expectedFilesize = (Long)this.getJSONValue(jobj, "Image.Size");
 
-		this.downloadFile(imageURL, fileName, expectedFileSize);
+		this.downloadFile(imageURL, fileName/*, expectedFilesize*/);
 	}
 	
-	public void downloadFile(String imageURL, File fileName, long expectedFileSize)
+	public void downloadFile(String imageURL, File fileName/*, long expectedFilesize*/)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
 
@@ -703,33 +722,60 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//write url to file
 		try
 		{
-
             long startTime = (new Date()).getTime(); // this might belong inside the loop ...
 
+
+//            int contentFilesize = 0;
+//            //int retryCount = 0;
+//            do //loop until the downloaded file has the correct filesize
+//            {
+//                URL url	= new URL(imageURL);
+//                FileOutputStream out = new FileOutputStream(tempFileName, false);
+//                URLConnection conn = url.openConnection();
+//                contentFilesize = conn.getContentLength();
+//                InputStream  in = conn.getInputStream();
+//
+//
+//                byte[] buffer = new byte[65536]; //write data in 64kb chunks
+//                int numRead;
+//                long numWritten = 0;
+//                while ((numRead = in.read(buffer)) != -1)
+//                {
+//                    out.write(buffer, 0, numRead);
+//                    numWritten += numRead;
+//                }
+//
+//                out.close();
+//
+//
+//                //retryCount++;
+//                //if (retryCount > 3) { this.log.printLog("giving up (under development) ... "); } else
+//                if (tempFileName.length() != contentFilesize) { this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
+//            } while ( (tempFileName.length() != contentFilesize) /*&& (retryCount <= 3)*/ );
+
+
+
+            
+            int contentFilesize = 0;
             do //loop until the downloaded file has the correct filesize
             {
+                //temporary: get the file size "old school"
                 URL url	= new URL(imageURL);
-                FileOutputStream out = new FileOutputStream(tempFileName, false);
                 URLConnection conn = url.openConnection();
-                InputStream  in = conn.getInputStream();
-     
+                contentFilesize = conn.getContentLength();
 
-                byte[] buffer = new byte[65536]; //write data in 64kb chunks
-                int numRead;
-                long numWritten = 0;
-                while ((numRead = in.read(buffer)) != -1)
-                {
-                    out.write(buffer, 0, numRead);
-                    numWritten += numRead;
-                }
+                // alternate download ... todo: exceptions, repeating
+                String responseBody = null;
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet httpget = new HttpGet(imageURL);
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                responseBody = httpclient.execute(httpget, responseHandler);
+                FileOutputStream out = new FileOutputStream(tempFileName, false);
+                out.write(responseBody.getBytes("ISO-8859-1")); //the fixed encoding might cause problems
+                //this.log.printLog("DEBUG: length: " + tempFileName.length() + ", alternative length: " + responseBody.length() + ", contentFilesize: " + contentFilesize);
+                if (tempFileName.length() != contentFilesize) { this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
+            } while (tempFileName.length() != contentFilesize);
 
-                out.close();
-
-                if (tempFileName.length() != expectedFileSize)
-                {
-                    this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + expectedFileSize + "), retrying ... ");
-                }
-            } while (tempFileName.length() != expectedFileSize);
 
 
             //rename file
@@ -757,7 +803,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		catch (FileNotFoundException e) { e.printStackTrace(); }
 		catch (MalformedURLException e) { e.printStackTrace(); }
 		catch (IOException e)           { e.printStackTrace(); }
-        catch (Exception e)           { e.printStackTrace(); } //not really nesseciary
+        catch (Exception e)             { e.printStackTrace(); } //not really nesseciary
 	}
 
 //	public void verifyFile() {

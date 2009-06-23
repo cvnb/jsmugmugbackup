@@ -51,7 +51,7 @@ public class GlobalConfig
    private final int    constantRetryWait                   = 20000; //time to wait before retrying (20sec)
    private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
-   private final int    constantUploadFileSizeLimit         = 512*1024*1024; //512MB
+   private final int    constantUploadFileSizeLimit         = 600*1024*1024; //600MB
    private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename               = "res/pixel.jpg";
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
@@ -90,9 +90,13 @@ public class GlobalConfig
         " - if you want to dowwnload someones public galleries, login using his nickname and\n" +
         "   \"anonymous\" as password (album passwords are currently not supported, sorry)\n" +
         " - for downloading, we always download the best resolution available\n" +
+        /*
         " - resuming downloading works (well resuming per file, not in the middle of one) as long \n" +
         "   as there are no videos ... videos will always be downloaded a second time, no idea how\n" +
         "   to fix that\n" +
+        " - there is also a bug that prevents us from resuming certain galleries, the same problem\n" +
+        "   is responsible for retrying downloading twice before giving up because of a size error\n" +
+        */
         " - when downloading from users that don't allow originals, the reported download queue size\n" +
         "   is most definitively wrong, and the remaining time counter might get confused too - no fix\n" +
         "   for that at the moment, sorry\n" +
