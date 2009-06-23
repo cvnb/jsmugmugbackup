@@ -428,7 +428,29 @@ public class AccountListingProxy implements IAccountListingProxy
 		IAlbum album = this.getAlbum(albumID);
 		for (IImage image : album.getImageList())
 		{
-			File imageFile = new File(targetDir + image.getName());
+
+            //check if it's a video
+            boolean isVideo = false;
+            for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+            {
+                if (image.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+            }
+
+
+            // if it's a video don't use the original name (i.e. .avi), but use .mp4 since all
+            // videos are beeing converted by smugmug into mp4 directly after upload ... this
+            // should also protect original videos when downloading them into the same folder
+            // which they've been uploaded from
+            File imageFile = null;
+            if (!isVideo) { imageFile = new File(targetDir + image.getName()); }
+            else
+            {
+                String videoName = image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4";
+                imageFile = new File(targetDir + videoName);
+            }
+            //this.log.printLogLine("DEBUG: file: " + imageFile.getAbsolutePath());
+
+            
 
             if (imageFile.exists()) //skip file
             {
@@ -453,7 +475,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else // no md5, just compare file size
                 {
-                    //todo: checking filesize
+                    //checking filesize
                     if (image.getSize() == imageFile.length())
                     {
                         // file sizes match, skip
@@ -461,13 +483,15 @@ public class AccountListingProxy implements IAccountListingProxy
                     }
                     else
                     {
+                        /*
                         //files sizes don't match, download again
-                        this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
-                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                        this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getLargestURLContentSize() + ") ... enqueuing again");
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getLargestURLContentSize(), null);
                         this.transferQueue.add(item);
                         downloadCount++;
+                        */
                         
-                        /*
+                        
                         if (image.getOriginalURL() != null)
                         {
                             //original url is available ... this is unusual
@@ -485,7 +509,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
                             skippedCount++;
                         }
-                        */
+                        
                     }                    
                 }                
             }
