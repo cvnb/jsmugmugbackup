@@ -338,20 +338,13 @@ public class AccountListingProxy implements IAccountListingProxy
         	{
                 IImage image = this.getImage(imageID);
 
-                //check if it's a video
-                boolean isVideo = false;
-                for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
-                {
-                    if (image.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
-                }
-
 
                 if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
                 {
                     String fileMD5 = Helper.computeMD5Hash(fileList[i]); //generate md5sum
                     if (!image.getMD5().equals(fileMD5)) //exists already, but has wrong md5
                     {
-                        if (isVideo)
+                        if (Helper.isVideo(image.getName()))
                         {
                             //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is normal for a video ... skipping");
                             skippedCount++;
@@ -378,7 +371,7 @@ public class AccountListingProxy implements IAccountListingProxy
                     //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug ... skipping");
                     //skippedCount++;
 
-                    if (isVideo)
+                    if (Helper.isVideo(image.getName()))
                     {
                         //no filesize checking on videos, skipping
                         skippedCount++;
@@ -429,20 +422,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		for (IImage image : album.getImageList())
 		{
 
-            //check if it's a video
-            boolean isVideo = false;
-            for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
-            {
-                if (image.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
-            }
-
-
             // if it's a video don't use the original name (i.e. .avi), but use .mp4 since all
             // videos are beeing converted by smugmug into mp4 directly after upload ... this
             // should also protect original videos when downloading them into the same folder
             // which they've been uploaded from
             File imageFile = null;
-            if (!isVideo) { imageFile = new File(targetDir + image.getName()); }
+            if (!Helper.isVideo(image.getName())) { imageFile = new File(targetDir + image.getName()); }
             else
             {
                 String videoName = image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4";
@@ -636,16 +621,11 @@ public class AccountListingProxy implements IAccountListingProxy
 						//this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
 
                         
-                        //check if it's a video
-                        boolean isVideo = false;
-                        for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                        if (Helper.isVideo(image.getName()))
                         {
-                            if (image.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
-                        }
+                            compareOK = false; // temporary for debug
 
-                        if (isVideo)
-                        {
-                            compareDelayedOutputString += "failed - this is normal for a video" + "\n";
+                            compareDelayedOutputString += "failed - this is normal for a original video" + "\n";
                         }
                         else //standard case, it's an image
                         {

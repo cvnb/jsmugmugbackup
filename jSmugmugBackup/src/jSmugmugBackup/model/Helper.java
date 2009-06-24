@@ -6,6 +6,7 @@
  */
 package jSmugmugBackup.model;
 
+import jSmugmugBackup.config.GlobalConfig;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -200,5 +201,18 @@ public class Helper
     public static String extractFilenameFromURL(String url)
     {
         return url.substring(url.lastIndexOf("/")+1);
+    }
+
+    public static boolean isVideo(String fileName)
+    {
+        GlobalConfig config = GlobalConfig.getInstance();
+
+        //check if it's a video
+        for (String fileEnding : config.getConstantSupportedFileTypes_Videos())
+        {
+            if (fileName.toLowerCase().endsWith(fileEnding)) { return true; }
+        }
+
+        return false;
     }
 }
