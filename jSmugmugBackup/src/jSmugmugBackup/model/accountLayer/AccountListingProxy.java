@@ -565,8 +565,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         
                         countDelayedOutputString += "\n";
                     }
-        		}
-        		
+        		}        		
         	}
         	else //if ( fileList.length < imageList.size() )
         	{
@@ -601,9 +600,43 @@ public class AccountListingProxy implements IAccountListingProxy
     	{
     		for (IImage image : imageList)
     		{
-    			if ( fileList[i].getName().equals(image.getName()) )
+                if ( (Helper.isVideo(image.getName())) && (fileList[i].getName().startsWith(image.getName().substring(0, image.getName().lastIndexOf(".") ))) )
+                {
+                    // handle videos ...
+
+    				//compare files
+    				compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
+                    if ( ( fileList[i].getName().equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
+                         ( fileList[i].getName().equals(image.getName()) ) )
+                    {
+                        //now we have the matching pair, so we compute the md5sums
+                        String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
+                        // checking md5:
+                        //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
+                        //   and downloaded again) ... md5 sums will most definitively not match
+                        // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
+                        if ( localFileMD5Sum.equals(image.getMD5()) ) { compareDelayedOutputString += "ok" + "\n"; }
+                        else
+                        {
+                            //compareOK = false;
+                            compareDelayedOutputString += "failed - this is normal for a video" + "\n";
+                            //compareDelayedOutputString += "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() + "\n";
+                            //compareDelayedOutputString += "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() + "\n";
+                        }
+                    }
+                    else
+                    {
+                        // the videos filename ending is neither it's original ending (as it was uploaded)
+                        // nor the standard .mp4 ending that jSmugmugBackup appends when it downloads videos
+                        // from smugmug ... something is wrong here
+                        this.log.printLogLine("ERROR: there was a problem with the filename mapping for a video (" + fileList[i].getName() + ") ... exiting");
+                        return;
+                    }
+                }
+                else if ( fileList[i].getName().equals(image.getName()) ) // handle normal images
     			{
-    				//now we have the matching pair, so we check the md5sums
+    				//now we have the matching pair, so we compute the md5sums
     				String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
       			
     				//compare files
@@ -616,15 +649,16 @@ public class AccountListingProxy implements IAccountListingProxy
 					}
 					else
 					{
-						//this.log.printLogLine("failed");
-						//this.log.printLogLine("   localFileMD5Sum   = " + localFileMD5Sum);
-						//this.log.printLogLine("   MD5Sum on SmugMug = " + image.getMD5());
+                        compareOK = false;
+                        compareDelayedOutputString += "failed" + "\n";
+                        compareDelayedOutputString += "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() + "\n";
+                        compareDelayedOutputString += "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() + "\n";
 
-                        
-                        if (Helper.isVideo(image.getName()))
+
+                        /*
+                        if (Helper.isVideo(image.getName())) //probably not nesseciary now
                         {
-                            compareOK = false; // temporary for debug
-
+                            //compareOK = false; // temporary for debug
                             compareDelayedOutputString += "failed - this is normal for a original video" + "\n";
                         }
                         else //standard case, it's an image
@@ -634,6 +668,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             compareDelayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
                             compareDelayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
                         }
+                        */
 					}
     			}
       		}
