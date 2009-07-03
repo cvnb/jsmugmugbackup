@@ -420,6 +420,7 @@ public class Model
         String targetBaseDir = transferDialogResult.getDir();
         //this.log.printLogLine("targetBaseDir: " + targetBaseDir);
 
+        /*
         //check if a category has been given
         if (transferDialogResult.getCategoryName() != null)
         {
@@ -433,14 +434,41 @@ public class Model
                 if (targetBaseDir.lastIndexOf(transferDialogResult.getSubCategoryName()) != -1) { targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getSubCategoryName()) ); }
             }
 
+            //reduce baseDir by the category name
             if (targetBaseDir.lastIndexOf(transferDialogResult.getCategoryName()) != -1) { targetBaseDir = targetBaseDir.substring(0, targetBaseDir.lastIndexOf(transferDialogResult.getCategoryName()) ); }
         }
         //this.log.printLogLine("targetBaseDir: " + targetBaseDir);
-        
+        */
 
         for (IAlbum a : selectedAlbums)
 		{
-            this.accListing.verifyAlbum(a.getID(), targetBaseDir);
+            String targetAlbumDir = targetBaseDir;
+
+            if (transferDialogResult.getAlbumName() == null)
+            {
+                if (transferDialogResult.getSubCategoryName() == null)
+                {
+                    if (transferDialogResult.getCategoryName() == null)
+                    {
+                        String categoryName = null;
+                        if ( a.getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_CATEGORY) ) { categoryName = a.getParent().getName(); }
+                        else if ( a.getParent().getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_CATEGORY) ) { categoryName = a.getParent().getParent().getName(); }
+                        else { this.log.printLogLine("ERROR: could not find album category!"); return; }
+                        targetAlbumDir = targetAlbumDir + categoryName;
+                    }
+
+                    String subcategoryName = null;
+                    if ( a.getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_SUBCATEGORY) ) { subcategoryName = a.getParent().getName(); }
+                    else { this.log.printLogLine("ERROR: could not find album subcategory!"); return; }
+                    targetAlbumDir = targetAlbumDir + subcategoryName;
+                }
+
+                //this.log.printLogLine("DEBUG: albumName: " + a.getName());
+                String albumName = a.getName();
+                targetAlbumDir = targetAlbumDir + albumName;
+            }
+
+            this.accListing.verifyAlbum(a.getID(), targetAlbumDir);
         }
 
 //    	//todo: what about missing local dirs?
