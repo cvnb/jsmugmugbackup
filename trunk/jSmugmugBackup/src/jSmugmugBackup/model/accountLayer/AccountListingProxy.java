@@ -318,7 +318,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 // check if file is smaller than 512 MB
                 else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
                 {
-                	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize greater than 512 MB is not supported ... skipping");
+                	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize greater than " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB is not supported ... skipping");
                 	skippedCount++;
                 }                
                 //check if someone has manually set the ignore tag
@@ -509,15 +509,17 @@ public class AccountListingProxy implements IAccountListingProxy
 	    this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
 	}
 	
-    public void verifyAlbum(int albumID, String targetBaseDir)
+    public void verifyAlbum(int albumID, String targetAlbumDir)
     {
+        //this.log.printLogLine("DEBUG: AccountListingProxy.verifyAlbum(" + albumID + ", " + targetAlbumDir + ")");
+
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
 
-		String targetDir = targetBaseDir + this.getAlbumDirEnd(albumID);
-    	this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetDir + ") ... ");
+		//String targetDir = targetAlbumDir + this.getAlbumDirEnd(albumID);
+    	this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetAlbumDir + ") ... ");
 
-		File dir = new File(targetDir);
+		File dir = new File(targetAlbumDir);
 	    File[] fileList = dir.listFiles(this.config.getConstantSupportedFileTypesFilter());
 	    if (fileList == null)
 	    {
