@@ -26,11 +26,13 @@ public interface IView
     ITransferDialogResult showListDialog();
 	ITransferDialogResult showSortDialog();
     ITransferDialogResult showAutotagDialog();
+    ITransferDialogResult showStatisticsDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
 	ITransferDialogResult showVerifyDialog();
 	ITransferDialogResult showDeleteDialog();
-	void printLog(String text);
+
+    void printLog(String text);
 	void showError(String errMessage);
 	void showBusyStart(String waitingMessage);
 	void showBusyStop();
@@ -39,6 +41,7 @@ public interface IView
 	void addListButtonListener(ActionListener listener);
 	void addSortButtonListener(ActionListener listener);
     void addAutotagButtonListener(ActionListener listener);
+    void addStatisticsButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);
 	void addVerifyDialogButtonListener(ActionListener listener);

@@ -25,6 +25,7 @@ public class Controller
         this.view.addListButtonListener(new ListButtonListener());
         this.view.addSortButtonListener(new SortButtonListener());
         this.view.addAutotagButtonListener(new AutotagButtonListener());
+        this.view.addStatisticsButtonListener(new StatisticsButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         //this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
@@ -92,7 +93,15 @@ public class Controller
 			model.autotag(view.showAutotagDialog());
 		}
 	}
-	
+
+	class StatisticsButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			model.statistics(view.showStatisticsDialog());
+		}
+	}
+
 	class UploadDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)

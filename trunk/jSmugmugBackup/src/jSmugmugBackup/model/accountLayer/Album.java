@@ -15,20 +15,22 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
     private Vector<String> tags = null;
 	private Vector<IImage> imageList = null;
     private String lastUpdatedString = null;
+    private IAlbumMonthlyStatistics albumStatistics = null;
 	
-	public Album(ISmugmugObject parent, int id, String name, String keywords, String lastUpdatedString)
+	public Album(ISmugmugObject parent, int id, String name, String keywords, String lastUpdatedString, IAlbumMonthlyStatistics albumStatistics)
 	{
 		super(parent, id, name);
 		this.imageList = new Vector<IImage>();
 
         this.tags = Helper.getTags(keywords);
         this.lastUpdatedString = lastUpdatedString;
+        this.albumStatistics = albumStatistics;
 	}
 
     // special copy constructor
     public Album(ISmugmugObject parent, IAlbum album)
     {
-        this(parent, album.getID(), album.getName(), Helper.getKeywords( album.getTags() ), album.getLastUpdatedString());
+        this(parent, album.getID(), album.getName(), Helper.getKeywords( album.getTags() ), album.getLastUpdatedString(), new AlbumMonthlyStatistics(album.getStatistics()));
         for (IImage i : album.getImageList())
         {
             this.addImage(new Image(album, i));
@@ -60,6 +62,10 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
     }
 
 
+    public IAlbumMonthlyStatistics getStatistics()
+    {
+        return this.albumStatistics;
+    }
 
 
 

@@ -9,7 +9,7 @@ package jSmugmugBackup.model.accountLayer;
  *
  * @author paul
  */
-public class Statistics
+public class TransferStatistics
 {
     // encapsulation statistics data into an object, so we can with references
 
