@@ -11,10 +11,13 @@ todo:
  - connector for api version 1.2.2
  - support infinite directory hierarchies
  - use OS specific dir separator
- - downloading password protected albums (anonymous login mode)
+ - downloading
+   - password protected albums (anonymous login mode)
+   - url's
  - for commandline: addtags and removetags parameter
  - for commandline: maxresolution and minresolution parameter (for download)
  - todo: test encoding after download on mac and windows
+ - support questions: md5sums, heavy statistics
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

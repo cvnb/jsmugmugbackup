@@ -38,7 +38,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private static String login_nickname = null;
 	private static String login_passwordHash = null;
     private static SmugmugLocalAlbumCache albumCache = null; //making this static is a bit error prone, but should speed things up
-	
+
+    private Vector<IAlbumMonthlyStatistics> statisticsRuntimeCache = null; //this is a runtime cache, so nothing is stored permanently
 	private long transferedBytes = 0;
 	
 	
@@ -92,6 +93,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data (this might take a while) ... ");
 
+
+        // downloading album statistic data from smugmug ... they will later be merged with other album information
+
+
+
         //SmugmugLocalAlbumCache albumCache = null;
         SmugmugConnectorNG.albumCache = null;
         if (this.config.getPersistentCacheAccountInfo())
@@ -109,7 +115,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		IRootElement smugmugRoot = new RootElement(SmugmugConnectorNG.login_nickname);
 		
-		JSONObject tree = this.smugmug_users_getTree();
+		JSONObject tree = this.smugmug_users_getTree(null);
 		//this.printJSONObject(tree);
 
 
@@ -117,7 +123,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         //cache: validate if albums in cache are still valid
         //statistics: walk over the tree and count the number of files
         //note: the estimated count seems to be slightly (at least 3) lower than the real count, but is sufficient for an approximation
-        Statistics stat = new Statistics();
+        TransferStatistics stat = new TransferStatistics();
 		int statCategoryIndex = 0;
 		JSONObject statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
 		while (statJsonCategory != null)
@@ -233,7 +239,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
                     if (album == null)
                     {
-                        album = new Album(subcategory, albumID.intValue(), albumName, albumKeywords, albumLastUpdated);
+                        album = new Album(subcategory, albumID.intValue(), albumName, albumKeywords, albumLastUpdated, this.getAlbumStatistics(albumID.intValue()));
                         subcategory.addAlbum(album);
 
                         //iterate over images
@@ -342,7 +348,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
                 if (album == null)
                 {
-                    album = new Album(category, albumID.intValue(), albumName, albumKeywords, albumLastUpdated);
+                    album = new Album(category, albumID.intValue(), albumName, albumKeywords, albumLastUpdated, this.getAlbumStatistics(albumID.intValue()) );
                     category.addAlbum(album);
 
 
@@ -458,7 +464,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return smugmugRoot;
 	}
 
-    private void getTree_iterateImages(IAlbum album, Statistics stat)
+    private void getTree_iterateImages(IAlbum album, TransferStatistics stat)
     {
         JSONObject jsonImages = (JSONObject)this.smugmug_images_get(album.getID());
         int imageIndex = 0;
@@ -818,7 +824,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	public long getTransferedBytes() { return this.transferedBytes; }
 
-	
+
+
 	
 	//======================== private - smugmug =============================
 	
@@ -1133,7 +1140,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         else { this.log.printLogLine("failed"); }
 	}
 		
-	private JSONObject smugmug_users_getTree()
+	private JSONObject smugmug_users_getTree(String sitePassword)
 	{
 		//this.log.printLog("smugmug.users.getTree ... ");
 		
@@ -1145,7 +1152,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "NickName=" + SmugmugConnectorNG.login_nickname + "&"; //optional
 		url = url + "Heavy=1&"; //optional, the extra info might be useful at a later time
-		//url = url + "SitePassword=????&"; //optional
+		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //optional
 		
 		do
 		{		
@@ -1169,6 +1176,47 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
         
+        //return null;
+	}
+
+	private JSONObject smugmug_users_getTransferStats(int month, int year)
+	{
+		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
+        this.log.printLog("loading statistics for " + month + "/" + year + " ... ");
+
+        String methodName = "smugmug.users.getTransferStats";
+
+		//build url
+		String url = this.config.getConstantSmugmugServerURL() + "?";
+		url = url + "method=" + methodName + "&";
+		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
+		url = url + "Month=" + month + "&";
+        url = url + "Year=" + month + "&";
+		url = url + "Heavy=0&"; //optional, Heavy=1 doesn't seem to work
+
+
+		do
+		{
+			HttpGet httpget = new HttpGet(url);
+			JSONObject jobj = this.smugmugJSONRequest(httpget);
+			//this.printJSONObject(jobj);
+
+
+	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
+	        {
+	        	this.log.printLogLine("ok");
+                //this.printJSONObject(jobj);
+	           	return jobj;
+	        }
+	        else
+	        {
+	        	//this.log.printLogLine("failed");
+	        	this.log.printLog("smugmug.users.getTransferStats failed, retrying ...");
+	        	this.printJSONObject(jobj); //temporary
+	        }
+		} while (true); //hopefully, this will have an end ... sooner or later ...
+
         //return null;
 	}
 		
@@ -2132,6 +2180,147 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             }
             
         }
+    }
+
+    private IAlbumMonthlyStatistics getAlbumStatistics(int albumID)
+    {
+        //only download statistics once
+        if (this.statisticsRuntimeCache == null)
+        {
+            int month = Calendar.getInstance().get(Calendar.MONTH);
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            this.statisticsRuntimeCache = this.getStatistics(month, year);
+        }
+
+        for (IAlbumMonthlyStatistics stat : this.statisticsRuntimeCache)
+        {
+            if (stat.getAlbumID() == albumID) { return stat; }
+        }
+
+        return null;
+    }
+
+
+    private Vector<IAlbumMonthlyStatistics> getStatistics(int month, int year)
+    {
+        //this.log.printLogLine("DEBUG: Statistics stub (SmugmugConnector)");
+
+        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
+
+        JSONObject jsonAlbumStatisticsArray = this.smugmug_users_getTransferStats(month, year);
+        //this.printJSONObject(jsonAlbumStatisticsArray);
+
+		int albumIndex = 0;
+		JSONObject jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
+		while (jsonAlbumStatistics != null)
+		{
+            //Integers
+            Number albumID   = (Number)this.getJSONValue(jsonAlbumStatistics, "id");
+            Number bytes     = (Number)this.getJSONValue(jsonAlbumStatistics, "Bytes");
+            Number thumb     = (Number)this.getJSONValue(jsonAlbumStatistics, "Thumb");
+            Number tiny      = (Number)this.getJSONValue(jsonAlbumStatistics, "Tiny");
+            Number medium    = (Number)this.getJSONValue(jsonAlbumStatistics, "Medium");
+            Number large     = (Number)this.getJSONValue(jsonAlbumStatistics, "Large");
+            Number xLarge    = (Number)this.getJSONValue(jsonAlbumStatistics, "XLarge");
+            Number x2Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X2Large");
+            Number x3Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X3Large");
+
+            //Floats
+            Number original   = (Number)this.getJSONValue(jsonAlbumStatistics, "Original");
+            Number video320   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video320");
+            Number video640   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video640");
+            Number video960   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video960");
+            Number video1280  = (Number)this.getJSONValue(jsonAlbumStatistics, "Video1280");
+
+            IAlbumMonthlyStatistics albumStat = new AlbumMonthlyStatistics(month, year, albumID.intValue(), bytes.intValue(), thumb.intValue(), tiny.intValue(), medium.intValue(),
+                                                             large.intValue(), xLarge.intValue(), x2Large.intValue(), x3Large.intValue(),
+                                                             original.floatValue(), video320.floatValue(), video640.floatValue(), video960.floatValue(), video1280.floatValue());
+
+            result.add(albumStat);
+
+            
+            albumIndex++;
+            jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
+        }
+
+
+
+        return result;
+        /*
+            smugmug.users.getTransferStats
+
+            Gets the transfer statistics for the logged-in user during the given Month and Year. SmugMug only keeps the last few months of traffic on file, so requesting farther back then 2 months may not return valid results.
+
+            A float is provided for Original and video sizes because it's possible to watch only a portion of a video.
+
+            If Heavy is set to "1", transfer statistics for each image in each album will be returned as well.
+            Arguments
+
+                * string SessionID
+                * integer Month
+                * integer Year
+                * boolean Heavy (optional)
+
+            Result
+
+                standard response
+
+                * array Albums
+                      o struct Album
+                            + integer id
+                            + integer Bytes
+                            + integer Tiny
+                            + integer Thumb
+                            + integer Small
+                            + integer Medium
+                            + integer Large
+                            + integer XLarge
+                            + integer X2Large
+                            + integer X3Large
+                            + float Original
+                            + float Video320
+                            + float Video640
+                            + float Video960
+                            + float Video1280
+
+                heavy response
+
+                * array Albums
+                      o struct Album
+                            + integer id
+                            + integer Bytes
+                            + integer Tiny
+                            + integer Thumb
+                            + integer Small
+                            + integer Medium
+                            + integer Large
+                            + integer XLarge
+                            + integer X2Large
+                            + integer X3Large
+                            + float Original
+                            + float Video320
+                            + float Video640
+                            + float Video960
+                            + float Video1280
+                                  # array Images
+                                        * struct Image
+                                              o integer id
+                                              o integer Bytes
+                                              o integer Tiny
+                                              o integer Thumb
+                                              o integer Small
+                                              o integer Medium
+                                              o integer Large
+                                              o integer XLarge
+                                              o integer X2Large
+                                              o integer X3Large
+                                              o float Original
+
+            Fault Codes
+
+                * 4 - "invalid user (message)"
+         */
+
     }
 
 

@@ -52,6 +52,7 @@ public class GlobalConfig
    private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit         = 600*1024*1024; //600MB
+   private final int    constantStatisticsHistoryMonth      = 3; // how many month of statistics should jSmugmugBackup try to retrieve
    private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename               = "res/pixel.jpg";
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
@@ -224,6 +225,7 @@ public class GlobalConfig
    public boolean  getConstantHeavyRelogin()              { return this.constantHeavyRelogin; }
    //public boolean  getConstantVerboseLogging()            { return this.constantVerboseLogging; } //disabled for the moment
    public int      getConstantUploadFileSizeLimit()       { return this.constantUploadFileSizeLimit; }
+   public int      getConstantStatisticsHistoryMonth()    { return this.constantStatisticsHistoryMonth; }
    public String   getConstantUploadIgnoreFilePostfix()   { return this.constantUploadIgnoreFilePostfix; }
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }
    public String   getConstantAlbumCacheFilenamePrefix()  { return this.constantAlbumCacheFilenamePrefix; }

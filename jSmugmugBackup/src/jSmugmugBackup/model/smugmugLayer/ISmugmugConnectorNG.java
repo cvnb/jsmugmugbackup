@@ -22,6 +22,7 @@ public interface ISmugmugConnectorNG
 	void getImages(int albumID); //???
 	Hashtable<String, String> getImageInfo(int imageID);
     void setImageKeywords(int albumID, int imageID, String keywords);
+    //Vector<IAlbumStatistics> getStatistics(int month, int year);
 	
 	int createCategory(String name);
 	int createSubcategory(int categoryID, String name);

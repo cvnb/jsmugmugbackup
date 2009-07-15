@@ -84,7 +84,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		//find matching albums
 		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName, albumKeywords);
 		
-		// for all albums in the albumList:
+		// for all albums in the albumList: put them into a hirarchy
 		// - find it's parent category
 		// - find it's parent subcategory (if existing)
 		// - add album, with correct category and subcategory to result
@@ -129,7 +129,8 @@ public class AccountListingProxy implements IAccountListingProxy
 			}
 			
 		}
-		
+
+
 		return result;
 	}
 
@@ -270,7 +271,7 @@ public class AccountListingProxy implements IAccountListingProxy
         if (albumID == 0) //album doesn't exist, so create one
         {
         	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumAsciiName, albumTags);
-        	this.addAlbum(categoryID, subCategoryID, albumID, albumAsciiName, albumKeywords, "<internally created>");
+        	this.addAlbum(categoryID, subCategoryID, albumID, albumAsciiName, albumKeywords, "<internally created>", null);
         }
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
@@ -564,6 +565,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         //check if ignore tag exists and state a message
                         File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
                         if (ignoreTagFile.exists()) { countDelayedOutputString += " (ignore tag is present)"; }
+                        if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { countDelayedOutputString += " (filesize is greater than " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB)"; }
                         
                         countDelayedOutputString += "\n";
                     }
@@ -814,6 +816,20 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine(" ... tagged " + albumList.size() + " albums");
     }
 	
+    public void statistics(String categoryName, String subcategoryName, String albumName)
+    {
+        //this.log.printLogLine("DEBUG: Statistics stub (AccountListingProxy)");
+
+        //find matching albums
+		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName, null);
+
+        for (IAlbum a : albumList)
+        {
+            this.log.printLogLine("DEBUG: " + a.getFullName() + "statistics: \t" + a.getStatistics().getBytes() + " bytes");
+        }
+        
+    }
+
 	public void startSyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
@@ -984,9 +1000,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addSubcategory: ERROR!");
 	}
-	private void addAlbum(int categoryID, int subcategoryID, int id, String name, String albumKeywords, String lastUpdatedString)
+	private void addAlbum(int categoryID, int subcategoryID, int id, String name, String albumKeywords, String lastUpdatedString, IAlbumMonthlyStatistics albumStats)
 	{
-		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name, albumKeywords, lastUpdatedString); return; }
+		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name, albumKeywords, lastUpdatedString, albumStats); return; }
 		
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
@@ -996,7 +1012,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (s.getID() == subcategoryID)
 					{
-						s.addAlbum( new Album(s, id, name, albumKeywords, lastUpdatedString) );
+						s.addAlbum( new Album(s, id, name, albumKeywords, lastUpdatedString, albumStats) );
 						return;
 					}
 				}
@@ -1005,13 +1021,13 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addAlbum: ERROR!");		
 	}
-	private void addAlbum(int categoryID, int id, String name, String albumKeywords, String lastUpdatedString)
+	private void addAlbum(int categoryID, int id, String name, String albumKeywords, String lastUpdatedString, IAlbumMonthlyStatistics albumStats)
 	{
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
-				c.addAlbum( new Album(c, id, name, albumKeywords, lastUpdatedString) );
+				c.addAlbum( new Album(c, id, name, albumKeywords, lastUpdatedString, albumStats) );
 				return;
 			}
 		}

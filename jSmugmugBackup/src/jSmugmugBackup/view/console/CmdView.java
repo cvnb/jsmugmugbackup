@@ -29,6 +29,7 @@ public class CmdView implements IView
 	private ActionListener refreshButtonListener = null;
 	private ActionListener sortButtonListener = null;
     private ActionListener autotagButtonListener = null;
+    private ActionListener statisticsButtonListener = null;
 	private ActionListener quitButtonListener = null;
     private ActionListener syncProcessQueueButtonListener = null;
     private ActionListener asyncProcessQueueStartButtonListener = null;
@@ -64,6 +65,11 @@ public class CmdView implements IView
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.autotagButtonListener.actionPerformed(null);
+		}
+		else if ( this.findArgumentFromCommandline("stats") )
+		{
+			this.loginButtonListener.actionPerformed(null);
+			this.statisticsButtonListener.actionPerformed(null);
 		}
         else if ( this.findArgumentFromCommandline("upload") )
 		{
@@ -103,15 +109,16 @@ public class CmdView implements IView
 	}
 
 
-	public void addLoginButtonListener(ActionListener listener)          { this.loginButtonListener = listener; }
-	public void addUploadDialogButtonListener(ActionListener listener)   { this.uploadDialogButtonListener = listener; }
-	public void addDownloadDialogButtonListener(ActionListener listener) { this.downloadDialogButtonListener = listener; }
-	public void addVerifyDialogButtonListener(ActionListener listener)   { this.verifyDialogButtonListener = listener; }
-	public void addDeleteDialogButtonListener(ActionListener listener)   { this.deleteDialogButtonListener = listener; }
-	public void addListButtonListener(ActionListener listener)        { this.refreshButtonListener = listener; }
-	public void addSortButtonListener(ActionListener listener)           { this.sortButtonListener = listener; }
-    public void addAutotagButtonListener(ActionListener listener)           { this.autotagButtonListener = listener; }
-	public void addQuitButtonListener(ActionListener listener)           { this.quitButtonListener = listener; }
+	public void addLoginButtonListener(ActionListener listener)              { this.loginButtonListener = listener; }
+	public void addUploadDialogButtonListener(ActionListener listener)       { this.uploadDialogButtonListener = listener; }
+	public void addDownloadDialogButtonListener(ActionListener listener)     { this.downloadDialogButtonListener = listener; }
+	public void addVerifyDialogButtonListener(ActionListener listener)       { this.verifyDialogButtonListener = listener; }
+	public void addDeleteDialogButtonListener(ActionListener listener)       { this.deleteDialogButtonListener = listener; }
+	public void addListButtonListener(ActionListener listener)               { this.refreshButtonListener = listener; }
+	public void addSortButtonListener(ActionListener listener)               { this.sortButtonListener = listener; }
+    public void addAutotagButtonListener(ActionListener listener)            { this.autotagButtonListener = listener; }
+    public void addStatisticsButtonListener(ActionListener listener)         { this.statisticsButtonListener = listener; }
+	public void addQuitButtonListener(ActionListener listener)               { this.quitButtonListener = listener; }
 	public void addSyncProcessQueueButtonListener(ActionListener listener)   { this.syncProcessQueueButtonListener = listener; }
 
     public void addASyncProcessQueueStartButtonListener(ActionListener listener)   { /*this.asyncProcessQueueStartButtonListener = listener;*/ }
@@ -224,6 +231,11 @@ public class CmdView implements IView
 	{
 		return this.showListDialog();
 	}
+
+    public ITransferDialogResult showStatisticsDialog()
+	{
+		return this.showListDialog();
+	}
 	
 	public ITransferDialogResult showUploadDialog()
 	{
@@ -295,6 +307,7 @@ public class CmdView implements IView
 		this.log.printLogLine("     --list         : list contents of your smumgmug account");
 		this.log.printLogLine("     --sort         : sort categories, subcategories, albums");
         this.log.printLogLine("     --autotag      : assign tags based on the album name");
+        this.log.printLogLine("     --stats        : show statistics");
         this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
