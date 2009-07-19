@@ -889,7 +889,7 @@ public class SwingViewNG extends FrameView implements IView
     public ITransferDialogResult showListDialog()
     {
         // listing everything by default
-        return new TransferDialogResult(null, null, null, null, null);
+        return new TransferDialogResult(null, null, null, null, null, null);
     }
 
     public ITransferDialogResult showUploadDialog()
@@ -929,6 +929,11 @@ public class SwingViewNG extends FrameView implements IView
         this.transferDialog.setVisible(true);
 
         return this.transferGetTransferDialogResult();
+    }
+
+    public ITransferDialogResult showDownloadURLDialog()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public ITransferDialogResult showVerifyDialog() {
@@ -1010,6 +1015,11 @@ public class SwingViewNG extends FrameView implements IView
     public void addDownloadDialogButtonListener(ActionListener listener)
     {
         this.mainDownloadButton.addActionListener(listener);
+    }
+
+    public void addDownloadURLDialogButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
     }
 
     public void addVerifyDialogButtonListener(ActionListener listener)
@@ -1140,7 +1150,7 @@ public class SwingViewNG extends FrameView implements IView
                                                                   (String)this.transferSubcategoryComboBox.getSelectedItem(),
                                                                   (String)this.transferAlbumComboBox.getSelectedItem(),
                                                                   this.transferFolderTextField.getText(),
-                                                                  null );
+                                                                  null, null );
 
             //clear input fields
             //...

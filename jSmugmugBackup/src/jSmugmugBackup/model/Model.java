@@ -159,7 +159,7 @@ public class Model
 
         for (IAlbum a : selectedAlbums)
 		{
-			this.accListing.enqueueAlbumForDownload(a.getID(), transferDialogResult.getDir());
+			this.accListing.enqueueAlbumForDownload(a.getID(), null, transferDialogResult.getDir());
 		}
 
 //        this.log.printLogLine("category   : " + transferDialogResult.getCategoryName());
@@ -171,6 +171,25 @@ public class Model
 //		{
 //			this.accListing.enqueueAlbumForDownload(a.getID(), transferDialogResult.getDir());
 //		}
+    }
+
+    public void downloadURL(ITransferDialogResult transferDialogResult)
+    {
+        //this.log.printLogLine("DEBUG: downloadURL stub (Model)");
+        //this.log.printLogLine("DEBUG: url=" + transferDialogResult.getURL());
+
+        String url = transferDialogResult.getURL();
+        String urlTail = url.substring(url.indexOf("/gallery/") + 9);
+
+        String albumIDString = urlTail.substring(0, urlTail.indexOf("_"));
+        int albumID = Integer.parseInt(albumIDString);
+        String albumKey = urlTail.substring(urlTail.indexOf("_")+1, urlTail.indexOf("/"));
+
+        //this.log.printLogLine("DEBUG: albumID : " + albumID);
+        //this.log.printLogLine("DEBUG: albumKey: " + albumKey);
+        this.accListing.enqueueAlbumForDownload(albumID, albumKey, transferDialogResult.getDir());
+
+
     }
     
     public void verify(ITransferDialogResult transferDialogResult)

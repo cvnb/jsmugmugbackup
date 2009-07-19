@@ -13,7 +13,6 @@ import java.util.Vector;
 
 public interface IAccountListingProxy
 {
-	void serialize(File accoutDataFile);
 	Number login(String userEmail, String password);
 	void logout();
 	
@@ -22,8 +21,9 @@ public interface IAccountListingProxy
     Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName, String albumKeywords);
 
     void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords);
-	void enqueueAlbumForDownload(int albumID, String targetBaseDir);
-	void verifyAlbum(int albumID, String targetBaseDir);
+	void enqueueAlbumForDownload(int albumID, String albumKey, String targetBaseDir);
+	//void enqueueAlbumFromURLForDownload(int albumID, String albumKey, String targetDir);
+    void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);
     void autotag(String categoryName, String subcategoryName, String albumName);
     void statistics(String categoryName, String subcategoryName, String albumName);

@@ -101,6 +101,8 @@ public class GlobalConfig
         " - when downloading from users that don't allow originals, the reported download queue size\n" +
         "   is most definitively wrong, and the remaining time counter might get confused too - no fix\n" +
         "   for that at the moment, sorry\n" +
+        " - statistics: nesseceary functions are more or less implemented, but the smugmug API seems\n" +
+        "   to return zero for everything ... there's not much I can do about it atm, sorry\n" +
         " - <to be continued>\n";
 
    // constant objects

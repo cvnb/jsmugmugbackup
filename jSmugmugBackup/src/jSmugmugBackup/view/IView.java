@@ -29,6 +29,7 @@ public interface IView
     ITransferDialogResult showStatisticsDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
+    ITransferDialogResult showDownloadURLDialog();
 	ITransferDialogResult showVerifyDialog();
 	ITransferDialogResult showDeleteDialog();
 
@@ -44,6 +45,7 @@ public interface IView
     void addStatisticsButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);
+    void addDownloadURLDialogButtonListener(ActionListener listener);
 	void addVerifyDialogButtonListener(ActionListener listener);
 	void addDeleteDialogButtonListener(ActionListener listener);
 	void addQuitButtonListener(ActionListener listener);
