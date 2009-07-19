@@ -519,7 +519,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	    {
 	    	/* Either dir does not exist or is not a directory */
 	    	this.log.printLogLine("failed");
-	      	this.log.printLogLine("ERROR: local album path could not be found");
+	      	this.log.printLogLine("   ERROR: local album path could not be found");
 	      	return;
 	    }
 	    Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files, convienence only
