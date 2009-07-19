@@ -243,7 +243,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                         subcategory.addAlbum(album);
 
                         //iterate over images
-                        this.getTree_iterateImages(album, stat);
+                        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(album.getID(), null, null, null);
+                        this.getTree_iterateImages(jsonImages, album, stat);
 //                        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 //                        int imageIndex = 0;
 //                        JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
@@ -353,7 +354,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
                     //iterate over images
-                    this.getTree_iterateImages(album, stat);
+                    JSONObject jsonImages = (JSONObject)this.smugmug_images_get(album.getID(), null, null, null);
+                    this.getTree_iterateImages(jsonImages, album, stat);
 //                    JSONObject jsonImages = (JSONObject)this.smugmug_images_get(albumID.intValue());
 //                    int imageIndex = 0;
 //                    JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
@@ -464,9 +466,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		return smugmugRoot;
 	}
 
-    private void getTree_iterateImages(IAlbum album, TransferStatistics stat)
-    {
-        JSONObject jsonImages = (JSONObject)this.smugmug_images_get(album.getID());
+    private void getTree_iterateImages(JSONObject jsonImages, IAlbum album, TransferStatistics stat)
+    {        
         int imageIndex = 0;
         JSONObject jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
         //this.printJSONObject(jsonImage);
@@ -542,18 +543,31 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
             //progress stats
-            stat.imageCount++; double currCompletion = (double)stat.imageCount / (double) stat.estimatedImageCount;
-            if (currCompletion > stat.currCompletionStep) { this.log.printLog( (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
+            if (stat != null)
+            {
+                stat.imageCount++; double currCompletion = (double)stat.imageCount / (double) stat.estimatedImageCount;
+                if (currCompletion > stat.currCompletionStep) { this.log.printLog( (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
+            }
 
             imageIndex++;
             jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
         }
     }
 
-	public void getImages(int albumID)
+	public IAlbum getAlbum(int albumID, String albumKey)
 	{
-		JSONObject jobj = this.smugmug_images_get(albumID);
-		this.printJSONObject(jobj);
+        //seems to return no valuable info on non-public albums :-(
+        //JSONObject jsonAlbum = this.smugmug_albums_getInfo(albumID, null, null, albumKey);
+        //this.printJSONObject(jsonAlbum);
+
+		JSONObject jsonImages = this.smugmug_images_get(albumID, null, null, albumKey);
+		//this.printJSONObject(jsonImages);
+
+
+        IAlbum album = new Album(null, albumID, "Album Doe", "", "", new AlbumMonthlyStatistics());
+        this.getTree_iterateImages(jsonImages, album, null);
+
+        return album;
 	}
 	
 	public Hashtable<String, String> getImageInfo(int imageID)
@@ -893,7 +907,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                         this.log.printLog("special socket exception with video: waiting 5min and checking if the video is already there ... ");
                         //this.log.printLog("special (waiting 5min) ... ");
                         Helper.pause(300 * 1000); // 300s = 20min
-                        JSONObject jobj_imageList = this.smugmug_images_get(albumID);
+                        JSONObject jobj_imageList = this.smugmug_images_get(albumID, null, null, null);
                         //this.printJSONObject(jobj_imageList);
 
                         //iterate over images - trying to find out if the image is already listed on smugmug
@@ -1182,7 +1196,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private JSONObject smugmug_users_getTransferStats(int month, int year)
 	{
 		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
-        this.log.printLog("loading statistics for " + month + "/" + year + " ... ");
+        this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
 
         String methodName = "smugmug.users.getTransferStats";
 
@@ -1205,7 +1219,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	this.log.printLogLine("ok");
+	        	this.log.printLog("ok) ... ");
                 //this.printJSONObject(jobj);
 	           	return jobj;
 	        }
@@ -1457,7 +1471,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
 	}
 
-	private JSONObject smugmug_albums_getInfo(int albumID)
+	private JSONObject smugmug_albums_getInfo(int albumID, String password, String sitePassword, String albumKey)
 	{
 		String methodName = "smugmug.albums.getInfo";
 		//this.log.printLog(methodName + " ...");
@@ -1467,10 +1481,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&"; //integer
-		//url = url + "Password=&"; //string, optional
-		//url = url + "SitePassword=&"; //string, optional
-		//url = url + "AlbumKey=&"; //string
-		
+		if (password != null)     { url = url + "Password=" + password + "&"; } //string, optional
+		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //string, optional
+		if (albumKey != null)     { url = url + "AlbumKey=" + albumKey + "&"; } //string, seems to be optional, but is not documented
+
+
 		do
 		{
 			HttpGet httpget = new HttpGet(url);
@@ -1694,7 +1709,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
 
-	private JSONObject smugmug_images_get(int albumID)
+	private JSONObject smugmug_images_get(int albumID, String password, String sitePassword, String albumKey)
 	{
 		String methodName = "smugmug.images.get";
 		//this.log.printLog("smugmug.images.get ... ");
@@ -1705,9 +1720,9 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
 		url = url + "Heavy=1&"; //optional
-		//url = url + "Password=????&"; //optional
-		//url = url + "SitePassword=????&"; //optional
-		//url = url + "AlbumKey=" + albumKey + "&"; //seems to be optional, but is not documented
+		if (password != null)     { url = url + "Password=" + password + "&"; } //optional
+		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //optional
+		if (albumKey != null)     { url = url + "AlbumKey=" + albumKey + "&"; } //seems to be optional, but is not documented
 
 
 		do

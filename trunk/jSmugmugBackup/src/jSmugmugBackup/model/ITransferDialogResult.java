@@ -13,4 +13,5 @@ public interface ITransferDialogResult
 	String getAlbumName();
 	String getDir();
     String getAlbumKeywords();
+    String getURL();
 }

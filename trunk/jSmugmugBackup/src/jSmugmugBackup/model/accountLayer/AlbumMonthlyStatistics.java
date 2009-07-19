@@ -30,6 +30,10 @@ public class AlbumMonthlyStatistics implements IAlbumMonthlyStatistics, Serializ
     private float video960  = 0.0f;
     private float video1280 = 0.0f;
 
+    public AlbumMonthlyStatistics()
+    {
+        // initialize without values ... not really useful, but prevents null-pointer exception later on ...
+    }
 
     public AlbumMonthlyStatistics( int month, int year, int albumID, int bytes,
                             int thumb, int tiny, int medium, int large, int xLarge, int x2Large, int x3Large,

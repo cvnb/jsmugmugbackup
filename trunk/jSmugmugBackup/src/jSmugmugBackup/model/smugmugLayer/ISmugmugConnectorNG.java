@@ -19,7 +19,7 @@ public interface ISmugmugConnectorNG
 	void logout();
 	
 	IRootElement getTree();
-	void getImages(int albumID); //???
+	IAlbum getAlbum(int albumID, String albumKey);
 	Hashtable<String, String> getImageInfo(int imageID);
     void setImageKeywords(int albumID, int imageID, String keywords);
     //Vector<IAlbumStatistics> getStatistics(int month, int year);

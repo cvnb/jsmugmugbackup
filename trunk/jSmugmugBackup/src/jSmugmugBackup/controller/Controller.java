@@ -29,6 +29,7 @@ public class Controller
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         //this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
+        this.view.addDownloadURLDialogButtonListener(new DownloadURLDialogButtonListener());
         //this.view.addDownloadStartButtonListener(new DownloadStartButtonListener());
         this.view.addVerifyDialogButtonListener(new VerifyDialogButtonListener());
         //this.view.addVerifyStartButtonListener(new VerifyStartButtonListener());
@@ -60,7 +61,7 @@ public class Controller
                 view.showBusyStop();
 
                 view.showBusyStart("downloading account data ...");
-                model.list(new TransferDialogResult(null, null, null, null, null));
+                model.list(new TransferDialogResult(null, null, null, null, null, null));
             }
 
             view.showBusyStop();
@@ -117,7 +118,15 @@ public class Controller
 			model.download(view.showDownloadDialog());
 		}		
 	}
-	
+
+	class DownloadURLDialogButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			model.downloadURL(view.showDownloadURLDialog());
+		}		
+	}
+
 	class VerifyDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)

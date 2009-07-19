@@ -24,6 +24,7 @@ public class CmdView implements IView
 	private ActionListener loginButtonListener = null;
 	private ActionListener uploadDialogButtonListener = null;
 	private ActionListener downloadDialogButtonListener = null;
+    private ActionListener downloadURLDialogButtonListener = null;
 	private ActionListener verifyDialogButtonListener = null;
 	private ActionListener deleteDialogButtonListener = null;
 	private ActionListener refreshButtonListener = null;
@@ -81,8 +82,12 @@ public class CmdView implements IView
 		}
 		else if ( this.findArgumentFromCommandline("download") )
 		{
-			this.loginButtonListener.actionPerformed(null);
-			this.downloadDialogButtonListener.actionPerformed(null);
+            this.loginButtonListener.actionPerformed(null);
+
+            if ( this.findArgumentFromCommandline("url") ) { this.downloadURLDialogButtonListener.actionPerformed(null); }
+            else { this.downloadDialogButtonListener.actionPerformed(null); }
+
+
 			//this.downloadStartButtonListener.actionPerformed(null);
             this.syncProcessQueueButtonListener.actionPerformed(null);
             //this.asyncProcessQueueStartButtonListener.actionPerformed(null);
@@ -112,6 +117,7 @@ public class CmdView implements IView
 	public void addLoginButtonListener(ActionListener listener)              { this.loginButtonListener = listener; }
 	public void addUploadDialogButtonListener(ActionListener listener)       { this.uploadDialogButtonListener = listener; }
 	public void addDownloadDialogButtonListener(ActionListener listener)     { this.downloadDialogButtonListener = listener; }
+    public void addDownloadURLDialogButtonListener(ActionListener listener)  { this.downloadURLDialogButtonListener = listener; }
 	public void addVerifyDialogButtonListener(ActionListener listener)       { this.verifyDialogButtonListener = listener; }
 	public void addDeleteDialogButtonListener(ActionListener listener)       { this.deleteDialogButtonListener = listener; }
 	public void addListButtonListener(ActionListener listener)               { this.refreshButtonListener = listener; }
@@ -219,7 +225,7 @@ public class CmdView implements IView
 		String album = this.extractArgumentValueFromCommandline("album");
         String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		
-		return new TransferDialogResult(category, subCategory, album, null, albumKeywords);
+		return new TransferDialogResult(category, subCategory, album, null, albumKeywords, null);
 	}
 	
 	public ITransferDialogResult showSortDialog()
@@ -245,7 +251,7 @@ public class CmdView implements IView
         String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		String pics_dir = this.extractDirectoryFromCommandline();
 		
-		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords);
+		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null);
 	}
 	
 	public ITransferDialogResult showDownloadDialog()
@@ -262,6 +268,14 @@ public class CmdView implements IView
 		//method is identical to the upload dialog
 		return this.showUploadDialog();
 	}
+
+    public ITransferDialogResult showDownloadURLDialog()
+    {
+        String pics_dir = this.extractDirectoryFromCommandline();
+        String url = this.extractArgumentValueFromCommandline("url");
+
+        return new TransferDialogResult(null, null, null, pics_dir, null, url);
+    }
 	
 	public ITransferDialogResult showVerifyDialog()
 	{
@@ -319,6 +333,7 @@ public class CmdView implements IView
 		this.log.printLogLine("     --subcategory={name}        : perform the given action only on the given subcategory (optional)");
 		this.log.printLogLine("     --album={name}              : perform the given action only on the given album (optional)");
         this.log.printLogLine("     --albumKeywords={keywords}  : perform the given action only using the given keywords, separated by \"; \" (optional)");
+        this.log.printLogLine("     --url={smugmug album url}   : only in conjunction with the \"download\" action, downloads the album specified a url");
 		this.log.printLogLine("     --dir={directory}           : the local base dir for the actions");
 		this.log.printLogLine("");
 		this.log.printLogLine(this.config.getConstantHelpNotes());

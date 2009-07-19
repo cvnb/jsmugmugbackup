@@ -38,27 +38,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.connector = new SmugmugConnectorNG();
 	}
 	
-//	public void setLoginMethod(ILoginView loginToken)
-//	{
-//		this.loginMethod = loginToken;
-//	}
-	
-//	public void init()
-//	{
-//		//this.categoryList = this.connector.getTree();
-//		this.smugmugRoot = this.connector.getTree();
-//	}
-//
-//	public void init(File accountDataFile)
-//	{
-//		//todo
-//	}
-	
-	public void serialize(File accoutDataFile)
-	{
-		//todo
-	}
-	
 	public Number login(String userEmail, String password)
 	{
         return this.connector.login(userEmail, password);
@@ -399,7 +378,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 	}
 
-	public void enqueueAlbumForDownload(int albumID, String targetBaseDir)
+	public void enqueueAlbumForDownload(int albumID, String albumKey, String targetBaseDir)
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
@@ -417,9 +396,11 @@ public class AccountListingProxy implements IAccountListingProxy
 		boolean dirIsNew = (new File(targetDir)).mkdirs();
 	    if (dirIsNew) { this.log.printLogLine("  ... created dir: " + targetDir); }
 
-	    
-	    
-		IAlbum album = this.getAlbum(albumID);
+        IAlbum album = this.getAlbum(albumID);
+
+        //handle cases where the album can not be found the the tree, i.e. a private URL has been given
+	    if ( (album == null) && (albumKey != null) ) { album = this.connector.getAlbum(albumID, albumKey); }
+		
 		for (IImage image : album.getImageList())
 		{
 
@@ -509,6 +490,18 @@ public class AccountListingProxy implements IAccountListingProxy
 	    
 	    this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
 	}
+
+    /*
+    public void enqueueAlbumFromURLForDownload(int albumID, String albumKey, String targetDir)
+    {
+        this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", key:" + albumKey + ", target:" + targetDir + ")");
+
+        int downloadCount = 0;
+		int skippedCount = 0;
+
+        this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
+    }
+     * */
 	
     public void verifyAlbum(int albumID, String targetAlbumDir)
     {
