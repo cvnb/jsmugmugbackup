@@ -2209,10 +2209,15 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         for (IAlbumMonthlyStatistics stat : this.statisticsRuntimeCache)
         {
-            if (stat.getAlbumID() == albumID) { return stat; }
+            if (stat.getAlbumID() == albumID)
+            {
+                //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning statistics!");
+                return stat;
+            }
         }
 
-        return null;
+        //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning empty statistics");
+        return new AlbumMonthlyStatistics(); //return empty statistics ... not the best solution, but should work for the moment
     }
 
 

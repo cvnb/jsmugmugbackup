@@ -537,8 +537,7 @@ public class AccountListingProxy implements IAccountListingProxy
             //everything seems fine: same number of pictures in SmugMug as in local dir
         }
         else 
-        {
-        	countOK = false;
+        {        	
         	if ( fileList.length > imageList.size() )
         	{
         		//some files have not been uploaded
@@ -553,12 +552,12 @@ public class AccountListingProxy implements IAccountListingProxy
         			}
         			if (match == false)
                     {
-                        countDelayedOutputString += "  " + fileList[i].getAbsolutePath();
+                        countDelayedOutputString += "  " + fileList[i].getAbsolutePath();                        
                         
-                        //check if ignore tag exists and state a message
                         File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
-                        if (ignoreTagFile.exists()) { countDelayedOutputString += " (ignore tag is present)"; }
-                        if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { countDelayedOutputString += " (filesize is greater than the " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB upload limit)"; }
+                        if (ignoreTagFile.exists()) { countDelayedOutputString += " (ignore tag is present)"; } //check if ignore tag exists and state a message
+                        else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { countDelayedOutputString += " (filesize is greater than the " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB upload limit, no worries)"; }
+                        else { countOK = false; } //show output only if none of the reasons above are true
                         
                         countDelayedOutputString += "\n";
                     }
@@ -567,6 +566,7 @@ public class AccountListingProxy implements IAccountListingProxy
         	else //if ( fileList.length < imageList.size() )
         	{
         		//some local files are missing
+                countOK = false;
         		countDelayedOutputString += "   ERROR: some local files are missing (if the following list is empty, it might indicate that the same file has been uploaded twice)" + "\n";
         		countDelayedOutputString += "   listing remote files (" + (imageList.size() - fileList.length) + ") ... " + "\n";
         		for (IImage image : imageList)
@@ -674,7 +674,7 @@ public class AccountListingProxy implements IAccountListingProxy
     	if (countOK && compareOK)
     	{
     		//this.log.printLogLine(this.getTimeString() + " all md5 sums checked ... ok");
-    		this.log.printLogLine("ok (all md5 sums checked)");
+    		this.log.printLogLine("ok");
     	}
     	else
     	{
