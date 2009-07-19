@@ -43,7 +43,7 @@ public class GlobalConfig
    private final String internconstantXMLConfigFilename = "config.xml";
 
    // constants --> getter
-   private final String constantVersion                     = "0.9 (dev)";
+   private final String constantVersion                     = "1.0";
    private final String constantSmugmugUserAgentString      = "jSmugmugBackup/v" + this.constantVersion;
    private final String constantSmugmugServerURL            = "https://api.smugmug.com/hack/json/1.2.0/";
    private final String constantSmugmugAPIKey               = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
