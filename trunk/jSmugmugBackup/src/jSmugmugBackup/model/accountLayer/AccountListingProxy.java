@@ -558,7 +558,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         //check if ignore tag exists and state a message
                         File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
                         if (ignoreTagFile.exists()) { countDelayedOutputString += " (ignore tag is present)"; }
-                        if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { countDelayedOutputString += " (filesize is greater than " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB)"; }
+                        if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { countDelayedOutputString += " (filesize is greater than the " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB upload limit)"; }
                         
                         countDelayedOutputString += "\n";
                     }
