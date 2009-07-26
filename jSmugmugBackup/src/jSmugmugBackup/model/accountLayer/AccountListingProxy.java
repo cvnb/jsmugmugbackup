@@ -592,13 +592,14 @@ public class AccountListingProxy implements IAccountListingProxy
         
 	    // compare albums
         boolean compareOK = true;
+        int matchCount = 0; //count the number of matching pairs found
         String compareDelayedOutputString = "";
     	for (int i=0; i<fileList.length; i++)
     	{
     		for (IImage image : imageList)
     		{
                 if ( (Helper.isVideo(image.getName())) && (fileList[i].getName().startsWith(image.getName().substring(0, image.getName().lastIndexOf(".") ))) )
-                {
+                {                    
                     // handle videos ...
 
     				//compare files
@@ -607,6 +608,7 @@ public class AccountListingProxy implements IAccountListingProxy
                          ( fileList[i].getName().equals(image.getName()) ) )
                     {
                         //now we have the matching pair, so we compute the md5sums
+                        matchCount++;
                         String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
 
                         // checking md5:
@@ -627,12 +629,15 @@ public class AccountListingProxy implements IAccountListingProxy
                         // the videos filename ending is neither it's original ending (as it was uploaded)
                         // nor the standard .mp4 ending that jSmugmugBackup appends when it downloads videos
                         // from smugmug ... something is wrong here
-                        this.log.printLogLine("ERROR: there was a problem with the filename mapping for a video (" + fileList[i].getName() + ") ... exiting");
-                        return;
+                        compareOK = false;
+                        compareDelayedOutputString += "   ERROR: there was a problem with the filename mapping for a video (file: " + fileList[i].getName() + ", image: " + image.getName() + ") ... exiting" + "\n";
+                        //return;
                     }
                 }
                 else if ( fileList[i].getName().equals(image.getName()) ) // handle normal images
     			{
+                    matchCount++;
+
     				//now we have the matching pair, so we compute the md5sums
     				String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
       			
@@ -670,6 +675,13 @@ public class AccountListingProxy implements IAccountListingProxy
     			}
       		}
       	}
+
+        if (matchCount != imageList.size())
+        {
+            countOK = false;
+            compareOK = false;
+            this.log.printLog("WARNING: not all images could be matched (images=" + imageList.size() + ", " + matchCount + ") ... ");
+        }
     	
     	if (countOK && compareOK)
     	{
