@@ -39,10 +39,14 @@ public class ConsoleViewLogin_1_5 implements ILoginView
     //--------------------------------------------------------------------------
 	private String requestUserEmail()
 	{
-		if (this.initUserEmail != null) { return this.initUserEmail; }
+		if (this.initUserEmail != null)
+        {
+            System.out.println("    username: " + this.initUserEmail);
+            return this.initUserEmail;
+        }
 		
 		String userEmail = null;
-		System.out.print("    Username (or email): ");
+		System.out.print("    username: ");
 		Scanner in = new Scanner(System.in);
 		userEmail = in.nextLine();
 		
@@ -57,7 +61,7 @@ public class ConsoleViewLogin_1_5 implements ILoginView
 		String password = null;
 		
 		//this should be Java 5 compatible
-		System.out.print("    Password: ");
+		System.out.print("    password: ");
 		Scanner in = new Scanner(System.in);
 		password = in.nextLine();
 		

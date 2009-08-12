@@ -920,7 +920,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                             if (imageName.equals(fileName))
                             {
                                 this.log.printLog("success: we've found the video, no need to upload it again! ...");
-                                this.printJSONObject(jsonImage);
+                                //this.printJSONObject(jsonImage);
                                 repeat = false; // not really nesseciary, cause we're returning early
                                 JSONObject jobj = new JSONObject(); // construct a fake JSON reply
                                 jobj.put("stat", "fail");
