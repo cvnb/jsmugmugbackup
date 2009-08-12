@@ -39,10 +39,14 @@ public class ConsoleViewLogin_1_6 implements ILoginView
 
 	private String requestUserEmail()
 	{
-		if (this.initUserEmail != null) { return this.initUserEmail; }
+		if (this.initUserEmail != null)
+        {
+            System.out.println("    username: " + this.initUserEmail);
+            return this.initUserEmail;
+        }
 		
 		String userEmail = null;
-		System.out.print("    Username (or email): ");
+		System.out.print("    username: ");
 		Scanner in = new Scanner(System.in);
 		userEmail = in.nextLine();
 
@@ -58,13 +62,13 @@ public class ConsoleViewLogin_1_6 implements ILoginView
 		java.io.Console console = System.console(); //seems not to work in the eclipse console, returns null
 		if(console != null)
 		{
-			password = new String(System.console().readPassword("    Password: "));
+			password = new String(System.console().readPassword("    password: "));
 		}
 		else
 		{
 			System.out.println("error, couldn't allocate console (running eclipse?) ... let's do it oldschool ...");
     		
-    		System.out.print("    Password: ");
+    		System.out.print("    password: ");
     		Scanner in = new Scanner(System.in);
     		password = in.nextLine();
 		}

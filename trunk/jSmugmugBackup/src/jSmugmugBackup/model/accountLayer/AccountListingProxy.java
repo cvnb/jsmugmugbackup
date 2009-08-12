@@ -598,15 +598,30 @@ public class AccountListingProxy implements IAccountListingProxy
     	{
     		for (IImage image : imageList)
     		{
-                if ( (Helper.isVideo(image.getName())) && (fileList[i].getName().startsWith(image.getName().substring(0, image.getName().lastIndexOf(".") ))) )
+                if ( Helper.isVideo(image.getName()) )
                 {                    
                     // handle videos ...
 
-    				//compare files
-    				compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
-                    if ( ( fileList[i].getName().equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
-                         ( fileList[i].getName().equals(image.getName()) ) )
+//                    if ( ( fileList[i].getName().equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) &&
+//                         ( fileList[i].getName().equals(image.getName()) ) )
+//                    {
+//                        //DEBUG: special case, down't really yet know what to do here
+//
+//                        //compare files
+//                        compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
+//
+//                        compareOK = false;
+//                        compareDelayedOutputString += "   DEBUG: found video with original ending as well as a .mp4 file, don't really know what to do here (file: " + fileList[i].getName() + ", image: " + image.getName() + ") ... failed" + "\n";
+//
+//                    }
+//                    else
+                    if ( ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
+                         ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
                     {
+                        //compare files
+                        compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
+
+
                         //now we have the matching pair, so we compute the md5sums
                         matchCount++;
                         String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
@@ -624,6 +639,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             //compareDelayedOutputString += "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() + "\n";
                         }
                     }
+                    /*
                     else
                     {
                         // the videos filename ending is neither it's original ending (as it was uploaded)
@@ -633,8 +649,9 @@ public class AccountListingProxy implements IAccountListingProxy
                         compareDelayedOutputString += "   ERROR: there was a problem with the filename mapping for a video (file: " + fileList[i].getName() + ", image: " + image.getName() + ") ... exiting" + "\n";
                         //return;
                     }
+                    */
                 }
-                else if ( fileList[i].getName().equals(image.getName()) ) // handle normal images
+                else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) // handle normal images
     			{
                     matchCount++;
 
@@ -680,7 +697,7 @@ public class AccountListingProxy implements IAccountListingProxy
         {
             countOK = false;
             compareOK = false;
-            this.log.printLog("WARNING: not all images could be matched (images=" + imageList.size() + ", " + matchCount + ") ... ");
+            compareDelayedOutputString += "WARNING: not all images could be matched (images=" + imageList.size() + ", matched=" + matchCount + ") ... " + "\n";
         }
     	
     	if (countOK && compareOK)

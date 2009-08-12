@@ -18,6 +18,7 @@ todo:
  - for commandline: maxresolution and minresolution parameter (for download)
  - todo: test encoding after download on mac and windows
  - support questions: md5sums, heavy statistics
+- speed limits for up- and download
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality
