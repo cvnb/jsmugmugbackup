@@ -859,7 +859,8 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	
 	        // Create a response handler
 	        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-			
+
+
 	        try
 			{
 				responseBody = httpclient.execute(httpRequest, responseHandler);
@@ -1259,6 +1260,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
         	return jobj;
         }
+        else if ( (this.getJSONValue(jobj, "stat").equals("failed")) &&
+                  (this.getJSONValue(jobj, "code").equals(new Long(16))) )
+        {
+            //category already exists
+        	this.log.printLogLine("failed (" + this.getJSONValue(jobj, "message") + ")");
+        	return null;
+        }
         else
         {
         	this.log.printLogLine("failed");
@@ -1394,7 +1402,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		//essentials
 		//url = url + "AlbumTemplateID=" + 0 + "&"; //integer, optional, default: 0
-		url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0		
+		url = url + "SubCategoryID=" + subCategoryID + "&"; //integer, optional, default: 0
 		//url = url + "Description=&"; //string, optional
 		//url = url + "Keywords=&"; //string, optional
         if (albumKeywords != null) { url = url + "Keywords=" + Helper.encodeForURL(albumKeywords) + "&"; }//string, optional
@@ -1942,7 +1950,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		do
 		{	
 	        HttpPut httpPut = new HttpPut(url);
-	        
+
 	        //add header
 	        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
 	        httpPut.addHeader("Content-MD5", Helper.computeMD5Hash(fileName) );
