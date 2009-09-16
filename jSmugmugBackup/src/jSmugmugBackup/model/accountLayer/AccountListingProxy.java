@@ -224,8 +224,9 @@ public class AccountListingProxy implements IAccountListingProxy
 
     	//get or create category
         int categoryID;
-        categoryID = this.getCategoryID(categoryAsciiName);
-        if (categoryID == 0) //category doesn't exist, so we create one
+        categoryID = this.getCategoryID(categoryAsciiName); //returns -1 for non-existing categorys, because 0 is used by the category named "Other"
+        //this.log.printLogLine("DEBUG: categoryName: " + categoryAsciiName + ", categoryID: " + categoryID);
+        if (categoryID == -1) //category doesn't exist, so we create one
         {
         	categoryID = this.connector.createCategory(categoryAsciiName); //create on smugmug
         	//this.addCategory(categoryID, categoryName); //add to local structure
@@ -505,13 +506,12 @@ public class AccountListingProxy implements IAccountListingProxy
 	
     public void verifyAlbum(int albumID, String targetAlbumDir)
     {
-        //this.log.printLogLine("DEBUG: AccountListingProxy.verifyAlbum(" + albumID + ", " + targetAlbumDir + ")");
-
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
 
 		//String targetDir = targetAlbumDir + this.getAlbumDirEnd(albumID);
-    	this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetAlbumDir + ") ... ");
+    	//this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetAlbumDir + ") ... ");
+        this.log.printLog(Helper.getCurrentTimeString() + " verify: " + this.getAlbumDirEnd(albumID) + " ... ");
 
 		File dir = new File(targetAlbumDir);
 	    File[] fileList = dir.listFiles(this.config.getConstantSupportedFileTypesFilter());
@@ -1094,7 +1094,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			if (c.getName().equals(categoryName)) return c.getID();
 		}
 		
-		return 0;
+		return -1; //using "-1" here, because the standard category "Other" is using id=0
 	}
 	private int getSubcategoryID(int categoryID, String subcategoryName)
 	{

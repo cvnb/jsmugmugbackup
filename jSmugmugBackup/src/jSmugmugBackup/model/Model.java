@@ -82,7 +82,7 @@ public class Model
     {
         if (transferDialogResult == null) { return; }
 
-    	this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
+    	//this.log.printLogLine("preparing upload of pics from: " + transferDialogResult.getDir());
 
 
 		String category    = transferDialogResult.getCategoryName();
@@ -100,6 +100,7 @@ public class Model
             return;
         }
 
+        //this.log.printLogLine("DEBUG: " + category + "/" + subcategory + "/" + album);
 		if ((category == null) && (subcategory == null) && (album == null))
 		{			
             this.recursiveUploadDirectorySearch(3, rootDir, category, subcategory, album, keywords);
@@ -140,7 +141,7 @@ public class Model
     {
         if (transferDialogResult == null) { return; }
 
-		this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
+		//this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
 
         IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
 
@@ -194,7 +195,7 @@ public class Model
     
     public void verify(ITransferDialogResult transferDialogResult)
     {
-        this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
+        //this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
 
 //        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
 //
@@ -482,7 +483,8 @@ public class Model
     //                            this.log.printLogLine("ERROR: Model.recursiveUploadDirectorySearch: this case is yet unhandled");
     //                            this.quitApplication();
     //                        }
-                            if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+                            //if (category == null) { category    = subDirectory.getParentFile().getName(); } else { /*NOOP: category is already defined*/ }
+                            category    = subDirectory.getParentFile().getName();
                             subcategory = null;
                             album       = subDirectory.getName();
 
@@ -509,6 +511,7 @@ public class Model
                         }
                         else { this.log.printLogLine("ERROR: undefined recursion level"); this.quitApplication(); }
 
+                        //this.log.printLogLine("DEBUG: enqueuing: " + subDirectory + "(" + category + "/" + subcategory + "/" + album + ")");
                         this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirectory, keywords);
                     }
                     else
