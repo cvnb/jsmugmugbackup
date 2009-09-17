@@ -195,6 +195,8 @@ public class Model
     
     public void verify(ITransferDialogResult transferDialogResult)
     {
+        if (this.config.getConstantVerifyMD5ForVideos() == false) { this.log.printLogLine("WARNING: md5 sums for videos will not be checked, since they usually fail anyway"); }
+
         //this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
 
 //        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());

@@ -50,6 +50,7 @@ public class GlobalConfig
    private final String constantSmugmugAPIVersion           = "1.2.0";
    private final int    constantRetryWait                   = 20000; //time to wait before retrying (20sec)
    private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
+   private final boolean constantVerifyMD5ForVideos         = false; // since md5 verification usually fails for videos, this will sspeed up the process
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit         = 600*1024*1024; //600MB
    private final int    constantStatisticsHistoryMonth      = 3; // how many month of statistics should jSmugmugBackup try to retrieve
@@ -225,6 +226,7 @@ public class GlobalConfig
    public String   getConstantSmugmugAPIVersion()         { return this.constantSmugmugAPIVersion; }
    public int      getConstantRetryWait()                 { return this.constantRetryWait; }
    public boolean  getConstantHeavyRelogin()              { return this.constantHeavyRelogin; }
+   public boolean  getConstantVerifyMD5ForVideos()              { return this.constantVerifyMD5ForVideos; }
    //public boolean  getConstantVerboseLogging()            { return this.constantVerboseLogging; } //disabled for the moment
    public int      getConstantUploadFileSizeLimit()       { return this.constantUploadFileSizeLimit; }
    public int      getConstantStatisticsHistoryMonth()    { return this.constantStatisticsHistoryMonth; }
