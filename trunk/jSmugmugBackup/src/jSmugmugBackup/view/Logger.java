@@ -31,6 +31,17 @@ public class Logger
             catch (IOException e) { e.printStackTrace(); }
         }
 
+
+
+    	//write separator to file (only once per program execution)
+    	try
+    	{
+    		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), true);
+    		out.write("\n----------------------------------------------------------------------------\n");
+			out.close();
+		}
+    	catch (IOException e) { e.printStackTrace(); }
+
 	}
 	 
 	/**
@@ -75,6 +86,7 @@ public class Logger
     {
     	this.printLog(text + "\n");
     }
+
 
     /*
     // Verbose logging is disabled for the moment

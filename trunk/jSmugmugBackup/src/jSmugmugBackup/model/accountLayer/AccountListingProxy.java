@@ -509,7 +509,6 @@ public class AccountListingProxy implements IAccountListingProxy
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
 
-		//String targetDir = targetAlbumDir + this.getAlbumDirEnd(albumID);
     	//this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetAlbumDir + ") ... ");
         this.log.printLog(Helper.getCurrentTimeString() + " verify: " + this.getAlbumDirEnd(albumID) + " ... ");
 
@@ -522,78 +521,15 @@ public class AccountListingProxy implements IAccountListingProxy
 	      	this.log.printLogLine("   ERROR: local album path could not be found");
 	      	return;
 	    }
+
 	    Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files, convienence only
 
-	    
-	    
-        boolean countOK = true;
-        String countDelayedOutputString = "";
-
-	    //compare number of files
+	    boolean failed = false;
         IAlbum album = this.getAlbum(albumID);
         Vector<IImage> imageList = album.getImageList();
-        if ( fileList.length == imageList.size() )
-        {
-            //everything seems fine: same number of pictures in SmugMug as in local dir
-        }
-        else 
-        {        	
-        	if ( fileList.length > imageList.size() )
-        	{
-        		//some files have not been uploaded
-        		countDelayedOutputString += "   ERROR: some files have not been uploaded" + "\n";
-        		countDelayedOutputString += "   listing local files (" + (fileList.length - imageList.size())  + ") ... " + "\n";
-        		for (int i=0; i<fileList.length; i++)
-        		{
-        			boolean match = false;
-        			for (IImage image : imageList)
-        			{
-        				if (fileList[i].getName().equals(image.getName())) { match = true; }
-        			}
-        			if (match == false)
-                    {
-                        countDelayedOutputString += "  " + fileList[i].getAbsolutePath();                        
-                        
-                        File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
-                        if (ignoreTagFile.exists()) { countDelayedOutputString += " (ignore tag is present)"; } //check if ignore tag exists and state a message
-                        else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { countDelayedOutputString += " (filesize is greater than the " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB upload limit, no worries)"; }
-                        else { countOK = false; } //show output only if none of the reasons above are true
-                        
-                        countDelayedOutputString += "\n";
-                    }
-        		}        		
-        	}
-        	else //if ( fileList.length < imageList.size() )
-        	{
-        		//some local files are missing
-                countOK = false;
-        		countDelayedOutputString += "   ERROR: some local files are missing (if the following list is empty, it might indicate that the same file has been uploaded twice)" + "\n";
-        		countDelayedOutputString += "   listing remote files (" + (imageList.size() - fileList.length) + ") ... " + "\n";
-        		for (IImage image : imageList)
-        		{
-        			boolean match = false;
-        			for (int i=0; i<fileList.length; i++)
-        			{
-        				if (fileList[i].getName().equals(image.getName())) { match = true; }
-        			}
-        			if (match == false) { countDelayedOutputString += "  " + image.getName() + "\n"; }
-        		}
-        	}
-          
-        	/*
-        	delayedOutputString += "listing local files (" + fileList.length + ") ... " + "\n";
-        	for (int i=0; i<fileList.length; i++) { delayedOutputString += "  " + fileList[i].getAbsolutePath() + "\n"; }
-          
-        	delayedOutputString += "listing remote files (" + imageList.size() + ") ... " + "\n";
-        	for (IImage image : imageList) { delayedOutputString += "  " + image.getName() + "\n"; }
-        	*/
-        }        
-    	
         
 	    // compare albums
-        boolean compareOK = true;
         int matchCount = 0; //count the number of matching pairs found
-        String compareDelayedOutputString = "";
     	for (int i=0; i<fileList.length; i++)
     	{
     		for (IImage image : imageList)
@@ -601,42 +537,37 @@ public class AccountListingProxy implements IAccountListingProxy
                 if ( Helper.isVideo(image.getName()) )
                 {                    
                     // handle videos ...
-
-//                    if ( ( fileList[i].getName().equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) &&
-//                         ( fileList[i].getName().equals(image.getName()) ) )
-//                    {
-//                        //DEBUG: special case, down't really yet know what to do here
-//
-//                        //compare files
-//                        compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
-//
-//                        compareOK = false;
-//                        compareDelayedOutputString += "   DEBUG: found video with original ending as well as a .mp4 file, don't really know what to do here (file: " + fileList[i].getName() + ", image: " + image.getName() + ") ... failed" + "\n";
-//
-//                    }
-//                    else
                     if ( ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
                          ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
                     {
                         //compare files
-                        compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
-
 
                         //now we have the matching pair, so we compute the md5sums
                         matchCount++;
-                        String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
-
-                        // checking md5:
-                        //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
-                        //   and downloaded again) ... md5 sums will most definitively not match
-                        // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
-                        if ( localFileMD5Sum.equals(image.getMD5()) ) { compareDelayedOutputString += "ok" + "\n"; }
-                        else
+                        if (this.config.getConstantVerifyMD5ForVideos())
                         {
-                            //compareOK = false;
-                            compareDelayedOutputString += "failed - this is normal for a video" + "\n";
-                            //compareDelayedOutputString += "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() + "\n";
-                            //compareDelayedOutputString += "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() + "\n";
+                            String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
+                            // checking md5:
+                            //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
+                            //   and downloaded again) ... md5 sums will most definitively not match
+                            // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
+                            if ( localFileMD5Sum.equals(image.getMD5()) )
+                            {
+                                // no real need to print that to output, though unusual since md5 verification usually fails on videos
+                                //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok (unusual, but definitively nothing to worry about)");
+                            }
+                            else
+                            {
+                                if (failed == false)
+                                {
+                                    this.log.printLogLine("failed"); //this completes the first line
+                                    failed = true;
+                                }
+                                this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... failed - this is normal for a video");
+                                //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
+                                //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
+                            }
                         }
                     }
                     /*
@@ -659,58 +590,116 @@ public class AccountListingProxy implements IAccountListingProxy
     				String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
       			
     				//compare files
-			    	//this.log.printLog(this.getTimeString() + "   checking " + fileList[i].getAbsolutePath() + " ... ");
-    				compareDelayedOutputString += "   checking " + fileList[i].getAbsolutePath() + " ... ";
 					if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
 					{
-						//this.log.printLogLine("ok");
-						compareDelayedOutputString += "ok" + "\n";
+                       // no need to print that to output:
+                       //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok");
 					}
 					else
 					{
-                        compareOK = false;
-                        compareDelayedOutputString += "failed" + "\n";
-                        compareDelayedOutputString += "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() + "\n";
-                        compareDelayedOutputString += "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() + "\n";
-
-
-                        /*
-                        if (Helper.isVideo(image.getName())) //probably not nesseciary now
+                        if (failed == false)
                         {
-                            //compareOK = false; // temporary for debug
-                            compareDelayedOutputString += "failed - this is normal for a original video" + "\n";
+                            this.log.printLogLine("failed"); //this completes the first line
+                            failed = true;
                         }
-                        else //standard case, it's an image
-                        {
-                            compareOK = false;
-                            compareDelayedOutputString += "failed" + "\n";
-                            compareDelayedOutputString += "      localFileMD5Sum   = " + localFileMD5Sum + "\n";
-                            compareDelayedOutputString += "      MD5Sum on SmugMug = " + image.getMD5() + "\n";
-                        }
-                        */
+                        this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... failed");
+                        this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
+                        this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
 					}
     			}
       		}
       	}
 
-        if (matchCount != imageList.size())
+
+
+        if ( (fileList.length == matchCount) && (imageList.size() == matchCount) )
         {
-            countOK = false;
-            compareOK = false;
-            compareDelayedOutputString += "WARNING: not all images could be matched (images=" + imageList.size() + ", matched=" + matchCount + ") ... " + "\n";
+            if (failed == false) { this.log.printLogLine("ok"); } // i.e. there were no errors for the whole album
+            else { /*NOOP ... the "failed" was already printed before*/ } // i.e. there were errors with md5 verification, but no missing files or so
         }
-    	
-    	if (countOK && compareOK)
-    	{
-    		//this.log.printLogLine(this.getTimeString() + " all md5 sums checked ... ok");
-    		this.log.printLogLine("ok");
-    	}
-    	else
-    	{
-    		this.log.printLog("failed (see below)\n");
-    		if (!countOK)   this.log.printLog( countDelayedOutputString );
-    		if (!compareOK) this.log.printLog( compareDelayedOutputString );
-    	}
+        else
+        {
+            if (failed == false) // no error was encountered so far
+            {
+                this.log.printLogLine("failed");
+                failed = true; // not really nesseciary, because "failed" is not used anymore hereafter
+            }
+
+            Hashtable<String, Integer> fileMappingTable = new Hashtable<String, Integer>();
+            //match files against images on smugmug
+            for (int i=0; i<fileList.length; i++)
+            {
+                int fileMatchCount = 0;
+                for (IImage image : imageList)
+                {
+                    if (fileList[i].getName().equals(image.getName())) { fileMatchCount++; }
+                }
+
+                if (fileMatchCount == 0)
+                {
+                    //check for special cases
+                    File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
+                    if ( (ignoreTagFile.exists()) && (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) ) { fileMatchCount = -11; }
+                    else if (ignoreTagFile.exists()) { fileMatchCount = -12; } //check if ignore tag exists
+                    else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { fileMatchCount = -13; }
+                    else { fileMatchCount = -10; } //the value -10 identifies it as a file with no corresponding image on smugmug
+                }
+
+                fileMappingTable.put(fileList[i].getAbsolutePath(), fileMatchCount);
+            }
+
+            //match images on smugmug against local files
+            for (IImage image : imageList)
+            {
+                int fileMatchCount = 0;
+                for (int i=0; i<fileList.length; i++)
+                {
+                    if (fileList[i].getName().equals(image.getName())) { fileMatchCount++; }
+                }
+                
+                //assumption: local files have distinctive names on disk (should be safe to assume)
+                if (fileMatchCount > 1) { this.log.printLogLine("   ERROR: one image matched with multiple local files! This is not supposed to happen, aborting!"); return; }
+                
+                //the value -20 identifies it as an image on smugmug with no corresponding local file
+                if (fileMatchCount == 0) { fileMatchCount = -20; }
+
+                fileMappingTable.put(image.getName(), fileMatchCount);
+            }
+
+            //evaluate matching results
+            for (String key : fileMappingTable.keySet())
+            {   
+                if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key + " was uploaded multiple(" + fileMappingTable.get(key) + ") times"); }
+                else if (fileMappingTable.get(key) == -10) { this.log.printLogLine("   WARNING: " + key + " was not uploaded"); }
+                else if (fileMappingTable.get(key) == -11) { this.log.printLogLine("   WARNING: " + key + " was not uploaded (reason: ignore tag and file size limit)"); }
+                else if (fileMappingTable.get(key) == -12) { this.log.printLogLine("   WARNING: " + key + " was not uploaded (reason: ignore tag)"); }
+                else if (fileMappingTable.get(key) == -13) { this.log.printLogLine("   WARNING: " + key + " was not uploaded (reason: file size limit)"); }
+                else if (fileMappingTable.get(key) == -20) { this.log.printLogLine("   WARNING: the image " + key + " exists on smugmug, but no corresponding file was found"); }
+                else
+                {
+                    this.log.printLogLine("   ERROR: undefined result while matching images with local files");
+                    this.log.printLogLine("   ERROR: fileName       = " + key);
+                    this.log.printLogLine("   ERROR: fileMatchCount = " + fileMappingTable.get(key));
+                }
+            }
+
+            //Debug output
+            this.log.printLogLine("   DEBUG: fileList.length  :" + fileList.length);
+            this.log.printLogLine("   DEBUG: imageList.size() :" + imageList.size());
+            this.log.printLogLine("   DEBUG: matchCount       :" + matchCount);
+            if (fileMappingTable.size() != (fileList.length + imageList.size())) { this.log.printLogLine("   DEBUG: incorrect size of fileMappingTable, something is wrong!!!"); }
+            this.log.printLogLine("   DEBUG: mapping table ...");
+            for (String key : fileMappingTable.keySet())
+            {
+                if (fileMappingTable.get(key) != 1)
+                {
+                    this.log.printLogLine("   DEBUG: " + key + " = " + fileMappingTable.get(key));
+                }                
+            }
+
+
+
+        }
     }
 
     public void sort(String categoryName, String subcategoryName)
