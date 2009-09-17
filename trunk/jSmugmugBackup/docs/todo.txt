@@ -21,6 +21,7 @@ todo:
  - speed limits for up- and download
  - better GUI
  - new API
+ - verifying tags
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

@@ -37,7 +37,7 @@ public class Logger
     	try
     	{
     		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), true);
-    		out.write("\n----------------------------------------------------------------------------\n");
+    		out.write("\n----------------------------------------------------------------------------------------------------\n");
 			out.close();
 		}
     	catch (IOException e) { e.printStackTrace(); }

@@ -564,23 +564,12 @@ public class AccountListingProxy implements IAccountListingProxy
                                     this.log.printLogLine("failed"); //this completes the first line
                                     failed = true;
                                 }
-                                this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... failed - this is normal for a video");
+                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... failed - this is normal for a video");
                                 //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
                                 //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
                             }
                         }
                     }
-                    /*
-                    else
-                    {
-                        // the videos filename ending is neither it's original ending (as it was uploaded)
-                        // nor the standard .mp4 ending that jSmugmugBackup appends when it downloads videos
-                        // from smugmug ... something is wrong here
-                        compareOK = false;
-                        compareDelayedOutputString += "   ERROR: there was a problem with the filename mapping for a video (file: " + fileList[i].getName() + ", image: " + image.getName() + ") ... exiting" + "\n";
-                        //return;
-                    }
-                    */
                 }
                 else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) // handle normal images
     			{
@@ -593,7 +582,7 @@ public class AccountListingProxy implements IAccountListingProxy
 					if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
 					{
                        // no need to print that to output:
-                       //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok");
+                       //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
 					}
 					else
 					{
@@ -602,7 +591,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             this.log.printLogLine("failed"); //this completes the first line
                             failed = true;
                         }
-                        this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... failed");
+                        this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 verification failed");
                         this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
                         this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
 					}
@@ -619,7 +608,7 @@ public class AccountListingProxy implements IAccountListingProxy
         }
         else
         {
-            if (failed == false) // no error was encountered so far
+            if (failed == false) // no error was encountered so far, so we need to print a "failed" message for the album
             {
                 this.log.printLogLine("failed");
                 failed = true; // not really nesseciary, because "failed" is not used anymore hereafter
@@ -663,17 +652,18 @@ public class AccountListingProxy implements IAccountListingProxy
                 //the value -20 identifies it as an image on smugmug with no corresponding local file
                 if (fileMatchCount == 0) { fileMatchCount = -20; }
 
-                fileMappingTable.put(image.getName(), fileMatchCount);
+                fileMappingTable.put("id=" + image.getID() + ";name=" + image.getName(), fileMatchCount);
             }
 
             //evaluate matching results
             for (String key : fileMappingTable.keySet())
-            {   
-                if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key + " was uploaded multiple(" + fileMappingTable.get(key) + ") times"); }
-                else if (fileMappingTable.get(key) == -10) { this.log.printLogLine("   WARNING: " + key + " was not uploaded"); }
-                else if (fileMappingTable.get(key) == -11) { this.log.printLogLine("   WARNING: " + key + " was not uploaded (reason: ignore tag and file size limit)"); }
-                else if (fileMappingTable.get(key) == -12) { this.log.printLogLine("   WARNING: " + key + " was not uploaded (reason: ignore tag)"); }
-                else if (fileMappingTable.get(key) == -13) { this.log.printLogLine("   WARNING: " + key + " was not uploaded (reason: file size limit)"); }
+            {
+                if (fileMappingTable.get(key) == 1) { /* NOOP - everything is fine; matched 1:1 */ }
+                else if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key + " ... was uploaded multiple(" + fileMappingTable.get(key) + ") times"); }
+                else if (fileMappingTable.get(key) == -10) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded"); }
+                else if (fileMappingTable.get(key) == -11) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: ignore tag and file size limit)"); }
+                else if (fileMappingTable.get(key) == -12) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: ignore tag)"); }
+                else if (fileMappingTable.get(key) == -13) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: file size limit)"); }
                 else if (fileMappingTable.get(key) == -20) { this.log.printLogLine("   WARNING: the image " + key + " exists on smugmug, but no corresponding file was found"); }
                 else
                 {
@@ -683,6 +673,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
             }
 
+            /*
             //Debug output
             this.log.printLogLine("   DEBUG: fileList.length  :" + fileList.length);
             this.log.printLogLine("   DEBUG: imageList.size() :" + imageList.size());
@@ -696,6 +687,7 @@ public class AccountListingProxy implements IAccountListingProxy
                     this.log.printLogLine("   DEBUG: " + key + " = " + fileMappingTable.get(key));
                 }                
             }
+            */
 
 
 
