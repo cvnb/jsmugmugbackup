@@ -22,6 +22,7 @@ todo:
  - better GUI
  - new API
  - verifying tags
+ - allow creating categories with a "#"
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

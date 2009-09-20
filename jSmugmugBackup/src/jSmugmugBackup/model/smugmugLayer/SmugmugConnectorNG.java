@@ -534,7 +534,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
             //if there is no filename available, take the name from the url
-            if (imageName == null) { imageName = Helper.extractFilenameFromURL(largestAvailableURL); }
+            if ((imageName == null) || (imageName.equals(""))) { imageName = Helper.extractFilenameFromURL(largestAvailableURL); }
 
 
             IImage image = new Image(album, imageID.intValue(), imageName, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), /*largestURLContentSize,*/ imageMD5,
