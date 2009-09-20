@@ -410,6 +410,14 @@ public class AccountListingProxy implements IAccountListingProxy
             // should also protect original videos when downloading them into the same folder
             // which they've been uploaded from
             File imageFile = null;
+            /*
+            if (image.getName().equals("")) //no filename has been assigned
+            {
+                //TODO: find out if it's a video or an image
+                
+                imageFile = new File(targetDir + image.getID() + ".jpg");
+            }
+            else*/
             if (!Helper.isVideo(image.getName())) { imageFile = new File(targetDir + image.getName()); }
             else
             {
@@ -659,7 +667,7 @@ public class AccountListingProxy implements IAccountListingProxy
             for (String key : fileMappingTable.keySet())
             {
                 if (fileMappingTable.get(key) == 1) { /* NOOP - everything is fine; matched 1:1 */ }
-                else if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key + " ... was uploaded multiple(" + fileMappingTable.get(key) + ") times"); }
+                else if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
                 else if (fileMappingTable.get(key) == -10) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded"); }
                 else if (fileMappingTable.get(key) == -11) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: ignore tag and file size limit)"); }
                 else if (fileMappingTable.get(key) == -12) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: ignore tag)"); }
@@ -688,9 +696,6 @@ public class AccountListingProxy implements IAccountListingProxy
                 }                
             }
             */
-
-
-
         }
     }
 
