@@ -1426,7 +1426,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "Public=0&"; //boolean, optional, default: 1
 		url = url + "WorldSearchable=0&"; //boolean, optional, default: 1
 		url = url + "SmugSearchable=0&"; //boolean, optional, default: 1
-		//url = url + "External=&"; //boolean, optional, default: 1
+		url = url + "External=0&"; //boolean, optional, default: 1
 		//url = url + "Protected=&"; //boolean, optional(power&pro only), default: 0
 		//url = url + "Watermarking=&"; //boolean, optional (pro only), default: 0
 		//url = url + "WatermarkID=&"; //integer, optional (pro only), default: 0
@@ -1442,7 +1442,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "FriendEdit=&"; //boolean, optional, default: 0
 		//url = url + "FamilyEdit=&"; //boolean, optional, default: 0
 		//url = url + "Comments=&"; //boolean, optional, default: 1
-		//url = url + "Share=&"; //boolean, optional, default: 1
+		url = url + "Share=0&"; //boolean, optional, default: 1
 		
 		// printing&sales
 		//url = url + "Printable=&"; //boolean, optional, default: 1

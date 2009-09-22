@@ -583,7 +583,7 @@ public class AccountListingProxy implements IAccountListingProxy
     			{
                     matchCount++;
 
-    				//now we have the matching pair, so we compute the md5sums
+                    //now we have the matching pair, so we compute the md5sums
     				String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
       			
     				//compare files
@@ -602,6 +602,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 verification failed");
                         this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
                         this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
+                        this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
 					}
     			}
       		}

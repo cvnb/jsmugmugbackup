@@ -15,6 +15,7 @@ cp -v lib/httpcomponents-client-4.0-beta1/lib/httpmime-4.0-beta1.jar deployment/
 cp -v lib/json_simple/lib/json_simple.jar deployment/jSmugmugBackup/
 cp -v lib/appframework/appframework-1.0.3.jar deployment/jSmugmugBackup/
 cp -v lib/appframework/swing-worker-1.1.jar deployment/jSmugmugBackup/
+cp -v lib/sanselan-0.97-incubator/sanselan-0.97-incubator.jar deployment/jSmugmugBackup/
 
 #copy code
 #cp -v -r bin/jSmugmugBackup deployment/jSmugmugBackup/ #eclipse
@@ -31,6 +32,7 @@ jar -xvf httpmime-4.0-beta1.jar
 jar -xvf json_simple.jar
 jar -xvf appframework-1.0.3.jar
 jar -xvf swing-worker-1.1.jar
+jar -xvf sanselan-0.97-incubator.jar
 
 rm -v *.jar
 rm -v -r META-INF/
@@ -59,6 +61,11 @@ cp -v lib/httpcomponents-client-4.0-beta1/README.txt deployment/docs/README.apac
 cp -v lib/json_simple/LICENSE.txt deployment/docs/LICENSE.json_simple.txt
 cp -v lib/json_simple/AUTHORS.txt deployment/docs/AUTHORS.json_simple.txt
 cp -v lib/json_simple/README.txt deployment/docs/README.json_simple.txt
+cp -v lib/sanselan-0.97-incubator/KEYS deployment/docs/KEYS.sanselan.txt
+cp -v lib/sanselan-0.97-incubator/LICENSE deployment/docs/LICENSE.sanselan.txt
+cp -v lib/sanselan-0.97-incubator/NOTICE deployment/docs/NOTICE.sanselan.txt
+cp -v lib/sanselan-0.97-incubator/README.txt deployment/docs/README.sanselan.txt
+cp -v lib/sanselan-0.97-incubator/RELEASE_NOTES deployment/docs/RELEASE_NOTES.sanselan.txt
 
 #cleanup
 rm -r -f deployment/jSmugmugBackup

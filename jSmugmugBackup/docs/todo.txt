@@ -23,6 +23,9 @@ todo:
  - new API
  - verifying tags
  - allow creating categories with a "#"
+ - statistics
+ - orientation for verify
+ - album defaults from config
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

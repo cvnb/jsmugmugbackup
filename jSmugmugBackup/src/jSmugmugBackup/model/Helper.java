@@ -16,8 +16,19 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.sanselan.*;
+import org.apache.sanselan.common.*;
+import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
+import org.apache.sanselan.formats.tiff.TiffDirectory;
+import org.apache.sanselan.formats.tiff.TiffField;
+import org.apache.sanselan.formats.tiff.TiffHeader;
+import org.apache.sanselan.formats.tiff.constants.TagInfo;
 
 public class Helper
 {
@@ -214,5 +225,51 @@ public class Helper
         }
 
         return false;
+    }
+
+    public static Integer getOrientationExifMetadata(File filename)
+    {
+        int orientation = 0;
+
+        Hashtable<String, String> exifMetadata = Helper.getExifMetadata(filename);
+        for (String key : exifMetadata.keySet())
+        {
+            if (key.equals("Orientation")) { return Integer.parseInt(exifMetadata.get(key)); }
+        }
+
+        return null;
+    }
+
+    public static Hashtable<String, String> getExifMetadata(File filename)
+    {
+        //System.out.println("Helper.getEXIFMetadata(" + filename.getAbsolutePath() + ")");
+
+        Hashtable<String, String> result = new Hashtable<String, String>();
+
+        IImageMetadata metadata = null;
+        try { metadata = Sanselan.getMetadata(filename); }
+        catch (ImageReadException e) { e.printStackTrace(); }
+        catch (IOException e) { e.printStackTrace(); }
+
+        if (metadata instanceof JpegImageMetadata)
+        {
+            JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+
+            ArrayList items = jpegMetadata.getItems();
+            for (int i = 0; i < items.size(); i++)
+            {
+                String item = items.get(i).toString();
+                //System.out.println("    item: " + item);
+
+                String item_name = item.substring(0, item.indexOf(":"));
+                String item_value = item.substring(item.indexOf(":")+2);
+                //System.out.println("       item_name : " + item_name);
+                //System.out.println("       item_value: " + item_value);
+
+                result.put(item_name, item_value);
+            }
+        }
+
+        return result;
     }
 }

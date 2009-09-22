@@ -6,6 +6,35 @@
         <checkMD5Sums>false</checkMD5Sums>
         <cacheAccountInfo>true</cacheAccountInfo>
     </config>
+    <albumDefaults>
+        <!-- essentials -->
+        <albumGeography></albumGeography>            <!-- default: 1 -->
+
+        <!-- look&feel -->
+        <albumClean></albumClean>                    <!-- default: 0 -->
+        <albumEXIF></albumEXIF>                      <!-- default: 1 -->
+        <albumFilenames>1</albumFilenames>           <!-- default: 0 -->
+        <albumSquareThumbs>0</albumSquareThumbs>     <!-- default: 1 -->
+        <albumSortMethod>FileName</albumSortMethod>  <!-- default: position -->
+        <albumSortDirection>0</albumSortDirection>
+
+        <!-- security and privacy -->
+        <albumPassword></albumPassword>
+        <albumPasswordHint></albumPasswordHint>
+        <albumPublic>0</albumPublic>                    <!-- default: 1 -->
+        <albumWorldSearchable>0</albumWorldSearchable>  <!-- default: 1 -->
+        <albumSmugSearchable>0</albumSmugSearchable>    <!-- default: 1 -->
+        <albumExternal>0</albumExternal>                <!-- default: 1 -->
+        <albumHideOwner></albumHideOwner>               <!-- default: 0 -->
+
+        <!-- social -->
+        <albumCanRank></albumCanRank>                   <!-- default: 1 -->
+        <albumFriendEdit></albumFriendEdit>             <!-- default: 0 -->
+        <albumFamilyEdit></albumFamilyEdit>             <!-- default: 0 -->
+        <albumComments></albumComments>                 <!-- default: 1 -->
+        <albumShare>0</albumShare>                      <!-- default: 1 -->
+
+        <!-- printing&sales -->
+        <albumPrintable></albumPrintable>               <!-- default: 1 -->
+    </albumDefaults>
 </jSmugmugBackup>
-
-
