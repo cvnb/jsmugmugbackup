@@ -78,6 +78,10 @@ Commons IO
 URL     : http://commons.apache.org/
 License : Apache License, Version 2.0
 
+Apache Sanselan
+URL     : http://sanselan.apache.org/
+License : Apache License, Version 2.0
+
 JSON
 URL     : http://json.org/
 License :
