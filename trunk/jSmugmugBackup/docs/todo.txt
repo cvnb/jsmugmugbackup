@@ -24,7 +24,6 @@ todo:
  - verifying tags
  - allow creating categories with a "#"
  - statistics
- - orientation for verify
  - album defaults from config
 
  - "pretend" switch on commandline

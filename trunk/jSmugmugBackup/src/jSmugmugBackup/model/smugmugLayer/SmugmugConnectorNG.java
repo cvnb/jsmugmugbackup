@@ -1199,14 +1199,19 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
         this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
 
+        // adding a "0" to the month
+        String month_str = "";
+        if (month < 10) { month_str = "0" + Integer.toString(month); }
+        else { month_str = Integer.toString(month); }
+
         String methodName = "smugmug.users.getTransferStats";
 
 		//build url
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Month=" + month + "&";
-        url = url + "Year=" + month + "&";
+		url = url + "Month=" + month_str + "&";
+        url = url + "Year=" + year + "&";
 		url = url + "Heavy=0&"; //optional, Heavy=1 doesn't seem to work
 
 
