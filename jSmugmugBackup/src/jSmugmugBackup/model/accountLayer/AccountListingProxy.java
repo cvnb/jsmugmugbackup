@@ -500,18 +500,6 @@ public class AccountListingProxy implements IAccountListingProxy
 	    this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
 	}
 
-    /*
-    public void enqueueAlbumFromURLForDownload(int albumID, String albumKey, String targetDir)
-    {
-        this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", key:" + albumKey + ", target:" + targetDir + ")");
-
-        int downloadCount = 0;
-		int skippedCount = 0;
-
-        this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
-    }
-     * */
-	
     public void verifyAlbum(int albumID, String targetAlbumDir)
     {
         //initialize Tree is nesseciary
@@ -572,7 +560,7 @@ public class AccountListingProxy implements IAccountListingProxy
                                     this.log.printLogLine("failed"); //this completes the first line
                                     failed = true;
                                 }
-                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... failed - this is normal for a video");
+                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (reason: this is normal for a video)");
                                 //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
                                 //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
                             }
@@ -591,18 +579,28 @@ public class AccountListingProxy implements IAccountListingProxy
 					{
                        // no need to print that to output:
                        //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
+                       //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
 					}
-					else
+					else //md5 check failed
 					{
                         if (failed == false)
                         {
                             this.log.printLogLine("failed"); //this completes the first line
                             failed = true;
                         }
-                        this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 verification failed");
-                        this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
-                        this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
-                        this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+
+                        int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
+                        if (exifOrientation == 1)
+                        {
+                            this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 verification failed");
+                            this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
+                            this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
+                            //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                        }
+                        else
+                        {
+                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (possible reason: image contains orientation info (" + exifOrientation + "))");
+                        }
 					}
     			}
       		}
