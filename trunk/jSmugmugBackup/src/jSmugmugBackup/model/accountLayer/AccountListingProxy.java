@@ -590,17 +590,23 @@ public class AccountListingProxy implements IAccountListingProxy
                         }
 
                         int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
-                        if (exifOrientation == 1)
+                        int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
+                        if (exifOrientation > 1)
+                        {
+                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (possible reason: image contains orientation info (" + exifOrientation + "))");
+                        }
+                        else if (exifDimensions > 48000000) //image has more than 48 megapixel
+                        {
+                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (reason: image was resampled by smugmug due to 48mp size limitation (" + ((float)exifDimensions / (1024.0 *1024.0))  + "))");
+                        }
+                        else
                         {
                             this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 verification failed");
                             this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
                             this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
                             //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
                         }
-                        else
-                        {
-                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (possible reason: image contains orientation info (" + exifOrientation + "))");
-                        }
+
 					}
     			}
       		}
@@ -832,9 +838,26 @@ public class AccountListingProxy implements IAccountListingProxy
 
         for (IAlbum a : albumList)
         {
-            this.log.printLogLine("DEBUG: " + a.getFullName() + "statistics: \t" + a.getStatistics().getBytes() + " bytes");
-        }
-        
+            if (a.getStatistics().getBytes() != 0)
+            {
+                this.log.printLogLine("DEBUG: " + a.getFullName() + " statistics for " + a.getStatistics().getMonth() + "/" + a.getStatistics().getYear() +  ":");
+                this.log.printLogLine("DEBUG:     ID        :" + a.getStatistics().getAlbumID());
+                this.log.printLogLine("DEBUG:     Bytes     :" + a.getStatistics().getBytes());
+                this.log.printLogLine("DEBUG:     Thumb     :" + a.getStatistics().getThumb());
+                this.log.printLogLine("DEBUG:     Tiny      :" + a.getStatistics().getTiny());
+                this.log.printLogLine("DEBUG:     Medium    :" + a.getStatistics().getMedium());
+                this.log.printLogLine("DEBUG:     Large     :" + a.getStatistics().getLarge());
+                this.log.printLogLine("DEBUG:     XLarge    :" + a.getStatistics().getXLarge());
+                this.log.printLogLine("DEBUG:     X2Large   :" + a.getStatistics().getX2Large());
+                this.log.printLogLine("DEBUG:     X3Large   :" + a.getStatistics().getX3Large());
+                this.log.printLogLine("DEBUG:     Original  :" + a.getStatistics().getOriginal());
+                this.log.printLogLine("DEBUG:     Video320  :" + a.getStatistics().getVideo320());
+                this.log.printLogLine("DEBUG:     Video640  :" + a.getStatistics().getVideo640());
+                this.log.printLogLine("DEBUG:     Video960  :" + a.getStatistics().getVideo960());
+                this.log.printLogLine("DEBUG:     Video1280 :" + a.getStatistics().getVideo1280());
+
+            }
+        }        
     }
 
 	public void startSyncProcessingQueue()

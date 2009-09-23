@@ -98,7 +98,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 
 
-        //SmugmugLocalAlbumCache albumCache = null;
         SmugmugConnectorNG.albumCache = null;
         if (this.config.getPersistentCacheAccountInfo())
         {
@@ -139,12 +138,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     Number albumID          = (Number)this.getJSONValue(statJsonAlbum, "id");
                     Number albumImageCount  = (Number)this.getJSONValue(statJsonAlbum, "ImageCount");
                     String albumLastUpdated = (String)this.getJSONValue(statJsonAlbum, "LastUpdated");
+                    String albumName        = (String)this.getJSONValue(statJsonAlbum, "Title");
                     stat.estimatedImageCount += albumImageCount.intValue();
                     stat.estimatedAlbumCount++;
 
                     if (this.config.getPersistentCacheAccountInfo())
                     {
-                        SmugmugConnectorNG.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
+                        SmugmugConnectorNG.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated, albumName);
                     }
 
                     statAlbumIndex++;
@@ -162,12 +162,13 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                 Number albumID          = (Number)this.getJSONValue(_jsonAlbum, "id");
                 Number albumImageCount  = (Number)this.getJSONValue(_jsonAlbum, "ImageCount");
                 String albumLastUpdated = (String)this.getJSONValue(_jsonAlbum, "LastUpdated");
+                String albumName        = (String)this.getJSONValue(_jsonAlbum, "Title");
                 stat.estimatedImageCount += albumImageCount.intValue();
                 stat.estimatedAlbumCount++;
 
                 if (this.config.getPersistentCacheAccountInfo())
                 {
-                    SmugmugConnectorNG.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated);
+                    SmugmugConnectorNG.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated, albumName);
                 }
 
                 _albumIndex++;
@@ -231,7 +232,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                     {
                         if (SmugmugConnectorNG.albumCache.exists(albumID.intValue()))
                         {
-                            album = new Album(subcategory, SmugmugConnectorNG.albumCache.getCachedAlbum(albumID.intValue()));
+                            album = new Album(subcategory, SmugmugConnectorNG.albumCache.getCachedAlbum(albumID.intValue()), this.getAlbumStatistics(albumID.intValue()));
                             subcategory.addAlbum(album);
                             cacheHits++;
                         }
@@ -341,7 +342,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
                 {
                     if (SmugmugConnectorNG.albumCache.exists(albumID.intValue()))
                     {
-                        album = new Album(category, SmugmugConnectorNG.albumCache.getCachedAlbum(albumID.intValue()));
+                        album = new Album(category, SmugmugConnectorNG.albumCache.getCachedAlbum(albumID.intValue()), this.getAlbumStatistics(albumID.intValue()));
                         category.addAlbum(album);
                         cacheHits++;
                     }
@@ -1199,10 +1200,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
         this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
 
-        // adding a "0" to the month
-        String month_str = "";
-        if (month < 10) { month_str = "0" + Integer.toString(month); }
-        else { month_str = Integer.toString(month); }
 
         String methodName = "smugmug.users.getTransferStats";
 
@@ -1210,7 +1207,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		String url = this.config.getConstantSmugmugServerURL() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnectorNG.login_sessionID + "&";
-		url = url + "Month=" + month_str + "&";
+		url = url + "Month=" + month + "&";
         url = url + "Year=" + year + "&";
 		url = url + "Heavy=0&"; //optional, Heavy=1 doesn't seem to work
 

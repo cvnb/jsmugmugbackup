@@ -21,5 +21,5 @@ public interface ISmugmugLocalAlbumCache
     void removeAlbum(int albumID);
     boolean exists(int albumID);
     IAlbum getCachedAlbum(int albumID);
-    boolean validateCachedAlbum(int albumID, int imageCount, String lastUpdated);
+    boolean validateCachedAlbum(int albumID, int imageCount, String lastUpdated, String albumName);
 }

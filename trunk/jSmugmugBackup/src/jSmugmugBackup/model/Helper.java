@@ -227,20 +227,37 @@ public class Helper
         return false;
     }
 
-    public static Integer getOrientationExifMetadata(File filename)
+    public static int getOrientationExifMetadata(File filename)
     {
-        int orientation = 0;
-
         Hashtable<String, String> exifMetadata = Helper.getExifMetadata(filename);
         for (String key : exifMetadata.keySet())
         {
             if (key.equals("Orientation")) { return Integer.parseInt(exifMetadata.get(key)); }
         }
 
-        return null;
+        return -1;
     }
 
-    public static Hashtable<String, String> getExifMetadata(File filename)
+    public static int getDimensionExifMetadata(File filename)
+    {
+        int imageWidth = 0;
+        int imageHeight = 0;
+
+        Hashtable<String, String> exifMetadata = Helper.getExifMetadata(filename);
+        for (String key : exifMetadata.keySet())
+        {
+            if (key.equals("Exif Image Width")) { imageWidth = Integer.parseInt(exifMetadata.get(key)); }
+        }
+        for (String key : exifMetadata.keySet())
+        {
+            if (key.equals("Exif Image Height")) { imageHeight = Integer.parseInt(exifMetadata.get(key)); }
+        }
+
+
+        return (imageWidth * imageHeight);
+    }
+
+    private static Hashtable<String, String> getExifMetadata(File filename)
     {
         //System.out.println("Helper.getEXIFMetadata(" + filename.getAbsolutePath() + ")");
 
