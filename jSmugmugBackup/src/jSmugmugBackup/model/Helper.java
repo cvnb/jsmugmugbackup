@@ -243,6 +243,8 @@ public class Helper
         int imageWidth = 0;
         int imageHeight = 0;
 
+        /*
+        // reading Metadata (doesn't seem very reliable, since not all images contain metadata)
         Hashtable<String, String> exifMetadata = Helper.getExifMetadata(filename);
         for (String key : exifMetadata.keySet())
         {
@@ -252,6 +254,44 @@ public class Helper
         {
             if (key.equals("Exif Image Height")) { imageHeight = Integer.parseInt(exifMetadata.get(key)); }
         }
+        */
+
+        // hefty hack from: http://stackoverflow.com/questions/672916/how-to-get-image-height-and-width-using-java
+        FileInputStream fis;
+        try
+        {
+            fis = new FileInputStream(filename);
+            // check for SOI marker
+            if (fis.read() != 255 || fis.read() != 216) throw new RuntimeException("SOI (Start Of Image) marker 0xff 0xd8 missing");
+
+            while (fis.read() == 255)
+            {
+                int marker = fis.read();
+                int len = fis.read() << 8 | fis.read();
+
+                if (marker == 192)
+                {
+                    fis.skip(1);
+
+                    int height = fis.read() << 8 | fis.read();
+                    int width = fis.read() << 8 | fis.read();
+
+                    imageWidth = width;
+                    imageHeight = height;
+                    break;
+                }
+                fis.skip(len - 2);
+            }
+            fis.close();
+        } catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+
+
+
+
+        // todo: nicer solution would be using the java imageio library
 
 
         return (imageWidth * imageHeight);

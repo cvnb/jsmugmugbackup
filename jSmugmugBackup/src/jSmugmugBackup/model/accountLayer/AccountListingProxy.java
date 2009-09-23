@@ -597,7 +597,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         }
                         else if (exifDimensions > 48000000) //image has more than 48 megapixel
                         {
-                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (reason: image was resampled by smugmug due to 48mp size limitation (" + ((float)exifDimensions / (1024.0 *1024.0))  + "))");
+                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 verification failed (reason: image was resampled by smugmug due to 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
                         }
                         else
                         {
@@ -605,6 +605,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
                             this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
                             //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                            //this.log.printLogLine("      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
                         }
 
 					}
