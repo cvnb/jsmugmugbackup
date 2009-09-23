@@ -8,33 +8,33 @@
     </config>
     <albumDefaults>
         <!-- essentials -->
-        <albumGeography></albumGeography>            <!-- default: 1 -->
+        <albumGeography>true</albumGeography>            <!-- default: true -->
 
         <!-- look&feel -->
-        <albumClean></albumClean>                    <!-- default: 0 -->
-        <albumEXIF></albumEXIF>                      <!-- default: 1 -->
-        <albumFilenames>1</albumFilenames>           <!-- default: 0 -->
-        <albumSquareThumbs>0</albumSquareThumbs>     <!-- default: 1 -->
-        <albumSortMethod>FileName</albumSortMethod>  <!-- default: position -->
-        <albumSortDirection>0</albumSortDirection>
+        <albumClean>false</albumClean>                   <!-- default: false -->
+        <albumExif>true</albumExif>                      <!-- default: true -->
+        <albumFilenames>true</albumFilenames>            <!-- default: false -->
+        <albumSquareThumbs>false</albumSquareThumbs>     <!-- default: true -->
+        <albumSortMethod>FileName</albumSortMethod>      <!-- default: position -->
+        <albumSortDirection>true</albumSortDirection>    <!-- asc = true; desc = false -->
 
         <!-- security and privacy -->
         <albumPassword></albumPassword>
         <albumPasswordHint></albumPasswordHint>
-        <albumPublic>0</albumPublic>                    <!-- default: 1 -->
-        <albumWorldSearchable>0</albumWorldSearchable>  <!-- default: 1 -->
-        <albumSmugSearchable>0</albumSmugSearchable>    <!-- default: 1 -->
-        <albumExternal>0</albumExternal>                <!-- default: 1 -->
-        <albumHideOwner></albumHideOwner>               <!-- default: 0 -->
+        <albumPublic>false</albumPublic>                    <!-- default: true -->
+        <albumWorldSearchable>false</albumWorldSearchable>  <!-- default: true -->
+        <albumSmugSearchable>false</albumSmugSearchable>    <!-- default: true -->
+        <albumExternal>false</albumExternal>                <!-- default: true -->
+        <albumHideOwner>false</albumHideOwner>              <!-- default: false -->
 
         <!-- social -->
-        <albumCanRank></albumCanRank>                   <!-- default: 1 -->
-        <albumFriendEdit></albumFriendEdit>             <!-- default: 0 -->
-        <albumFamilyEdit></albumFamilyEdit>             <!-- default: 0 -->
-        <albumComments></albumComments>                 <!-- default: 1 -->
-        <albumShare>0</albumShare>                      <!-- default: 1 -->
+        <albumCanRank>true</albumCanRank>                   <!-- default: true -->
+        <albumFriendEdit>false</albumFriendEdit>            <!-- default: false -->
+        <albumFamilyEdit>false</albumFamilyEdit>            <!-- default: false -->
+        <albumComments>true</albumComments>                 <!-- default: true -->
+        <albumShare>false</albumShare>                      <!-- default: true -->
 
         <!-- printing&sales -->
-        <albumPrintable></albumPrintable>               <!-- default: 1 -->
+        <albumPrintable>true</albumPrintable>               <!-- default: true -->
     </albumDefaults>
 </jSmugmugBackup>

@@ -57,7 +57,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
         return this.cache.get(albumID);
     }
 
-    public boolean validateCachedAlbum(int albumID, int imageCount, String lastUpdated)
+    public boolean validateCachedAlbum(int albumID, int imageCount, String lastUpdated, String albumName)
     {
         IAlbum album = this.getCachedAlbum(albumID);
 
@@ -65,7 +65,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
         if (album == null) { return false; }
 
         //check if album is still valid
-        if ( (album.getImageCount() == imageCount) && (album.getLastUpdatedString().equals(lastUpdated)) )
+        if ( (album.getImageCount() == imageCount) && (album.getLastUpdatedString().equals(lastUpdated)) && (album.getName().equals(albumName)) )
         {
             return true;
         }

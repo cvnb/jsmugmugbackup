@@ -309,7 +309,8 @@ public class Model
 
     public void statistics(ITransferDialogResult transferDialogResult)
     {
-        //this.log.printLogLine("DEBUG: Statistics stub (Model)");
+        this.log.printLogLine("INFO: albums with zero transferd bytes will be omitted");
+
 
         if (transferDialogResult == null) { return; }
         this.accListing.statistics(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());

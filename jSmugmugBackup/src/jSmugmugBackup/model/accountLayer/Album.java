@@ -15,7 +15,7 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
     private Vector<String> tags = null;
 	private Vector<IImage> imageList = null;
     private String lastUpdatedString = null;
-    private IAlbumMonthlyStatistics albumStatistics = null;
+    private IAlbumMonthlyStatistics albumStatistics = null; // statistics are written to disk during serialization, but replaced with fresh data after each startup
 	
 	public Album(ISmugmugObject parent, int id, String name, String keywords, String lastUpdatedString, IAlbumMonthlyStatistics albumStatistics)
 	{
@@ -28,9 +28,10 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
 	}
 
     // special copy constructor
-    public Album(ISmugmugObject parent, IAlbum album)
+    // - even when copying (a cached album from disk) we still add fresh statistics
+    public Album(ISmugmugObject parent, IAlbum album, IAlbumMonthlyStatistics albumMonthlyStatistics)
     {
-        this(parent, album.getID(), album.getName(), Helper.getKeywords( album.getTags() ), album.getLastUpdatedString(), new AlbumMonthlyStatistics(album.getStatistics()));
+        this(parent, album.getID(), album.getName(), Helper.getKeywords( album.getTags() ), album.getLastUpdatedString(), new AlbumMonthlyStatistics(albumMonthlyStatistics));
         for (IImage i : album.getImageList())
         {
             this.addImage(new Image(album, i));
