@@ -15,7 +15,7 @@ todo:
  - for commandline: addtags and removetags parameter
  - for commandline: maxresolution and minresolution parameter (for download)
  - todo: test encoding after download on mac and windows
- - support questions: md5sums, heavy statistics
+ - support questions: heavy statistics, orientation (DGRIN)
  - speed limits for up- and download
  - better GUI
  - verifying tags

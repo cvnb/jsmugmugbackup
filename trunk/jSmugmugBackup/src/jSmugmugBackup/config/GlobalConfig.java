@@ -170,10 +170,10 @@ public class GlobalConfig
    private boolean persistentAlbumExif;
    private boolean persistentAlbumFilenames;
    private boolean persistentAlbumSquareThumbs;
-   private boolean persistentAlbumSortMethod;
+   private String persistentAlbumSortMethod;
    private boolean persistentAlbumSortDirection;
-   private boolean persistentAlbumPassword;
-   private boolean persistentAlbumPasswordHint;
+   private String persistentAlbumPassword;
+   private String persistentAlbumPasswordHint;
    private boolean persistentAlbumPublic;
    private boolean persistentAlbumWorldSearchable;
    private boolean persistentAlbumSmugSearchable;
@@ -260,7 +260,7 @@ public class GlobalConfig
 
        nodes = doc.getElementsByTagName("albumSortMethod");
        if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
-       this.persistentAlbumSortMethod = Boolean.parseBoolean(nodes.item(0).getTextContent());
+       this.persistentAlbumSortMethod = nodes.item(0).getTextContent();
 
        nodes = doc.getElementsByTagName("albumSortDirection");
        if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
@@ -268,11 +268,11 @@ public class GlobalConfig
 
        nodes = doc.getElementsByTagName("albumPassword");
        if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
-       this.persistentAlbumPassword = Boolean.parseBoolean(nodes.item(0).getTextContent());
+       this.persistentAlbumPassword = nodes.item(0).getTextContent();
 
        nodes = doc.getElementsByTagName("albumPasswordHint");
        if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
-       this.persistentAlbumPasswordHint = Boolean.parseBoolean(nodes.item(0).getTextContent());
+       this.persistentAlbumPasswordHint = nodes.item(0).getTextContent();
 
        nodes = doc.getElementsByTagName("albumPublic");
        if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
@@ -355,6 +355,27 @@ public class GlobalConfig
    public String getPersistentLogfile() { return persistentLogfile; }
    public boolean getPersistentCacheAccountInfo() { return this.persistentCacheAccountInfo; }
    public boolean getPersistentAppendLogfile() { return this.persistentAppendLogfile; }
+   
+   public boolean getPersistentAlbumGeography()       { return persistentAlbumGeography; }
+   public boolean getPersistentAlbumClean()           { return persistentAlbumClean; }
+   public boolean getPersistentAlbumExif()            { return persistentAlbumExif; }
+   public boolean getPersistentAlbumFilenames()       { return persistentAlbumFilenames; }
+   public boolean getPersistentAlbumSquareThumbs()    { return persistentAlbumSquareThumbs; }   
+   public String  getPersistentAlbumSortMethod()      { return persistentAlbumSortMethod; }
+   public boolean getPersistentAlbumSortDirection()   { return persistentAlbumSortDirection; }
+   public String  getPersistentAlbumPassword()        { return persistentAlbumPassword; }
+   public String  getPersistentAlbumPasswordHint()    { return persistentAlbumPasswordHint; }   
+   public boolean getPersistentAlbumPublic()          { return persistentAlbumPublic; }
+   public boolean getPersistentAlbumWorldSearchable() { return persistentAlbumWorldSearchable; }
+   public boolean getPersistentAlbumSmugSearchable()  { return persistentAlbumSmugSearchable; }
+   public boolean getPersistentAlbumExternal()        { return persistentAlbumExternal; }
+   public boolean getPersistentAlbumHideOwner()       { return persistentAlbumHideOwner; }   
+   public boolean getPersistentAlbumCanRank()         { return persistentAlbumCanRank; }
+   public boolean getPersistentAlbumFriendEdit()      { return persistentAlbumFriendEdit; }
+   public boolean getPersistentAlbumFamilyEdit()      { return persistentAlbumFamilyEdit; }
+   public boolean getPersistentAlbumComments()        { return persistentAlbumComments; }
+   public boolean getPersistentAlbumShare()           { return persistentAlbumShare; }
+   public boolean getPersistentAlbumPrintable()       { return persistentAlbumPrintable; }
 
 
    //runtime getters and setters
