@@ -6,7 +6,7 @@
         <checkMD5Sums>false</checkMD5Sums>
         <cacheAccountInfo>true</cacheAccountInfo>
     </config>
-    <albumDefaults>
+    <albumDefaults> <!-- not implemented yet -->
         <!-- essentials -->
         <albumGeography>true</albumGeography>            <!-- default: true -->
 
