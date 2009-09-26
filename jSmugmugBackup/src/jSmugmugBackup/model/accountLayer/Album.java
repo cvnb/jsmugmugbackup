@@ -15,9 +15,9 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
     private Vector<String> tags = null;
 	private Vector<IImage> imageList = null;
     private String lastUpdatedString = null;
-    private IAlbumMonthlyStatistics albumStatistics = null; // statistics are written to disk during serialization, but replaced with fresh data after each startup
+    private Vector<IAlbumMonthlyStatistics> albumStatistics = null; // statistics are written to disk during serialization, but replaced with fresh data after each startup
 	
-	public Album(ISmugmugObject parent, int id, String name, String keywords, String lastUpdatedString, IAlbumMonthlyStatistics albumStatistics)
+	public Album(ISmugmugObject parent, int id, String name, String keywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStatistics)
 	{
 		super(parent, id, name);
 		this.imageList = new Vector<IImage>();
@@ -29,9 +29,9 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
 
     // special copy constructor
     // - even when copying (a cached album from disk) we still add fresh statistics
-    public Album(ISmugmugObject parent, IAlbum album, IAlbumMonthlyStatistics albumMonthlyStatistics)
+    public Album(ISmugmugObject parent, IAlbum album, Vector<IAlbumMonthlyStatistics> albumMonthlyStatistics)
     {
-        this(parent, album.getID(), album.getName(), Helper.getKeywords( album.getTags() ), album.getLastUpdatedString(), new AlbumMonthlyStatistics(albumMonthlyStatistics));
+        this(parent, album.getID(), album.getName(), Helper.getKeywords( album.getTags() ), album.getLastUpdatedString(), Helper.cloneAlbumMonthlyStatisticsVector(albumMonthlyStatistics) );
         for (IImage i : album.getImageList())
         {
             this.addImage(new Image(album, i));
@@ -63,7 +63,7 @@ public class Album extends SmugmugObject implements IAlbum, Serializable
     }
 
 
-    public IAlbumMonthlyStatistics getStatistics()
+    public Vector<IAlbumMonthlyStatistics> getStatistics()
     {
         return this.albumStatistics;
     }

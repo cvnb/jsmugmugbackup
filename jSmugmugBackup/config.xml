@@ -24,7 +24,7 @@
         <albumPublic>false</albumPublic>                    <!-- default: true -->
         <albumWorldSearchable>false</albumWorldSearchable>  <!-- default: true -->
         <albumSmugSearchable>false</albumSmugSearchable>    <!-- default: true -->
-        <albumExternal>false</albumExternal>                <!-- default: true -->
+        <albumExternal>true</albumExternal>                 <!-- default: true -->
         <albumHideOwner>false</albumHideOwner>              <!-- default: false -->
 
         <!-- social -->
@@ -32,7 +32,7 @@
         <albumFriendEdit>false</albumFriendEdit>            <!-- default: false -->
         <albumFamilyEdit>false</albumFamilyEdit>            <!-- default: false -->
         <albumComments>true</albumComments>                 <!-- default: true -->
-        <albumShare>false</albumShare>                      <!-- default: true -->
+        <albumShare>true</albumShare>                       <!-- default: true -->
 
         <!-- printing&sales -->
         <albumPrintable>true</albumPrintable>               <!-- default: true -->
