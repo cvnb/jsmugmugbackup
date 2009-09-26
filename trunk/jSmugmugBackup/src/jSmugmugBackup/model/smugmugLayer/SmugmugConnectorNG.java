@@ -66,13 +66,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             return this.smugmug_login_withPassword(userEmail, password);
         }
 	}
-
 	public void relogin()
 	{
         if (this.config.getRtconfigAnonymousLogin() == false) { this.smugmug_login_withHash(); }
         else { this.smugmug_login_anonymously(true); }
 	}
-
 	public void logout()
 	{
 		if (SmugmugConnectorNG.login_sessionID != null) { this.smugmug_logout_logout(); }
@@ -85,7 +83,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         	SmugmugConnectorNG.login_passwordHash = null;
 		}
 	}
-
 	public IRootElement getTree()
 	{
         if (SmugmugConnectorNG.login_sessionID == null) { return null; }
@@ -466,7 +463,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		return smugmugRoot;
 	}
-
     private void getTree_iterateImages(JSONObject jsonImages, IAlbum album, TransferStatistics stat)
     {        
         int imageIndex = 0;
@@ -554,7 +550,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             jsonImage = (JSONObject)this.getJSONValue(jsonImages, "Images[" + imageIndex + "]");
         }
     }
-
 	public IAlbum getAlbum(int albumID, String albumKey)
 	{
         //seems to return no valuable info on non-public albums :-(
@@ -565,12 +560,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//this.printJSONObject(jsonImages);
 
 
-        IAlbum album = new Album(null, albumID, "Album Doe", "", "", new AlbumMonthlyStatistics());
+        IAlbum album = new Album(null, albumID, "Album Doe", "", "", new Vector<IAlbumMonthlyStatistics>());
         this.getTree_iterateImages(jsonImages, album, null);
 
         return album;
 	}
-	
 	public Hashtable<String, String> getImageInfo(int imageID)
 	{
         if (imageID == 0) { return null; }
@@ -586,7 +580,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		return result;
 	}
-
     public void setImageKeywords(int albumID, int imageID, String keywords)
     {
         JSONObject jobj = this.smugmug_images_changeSettings(imageID, keywords);
@@ -594,7 +587,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         this.cacheCleanup(albumID);
     }
-
 	public int createCategory(String name)
 	{
 		JSONObject jobj = this.smugmug_categories_create(name);
@@ -603,7 +595,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		return categoryID;
 	}
-
 	public int createSubcategory(int categoryID, String name)
 	{
 		JSONObject jobj = this.smugmug_subcategories_create(name, categoryID);
@@ -612,7 +603,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		return subcategoryID;
 	}
-
 	public int createAlbum(int categoryID, int subCategoryID, String name, Vector<String> albumTags)
 	{
         String albumKeywords = Helper.getKeywords(albumTags);
@@ -674,7 +664,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     	if (obj != null) { return ((Number)obj).intValue(); }
     	else return 0;
 	}
-		
 	public void downloadFile(int imageID, File fileName/*, long expectedFilesize*/)
 	{
     	//JSONObject jobj = this.smugmug_images_getURLs(imageID); //retrieves just the urls
@@ -732,7 +721,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
 		this.downloadFile(imageURL, fileName/*, expectedFilesize*/);
 	}
-	
 	public void downloadFile(String imageURL, File fileName/*, long expectedFilesize*/)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
@@ -826,21 +814,11 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		catch (IOException e)           { e.printStackTrace(); }
         catch (Exception e)             { e.printStackTrace(); } //not really nesseciary
 	}
-
-//	public void verifyFile() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-	
 	public void deleteFile(int imageID)
 	{
 		JSONObject jobj = this.smugmug_images_delete(imageID);		
 	}
-	
 	public long getTransferedBytes() { return this.transferedBytes; }
-
-
-
 	
 	//======================== private - smugmug =============================
 	
@@ -975,7 +953,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return jobj;
 	}
-	
 	private Number smugmug_login_withPassword(String userEmail, String password)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " logging in ... ");
@@ -1042,7 +1019,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 
 	}
-		
 	private void smugmug_login_withHash()
 	{
 		//this.log.printLog(this.getTimeString() + " relogin ... ");
@@ -1091,7 +1067,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 	}
-
 	private void smugmug_login_anonymously(boolean beQuiet)
 	{
         if (!beQuiet) { this.log.printLog(Helper.getCurrentTimeString() + " logging in anonymously ... "); }
@@ -1128,8 +1103,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 	}
-
-
 	private void smugmug_logout_logout()
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " logging out ... ");
@@ -1194,7 +1167,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         //return null;
 	}
-
 	private JSONObject smugmug_users_getTransferStats(int month, int year)
 	{
 		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
@@ -1277,7 +1249,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
     }
-
 	private JSONObject smugmug_categories_rename(int categoryID, String newName)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " renaming category ... ");
@@ -1312,9 +1283,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
     }
-
-	
-	private JSONObject smugmug_subcategories_create(String name, int categoryID)
+    private JSONObject smugmug_subcategories_create(String name, int categoryID)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " creating subcategory ... ");
 		
@@ -1350,7 +1319,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
 	}
-	
 	private JSONObject smugmug_subcategories_rename(int subcategoryID, String newName)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " renaming subcategory ... ");
@@ -1387,7 +1355,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
     }
-
 	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID, String albumKeywords)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " creating album ... ");
@@ -1428,7 +1395,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		url = url + "Public=0&"; //boolean, optional, default: 1
 		url = url + "WorldSearchable=0&"; //boolean, optional, default: 1
 		url = url + "SmugSearchable=0&"; //boolean, optional, default: 1
-		url = url + "External=0&"; //boolean, optional, default: 1
+		//url = url + "External=&"; //boolean, optional, default: 1
 		//url = url + "Protected=&"; //boolean, optional(power&pro only), default: 0
 		//url = url + "Watermarking=&"; //boolean, optional (pro only), default: 0
 		//url = url + "WatermarkID=&"; //integer, optional (pro only), default: 0
@@ -1444,7 +1411,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		//url = url + "FriendEdit=&"; //boolean, optional, default: 0
 		//url = url + "FamilyEdit=&"; //boolean, optional, default: 0
 		//url = url + "Comments=&"; //boolean, optional, default: 1
-		url = url + "Share=0&"; //boolean, optional, default: 1
+		//url = url + "Share=&"; //boolean, optional, default: 1
 		
 		// printing&sales
 		//url = url + "Printable=&"; //boolean, optional, default: 1
@@ -1480,7 +1447,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
 	}
-
 	private JSONObject smugmug_albums_getInfo(int albumID, String password, String sitePassword, String albumKey)
 	{
 		String methodName = "smugmug.albums.getInfo";
@@ -1519,8 +1485,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         //return null;
     }
-
-
 	private JSONObject smugmug_albums_changeSettings_title(int albumID, String newTitle)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (title) ... ");
@@ -1618,7 +1582,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
 	}
-
 	private JSONObject smugmug_albums_changeSettings_position(int albumID, int newPosition)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (id=" + albumID + ", newPosition=" + newPosition + ") ... ");
@@ -1717,8 +1680,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         return null;
 	}
 
-
-
 	private JSONObject smugmug_images_get(int albumID, String password, String sitePassword, String albumKey)
 	{
 		String methodName = "smugmug.images.get";
@@ -1771,7 +1732,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         //return null;
 	}
-
 	private JSONObject smugmug_images_changeSettings(int imageID, String keywords)
 	{
         //this.log.printLog(Helper.getCurrentTimeString() + " changing image settings: id=" + imageID + " keywords=" + keywords + " ... ");
@@ -1823,7 +1783,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         //return null;
 	}
-
 	private JSONObject smugmug_images_delete(int imageID)
 	{
 		this.log.printLog(Helper.getCurrentTimeString() + " deleting (imageID=" + imageID + ") ... ");
@@ -1857,7 +1816,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 
         return null;
 	}
-	
 	private JSONObject smugmug_images_getURLs(int imageID)
 	{
 		String methodName = "smugmug.images.getURLs";
@@ -1891,7 +1849,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         return null;
     }
-	
 	private JSONObject smugmug_images_getInfo(int imageID)
 	{
 		String methodName = "smugmug.images.getInfo";
@@ -1929,7 +1886,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         //return null;
     }
-	
 	private JSONObject smugmug_images_upload(int albumID, File fileName, String caption, String keywords)
 	{
         if (keywords == null)
@@ -2087,8 +2043,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
         
         //return null;
 	}
-	
-	
 
 	//======================== private - helper ==============================
 	
@@ -2099,7 +2053,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		this.printJSONObject(jobj, "");
 	}
-
 	private void printJSONObject(JSONObject jobj, String indent)
 	{
 		for (int i = 0; i < jobj.keySet().size(); i++)
@@ -2128,7 +2081,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 			
 		}
 	}
-	
 	private Object getJSONValue(JSONObject jobj, String identifier)
 	{
 		//System.out.println("getJSONValue(jobj, " + identifier + ")");
@@ -2177,8 +2129,6 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 		
 		return null;
 	}
-
-
     private synchronized void cacheCleanup(int albumID)
     {
         if (this.config.getPersistentCacheAccountInfo())
@@ -2206,15 +2156,16 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             
         }
     }
-
-    private IAlbumMonthlyStatistics getAlbumStatistics(int albumID)
+    private Vector<IAlbumMonthlyStatistics> getAlbumStatistics(int albumID)
     {
+        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>(); //return empty statistics if nothing was found ... not the best solution, but should work for the moment
+
         //only download statistics once
         if (this.statisticsRuntimeCache == null)
         {
-            int month = Calendar.getInstance().get(Calendar.MONTH);
+            int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            this.statisticsRuntimeCache = this.getStatistics(month, year);
+            this.statisticsRuntimeCache = this.getStatistics(month, year, this.config.getConstantStatisticsHistoryMonth());
         }
 
         for (IAlbumMonthlyStatistics stat : this.statisticsRuntimeCache)
@@ -2222,56 +2173,74 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
             if (stat.getAlbumID() == albumID)
             {
                 //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning statistics!");
-                return stat;
+                result.add(stat);
             }
         }
 
         //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning empty statistics");
-        return new AlbumMonthlyStatistics(); //return empty statistics ... not the best solution, but should work for the moment
+        return result;
     }
-
-
-    private Vector<IAlbumMonthlyStatistics> getStatistics(int month, int year)
+    private Vector<IAlbumMonthlyStatistics> getStatistics(int month, int year, int history_length)
     {
-        //this.log.printLogLine("DEBUG: Statistics stub (SmugmugConnector)");
+        this.log.printLogLine("DEBUG: SmugmugConnectorNG.getStatistics(" + month + ", " + year + ", " + history_length + ")");
 
         Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
 
-        JSONObject jsonAlbumStatisticsArray = this.smugmug_users_getTransferStats(month, year);
-        //this.printJSONObject(jsonAlbumStatisticsArray);
+        int month_count = history_length - 1;
+        do
+        {
+            int curr_month;
+            int curr_year;
+            if ( (month - month_count) > 0 )
+            {
+                curr_month = month - month_count;
+                curr_year = year;
+            }
+            else
+            {
+                curr_month = 12 + (month - month_count);
+                curr_year = year - 1;
+            }
 
-		int albumIndex = 0;
-		JSONObject jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
-		while (jsonAlbumStatistics != null)
-		{
-            //Integers
-            Number albumID   = (Number)this.getJSONValue(jsonAlbumStatistics, "id");
-            Number bytes     = (Number)this.getJSONValue(jsonAlbumStatistics, "Bytes");
-            Number thumb     = (Number)this.getJSONValue(jsonAlbumStatistics, "Thumb");
-            Number tiny      = (Number)this.getJSONValue(jsonAlbumStatistics, "Tiny");
-            Number medium    = (Number)this.getJSONValue(jsonAlbumStatistics, "Medium");
-            Number large     = (Number)this.getJSONValue(jsonAlbumStatistics, "Large");
-            Number xLarge    = (Number)this.getJSONValue(jsonAlbumStatistics, "XLarge");
-            Number x2Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X2Large");
-            Number x3Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X3Large");
+            JSONObject jsonAlbumStatisticsArray = this.smugmug_users_getTransferStats(curr_month, curr_year);
+            //this.printJSONObject(jsonAlbumStatisticsArray);
 
-            //Floats
-            Number original   = (Number)this.getJSONValue(jsonAlbumStatistics, "Original");
-            Number video320   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video320");
-            Number video640   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video640");
-            Number video960   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video960");
-            Number video1280  = (Number)this.getJSONValue(jsonAlbumStatistics, "Video1280");
+            int albumIndex = 0;
+            JSONObject jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
+            while (jsonAlbumStatistics != null)
+            {
+                //Integers
+                Number albumID   = (Number)this.getJSONValue(jsonAlbumStatistics, "id");
+                Number bytes     = (Number)this.getJSONValue(jsonAlbumStatistics, "Bytes");
+                Number thumb     = (Number)this.getJSONValue(jsonAlbumStatistics, "Thumb");
+                Number tiny      = (Number)this.getJSONValue(jsonAlbumStatistics, "Tiny");
+                Number medium    = (Number)this.getJSONValue(jsonAlbumStatistics, "Medium");
+                Number large     = (Number)this.getJSONValue(jsonAlbumStatistics, "Large");
+                Number xLarge    = (Number)this.getJSONValue(jsonAlbumStatistics, "XLarge");
+                Number x2Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X2Large");
+                Number x3Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X3Large");
 
-            IAlbumMonthlyStatistics albumStat = new AlbumMonthlyStatistics(month, year, albumID.intValue(), bytes.intValue(), thumb.intValue(), tiny.intValue(), medium.intValue(),
-                                                             large.intValue(), xLarge.intValue(), x2Large.intValue(), x3Large.intValue(),
-                                                             original.floatValue(), video320.floatValue(), video640.floatValue(), video960.floatValue(), video1280.floatValue());
+                //Floats
+                Number original   = (Number)this.getJSONValue(jsonAlbumStatistics, "Original");
+                Number video320   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video320");
+                Number video640   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video640");
+                Number video960   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video960");
+                Number video1280  = (Number)this.getJSONValue(jsonAlbumStatistics, "Video1280");
 
-            result.add(albumStat);
+                IAlbumMonthlyStatistics albumStat = new AlbumMonthlyStatistics(curr_month, curr_year, albumID.intValue(), bytes.intValue(), thumb.intValue(), tiny.intValue(), medium.intValue(),
+                                                                 large.intValue(), xLarge.intValue(), x2Large.intValue(), x3Large.intValue(),
+                                                                 original.floatValue(), video320.floatValue(), video640.floatValue(), video960.floatValue(), video1280.floatValue());
 
-            
-            albumIndex++;
-            jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
-        }
+                result.add(albumStat);
+
+
+                albumIndex++;
+                jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
+            }
+
+            month_count--;
+        } while (month_count >= 0);
+
 
 
 
@@ -2352,6 +2321,4 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
          */
 
     }
-
-
 }

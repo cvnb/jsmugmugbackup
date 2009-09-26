@@ -53,7 +53,7 @@ public class GlobalConfig
    private final boolean constantVerifyMD5ForVideos         = false; // since md5 verification usually fails for videos, this will sspeed up the process
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit         = 600*1024*1024; //600MB
-   private final int    constantStatisticsHistoryMonth      = 3; // how many month of statistics should jSmugmugBackup try to retrieve
+   private final int    constantStatisticsHistoryMonth      = 3; // assert: < 12; how many month of statistics should jSmugmugBackup try to retrieve
    private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename               = "res/pixel.jpg";
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";

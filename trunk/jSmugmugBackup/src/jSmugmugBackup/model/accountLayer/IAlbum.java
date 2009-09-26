@@ -19,5 +19,5 @@ public interface IAlbum extends ISmugmugObject
     int getImageCount();
     String getLastUpdatedString();
 
-    IAlbumMonthlyStatistics getStatistics();
+    Vector<IAlbumMonthlyStatistics> getStatistics();
 }

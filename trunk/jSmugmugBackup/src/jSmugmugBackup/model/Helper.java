@@ -7,6 +7,7 @@
 package jSmugmugBackup.model;
 
 import jSmugmugBackup.config.GlobalConfig;
+import jSmugmugBackup.model.accountLayer.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -325,6 +326,18 @@ public class Helper
 
                 result.put(item_name, item_value);
             }
+        }
+
+        return result;
+    }
+
+    public static Vector<IAlbumMonthlyStatistics> cloneAlbumMonthlyStatisticsVector(Vector<IAlbumMonthlyStatistics> input)
+    {
+        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
+
+        for (IAlbumMonthlyStatistics stat : input)
+        {
+            result.add(new AlbumMonthlyStatistics(stat));
         }
 
         return result;
