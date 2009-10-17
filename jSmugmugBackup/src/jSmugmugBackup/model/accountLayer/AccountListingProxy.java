@@ -20,7 +20,7 @@ public class AccountListingProxy implements IAccountListingProxy
 {
     private GlobalConfig config = null;
 	private Logger log = null;
-	private ISmugmugConnectorNG connector = null;
+	private ISmugmugConnector connector = null;
 	private ITransferQueue transferQueue = null;
 //	private ILoginView loginMethod = null;
 	
@@ -29,7 +29,6 @@ public class AccountListingProxy implements IAccountListingProxy
 	
 	private long transferedBytes = 0;
 	
-	
 	public AccountListingProxy()
 	{
         this.config = GlobalConfig.getInstance();
@@ -37,18 +36,14 @@ public class AccountListingProxy implements IAccountListingProxy
         this.transferQueue = TransferQueue.getInstance();
 		this.connector = new SmugmugConnectorNG();
 	}
-	
 	public Number login(String userEmail, String password)
 	{
         return this.connector.login(userEmail, password);
 	}
-	
 	public void logout()
 	{
 		this.connector.logout();
 	}
-
-
 	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords)
 	{
         //initialize Tree is nesseciary
@@ -112,7 +107,6 @@ public class AccountListingProxy implements IAccountListingProxy
 
 		return result;
 	}
-
 	public Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName, String albumKeywords)
 	{
         //initialize Tree is nesseciary
@@ -194,8 +188,6 @@ public class AccountListingProxy implements IAccountListingProxy
 
 		return selectedAlbums;
 	}
-
-
 	public void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords)
 	{
 
@@ -378,7 +370,6 @@ public class AccountListingProxy implements IAccountListingProxy
         }
 
 	}
-
 	public void enqueueAlbumForDownload(int albumID, String albumKey, String targetBaseDir)
 	{
         //initialize Tree is nesseciary
@@ -499,7 +490,6 @@ public class AccountListingProxy implements IAccountListingProxy
 	    
 	    this.log.printLogLine("  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
 	}
-
     public void verifyAlbum(int albumID, String targetAlbumDir)
     {
         //initialize Tree is nesseciary
@@ -591,9 +581,10 @@ public class AccountListingProxy implements IAccountListingProxy
 
                         int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
                         int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
-                        if (exifOrientation > 1)
+                        float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
+                        if ( (exifOrientation > 1) && (filesizeRatio > 0.985) && (filesizeRatio < 1.015) ) //different orientation than "landscape" and file sizes do not differ too much
                         {
-                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (possible reason: orientation metadata (" + exifOrientation + "))");
+                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
                         }
                         else if (exifDimensions > 48000000) //image has more than 48 megapixel
                         {
@@ -604,8 +595,8 @@ public class AccountListingProxy implements IAccountListingProxy
                             this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
                             this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
                             this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
-                            //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
-                            //this.log.printLogLine("      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
+                            this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                            this.log.printLogLine("      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
                         }
 
 					}
@@ -704,7 +695,6 @@ public class AccountListingProxy implements IAccountListingProxy
             */
         }
     }
-
     public void sort(String categoryName, String subcategoryName)
     {
         //find matching albums
@@ -735,7 +725,6 @@ public class AccountListingProxy implements IAccountListingProxy
         //this line is not too useful
 		this.log.printLogLine("  ... sorted " + albumArray.length + " albums");
     }
-
     public void autotag(String categoryName, String subcategoryName, String albumName)
     {
         //find matching albums
@@ -829,8 +818,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //this line is not too useful
 		this.log.printLogLine(" ... tagged " + albumList.size() + " albums");
     }
-	
-    public void statistics(String categoryName, String subcategoryName, String albumName)
+    public Vector<IAlbum> statistics(String categoryName, String subcategoryName, String albumName)
     {
         //this.log.printLogLine("DEBUG: Statistics stub (AccountListingProxy)");
 
@@ -861,9 +849,10 @@ public class AccountListingProxy implements IAccountListingProxy
 
                 }
             }
-        }        
-    }
+        }
 
+        return this.getAccountAlbumList(categoryName, subcategoryName, albumName, null);
+    }
 	public void startSyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
@@ -912,7 +901,6 @@ public class AccountListingProxy implements IAccountListingProxy
         this.log.printLogLine("ok");
 		
 	}
-
     public void startASyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
@@ -922,7 +910,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.transferQueue.startAsyncProcessing();
 
 	}
-
 	public void finishASyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
@@ -965,10 +952,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		this.log.printLogLine("ok");
 
 	}
-
-
 	public long getTransferedBytes() { return this.transferedBytes; }
-	
 	
 	//----------- private ----------
     private void sortAlbums(IAlbum[] albumArray)
@@ -993,7 +977,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		//delete image again
 		for (int i = 0 ; i < albumArray.length; i++) { this.connector.deleteFile(imageIDArray[i]); }
     }
-
     private boolean matchTags(Vector<String> tagList1, Vector<String> tagList2)
     {
         //return true if there is at least one tag that exists in both lists
@@ -1009,8 +992,6 @@ public class AccountListingProxy implements IAccountListingProxy
 
         return false;
     }
-
-
 //	private Vector<ICategory> getCategoryList()
 //	{
 //		return this.smugmugRoot.getCategoryList();
@@ -1097,7 +1078,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addImage: ERROR!");
 	}
-
 
 	private int getCategoryID(String categoryName)
 	{
@@ -1212,7 +1192,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		return 0;
 	}
 
-
 	private ICategory getAlbumCategory(int albumID)
 	{
 		//find the Category that contains the album, i.e. find the parent category
@@ -1269,8 +1248,8 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return null;
 	}
-	
-	private ICategory getCategory(int categoryID)
+
+    private ICategory getCategory(int categoryID)
 	{
 		//find category
 		for (ICategory c : this.smugmugRoot.getCategoryList())
@@ -1345,7 +1324,6 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		return null;
 	}
-	
 	
 	private String getAlbumDirEnd(int albumID)
 	{

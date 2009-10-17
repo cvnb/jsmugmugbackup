@@ -313,11 +313,27 @@ public class Model
 
 
         if (transferDialogResult == null) { return; }
-        this.accListing.statistics(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
+        Vector<IAlbum> albumList = this.accListing.statistics(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
 
-        //todo: this.view.showStatistics()
+        this.view.showStatistics(albumList);
     }
 
+    public void osmlayer(ITransferDialogResult transferDialogResult)
+    {
+        this.log.printLogLine("DEBUG: model.osmlayer");
+        this.log.printLogLine("DEBUG: ... not implemented yet ....");
+
+        //Vector<IAlbum> albumList = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
+
+//        for (IAlbum a : albumList)
+//        {
+//            this.log.printLogLine("DEBUG:   " + a.getFullName());
+//            for (IImage i : a.getImageList())
+//            {
+//                this.log.printLogLine("DEBUG:      " + i.getName());
+//            }
+//        }
+    }
     public void delete(ITransferDialogResult transferDialogResult)
     {
     	this.log.printLogLine("preparing to delete files");

@@ -26,7 +26,7 @@ public interface IAccountListingProxy
     void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);
     void autotag(String categoryName, String subcategoryName, String albumName);
-    void statistics(String categoryName, String subcategoryName, String albumName);
+    Vector<IAlbum> statistics(String categoryName, String subcategoryName, String albumName);
 	
 	void startSyncProcessingQueue();
 

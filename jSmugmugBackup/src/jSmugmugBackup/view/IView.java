@@ -6,10 +6,9 @@
  */
 package jSmugmugBackup.view;
 
-import jSmugmugBackup.model.accountLayer.ICategory;
-import jSmugmugBackup.model.accountLayer.IRootElement;
 import jSmugmugBackup.model.*;
-import jSmugmugBackup.view.ILoginView;
+import jSmugmugBackup.model.accountLayer.*;
+
 
 import java.awt.event.*;
 import java.util.Vector;
@@ -21,12 +20,14 @@ public interface IView
 	
 	//ILoginView getLoginMethod();
 	void updateFileListing(IRootElement smugmugRoot);
+    void showStatistics(Vector<IAlbum> albumList);
 	
     ILoginDialogResult showLoginDialog();
     ITransferDialogResult showListDialog();
 	ITransferDialogResult showSortDialog();
     ITransferDialogResult showAutotagDialog();
     ITransferDialogResult showStatisticsDialog();
+    ITransferDialogResult showOsmlayerDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
     ITransferDialogResult showDownloadURLDialog();
@@ -43,6 +44,7 @@ public interface IView
 	void addSortButtonListener(ActionListener listener);
     void addAutotagButtonListener(ActionListener listener);
     void addStatisticsButtonListener(ActionListener listener);
+    void addOsmlayerButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);
     void addDownloadURLDialogButtonListener(ActionListener listener);

@@ -10,6 +10,7 @@ import jSmugmugBackup.view.console.ConsoleViewLogin_1_6;
 
 
 import java.awt.event.*;
+import java.util.Calendar;
 import java.util.Vector;
 
 
@@ -31,6 +32,7 @@ public class CmdView implements IView
 	private ActionListener sortButtonListener = null;
     private ActionListener autotagButtonListener = null;
     private ActionListener statisticsButtonListener = null;
+    private ActionListener osmlayerButtonListener = null;
 	private ActionListener quitButtonListener = null;
     private ActionListener syncProcessQueueButtonListener = null;
     private ActionListener asyncProcessQueueStartButtonListener = null;
@@ -71,6 +73,11 @@ public class CmdView implements IView
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.statisticsButtonListener.actionPerformed(null);
+		}
+        else if ( this.findArgumentFromCommandline("osmlayer") )
+		{
+			this.loginButtonListener.actionPerformed(null);
+			this.osmlayerButtonListener.actionPerformed(null);
 		}
         else if ( this.findArgumentFromCommandline("upload") )
 		{
@@ -113,7 +120,6 @@ public class CmdView implements IView
 		this.model.quitApplication();
 	}
 
-
 	public void addLoginButtonListener(ActionListener listener)              { this.loginButtonListener = listener; }
 	public void addUploadDialogButtonListener(ActionListener listener)       { this.uploadDialogButtonListener = listener; }
 	public void addDownloadDialogButtonListener(ActionListener listener)     { this.downloadDialogButtonListener = listener; }
@@ -124,7 +130,8 @@ public class CmdView implements IView
 	public void addSortButtonListener(ActionListener listener)               { this.sortButtonListener = listener; }
     public void addAutotagButtonListener(ActionListener listener)            { this.autotagButtonListener = listener; }
     public void addStatisticsButtonListener(ActionListener listener)         { this.statisticsButtonListener = listener; }
-	public void addQuitButtonListener(ActionListener listener)               { this.quitButtonListener = listener; }
+	public void addOsmlayerButtonListener(ActionListener listener)           { this.osmlayerButtonListener = listener; }
+    public void addQuitButtonListener(ActionListener listener)               { this.quitButtonListener = listener; }
 	public void addSyncProcessQueueButtonListener(ActionListener listener)   { this.syncProcessQueueButtonListener = listener; }
 
     public void addASyncProcessQueueStartButtonListener(ActionListener listener)   { /*this.asyncProcessQueueStartButtonListener = listener;*/ }
@@ -135,6 +142,7 @@ public class CmdView implements IView
         //throw new UnsupportedOperationException("Not supported yet.");
         this.log.printLogLine("(asyncchronous) queue processing finished");
     }
+
 
 	public void updateFileListing(IRootElement smugmugRoot)
 	{		
@@ -175,28 +183,50 @@ public class CmdView implements IView
 			}
 		}
 	}
+    public void showStatistics(Vector<IAlbum> albumList)
+    {
+        int month_m0 = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        int year_m0 = Calendar.getInstance().get(Calendar.YEAR);
+
+        int month_m1;
+        int year_m1;
+        if ( month_m0 > 1 ) { month_m1 = month_m0 - 1; year_m1 = year_m0; }
+        else { month_m1 = 12; year_m1 = year_m0 - 1; }
+
+        int month_m2;
+        int year_m2;
+        if ( month_m0 > 2 ) { month_m2 = month_m0 - 2; year_m2 = year_m0; }
+        else { month_m2 = 12 + (month_m0 - 2); year_m2 = year_m0 - 1; }
 
 
+        this.log.printLogLine("Statistics:");
+        this.log.printLogLine("id     | " + month_m2 + "/" + year_m2 + " | " + month_m1 + "/" + year_m1 + " | " + month_m0 + "/" + year_m0 + " | description");
+        this.log.printLogLine("----------------------------------------------------------------------------------");
+
+        for (IAlbum a : albumList)
+        {
+            if (a.getStatistics().size() > 0)
+            {
+                this.log.printLogLine(a.getID() + " | ");
+            }
+        }
+    }
 	public void showError(String errMessage)
 	{
 		System.out.println(errMessage);
 	}
-	
 	public void showBusyStart(String waitingMessage)
 	{
 		/* noop */
 	}
-	
 	public void showBusyStop()
 	{
 		/* noop */
 	}
-
 	public void printLog(String text)
 	{
 		System.out.print(text);
 	}
-
 
     public ILoginDialogResult showLoginDialog()
 	{
@@ -217,7 +247,6 @@ public class CmdView implements IView
 
     	return loginView.getLoginDialogResult();
 	}
-
 	public ITransferDialogResult showListDialog()
 	{
 		String category = this.extractArgumentValueFromCommandline("category");
@@ -227,23 +256,24 @@ public class CmdView implements IView
 		
 		return new TransferDialogResult(category, subCategory, album, null, albumKeywords, null);
 	}
-	
 	public ITransferDialogResult showSortDialog()
 	{
 		return this.showListDialog();
 	}
-
     public ITransferDialogResult showAutotagDialog()
 	{
 		return this.showListDialog();
 	}
-
     public ITransferDialogResult showStatisticsDialog()
 	{
 		return this.showListDialog();
 	}
-	
-	public ITransferDialogResult showUploadDialog()
+    public ITransferDialogResult showOsmlayerDialog()
+    {
+        String dir = this.extractDirectoryFromCommandline();
+        return new TransferDialogResult(null, null, null, dir, null, null);
+    }
+    public ITransferDialogResult showUploadDialog()
 	{
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
@@ -253,7 +283,6 @@ public class CmdView implements IView
 		
 		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null);
 	}
-	
 	public ITransferDialogResult showDownloadDialog()
 	{
 		/*
@@ -268,7 +297,6 @@ public class CmdView implements IView
 		//method is identical to the upload dialog
 		return this.showUploadDialog();
 	}
-
     public ITransferDialogResult showDownloadURLDialog()
     {
         String pics_dir = this.extractDirectoryFromCommandline();
@@ -276,7 +304,6 @@ public class CmdView implements IView
 
         return new TransferDialogResult(null, null, null, pics_dir, null, url);
     }
-	
 	public ITransferDialogResult showVerifyDialog()
 	{
 		/*
@@ -291,7 +318,6 @@ public class CmdView implements IView
 		//method is identical to the upload dialog
 		return this.showUploadDialog();
 	}
-	
 	public ITransferDialogResult showDeleteDialog()
 	{
 		/*
@@ -322,6 +348,7 @@ public class CmdView implements IView
 		this.log.printLogLine("     --sort         : sort categories, subcategories, albums");
         this.log.printLogLine("     --autotag      : assign tags based on the album name");
         this.log.printLogLine("     --stats        : show statistics");
+        this.log.printLogLine("     --osmlayer     : create a layer file to be used with OpenStreetMap, requires \"--dir\" option");
         this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
@@ -347,7 +374,6 @@ public class CmdView implements IView
 		//undocumented feature ...
 		//this.log.printLogLine("     jSmugmugBackup --recursive-delete [--email={username}] [--category={name}] [--subcategory={name}] [--album={name}]");
 	}
-	
 	private boolean findArgumentFromCommandline(String argumentName)
 	{
 		for (String arg : this.cmd_args)
@@ -406,5 +432,4 @@ public class CmdView implements IView
 		
 		return dir;
 	}
-
 }

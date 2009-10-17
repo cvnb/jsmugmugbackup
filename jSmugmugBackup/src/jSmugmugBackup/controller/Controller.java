@@ -26,6 +26,7 @@ public class Controller
         this.view.addSortButtonListener(new SortButtonListener());
         this.view.addAutotagButtonListener(new AutotagButtonListener());
         this.view.addStatisticsButtonListener(new StatisticsButtonListener());
+        this.view.addOsmlayerButtonListener(new OsmlayerButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         //this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
@@ -66,8 +67,7 @@ public class Controller
 
             view.showBusyStop();
 		}
-	}
-	
+	}	
 	class ListButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -77,8 +77,7 @@ public class Controller
             view.showBusyStop();
 		}
 
-	}
-	
+	}	
 	class SortButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -86,7 +85,6 @@ public class Controller
 			model.sort(view.showSortDialog());
 		}
 	}
-
 	class AutotagButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -94,7 +92,6 @@ public class Controller
 			model.autotag(view.showAutotagDialog());
 		}
 	}
-
 	class StatisticsButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -102,15 +99,20 @@ public class Controller
 			model.statistics(view.showStatisticsDialog());
 		}
 	}
-
+	class OsmlayerButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			model.osmlayer(view.showOsmlayerDialog());
+		}
+	}
 	class UploadDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
 			model.upload(view.showUploadDialog());
 		}
-	}
-	
+	}	
 	class DownloadDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -118,7 +120,6 @@ public class Controller
 			model.download(view.showDownloadDialog());
 		}		
 	}
-
 	class DownloadURLDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -126,23 +127,20 @@ public class Controller
 			model.downloadURL(view.showDownloadURLDialog());
 		}		
 	}
-
 	class VerifyDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
 			model.verify(view.showVerifyDialog());
 		}		
-	}
-	
+	}	
 	class DeleteDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
 			model.delete(view.showDeleteDialog());
 		}		
-	}
-	
+	}	
 	class QuitButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -150,7 +148,6 @@ public class Controller
 			model.quitApplication();			
 		}		
 	}
-
     class SyncProcessQueueButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
@@ -158,7 +155,6 @@ public class Controller
 			model.startSyncProcessingQueue();
 		}
     }
-
     class ASyncProcessQueueStartButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
@@ -166,7 +162,6 @@ public class Controller
             model.startASyncProcessingQueue();
 		}
     }
-
     class ASyncProcessQueueFinishedListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)

@@ -9,7 +9,7 @@ todo:
  - integrate work queue into gui, threads - http://java.sun.com/docs/books/tutorial/essential/concurrency/runthread.html
  - connector for api version 1.2.2
  - support infinite directory hierarchies
- - use OS specific dir separator
+ - use OS specific dir separator / test with windows
  - downloading
    - password protected albums (anonymous login mode)
  - for commandline: addtags and removetags parameter
@@ -21,6 +21,7 @@ todo:
  - verifying tags
  - allow creating categories with a "#"
  - album defaults from config
+ - OpenStreetMap integration
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality
