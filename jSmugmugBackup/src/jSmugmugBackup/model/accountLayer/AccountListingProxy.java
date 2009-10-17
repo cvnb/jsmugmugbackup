@@ -34,7 +34,7 @@ public class AccountListingProxy implements IAccountListingProxy
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
         this.transferQueue = TransferQueue.getInstance();
-		this.connector = new SmugmugConnectorNG();
+		this.connector = new SmugmugConnector2G();
 	}
 	public Number login(String userEmail, String password)
 	{
