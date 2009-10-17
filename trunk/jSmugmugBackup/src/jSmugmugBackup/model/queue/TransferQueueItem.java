@@ -20,7 +20,7 @@ public class TransferQueueItem implements ITransferQueueItem
 {
     private GlobalConfig config = null;
 	private Logger log = null;
-	private ISmugmugConnectorNG smugmugConnector = null;
+	private ISmugmugConnector smugmugConnector = null;
 	private TransferQueueItemActionEnum action = null;
 	
 	private int albumID;

@@ -59,7 +59,7 @@ public class GlobalConfig
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
    private final String constantTempDownloadFilename        = "jSmugmugBackup.download.temp";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
-   private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp"}; //...hope thats all possible types
+   private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp", ".ogv"}; //...hope thats all possible types
    private final String constantHelpNotes =
 		"notes:\n" +
         " - It is strongly suggestend to stick with the commandline view, since the GUI is currently\n" +

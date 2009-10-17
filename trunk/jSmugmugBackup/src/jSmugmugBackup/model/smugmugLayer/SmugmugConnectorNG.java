@@ -25,7 +25,7 @@ import org.apache.http.impl.client.*;
 import org.json.simple.*;
 
 
-public class SmugmugConnectorNG implements ISmugmugConnectorNG
+public class SmugmugConnectorNG implements ISmugmugConnector
 {
     private GlobalConfig config = null;
 	private Logger log = null;
@@ -1170,7 +1170,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	private JSONObject smugmug_users_getTransferStats(int month, int year)
 	{
 		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
-        this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
+        //this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
 
 
         String methodName = "smugmug.users.getTransferStats";
@@ -1194,7 +1194,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	this.log.printLog("ok) ... ");
+	        	//this.log.printLog("ok) ... ");
                 //this.printJSONObject(jobj);
 	           	return jobj;
 	        }
@@ -2182,7 +2182,7 @@ public class SmugmugConnectorNG implements ISmugmugConnectorNG
     }
     private Vector<IAlbumMonthlyStatistics> getStatistics(int month, int year, int history_length)
     {
-        this.log.printLogLine("DEBUG: SmugmugConnectorNG.getStatistics(" + month + ", " + year + ", " + history_length + ")");
+        //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getStatistics(" + month + ", " + year + ", " + history_length + ")");
 
         Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
 

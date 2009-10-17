@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.Vector;
 
-public interface ISmugmugConnectorNG
+public interface ISmugmugConnector
 {
 	Number login(String userEmail, String password);
 	void relogin();

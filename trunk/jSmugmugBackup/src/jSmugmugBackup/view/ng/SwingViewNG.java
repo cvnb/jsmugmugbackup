@@ -10,6 +10,7 @@ import jSmugmugBackup.model.accountLayer.*;
 import jSmugmugBackup.model.queue.TransferQueueItemActionEnum;
 import jSmugmugBackup.view.*;
 
+import java.util.Vector;
 import javax.swing.tree.TreeModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -807,7 +808,6 @@ public class SwingViewNG extends FrameView implements IView
     {
         this.model.quitApplication();
     }
-
     public void updateFileListing(IRootElement smugmugRoot)
     {
         if (smugmugRoot == null) { return; }
@@ -875,6 +875,10 @@ public class SwingViewNG extends FrameView implements IView
         this.mainUploadButton.setEnabled(true);
         this.mainDownloadButton.setEnabled(true);
     }
+    public void showStatistics(Vector<IAlbum> albumList)
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     @Action
     public ILoginDialogResult showLoginDialog()
@@ -885,13 +889,11 @@ public class SwingViewNG extends FrameView implements IView
 
         return this.loginGetLoginDialogResult();
     }
-
     public ITransferDialogResult showListDialog()
     {
         // listing everything by default
         return new TransferDialogResult(null, null, null, null, null, null);
     }
-
     public ITransferDialogResult showUploadDialog()
     {
         this.transferCustomizeTransferDialog(TransferQueueItemActionEnum.UPLOAD);
@@ -901,22 +903,22 @@ public class SwingViewNG extends FrameView implements IView
 
         return this.transferGetTransferDialogResult();
     }
-
     public ITransferDialogResult showSortDialog()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     public ITransferDialogResult showAutotagDialog()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     public ITransferDialogResult showStatisticsDialog()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    public ITransferDialogResult showOsmlayerDialog()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     public ITransferDialogResult showDownloadDialog()
     {
         
@@ -930,29 +932,23 @@ public class SwingViewNG extends FrameView implements IView
 
         return this.transferGetTransferDialogResult();
     }
-
     public ITransferDialogResult showDownloadURLDialog()
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     public ITransferDialogResult showVerifyDialog() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     public ITransferDialogResult showDeleteDialog() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     public void printLog(String text)
     {
         this.logTextArea.append(text);
     }
-
     public void showError(String errMessage) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
     public void showBusyStart(String waitingMessage)
     {
         //disable frame, so no mouse events will be recieved
@@ -967,7 +963,6 @@ public class SwingViewNG extends FrameView implements IView
         this.waitDialog.setVisible(true);
 
     }
-
     public void showBusyStop()
     {        
         this.waitDialog.setVisible(false);
@@ -978,75 +973,65 @@ public class SwingViewNG extends FrameView implements IView
         //enable frame
         this.getFrame().setEnabled(true);
     }
-
     public void addLoginButtonListener(ActionListener listener)
     {
         this.mainLoginButton.addActionListener(listener);
         this.loginMenuItem.addActionListener(listener);
     }
-
     public void addListButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
 
         //this.listButton.addActionListener(listener);
     }
-
     public void addUploadDialogButtonListener(ActionListener listener)
     {
         this.mainUploadButton.addActionListener(listener);
     }
-
     public void addSortButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
     public void addAutotagButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
     public void addStatisticsButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
+    public void addOsmlayerButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
+    }
     public void addDownloadDialogButtonListener(ActionListener listener)
     {
         this.mainDownloadButton.addActionListener(listener);
     }
-
     public void addDownloadURLDialogButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
     public void addVerifyDialogButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
     public void addDeleteDialogButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
     public void addQuitButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }
-
     public void addSyncProcessQueueButtonListener(ActionListener listener)
     {
         this.mainSyncProcessQueueButton.addActionListener(listener);
     }
-
     public void addASyncProcessQueueStartButtonListener(ActionListener listener)
     {
         this.mainAsyncProcessQueueButton.addActionListener(listener);
     }
-
     public void notifyASyncProcessQueueFinished()
     {
         this.mainAsyncProcessQueueButton.setEnabled(true);
@@ -1061,12 +1046,10 @@ public class SwingViewNG extends FrameView implements IView
 
     //----------------------- login dialog -------------------------------------
     private ILoginDialogResult loginLoginDialogResult = null;
-
     private ILoginDialogResult loginGetLoginDialogResult()
     {
         return this.loginLoginDialogResult;
     }
-
     private void loginResetLoginDialog()
     {
         //making form invisible
@@ -1076,7 +1059,6 @@ public class SwingViewNG extends FrameView implements IView
         this.loginUsernameTextField.setText("");
         this.loginPasswordPasswordField.setText("");
     }
-
     @Action
     public void loginOkButtonActionPerformend()
     {
@@ -1085,7 +1067,6 @@ public class SwingViewNG extends FrameView implements IView
 
         this.loginResetLoginDialog();
     }
-
     @Action
     public void loginCancelButtonActionPerformed()
     {
@@ -1100,7 +1081,6 @@ public class SwingViewNG extends FrameView implements IView
 		this.waitDialog.setTitle(title);
         this.waitMessageLabel.setText(message);
 	}
-
 
     //--------------------- transfer Dialog ------------------------------------
     private ITransferDialogResult transferDialogResult = null;
@@ -1130,14 +1110,12 @@ public class SwingViewNG extends FrameView implements IView
 
         //this.transferInitTransferFilter();
     }
-
     @Action
     public void transferSelectFolderButtonActionPerformed()
     {
         this.transferFileChooser.showOpenDialog(this.getFrame());
         this.transferFolderTextField.setText(this.transferFileChooser.getSelectedFile().getAbsolutePath() + "/");
     }
-
     @Action
     public void transferOkButtonActionPerformed()
     {
@@ -1161,7 +1139,6 @@ public class SwingViewNG extends FrameView implements IView
             jop.showMessageDialog(this.transferDialog, "sorry, you have to select a valid folder");
         }
     }
-
     @Action
     public void transferCancelButtonActionPerformed()
     {
@@ -1173,7 +1150,6 @@ public class SwingViewNG extends FrameView implements IView
         //clear input fields
         //...
     }
-
     private void transferUpdateTransferDestinationComboBoxes(String categoryFilter, String subcategoryFilter, String albumFilter)
     {
 
@@ -1227,7 +1203,6 @@ public class SwingViewNG extends FrameView implements IView
         this.transferAlbumComboBox.setModel(albumComboBoxModel);
 
     }
-
     private void transferUpdateTransferTree(String categoryFilter, String subcategoryFilter, String albumFilter)
     {
         if (smugmugRoot == null) { return; }
@@ -1305,22 +1280,13 @@ public class SwingViewNG extends FrameView implements IView
 			this.transferTree.expandRow(row);
 		}
     }
-
     private void transferInitTransferFilter()
     {
         this.transferUpdateTransferDestinationComboBoxes(this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement);
         this.transferUpdateTransferTree(this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement, this.transferComboBoxWildcardElement);
     }
-
     private ITransferDialogResult transferGetTransferDialogResult()
     {
         return this.transferDialogResult;
     }
-
-
-
-
-
-
-
 }
