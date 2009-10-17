@@ -43,7 +43,7 @@ public class TransferQueueItem implements ITransferQueueItem
 		this.log = Logger.getInstance();
 		//this.log.printLogLine("new TransferQueueItem()");
 		
-		this.smugmugConnector = new SmugmugConnectorNG();
+		this.smugmugConnector = new SmugmugConnector2G();
 		//this.smugmugConnector.setLoginToken(loginToken);
 		//this.smugmugConnector.login();
 		
