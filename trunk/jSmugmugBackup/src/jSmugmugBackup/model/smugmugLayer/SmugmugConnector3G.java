@@ -963,11 +963,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
         String methodName = "smugmug.login.withPassword";
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "EmailAddress=" + userEmail + "&";
 		url = url + "Password=" + password + "&";
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		do
 		{
@@ -1030,12 +1033,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
         String methodName = "smugmug.login.withHash";
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "UserID=" + SmugmugConnector3G.login_userID + "&";
 		url = url + "PasswordHash=" + SmugmugConnector3G.login_passwordHash + "&";
-
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		do
 		{
@@ -1078,10 +1083,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
         String methodName = "smugmug.login.anonymously";
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
-
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 
 		do
@@ -1111,9 +1118,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog("smugmug.logout ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=smugmug.logout&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1138,12 +1148,19 @@ public class SmugmugConnector3G implements ISmugmugConnector
         String methodName = "smugmug.users.getTree";
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
-		url = url + "NickName=" + SmugmugConnector3G.login_nickname + "&"; //optional
-		url = url + "Heavy=1&"; //optional, the extra info might be useful at a later time
+		//url = url + "Associative=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Empty=" +  + "&"; //boolean
+        //url = url + "Extras=" +  + "&"; //string
+        url = url + "Heavy=1&"; //optional, the extra info might be useful at a later time
+        //url = url + "LastUpdated=" +  + "&"; //integer
+        url = url + "NickName=" + SmugmugConnector3G.login_nickname + "&"; //optional
+		//url = url + "Pretty=" +  + "&"; //boolean
 		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //optional
+        //url = url + "Strict=" +  + "&"; //boolean
 
 		do
 		{
@@ -1169,47 +1186,47 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
         //return null;
 	}
-	private JSONObject smugmug_users_getTransferStats(int month, int year)
-	{
-		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
-        //this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
-
-
-        String methodName = "smugmug.users.getTransferStats";
-
-		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
-		url = url + "method=" + methodName + "&";
-		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
-		url = url + "Month=" + month + "&";
-        url = url + "Year=" + year + "&";
-		url = url + "Heavy=0&"; //optional, Heavy=1 doesn't seem to work
-
-
-		do
-		{
-			HttpGet httpget = new HttpGet(url);
-			JSONObject jobj = this.smugmugJSONRequest(httpget);
-			//this.printJSONObject(jobj);
-
-
-	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
-	        {
-	        	//this.log.printLog("ok) ... ");
-                //this.printJSONObject(jobj);
-	           	return jobj;
-	        }
-	        else
-	        {
-	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("smugmug.users.getTransferStats failed, retrying ...");
-	        	this.printJSONObject(jobj); //temporary
-	        }
-		} while (true); //hopefully, this will have an end ... sooner or later ...
-
-        //return null;
-	}
+//	private JSONObject smugmug_users_getTransferStats(int month, int year)
+//	{
+//		//this.log.printLog("smugmug.users.getTransferStats(" + month + ", " + year + ") ... ");
+//        //this.log.printLog("(loading statistics for " + month + "/" + year + " ... ");
+//
+//
+//        String methodName = "smugmug.users.getTransferStats";
+//
+//		//build url
+//		String url = this.config.getConstantSmugmugServerURL_122() + "?";
+//		url = url + "method=" + methodName + "&";
+//		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
+//		url = url + "Month=" + month + "&";
+//        url = url + "Year=" + year + "&";
+//		url = url + "Heavy=0&"; //optional, Heavy=1 doesn't seem to work
+//
+//
+//		do
+//		{
+//			HttpGet httpget = new HttpGet(url);
+//			JSONObject jobj = this.smugmugJSONRequest(httpget);
+//			//this.printJSONObject(jobj);
+//
+//
+//	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+//	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
+//	        {
+//	        	//this.log.printLog("ok) ... ");
+//                //this.printJSONObject(jobj);
+//	           	return jobj;
+//	        }
+//	        else
+//	        {
+//	        	//this.log.printLogLine("failed");
+//	        	this.log.printLog("smugmug.users.getTransferStats failed, retrying ...");
+//	        	this.printJSONObject(jobj); //temporary
+//	        }
+//		} while (true); //hopefully, this will have an end ... sooner or later ...
+//
+//        //return null;
+//	}
 
 	private JSONObject smugmug_categories_create(String name)
 	{
@@ -1219,10 +1236,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "Name=" + Helper.encodeForURL(name) + "&";
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1259,11 +1279,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "CategoryID=" + categoryID + "&";
 		url = url + "Name=" + Helper.encodeForURL(newName) + "&";
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1293,11 +1316,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "Name=" + Helper.encodeForURL(name) + "&";
 		url = url + "CategoryID=" + categoryID + "&";
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1329,11 +1355,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "SubCategoryID=" + subcategoryID + "&";
 		url = url + "Name=" + Helper.encodeForURL(newName) + "&";
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1365,7 +1394,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "Title=" + Helper.encodeForURL(title) + "&";
@@ -1417,7 +1446,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 		// printing&sales
 		//url = url + "Printable=&"; //boolean, optional, default: 1
-		//url = url + "DefaultColor=&"; //boolean, optional (pro only), default: 0
+		//url = url + "DefaultColor=&"; //boolean, optional (pro only), default: 0, depreceated
 		//url = url + "ProofDays=&"; //integer, optional (pro only), default: 0
 		//url = url + "Backprinting=&"; //string, optional (pro only)
 
@@ -1429,6 +1458,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 		// community
 		//url = url + "CommunityID=&"; //integer, optional, default: 0
+
+        //url = url + "ColorCorrection=" +  + "&"; //integer
+        //url = url + "NiceName=" +  + "&"; //string
+        //url = url + "ThemeID=" +  + "&"; //integer
+        //url = url + "Unique=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
+
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1455,13 +1493,16 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&"; //integer
 		if (password != null)     { url = url + "Password=" + password + "&"; } //string, optional
 		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //string, optional
 		if (albumKey != null)     { url = url + "AlbumKey=" + albumKey + "&"; } //string, seems to be optional, but is not documented
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 
 		do
@@ -1495,7 +1536,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1563,6 +1604,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		// community
 		//url = url + "CommunityID=&"; //integer, optional, default: 0
 
+        //url = url + "ColorCorrection=" +  + "&"; //integer
+        //url = url + "NiceName=" +  + "&"; //string
+        //url = url + "ThemeID=" +  + "&"; //integer
+        //url = url + "Unique=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
+
+
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
@@ -1592,7 +1642,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//System.out.print(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1660,6 +1710,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		// community
 		//url = url + "CommunityID=&"; //integer, optional, default: 0
 
+        //url = url + "ColorCorrection=" +  + "&"; //integer
+        //url = url + "NiceName=" +  + "&"; //string
+        //url = url + "ThemeID=" +  + "&"; //integer
+        //url = url + "Unique=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
+
+
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
@@ -1688,7 +1747,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog("smugmug.images.get ... ");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "AlbumID=" + albumID + "&";
@@ -1696,6 +1755,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		if (password != null)     { url = url + "Password=" + password + "&"; } //optional
 		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //optional
 		if (albumKey != null)     { url = url + "AlbumKey=" + albumKey + "&"; } //seems to be optional, but is not documented
+
+        //url = url + "Associative=" +  + "&"; //boolean
+        //url = url + "Extras=" +  + "&"; //string
+        //url = url + "LastUpdated=" +  + "&"; //integer
+        //url = url + "Sandboxed=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 
 		do
@@ -1742,7 +1809,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog("smugmug.images.changeSettings ... ");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&";
@@ -1752,6 +1819,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//url = url + "Caption=????&"; //optional
 		url = url + "Keywords=" + Helper.encodeForURL(keywords) + "&"; //optional
 		//url = url + "Hidden=????&"; //optional
+
+        //url = url + "Altitude=" +  + "&"; //integer
+        //url = url + "Latitude=" +  + "&"; //integer
+        //url = url + "Longitude=" +  + "&"; //integer
+        //url = url + "FileName=" +  + "&"; //string
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
+
 
         //this.log.printLogLine("DEBUG: changing keywords url: " + url);
 
@@ -1793,10 +1869,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog("smugmug.images.get ... ");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&";
+
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
 
 
 		HttpGet httpget = new HttpGet(url);
@@ -1824,7 +1904,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
@@ -1832,6 +1912,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//url = url + "Password=&"; //string, optional
 		//url = url + "SitePassword=&"; //string, optional
 		//url = url + "ImageKey=&"; //string
+
+        //url = url + "Sandboxed=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
+
 
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
@@ -1857,13 +1943,19 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//this.log.printLog(methodName + " ...");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL() + "?";
+		String url = this.config.getConstantSmugmugServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "SessionID=" + SmugmugConnector3G.login_sessionID + "&";
 		url = url + "ImageID=" + imageID + "&"; //integer
 		//url = url + "Password=&"; //string, optional
 		//url = url + "SitePassword=&"; //string, optional
 		//url = url + "ImageKey=&"; //string
+
+        //url = url + "Sandboxed=" +  + "&"; //boolean
+        //url = url + "Callback=" +  + "&"; //string
+        //url = url + "Pretty=" +  + "&"; //boolean, default= false
+        //url = url + "Strict=" +  + "&"; //boolean, default= false
+
 
 		do
 		{
@@ -1915,7 +2007,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        //httpPut.addHeader("Content-Length", Long.toString(fileName.length()) );
 	        httpPut.addHeader("Content-MD5", Helper.computeMD5Hash(fileName) );
 	        httpPut.addHeader("X-Smug-SessionID", SmugmugConnector3G.login_sessionID);
-	        httpPut.addHeader("X-Smug-Version", this.config.getConstantSmugmugAPIVersion());
+	        httpPut.addHeader("X-Smug-Version", this.config.getConstantSmugmugAPIVersion_122());
 	        httpPut.addHeader("X-Smug-ResponseType", "JSON");
 	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
 	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
@@ -2160,168 +2252,169 @@ public class SmugmugConnector3G implements ISmugmugConnector
     }
     private Vector<IAlbumMonthlyStatistics> getAlbumStatistics(int albumID)
     {
-        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>(); //return empty statistics if nothing was found ... not the best solution, but should work for the moment
-
-        //only download statistics once
-        if (this.statisticsRuntimeCache == null)
-        {
-            int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-            int year = Calendar.getInstance().get(Calendar.YEAR);
-            this.statisticsRuntimeCache = this.getStatistics(month, year, this.config.getConstantStatisticsHistoryMonth());
-        }
-
-        for (IAlbumMonthlyStatistics stat : this.statisticsRuntimeCache)
-        {
-            if (stat.getAlbumID() == albumID)
-            {
-                //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning statistics!");
-                result.add(stat);
-            }
-        }
-
-        //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning empty statistics");
-        return result;
+//        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>(); //return empty statistics if nothing was found ... not the best solution, but should work for the moment
+//
+//        //only download statistics once
+//        if (this.statisticsRuntimeCache == null)
+//        {
+//            int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+//            int year = Calendar.getInstance().get(Calendar.YEAR);
+//            this.statisticsRuntimeCache = this.getStatistics(month, year, this.config.getConstantStatisticsHistoryMonth());
+//        }
+//
+//        for (IAlbumMonthlyStatistics stat : this.statisticsRuntimeCache)
+//        {
+//            if (stat.getAlbumID() == albumID)
+//            {
+//                //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning statistics!");
+//                result.add(stat);
+//            }
+//        }
+//
+//        //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getAlbumStatistics(" + albumID + "): returning empty statistics");
+//        return result;
+        return null;
     }
-    private Vector<IAlbumMonthlyStatistics> getStatistics(int month, int year, int history_length)
-    {
-        //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getStatistics(" + month + ", " + year + ", " + history_length + ")");
-
-        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
-
-        int month_count = history_length - 1;
-        do
-        {
-            int curr_month;
-            int curr_year;
-            if ( (month - month_count) > 0 )
-            {
-                curr_month = month - month_count;
-                curr_year = year;
-            }
-            else
-            {
-                curr_month = 12 + (month - month_count);
-                curr_year = year - 1;
-            }
-
-            JSONObject jsonAlbumStatisticsArray = this.smugmug_users_getTransferStats(curr_month, curr_year);
-            //this.printJSONObject(jsonAlbumStatisticsArray);
-
-            int albumIndex = 0;
-            JSONObject jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
-            while (jsonAlbumStatistics != null)
-            {
-                //Integers
-                Number albumID   = (Number)this.getJSONValue(jsonAlbumStatistics, "id");
-                Number bytes     = (Number)this.getJSONValue(jsonAlbumStatistics, "Bytes");
-                Number thumb     = (Number)this.getJSONValue(jsonAlbumStatistics, "Thumb");
-                Number tiny      = (Number)this.getJSONValue(jsonAlbumStatistics, "Tiny");
-                Number medium    = (Number)this.getJSONValue(jsonAlbumStatistics, "Medium");
-                Number large     = (Number)this.getJSONValue(jsonAlbumStatistics, "Large");
-                Number xLarge    = (Number)this.getJSONValue(jsonAlbumStatistics, "XLarge");
-                Number x2Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X2Large");
-                Number x3Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X3Large");
-
-                //Floats
-                Number original   = (Number)this.getJSONValue(jsonAlbumStatistics, "Original");
-                Number video320   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video320");
-                Number video640   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video640");
-                Number video960   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video960");
-                Number video1280  = (Number)this.getJSONValue(jsonAlbumStatistics, "Video1280");
-
-                IAlbumMonthlyStatistics albumStat = new AlbumMonthlyStatistics(curr_month, curr_year, albumID.intValue(), bytes.intValue(), thumb.intValue(), tiny.intValue(), medium.intValue(),
-                                                                 large.intValue(), xLarge.intValue(), x2Large.intValue(), x3Large.intValue(),
-                                                                 original.floatValue(), video320.floatValue(), video640.floatValue(), video960.floatValue(), video1280.floatValue());
-
-                result.add(albumStat);
-
-
-                albumIndex++;
-                jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
-            }
-
-            month_count--;
-        } while (month_count >= 0);
-
-
-
-
-        return result;
-        /*
-            smugmug.users.getTransferStats
-
-            Gets the transfer statistics for the logged-in user during the given Month and Year. SmugMug only keeps the last few months of traffic on file, so requesting farther back then 2 months may not return valid results.
-
-            A float is provided for Original and video sizes because it's possible to watch only a portion of a video.
-
-            If Heavy is set to "1", transfer statistics for each image in each album will be returned as well.
-            Arguments
-
-                * string SessionID
-                * integer Month
-                * integer Year
-                * boolean Heavy (optional)
-
-            Result
-
-                standard response
-
-                * array Albums
-                      o struct Album
-                            + integer id
-                            + integer Bytes
-                            + integer Tiny
-                            + integer Thumb
-                            + integer Small
-                            + integer Medium
-                            + integer Large
-                            + integer XLarge
-                            + integer X2Large
-                            + integer X3Large
-                            + float Original
-                            + float Video320
-                            + float Video640
-                            + float Video960
-                            + float Video1280
-
-                heavy response
-
-                * array Albums
-                      o struct Album
-                            + integer id
-                            + integer Bytes
-                            + integer Tiny
-                            + integer Thumb
-                            + integer Small
-                            + integer Medium
-                            + integer Large
-                            + integer XLarge
-                            + integer X2Large
-                            + integer X3Large
-                            + float Original
-                            + float Video320
-                            + float Video640
-                            + float Video960
-                            + float Video1280
-                                  # array Images
-                                        * struct Image
-                                              o integer id
-                                              o integer Bytes
-                                              o integer Tiny
-                                              o integer Thumb
-                                              o integer Small
-                                              o integer Medium
-                                              o integer Large
-                                              o integer XLarge
-                                              o integer X2Large
-                                              o integer X3Large
-                                              o float Original
-
-            Fault Codes
-
-                * 4 - "invalid user (message)"
-         */
-
-    }
+//    private Vector<IAlbumMonthlyStatistics> getStatistics(int month, int year, int history_length)
+//    {
+//        //this.log.printLogLine("DEBUG: SmugmugConnectorNG.getStatistics(" + month + ", " + year + ", " + history_length + ")");
+//
+//        Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
+//
+//        int month_count = history_length - 1;
+//        do
+//        {
+//            int curr_month;
+//            int curr_year;
+//            if ( (month - month_count) > 0 )
+//            {
+//                curr_month = month - month_count;
+//                curr_year = year;
+//            }
+//            else
+//            {
+//                curr_month = 12 + (month - month_count);
+//                curr_year = year - 1;
+//            }
+//
+//            JSONObject jsonAlbumStatisticsArray = this.smugmug_users_getTransferStats(curr_month, curr_year);
+//            //this.printJSONObject(jsonAlbumStatisticsArray);
+//
+//            int albumIndex = 0;
+//            JSONObject jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
+//            while (jsonAlbumStatistics != null)
+//            {
+//                //Integers
+//                Number albumID   = (Number)this.getJSONValue(jsonAlbumStatistics, "id");
+//                Number bytes     = (Number)this.getJSONValue(jsonAlbumStatistics, "Bytes");
+//                Number thumb     = (Number)this.getJSONValue(jsonAlbumStatistics, "Thumb");
+//                Number tiny      = (Number)this.getJSONValue(jsonAlbumStatistics, "Tiny");
+//                Number medium    = (Number)this.getJSONValue(jsonAlbumStatistics, "Medium");
+//                Number large     = (Number)this.getJSONValue(jsonAlbumStatistics, "Large");
+//                Number xLarge    = (Number)this.getJSONValue(jsonAlbumStatistics, "XLarge");
+//                Number x2Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X2Large");
+//                Number x3Large   = (Number)this.getJSONValue(jsonAlbumStatistics, "X3Large");
+//
+//                //Floats
+//                Number original   = (Number)this.getJSONValue(jsonAlbumStatistics, "Original");
+//                Number video320   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video320");
+//                Number video640   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video640");
+//                Number video960   = (Number)this.getJSONValue(jsonAlbumStatistics, "Video960");
+//                Number video1280  = (Number)this.getJSONValue(jsonAlbumStatistics, "Video1280");
+//
+//                IAlbumMonthlyStatistics albumStat = new AlbumMonthlyStatistics(curr_month, curr_year, albumID.intValue(), bytes.intValue(), thumb.intValue(), tiny.intValue(), medium.intValue(),
+//                                                                 large.intValue(), xLarge.intValue(), x2Large.intValue(), x3Large.intValue(),
+//                                                                 original.floatValue(), video320.floatValue(), video640.floatValue(), video960.floatValue(), video1280.floatValue());
+//
+//                result.add(albumStat);
+//
+//
+//                albumIndex++;
+//                jsonAlbumStatistics = (JSONObject)this.getJSONValue(jsonAlbumStatisticsArray, "Albums[" + albumIndex + "]");
+//            }
+//
+//            month_count--;
+//        } while (month_count >= 0);
+//
+//
+//
+//
+//        return result;
+//        /*
+//            smugmug.users.getTransferStats
+//
+//            Gets the transfer statistics for the logged-in user during the given Month and Year. SmugMug only keeps the last few months of traffic on file, so requesting farther back then 2 months may not return valid results.
+//
+//            A float is provided for Original and video sizes because it's possible to watch only a portion of a video.
+//
+//            If Heavy is set to "1", transfer statistics for each image in each album will be returned as well.
+//            Arguments
+//
+//                * string SessionID
+//                * integer Month
+//                * integer Year
+//                * boolean Heavy (optional)
+//
+//            Result
+//
+//                standard response
+//
+//                * array Albums
+//                      o struct Album
+//                            + integer id
+//                            + integer Bytes
+//                            + integer Tiny
+//                            + integer Thumb
+//                            + integer Small
+//                            + integer Medium
+//                            + integer Large
+//                            + integer XLarge
+//                            + integer X2Large
+//                            + integer X3Large
+//                            + float Original
+//                            + float Video320
+//                            + float Video640
+//                            + float Video960
+//                            + float Video1280
+//
+//                heavy response
+//
+//                * array Albums
+//                      o struct Album
+//                            + integer id
+//                            + integer Bytes
+//                            + integer Tiny
+//                            + integer Thumb
+//                            + integer Small
+//                            + integer Medium
+//                            + integer Large
+//                            + integer XLarge
+//                            + integer X2Large
+//                            + integer X3Large
+//                            + float Original
+//                            + float Video320
+//                            + float Video640
+//                            + float Video960
+//                            + float Video1280
+//                                  # array Images
+//                                        * struct Image
+//                                              o integer id
+//                                              o integer Bytes
+//                                              o integer Tiny
+//                                              o integer Thumb
+//                                              o integer Small
+//                                              o integer Medium
+//                                              o integer Large
+//                                              o integer XLarge
+//                                              o integer X2Large
+//                                              o integer X3Large
+//                                              o float Original
+//
+//            Fault Codes
+//
+//                * 4 - "invalid user (message)"
+//         */
+//
+//    }
 }
 

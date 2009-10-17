@@ -45,9 +45,11 @@ public class GlobalConfig
    // constants --> getter
    private final String constantVersion                     = "1.1 (dev)";
    private final String constantSmugmugUserAgentString      = "jSmugmugBackup/v" + this.constantVersion;
-   private final String constantSmugmugServerURL            = "https://api.smugmug.com/hack/json/1.2.0/";
+   private final String constantSmugmugServerURL_120        = "https://api.smugmug.com/hack/json/1.2.0/";
+   private final String constantSmugmugServerURL_122        = "https://api.smugmug.com/services/api/json/1.2.2/";
    private final String constantSmugmugAPIKey               = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
-   private final String constantSmugmugAPIVersion           = "1.2.0";
+   private final String constantSmugmugAPIVersion_120       = "1.2.0";
+   private final String constantSmugmugAPIVersion_122       = "1.2.2";
    private final int    constantRetryWait                   = 20000; //time to wait before retrying (20sec)
    private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
    private final boolean constantVerifyMD5ForVideos         = false; // since md5 verification usually fails for videos, this will sspeed up the process
@@ -129,12 +131,10 @@ public class GlobalConfig
            return false;
        }
    };
-
    private final FileFilter constantDirectoryFileFilter = new FileFilter()
    {
        public boolean accept(File file) { return file.isDirectory(); }
    };
-
    private final class FileComparator implements Comparator<File>
    {
        private Collator c = Collator.getInstance();
@@ -153,7 +153,6 @@ public class GlobalConfig
        }
    }
    private final FileComparator constantFileComparator = new FileComparator();
-
 
    // persistent options --> getter, xml
    private String  persistentLogfile = null;
@@ -328,9 +327,11 @@ public class GlobalConfig
    // constant getter
    public String   getConstantVersion()                   { return this.constantVersion; }
    public String   getConstantSmugmugUserAgentString()    { return this.constantSmugmugUserAgentString; }
-   public String   getConstantSmugmugServerURL()          { return this.constantSmugmugServerURL; }
+   public String   getConstantSmugmugServerURL_120()      { return this.constantSmugmugServerURL_120; }
+   public String   getConstantSmugmugServerURL_122()      { return this.constantSmugmugServerURL_122; }
    public String   getConstantSmugmugAPIKey()             { return this.constantSmugmugAPIKey; }
-   public String   getConstantSmugmugAPIVersion()         { return this.constantSmugmugAPIVersion; }
+   public String   getConstantSmugmugAPIVersion_120()     { return this.constantSmugmugAPIVersion_120; }
+   public String   getConstantSmugmugAPIVersion_122()     { return this.constantSmugmugAPIVersion_122; }
    public int      getConstantRetryWait()                 { return this.constantRetryWait; }
    public boolean  getConstantHeavyRelogin()              { return this.constantHeavyRelogin; }
    public boolean  getConstantVerifyMD5ForVideos()              { return this.constantVerifyMD5ForVideos; }
