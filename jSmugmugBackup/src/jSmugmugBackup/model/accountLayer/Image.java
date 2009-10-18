@@ -13,6 +13,7 @@ import java.util.Vector;
 
 public class Image extends SmugmugObject implements IImage, Serializable
 {
+    private String key = null;
 	private String caption = null;
 	private Vector<String> tags = null;
 	private String format = null;
@@ -33,10 +34,11 @@ public class Image extends SmugmugObject implements IImage, Serializable
 		super(parentAlbum, id, name);
 	}
 	
-	public Image(IAlbum parentAlbum, int id, String name, String caption, String keywords, String format, int height, int width, long size, /*int largestURLContentSize,*/ String md5,
+	public Image(IAlbum parentAlbum, int id, String name, String key, String caption, String keywords, String format, int height, int width, long size, /*int largestURLContentSize,*/ String md5,
                  String mediumURL, String largeURL, String xLargeURL, String x2LargeURL, String x3LargeURL, String originalURL)
 	{
 		super(parentAlbum, id, name);
+        this.key = key;
 		this.caption = caption;
 
         //handle tags
@@ -59,14 +61,15 @@ public class Image extends SmugmugObject implements IImage, Serializable
     //special copy constructor
     public Image(IAlbum parentAlbum, IImage image)
     {
-        this(parentAlbum, image.getID(), image.getName(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), /*image.getLargestURLContentSize(),*/ image.getMD5(),
+        this(parentAlbum, image.getID(), image.getName(), image.getKey(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), /*image.getLargestURLContentSize(),*/ image.getMD5(),
              image.getMediumURL(), image.getLargeURL(), image.getXLargeURL(), image.getX2LargeURL(), image.getX3LargeURL(), image.getOriginalURL());
     }
 
 
 	public SmugmugTypeEnum getSmugmugType() { return SmugmugTypeEnum.SMUGMUG_IMAGE; }
 
-	
+
+    public String getKey() { return this.key; }
 	public String getCaption() { return this.caption; }
 	public Vector<String> getTags() { return this.tags; }
 	public String getFormat() { return this.format; }

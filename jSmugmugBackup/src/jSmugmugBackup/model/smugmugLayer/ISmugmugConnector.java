@@ -20,7 +20,7 @@ public interface ISmugmugConnector
 	
 	IRootElement getTree();
 	IAlbum getAlbum(int albumID, String albumKey);
-	Hashtable<String, String> getImageInfo(int imageID);
+	Hashtable<String, String> getImageInfo(int imageID, String imageKey);
     void setImageKeywords(int albumID, int imageID, String keywords);
     //Vector<IAlbumStatistics> getStatistics(int month, int year);
 	
@@ -36,7 +36,7 @@ public interface ISmugmugConnector
 	*/
 	
 	int uploadFile(int albumID, File file, String caption, Vector<String> tags);
-	void downloadFile(int imageID, File fileName/*, long expectedFileSize*/);
+	void downloadFile(int imageID, String imageKey, File fileName/*, long expectedFileSize*/);
 	void downloadFile(String imageURL, File fileName/*, long expectedFileSize*/);
 	//void verifyFile();
 	void deleteFile(int imageID);

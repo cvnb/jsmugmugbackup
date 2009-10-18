@@ -11,6 +11,7 @@ import java.util.Vector;
 
 public interface IAlbum extends ISmugmugObject
 {
+    String getKey();
     Vector<String> getTags();
 
 	void addImage(IImage image);
