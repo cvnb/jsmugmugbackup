@@ -10,6 +10,7 @@ import java.util.Vector;
 
 public interface IImage extends ISmugmugObject
 {
+    String getKey();
 	String getCaption();
 	Vector<String> getTags();
 	String getFormat();

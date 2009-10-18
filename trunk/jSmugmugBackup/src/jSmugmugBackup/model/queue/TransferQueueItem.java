@@ -25,6 +25,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	
 	private int albumID;
 	private int imageID;
+    private String imageKey;
 	private File fileDescriptor = null;
 	private long fileSize = 0; // needed for pretty output
     private Vector<String> tags = null;
@@ -37,13 +38,14 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	public TransferQueueItem(TransferQueueItemActionEnum action, int id, File fileDescriptor, long fileSize, Vector<String> tags)
+	public TransferQueueItem(TransferQueueItemActionEnum action, int id, String key, File fileDescriptor, long fileSize, Vector<String> tags)
 	{
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
 		//this.log.printLogLine("new TransferQueueItem()");
 		
-		this.smugmugConnector = new SmugmugConnector2G();
+		//this.smugmugConnector = new SmugmugConnector2G();
+        this.smugmugConnector = new SmugmugConnector3G();
 		//this.smugmugConnector.setLoginToken(loginToken);
 		//this.smugmugConnector.login();
 		
@@ -68,6 +70,7 @@ public class TransferQueueItem implements ITransferQueueItem
 			      (this.action.equals(TransferQueueItemActionEnum.VERIFY))*/ )
 		{
 			this.imageID = id;
+            this.imageKey = key;
 		}
 	}
 
@@ -94,7 +97,7 @@ public class TransferQueueItem implements ITransferQueueItem
             //if ( this.config.getConstantHeavyRelogin()  ) { this.smugmugConnector.relogin(); } //but for downloading it's probably overkill
 
 			//this.result_successful = this.smugmugConnector.downloadFile(this.imageID, this.fileName);
-			this.smugmugConnector.downloadFile(this.imageID, this.fileDescriptor/*, this.fileSize*/);
+			this.smugmugConnector.downloadFile(this.imageID, this.imageKey, this.fileDescriptor/*, this.fileSize*/);
 		}
 		/*
 		else if (this.action.equals(TransferQueueItemActionEnum.VERIFY))

@@ -34,7 +34,8 @@ public class AccountListingProxy implements IAccountListingProxy
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
         this.transferQueue = TransferQueue.getInstance();
-		this.connector = new SmugmugConnector2G();
+		//this.connector = new SmugmugConnector2G();
+        this.connector = new SmugmugConnector3G();
 	}
 	public Number login(String userEmail, String password)
 	{
@@ -243,7 +244,7 @@ public class AccountListingProxy implements IAccountListingProxy
         if (albumID == 0) //album doesn't exist, so create one
         {
         	albumID = this.connector.createAlbum(categoryID, subCategoryID, albumAsciiName, albumTags);
-        	this.addAlbum(categoryID, subCategoryID, albumID, albumAsciiName, albumKeywords, "<internally created>", null);
+        	this.addAlbum(categoryID, subCategoryID, albumID, "<internal key>", albumAsciiName, albumKeywords, "<internally created>", null);
         }
 
         //this.log.printLogLine("categoryID=" + categoryID + ", subcategoryID=" + subCategoryID + ", albumID=" + albumID);
@@ -302,7 +303,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else
                 {
-    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, fileList[i], fileList[i].length(), tags);
+    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, null, fileList[i], fileList[i].length(), tags);
     				this.transferQueue.add(item);
                     uploadCount++;
                 }
@@ -434,7 +435,7 @@ public class AccountListingProxy implements IAccountListingProxy
                     {
                         //md5 doesn't match, download again
                         this.log.printLogLine("WARNING: image " + image.getName() + " already exists, but has wrong md5 sum ... enqueuing again");
-                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
                         this.transferQueue.add(item);
                         downloadCount++;
                     }
@@ -464,7 +465,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             //original url is available ... this is unusual
                             //files sizes don't match, download again
                             this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
-                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
                             this.transferQueue.add(item);
                             downloadCount++;
                         }
@@ -473,7 +474,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             //no original available
                             //files sizes don't match, in most cases this indicates that we couldn't download the original file
                             this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - since the original url is not available, there's nothing to worry about ... skipping");
-                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
                             skippedCount++;
                         }
                         
@@ -482,7 +483,7 @@ public class AccountListingProxy implements IAccountListingProxy
             }
             else //file doesn't exist, download
             {
-                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), imageFile, image.getSize(), null);
+                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
                 this.transferQueue.add(item);
                 downloadCount++;
             }
@@ -1015,9 +1016,9 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addSubcategory: ERROR!");
 	}
-	private void addAlbum(int categoryID, int subcategoryID, int id, String name, String albumKeywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStats)
+	private void addAlbum(int categoryID, int subcategoryID, int id, String key, String name, String albumKeywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStats)
 	{
-		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, name, albumKeywords, lastUpdatedString, albumStats); return; }
+		if (subcategoryID == 0) { this.addAlbum(subcategoryID, id, key, name, albumKeywords, lastUpdatedString, albumStats); return; }
 		
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
@@ -1027,7 +1028,7 @@ public class AccountListingProxy implements IAccountListingProxy
 				{
 					if (s.getID() == subcategoryID)
 					{
-						s.addAlbum( new Album(s, id, name, albumKeywords, lastUpdatedString, albumStats) );
+						s.addAlbum( new Album(s, id, key, name, albumKeywords, lastUpdatedString, albumStats) );
 						return;
 					}
 				}
@@ -1036,13 +1037,13 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		System.out.println("addAlbum: ERROR!");		
 	}
-	private void addAlbum(int categoryID, int id, String name, String albumKeywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStats)
+	private void addAlbum(int categoryID, int id, String key, String name, String albumKeywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStats)
 	{
 		for (ICategory c : this.smugmugRoot.getCategoryList())
 		{
 			if (c.getID() == categoryID)
 			{
-				c.addAlbum( new Album(c, id, name, albumKeywords, lastUpdatedString, albumStats) );
+				c.addAlbum( new Album(c, id, key, name, albumKeywords, lastUpdatedString, albumStats) );
 				return;
 			}
 		}
