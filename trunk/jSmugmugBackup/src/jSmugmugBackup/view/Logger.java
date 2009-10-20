@@ -87,6 +87,25 @@ public class Logger
     	this.printLog(text + "\n");
     }
 
+    public void printLogFixedWidth(String text, int width)
+    {
+        String result = null;
+
+        if (text.length() < width)
+        {
+            result = text;
+            for (int i = text.length(); i < width; i++) { result += " "; }
+        }
+        else if (text.length() > width)
+        {
+            if (width >= 8) { result = text.substring(0, width-3) + "..."; }
+            else { result = text.substring(0, width-1); }
+        }
+        else { result = text; }
+
+        this.printLog(result);
+    }
+
 
     /*
     // Verbose logging is disabled for the moment

@@ -200,14 +200,40 @@ public class CmdView implements IView
 
 
         this.log.printLogLine("Statistics:");
-        this.log.printLogLine("id     | " + month_m2 + "/" + year_m2 + " | " + month_m1 + "/" + year_m1 + " | " + month_m0 + "/" + year_m0 + " | description");
+        this.log.printLogLine("album                                                       |     " + month_m2 + "/" + year_m2 + "     |     " + month_m1 + "/" + year_m1 + "     |     " + month_m0 + "/" + year_m0 + "     | description");
         this.log.printLogLine("----------------------------------------------------------------------------------");
 
         for (IAlbum a : albumList)
         {
             if (a.getStatistics().size() > 0)
             {
-                this.log.printLogLine(a.getID() + " | ");
+                int bytes_m2 = 0;
+                for (IAlbumMonthlyStatistics stats : a.getStatistics())
+                {
+                    if ( (stats.getYear() == year_m2) && (stats.getMonth() == month_m2) ) { bytes_m2 = stats.getBytes(); }
+                }                
+
+                int bytes_m1 = 0;
+                for (IAlbumMonthlyStatistics stats : a.getStatistics())
+                {
+                    if ( (stats.getYear() == year_m1) && (stats.getMonth() == month_m1) ) { bytes_m1 = stats.getBytes(); }
+                }                
+
+                int bytes_m0 = 0;
+                for (IAlbumMonthlyStatistics stats : a.getStatistics())
+                {
+                    if ( (stats.getYear() == year_m0) && (stats.getMonth() == month_m0) ) { bytes_m0 = stats.getBytes(); }
+                }
+
+                if ( !((bytes_m2 == 0) && (bytes_m1 == 0) && (bytes_m0 == 0)) )
+                {
+                    this.log.printLogFixedWidth(a.getFullName(), 60); this.log.printLog("|");
+                    this.log.printLogFixedWidth(Integer.toString(bytes_m2), 15); this.log.printLog("|");
+                    this.log.printLogFixedWidth(Integer.toString(bytes_m1), 15); this.log.printLog("|");
+                    this.log.printLogFixedWidth(Integer.toString(bytes_m0), 15); this.log.printLog("|");
+                    this.log.printLogLine("");
+                }
+                
             }
         }
     }
