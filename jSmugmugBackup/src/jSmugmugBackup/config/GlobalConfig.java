@@ -58,6 +58,7 @@ public class GlobalConfig
    private final int    constantStatisticsHistoryMonth      = 3; // assert: < 12; how many month of statistics should jSmugmugBackup try to retrieve
    private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename               = "res/pixel.jpg";
+   private final String constantOsmIconFilename             = "res/Ol_icon_blue_example.png";
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
    private final String constantTempDownloadFilename        = "jSmugmugBackup.download.temp";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
@@ -385,18 +386,19 @@ public class GlobalConfig
    public String   getConstantSmugmugAPIVersion_122()     { return this.constantSmugmugAPIVersion_122; }
    public int      getConstantRetryWait()                 { return this.constantRetryWait; }
    public boolean  getConstantHeavyRelogin()              { return this.constantHeavyRelogin; }
-   public boolean  getConstantVerifyMD5ForVideos()              { return this.constantVerifyMD5ForVideos; }
+   public boolean  getConstantVerifyMD5ForVideos()        { return this.constantVerifyMD5ForVideos; }
    //public boolean  getConstantVerboseLogging()            { return this.constantVerboseLogging; } //disabled for the moment
    public int      getConstantUploadFileSizeLimit()       { return this.constantUploadFileSizeLimit; }
    public int      getConstantStatisticsHistoryMonth()    { return this.constantStatisticsHistoryMonth; }
    public String   getConstantUploadIgnoreFilePostfix()   { return this.constantUploadIgnoreFilePostfix; }
+   public String   getConstantOsmIconFilename()           { return this.constantOsmIconFilename; }
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }
    public String   getConstantAlbumCacheFilenamePrefix()  { return this.constantAlbumCacheFilenamePrefix; }
    public String   getConstantTempDownloadFilename()      { return this.constantTempDownloadFilename; }
    public String[] getConstantSupportedFileTypes_Images() { return this.constantSupportedFileTypes_Images; }
    public String[] getConstantSupportedFileTypes_Videos() { return this.constantSupportedFileTypes_Videos; }
    public String   getConstantHelpNotes()                 { return this.constantHelpNotes; }
-   public String   getConstantOSMbasicHtml()                 { return this.constantOSMbasicHtml; }
+   public String   getConstantOSMbasicHtml()              { return this.constantOSMbasicHtml; }
 
    public FilenameFilter getConstantSupportedFileTypesFilter() { return this.constantSupportedFileTypesFilter; }
    public FileFilter     getConstantDirectoryFileFilter()      { return this.constantDirectoryFileFilter; }
