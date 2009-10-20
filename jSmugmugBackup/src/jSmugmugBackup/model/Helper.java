@@ -57,7 +57,6 @@ public class Helper
     	
     	return md5sum;
     }
-    
 	public static String getCurrentTimeString()
 	{
 		Date date = new Date();
@@ -65,7 +64,6 @@ public class Helper
 		//DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         return dateFormat.format(date);
 	}
-	
 	public static String getDurationTimeString(long time)
 	{				
 		int hours   = (int)(time / 1000 / 60 / 60);
@@ -74,13 +72,11 @@ public class Helper
 		
 		return new String(hours + "h" + (minutes-(hours*60)) + "m" + (seconds-(minutes*60)) + "s");
 	}
-	
     public static void pause(long millisecs)
     {
     	try { Thread.sleep(millisecs); }
     	catch (InterruptedException e) {}
     }
-
     public static String getKeywords(Vector<String> tags)
     {
         String keywords;
@@ -94,7 +90,6 @@ public class Helper
 
         return keywords;
     }
-
     public static Vector<String> getTags(String keywords)
     {
         Vector<String> tags = null;
@@ -111,7 +106,6 @@ public class Helper
 
         return tags;
     }
-
     public static String encodeForURL(String str)
     {
         //todo: generalize
@@ -155,7 +149,6 @@ public class Helper
 
     	return encodedStr;
     }
-
     public static String encodeAsASCII(String str)
     {
 //        /*
@@ -211,12 +204,10 @@ public class Helper
 
         return encodedStr;
     }
-
     public static String extractFilenameFromURL(String url)
     {
         return url.substring(url.lastIndexOf("/")+1);
     }
-
     public static boolean isVideo(String fileName)
     {
         GlobalConfig config = GlobalConfig.getInstance();
@@ -229,7 +220,6 @@ public class Helper
 
         return false;
     }
-
     public static int getOrientationExifMetadata(File filename)
     {
         Hashtable<String, String> exifMetadata = Helper.getExifMetadata(filename);
@@ -240,7 +230,6 @@ public class Helper
 
         return -1;
     }
-
     public static int getDimensionExifMetadata(File filename)
     {
         int imageWidth = 0;
@@ -299,7 +288,6 @@ public class Helper
 
         return (imageWidth * imageHeight);
     }
-
     private static Hashtable<String, String> getExifMetadata(File filename)
     {
         //System.out.println("Helper.getEXIFMetadata(" + filename.getAbsolutePath() + ")");
@@ -332,7 +320,6 @@ public class Helper
 
         return result;
     }
-
     public static Vector<IAlbumMonthlyStatistics> cloneAlbumMonthlyStatisticsVector(Vector<IAlbumMonthlyStatistics> input)
     {
         Vector<IAlbumMonthlyStatistics> result = new Vector<IAlbumMonthlyStatistics>();
@@ -344,7 +331,6 @@ public class Helper
 
         return result;
     }
-
     public static boolean copyFile(String sourceFile, String destFile)
     {
         try

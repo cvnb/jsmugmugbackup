@@ -36,7 +36,6 @@ public class Model
     {
     	this.view = view;    	
     }
-    
     public void quitApplication()
     {
     	//logout from smugmug
@@ -59,7 +58,6 @@ public class Model
     	this.log.printLogLine("finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, avg speed: " + df.format(transferSpeed) + " kb/sec)");
     	System.exit(0);
     }
-
     public void login(ILoginDialogResult loginDialogResult)
     {
         if (loginDialogResult == null) { return; }
@@ -70,14 +68,12 @@ public class Model
         //if login failed, quit
         if (loginResult == null) { this.quitApplication(); }
     }
-    
     public void list(ITransferDialogResult transferDialogResult)
     {
         if (transferDialogResult == null) { return; }
 
     	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords()) );
     }
-
     public void upload(ITransferDialogResult transferDialogResult)
     {
         if (transferDialogResult == null) { return; }
@@ -136,7 +132,6 @@ public class Model
 			this.log.printLogLine("ERROR: Model.upload: this case is yet unhandled"); this.quitApplication();
 		}
     }
-    
     public void download(ITransferDialogResult transferDialogResult)
     {
         if (transferDialogResult == null) { return; }
@@ -173,7 +168,6 @@ public class Model
 //			this.accListing.enqueueAlbumForDownload(a.getID(), transferDialogResult.getDir());
 //		}
     }
-
     public void downloadURL(ITransferDialogResult transferDialogResult)
     {
         //this.log.printLogLine("DEBUG: downloadURL stub (Model)");
@@ -192,7 +186,6 @@ public class Model
 
 
     }
-    
     public void verify(ITransferDialogResult transferDialogResult)
     {
         if (this.config.getConstantVerifyMD5ForVideos() == false) { this.log.printLogLine("WARNING: md5 sums for videos will not be checked, since they usually fail anyway"); }
@@ -290,7 +283,6 @@ public class Model
 //    		this.accListing.verifyAlbum(a.getID(), transferDialogResult.getDir());
 //    	}
     }
-    
     public void sort(ITransferDialogResult transferDialogResult)
     {
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
@@ -300,13 +292,11 @@ public class Model
     	
         this.accListing.sort(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName());
     }
-
     public void autotag(ITransferDialogResult transferDialogResult)
     {
         if (transferDialogResult == null) { return; }
         this.accListing.autotag(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName());
     }
-
     public void statistics(ITransferDialogResult transferDialogResult)
     {
         this.log.printLogLine("INFO: albums with zero transferd bytes will be omitted");
@@ -317,7 +307,6 @@ public class Model
 
         this.view.showStatistics(albumList);
     }
-
     public void osmlayer(ITransferDialogResult transferDialogResult)
     {
         Vector<IAlbum> albumList = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
@@ -433,24 +422,20 @@ public class Model
 //    		this.log.printLogLine("no matching category was found on your SmugMug Account");
 //    	}
     }
-    
     public void startSyncProcessingQueue()
     {
     	this.accListing.startSyncProcessingQueue();
     	
     	this.quitApplication();
     }
-
     public void startASyncProcessingQueue()
     {
     	this.accListing.startASyncProcessingQueue();
     }
-
     public void finishASyncProcessingQuene()
     {
         this.accListing.finishASyncProcessingQueue();
     }
-    
     
     //-------------------------- private ----------------------------------------
 
