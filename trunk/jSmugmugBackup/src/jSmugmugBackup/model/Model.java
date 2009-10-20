@@ -323,16 +323,62 @@ public class Model
         this.log.printLogLine("DEBUG: model.osmlayer");
         this.log.printLogLine("DEBUG: ... not implemented yet ....");
 
-        //Vector<IAlbum> albumList = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
+        Vector<IAlbum> albumList = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
 
-//        for (IAlbum a : albumList)
-//        {
-//            this.log.printLogLine("DEBUG:   " + a.getFullName());
-//            for (IImage i : a.getImageList())
-//            {
-//                this.log.printLogLine("DEBUG:      " + i.getName());
-//            }
-//        }
+        String dir = transferDialogResult.getDir();
+        if (dir == null) { dir = "./"; }
+        String contentGeotagsTxt = "lat	lon	title	description	icon	iconSize	iconOffset\n";
+
+        this.log.printLogLine("DEBUG:----------------- geotags.txt -------------------------------------");
+        this.log.printLogLine("DEBUG:lat	lon	title	description	icon	iconSize	iconOffset");
+        for (IAlbum a : albumList)
+        {
+            for (IImage i : a.getImageList())
+            {
+                if ( !((i.getLongitude() == null) && (i.getLatitude() == null) && (i.getAltitude() == null)) )
+                {
+                    //this.log.printLogLine("DEBUG:   " + a.getFullName() + "." + i.getName());
+                    //this.log.printLogLine("DEBUG:      longitude: " + i.getLongitude());
+                    //this.log.printLogLine("DEBUG:      latitude : " + i.getLatitude());
+                    //this.log.printLogLine("DEBUG:      altitude : " + i.getAltitude());
+                    this.log.printLogLine("DEBUG:" + i.getLatitude() + "\t" +
+                                                     i.getLongitude() + "\t" +
+                                                     i.getName() + "\t" +
+                                                     "geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                                                     "Ol_icon_blue_example.png" + "\t" +
+                                                     "24,24" + "\t" +
+                                                     "0,-24");
+                    contentGeotagsTxt += i.getLatitude() + "\t" +
+                                         i.getLongitude() + "\t" +
+                                         i.getName() + "\t" +
+                                         "geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                                         "Ol_icon_blue_example.png" + "\t" +
+                                         "24,24" + "\t" +
+                                         "0,-24" + "\n";
+                }                
+            }
+        }
+        this.log.printLogLine("DEBUG:-------------------------------------------------------------------");
+
+
+        //write files
+        try
+        {
+            FileWriter fstream_html = new FileWriter(dir + "index.html"); // Create file
+            BufferedWriter out_html = new BufferedWriter(fstream_html);
+            out_html.write(this.config.getConstantOSMbasicHtml());
+            out_html.close(); //Close the output stream
+
+            FileWriter fstream_geotags = new FileWriter(dir + "geotags.txt"); // Create file
+            BufferedWriter out_geotags = new BufferedWriter(fstream_geotags);
+            out_geotags.write(contentGeotagsTxt);
+            out_geotags.close(); //Close the output stream
+        }
+        catch (Exception e)//Catch exception if any
+        {
+          System.err.println("Error: " + e.getMessage());
+        }
+
     }
     public void delete(ITransferDialogResult transferDialogResult)
     {

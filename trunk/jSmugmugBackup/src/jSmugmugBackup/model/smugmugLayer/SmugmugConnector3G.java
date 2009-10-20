@@ -484,10 +484,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
             Number imageWidth         = (Number)this.getJSONValue(jsonImage, "Width");
             Number imageSize          = (Number)this.getJSONValue(jsonImage, "Size");
             String imageMD5           = (String)this.getJSONValue(jsonImage, "MD5Sum");
-            //String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
-            //String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
-            //String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
-            //String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
+            String imageLatitude      = (String)this.getJSONValue(jsonImage, "Latitude");
+            String imageLongitude     = (String)this.getJSONValue(jsonImage, "Longitude");
+            String imageAltitude      = (String)this.getJSONValue(jsonImage, "Altitude");
+            String imageAlbumURL      = (String)this.getJSONValue(jsonImage, "AlbumURL");
+            String imageThumbURL      = (String)this.getJSONValue(jsonImage, "ThumbURL");
+            String imageTinyURL       = (String)this.getJSONValue(jsonImage, "TinyURL");
+            String imageSmallURL      = (String)this.getJSONValue(jsonImage, "SmallURL");
             String imageMediumURL     = (String)this.getJSONValue(jsonImage, "MediumURL");
             String imageLargeURL      = (String)this.getJSONValue(jsonImage, "LargeURL");
             String imageXLargeURL     = (String)this.getJSONValue(jsonImage, "XLargeURL");
@@ -538,8 +541,9 @@ public class SmugmugConnector3G implements ISmugmugConnector
             if ((imageName == null) || (imageName.equals(""))) { imageName = Helper.extractFilenameFromURL(largestAvailableURL); }
 
 
-            IImage image = new Image(album, imageID.intValue(), imageName, imageKey, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), /*largestURLContentSize,*/ imageMD5,
-                                     imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
+            IImage image = new Image(album, imageID.intValue(), imageName, imageKey, imageCaption, imageKeywords, imageFormat, imageHeight.intValue(), imageWidth.intValue(), imageSize.longValue(), /*largestURLContentSize,*/
+                                     imageMD5, imageLatitude, imageLongitude, imageAltitude,
+                                     imageAlbumURL, imageThumbURL, imageTinyURL, imageSmallURL, imageMediumURL, imageLargeURL, imageXLargeURL, imageX2LargeURL, imageX3LargeURL, imageOriginalURL);
             album.addImage(image);
 
 

@@ -22,6 +22,14 @@ public class Image extends SmugmugObject implements IImage, Serializable
 	private long size = 0;
     //private int largestURLContentSize = 0;
 	private String md5 = null;
+    private String latitude = null;
+    private String longitude = null;
+    private String altitude = null;
+
+    private String albumURL = null;
+    private String thumbURL = null;
+    private String tinyURL = null;
+    private String smallURL = null;
     private String mediumURL = null;
     private String largeURL = null;
     private String xLargeURL = null;
@@ -34,8 +42,9 @@ public class Image extends SmugmugObject implements IImage, Serializable
 		super(parentAlbum, id, name);
 	}
 	
-	public Image(IAlbum parentAlbum, int id, String name, String key, String caption, String keywords, String format, int height, int width, long size, /*int largestURLContentSize,*/ String md5,
-                 String mediumURL, String largeURL, String xLargeURL, String x2LargeURL, String x3LargeURL, String originalURL)
+	public Image(IAlbum parentAlbum, int id, String name, String key, String caption, String keywords, String format, int height, int width, long size, /*int largestURLContentSize,*/
+                 String md5, String latitude, String longitude, String altitude,
+                 String albumURL, String thumbURL, String tinyURL, String smallURL, String mediumURL, String largeURL, String xLargeURL, String x2LargeURL, String x3LargeURL, String originalURL)
 	{
 		super(parentAlbum, id, name);
         this.key = key;
@@ -50,6 +59,14 @@ public class Image extends SmugmugObject implements IImage, Serializable
 		this.size = size;
         //this.largestURLContentSize = largestURLContentSize;
 		this.md5 = md5;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+
+        this.albumURL = albumURL;
+        this.thumbURL = thumbURL;
+        this.tinyURL = tinyURL;
+        this.smallURL = smallURL;
         this.mediumURL = mediumURL;
         this.largeURL = largeURL;
         this.xLargeURL = xLargeURL;
@@ -61,8 +78,9 @@ public class Image extends SmugmugObject implements IImage, Serializable
     //special copy constructor
     public Image(IAlbum parentAlbum, IImage image)
     {
-        this(parentAlbum, image.getID(), image.getName(), image.getKey(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), /*image.getLargestURLContentSize(),*/ image.getMD5(),
-             image.getMediumURL(), image.getLargeURL(), image.getXLargeURL(), image.getX2LargeURL(), image.getX3LargeURL(), image.getOriginalURL());
+        this(parentAlbum, image.getID(), image.getName(), image.getKey(), image.getCaption(), Helper.getKeywords(image.getTags()), image.getFormat(), image.getHeight(), image.getWidth(), image.getSize(), /*image.getLargestURLContentSize(),*/
+             image.getMD5(), image.getLatitude(), image.getLongitude(), image.getAltitude(),
+             image.getAlbumURL(), image.getThumbURL(), image.getTinyURL(), image.getSmallURL(), image.getMediumURL(), image.getLargeURL(), image.getXLargeURL(), image.getX2LargeURL(), image.getX3LargeURL(), image.getOriginalURL());
     }
 
 
@@ -78,6 +96,14 @@ public class Image extends SmugmugObject implements IImage, Serializable
 	public long getSize() { return this.size; }
     //public int getLargestURLContentSize() { return this.largestURLContentSize; }
 	public String getMD5() { return this.md5; }
+    public String getLatitude() { return this.latitude; }
+    public String getLongitude() { return this.longitude; }
+    public String getAltitude() { return this.altitude; }
+
+    public String getAlbumURL() { return this.albumURL; }
+    public String getThumbURL() { return this.thumbURL; }
+    public String getTinyURL() { return this.tinyURL; }
+    public String getSmallURL() { return this.smallURL; }
     public String getMediumURL() { return this.mediumURL; }
     public String getLargeURL() { return this.largeURL; }
     public String getXLargeURL() { return this.xLargeURL; }
