@@ -320,17 +320,14 @@ public class Model
 
     public void osmlayer(ITransferDialogResult transferDialogResult)
     {
-        this.log.printLogLine("DEBUG: model.osmlayer");
-        this.log.printLogLine("DEBUG: ... not implemented yet ....");
-
         Vector<IAlbum> albumList = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
 
         String dir = transferDialogResult.getDir();
         if (dir == null) { dir = "./"; }
         String contentGeotagsTxt = "lat	lon	title	description	icon	iconSize	iconOffset\n";
 
-        this.log.printLogLine("DEBUG:----------------- geotags.txt -------------------------------------");
-        this.log.printLogLine("DEBUG:lat	lon	title	description	icon	iconSize	iconOffset");
+        //this.log.printLogLine("DEBUG:----------------- geotags.txt -------------------------------------");
+        //this.log.printLogLine("DEBUG:lat	lon	title	description	icon	iconSize	iconOffset");
         for (IAlbum a : albumList)
         {
             for (IImage i : a.getImageList())
@@ -341,24 +338,26 @@ public class Model
                     //this.log.printLogLine("DEBUG:      longitude: " + i.getLongitude());
                     //this.log.printLogLine("DEBUG:      latitude : " + i.getLatitude());
                     //this.log.printLogLine("DEBUG:      altitude : " + i.getAltitude());
-                    this.log.printLogLine("DEBUG:" + i.getLatitude() + "\t" +
-                                                     i.getLongitude() + "\t" +
-                                                     i.getName() + "\t" +
-                                                     "geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
-                                                     "Ol_icon_blue_example.png" + "\t" +
-                                                     "24,24" + "\t" +
-                                                     "0,-24");
+                    //this.log.printLogLine("DEBUG:" + i.getLatitude() + "\t" +
+                    //                                 i.getLongitude() + "\t" +
+                    //                                 i.getName() + "\t" +
+                    //                                 "geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                    //                                 "icon.png" + "\t" +
+                    //                                 "24,24" + "\t" +
+                    //                                 "0,-24");
                     contentGeotagsTxt += i.getLatitude() + "\t" +
                                          i.getLongitude() + "\t" +
                                          i.getName() + "\t" +
-                                         "geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
-                                         "Ol_icon_blue_example.png" + "\t" +
+                                         //"geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                                         //"<img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                                         "<a href=" + i.getLargeURL() + " target=\"_blank\"><img src=\"" + i.getTinyURL() + "\" /></a><br><h6>[exported using jSmugmugBackup]</h6>" + "\t" +
+                                         "icon.png" + "\t" +
                                          "24,24" + "\t" +
                                          "0,-24" + "\n";
                 }                
             }
         }
-        this.log.printLogLine("DEBUG:-------------------------------------------------------------------");
+        //this.log.printLogLine("DEBUG:-------------------------------------------------------------------");
 
 
         //write files
@@ -378,6 +377,14 @@ public class Model
         {
           System.err.println("Error: " + e.getMessage());
         }
+
+        //copy icon file
+        if (!Helper.copyFile(this.config.getConstantOsmIconFilename(), dir + "icon.png"))
+        {
+            this.log.printLogLine("WARNING: the file " + this.config.getConstantOsmIconFilename() + " could not be copied to it's destination. You might have to adjust the generated geotags.txt manually." );
+        }
+
+        this.log.printLogLine("INFO: finished creating a layer for OpenStreetMap. The results can be found in " + dir);
 
     }
     public void delete(ITransferDialogResult transferDialogResult)
