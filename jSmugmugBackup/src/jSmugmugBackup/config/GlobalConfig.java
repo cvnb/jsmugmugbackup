@@ -109,6 +109,57 @@ public class GlobalConfig
         " - statistics: nesseceary functions are more or less implemented, but the smugmug API seems\n" +
         "   to return zero for everything ... there's not much I can do about it atm, sorry\n" +
         " - <to be continued>\n";
+   private final String constantOSMbasicHtml =
+        "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+        "  <head>\n" +
+        "    <style type=\"text/css\">\n" +
+        "#map {\n" +
+        "        width: 100%;\n" +
+        "        height: 100%;\n" +
+        "        border: 0px;\n" +
+        "        padding: 0px;\n" +
+        "        position: absolute;\n" +
+        "     }\n" +
+        "body {\n" +
+        "        border: 0px;\n" +
+        "        margin: 0px;\n" +
+        "        padding: 0px;\n" +
+        "        height: 100%;\n" +
+        "     }\n" +
+        "    </style>\n" +
+        "    <script src=\"http://www.openlayers.org/api/OpenLayers.js\"></script>\n" +
+        "    <script src=\"http://www.openstreetmap.org/openlayers/OpenStreetMap.js\"></script>\n" +
+        "    <script type=\"text/javascript\">\n" +
+        "        <!--\n" +
+        "        var map;\n" +
+        "        function init(){\n" +
+        "            map = new OpenLayers.Map('map',\n" +
+        "                    { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),\n" +
+        "                      numZoomLevels: 19,\n" +
+        "                      maxResolution: 156543.0399,\n" +
+        "                      units: 'm',\n" +
+        "                      projection: new OpenLayers.Projection(\"EPSG:900913\"),\n" +
+        "                      displayProjection: new OpenLayers.Projection(\"EPSG:4326\")\n" +
+        "                    });\n" +
+        "            var layerMapnik = new OpenLayers.Layer.OSM.Mapnik(\"Mapnik\");\n" +
+        "            var layerTah = new OpenLayers.Layer.OSM.Osmarender(\"Tiles@Home\");\n" +
+        "            map.addLayers([layerMapnik,layerTah]);\n" +
+        "            var pois = new OpenLayers.Layer.Text( \"Geotagged Photos\",\n" +
+        "                    { location:\"./geotags.txt\",\n" +
+        "                      projection: map.displayProjection\n" +
+        "                    });\n" +
+        "            map.addLayer(pois);\n" +
+        "            map.addControl(new OpenLayers.Control.LayerSwitcher());\n" +
+        "            var lonLat = new OpenLayers.LonLat(13.3786, 52.5164).transform(map.displayProjection,  map.projection);\n" +
+        "            if (!map.getCenter()) map.setCenter (lonLat, 4);\n" +
+        "        }\n" +
+        "        // -->\n" +
+        "    </script>\n" +
+        "  </head>\n" +
+        "  <body onload=\"init()\">\n" +
+        "    <div id=\"map\"></div>\n" +
+        "  </body>\n" +
+        "</html>\n";
 
    // constant objects
    private final FilenameFilter constantSupportedFileTypesFilter = new FilenameFilter()
@@ -345,6 +396,7 @@ public class GlobalConfig
    public String[] getConstantSupportedFileTypes_Images() { return this.constantSupportedFileTypes_Images; }
    public String[] getConstantSupportedFileTypes_Videos() { return this.constantSupportedFileTypes_Videos; }
    public String   getConstantHelpNotes()                 { return this.constantHelpNotes; }
+   public String   getConstantOSMbasicHtml()                 { return this.constantOSMbasicHtml; }
 
    public FilenameFilter getConstantSupportedFileTypesFilter() { return this.constantSupportedFileTypesFilter; }
    public FileFilter     getConstantDirectoryFileFilter()      { return this.constantDirectoryFileFilter; }

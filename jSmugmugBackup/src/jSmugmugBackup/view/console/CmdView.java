@@ -270,8 +270,7 @@ public class CmdView implements IView
 	}
     public ITransferDialogResult showOsmlayerDialog()
     {
-        String dir = this.extractDirectoryFromCommandline();
-        return new TransferDialogResult(null, null, null, dir, null, null);
+        return this.showUploadDialog();
     }
     public ITransferDialogResult showUploadDialog()
 	{
