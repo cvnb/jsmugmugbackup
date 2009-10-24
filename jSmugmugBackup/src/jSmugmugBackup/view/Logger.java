@@ -106,6 +106,20 @@ public class Logger
         this.printLog(result);
     }
 
+    public void printLogFixedWidthRAL(String text, int width)
+    {
+        String result = null;
+
+        if (text.length() < width)
+        {
+            result = text;
+            for (int i = text.length(); i < width; i++) { result = " " + result; }
+        }
+        else { result = text; }
+
+        this.printLog(result);
+    }
+
 
     /*
     // Verbose logging is disabled for the moment

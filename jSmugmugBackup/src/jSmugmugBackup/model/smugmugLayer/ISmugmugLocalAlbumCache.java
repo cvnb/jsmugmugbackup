@@ -14,12 +14,12 @@ import java.io.File;
  */
 public interface ISmugmugLocalAlbumCache
 {
-    void loadCacheFromDisk();
-    void saveCacheToDisk();
+    //void loadCacheFromDisk();
+    void forceSaveCacheToDisk();
 
     void putAlbum(IAlbum album);
     void removeAlbum(int albumID);
     boolean exists(int albumID);
     IAlbum getCachedAlbum(int albumID);
-    boolean validateCachedAlbum(int albumID, int imageCount, String lastUpdated, String albumName);
+    boolean checkIfCachedAlbumIsUptodate(int albumID, int imageCount, String lastUpdated, String albumName);
 }
