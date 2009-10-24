@@ -56,6 +56,7 @@ public class GlobalConfig
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit         = 600*1024*1024; //600MB
    private final int    constantStatisticsHistoryMonth      = 3; // assert: < 12; how many month of statistics should jSmugmugBackup try to retrieve
+   private final int    constantCacheWritingPolicy          = 20; // write album cache to disk every 20 updates
    private final String constantUploadIgnoreFilePostfix     = ".jSmugmugBackup-upload-ignore.tag";
    private final String constantPixelFilename               = "res/pixel.jpg";
    private final String constantOsmIconFilename             = "res/Ol_icon_blue_example.png";
@@ -390,6 +391,7 @@ public class GlobalConfig
    //public boolean  getConstantVerboseLogging()            { return this.constantVerboseLogging; } //disabled for the moment
    public int      getConstantUploadFileSizeLimit()       { return this.constantUploadFileSizeLimit; }
    public int      getConstantStatisticsHistoryMonth()    { return this.constantStatisticsHistoryMonth; }
+   public int      getConstantCacheWritingPolicy()        { return this.constantCacheWritingPolicy; }
    public String   getConstantUploadIgnoreFilePostfix()   { return this.constantUploadIgnoreFilePostfix; }
    public String   getConstantOsmIconFilename()           { return this.constantOsmIconFilename; }
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }

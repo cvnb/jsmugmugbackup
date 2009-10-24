@@ -108,7 +108,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             {
                 SmugmugConnector3G.albumCache = new SmugmugLocalAlbumCache(SmugmugConnector3G.login_nickname);
             }
-            SmugmugConnector3G.albumCache.loadCacheFromDisk();
+            //SmugmugConnector3G.albumCache.loadCacheFromDisk();
         }
 
 		IRootElement smugmugRoot = new RootElement(SmugmugConnector3G.login_nickname);
@@ -143,7 +143,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
                     if (this.config.getPersistentCacheAccountInfo())
                     {
-                        SmugmugConnector3G.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated, albumName);
+                        SmugmugConnector3G.albumCache.checkIfCachedAlbumIsUptodate(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated, albumName);
                     }
 
                     statAlbumIndex++;
@@ -167,7 +167,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
                 if (this.config.getPersistentCacheAccountInfo())
                 {
-                    SmugmugConnector3G.albumCache.validateCachedAlbum(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated, albumName);
+                    SmugmugConnector3G.albumCache.checkIfCachedAlbumIsUptodate(albumID.intValue(), albumImageCount.intValue(), albumLastUpdated, albumName);
                 }
 
                 _albumIndex++;
@@ -313,7 +313,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                         if (this.config.getPersistentCacheAccountInfo())
                         {
                             SmugmugConnector3G.albumCache.putAlbum(album);
-                            SmugmugConnector3G.albumCache.saveCacheToDisk(); //this might produce quite some I/O overhead, but allows resuming of account info downloads
+                            //SmugmugConnector3G.albumCache.saveCacheToDisk(); //this might produce quite some I/O overhead, but allows resuming of account info downloads
                         }
                     }
 
@@ -425,7 +425,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                     if (this.config.getPersistentCacheAccountInfo())
                     {
                         SmugmugConnector3G.albumCache.putAlbum(album);
-                        SmugmugConnector3G.albumCache.saveCacheToDisk(); //this might produce quite some I/O overhead, but allows resuming of account info downloads
+                        //SmugmugConnector3G.albumCache.saveCacheToDisk(); //this might produce quite some I/O overhead, but allows resuming of account info downloads
                     }
                 }
 
@@ -461,7 +461,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //this.log.printLogLine("checkAlbumCount: " + checkAlbumCount);
         this.log.printLog("(totalImageCount: " + totalImageCount + ", totalAlbumCount: " + totalAlbumCount + ", cacheHits: " + cacheHits + ") ... ");
 
-        if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnector3G.albumCache.saveCacheToDisk(); }
+        if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnector3G.albumCache.forceSaveCacheToDisk(); }
 
         this.log.printLogLine("ok");
 
@@ -2198,7 +2198,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                 SmugmugConnector3G.albumCache.removeAlbum(albumID);
                 //this.log.printLogLine(Helper.getCurrentTimeString() + " removed album (id=" + albumID + ") from cache");
 
-                SmugmugConnector3G.albumCache.saveCacheToDisk();
+                //SmugmugConnector3G.albumCache.saveCacheToDisk();
             }
 
         }

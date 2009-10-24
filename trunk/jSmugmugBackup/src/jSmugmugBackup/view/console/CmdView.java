@@ -10,6 +10,7 @@ import jSmugmugBackup.view.console.ConsoleViewLogin_1_6;
 
 
 import java.awt.event.*;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Vector;
 
@@ -200,8 +201,8 @@ public class CmdView implements IView
 
 
         this.log.printLogLine("Statistics:");
-        this.log.printLogLine("album                                                       |     " + month_m2 + "/" + year_m2 + "     |     " + month_m1 + "/" + year_m1 + "     |     " + month_m0 + "/" + year_m0 + "     | description");
-        this.log.printLogLine("----------------------------------------------------------------------------------");
+        this.log.printLogLine("album                                                       |     " + month_m2 + "/" + year_m2 + "    |     " + month_m1 + "/" + year_m1 + "    |     " + month_m0 + "/" + year_m0 + "   | description");
+        this.log.printLogLine("---------------------------------------------------------------------------------------------------------------------------------");
 
         for (IAlbum a : albumList)
         {
@@ -227,10 +228,19 @@ public class CmdView implements IView
 
                 if ( !((bytes_m2 == 0) && (bytes_m1 == 0) && (bytes_m0 == 0)) )
                 {
+                    double megabytes_m2 = ( (float)bytes_m2 / (1024.0 * 1024.0) );
+                    double megabytes_m1 = ( (float)bytes_m1 / (1024.0 * 1024.0) );
+                    double megabytes_m0 = ( (float)bytes_m0 / (1024.0 * 1024.0) );
+
+                    NumberFormat nf = NumberFormat.getInstance();
+                    nf.setMaximumFractionDigits(1);
+                    nf.setMinimumFractionDigits(1);
+
+
                     this.log.printLogFixedWidth(a.getFullName(), 60); this.log.printLog("|");
-                    this.log.printLogFixedWidth(Integer.toString(bytes_m2), 15); this.log.printLog("|");
-                    this.log.printLogFixedWidth(Integer.toString(bytes_m1), 15); this.log.printLog("|");
-                    this.log.printLogFixedWidth(Integer.toString(bytes_m0), 15); this.log.printLog("|");
+                    this.log.printLogFixedWidthRAL(nf.format(megabytes_m2) + " mb", 15); this.log.printLog("|");
+                    this.log.printLogFixedWidthRAL(nf.format(megabytes_m1) + " mb", 15); this.log.printLog("|");
+                    this.log.printLogFixedWidthRAL(nf.format(megabytes_m0) + " mb", 15); this.log.printLog("|");
                     this.log.printLogLine("");
                 }
                 
