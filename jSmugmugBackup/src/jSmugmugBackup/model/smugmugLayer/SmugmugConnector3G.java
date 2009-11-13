@@ -811,6 +811,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                 repeat = true;
 
 
+                /*
                 //special: this routine should identify cases where there was an exception thrown, but the video has been successfully uploaded anyway
                 //         ... this is probably due the the time smugmug needs to process a video properly
                 //first: check if this was an upload request - all other requests don't have any but the standard headers
@@ -866,6 +867,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                         this.log.printLog("nothing found :-(, retrying ...");
                     }
                 }
+                */
             }
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
             {
@@ -2021,6 +2023,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                  (this.getJSONValue(jobj, "message") == null ))
+	        {
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
+                Helper.pause(this.config.getConstantRetryWait());
+
+                this.printJSONObject(jobj); //temporary
+            }
+            else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
 	                  (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
 	        {
 	        	//this.log.printLogLine("failed (wrong bytecount)");
@@ -2083,7 +2094,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        else
 	        {
 
-	        	this.log.printLog(Helper.getCurrentTimeString() + " retrying (wrong bytecount???) ... ");
+	        	this.log.printLog(Helper.getCurrentTimeString() + " retrying (reason unknown) ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
