@@ -589,7 +589,8 @@ public class AccountListingProxy implements IAccountListingProxy
                         }
                         else if (exifDimensions > 48000000) //image has more than 48 megapixel
                         {
-                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
+                            //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
+                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
                         }
                         else
                         {

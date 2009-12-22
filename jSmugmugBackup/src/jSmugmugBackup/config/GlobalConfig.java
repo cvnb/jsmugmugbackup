@@ -73,6 +73,8 @@ public class GlobalConfig
         "            ... uploads whole directory structure\n" +
         "      ./jSmugmugBackup.sh --upload --user=me --category=public --album=\"my hollidays\" --dir=/home/john/pics/public/paris\n" +
         "            ... uploads all images in /home/john/pics/public/paris to an album named \"my hollidays\" in the category \"public\"\n" +
+        " - usage example for windows: ... you have to quote everything that contains an \"=\" character, sorry for the inconvenience\n" +
+        "      jSmugmugBackup.bat --verify \"--user=me\" \"--category=public\" \"--album=\"my hollidays\"\" \"--dir=/home/john/pics/public/paris\"\n" +
 	    " - Names on smugmug are handled as if they were unique, although it is for instance\n" +
 	    "   possible to have two albums with the same name on smugmug. jSmugmugBackup will\n" +
 	    "   always use the first name the matches and ignore the second entity.\n" +
