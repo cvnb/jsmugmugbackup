@@ -77,7 +77,7 @@ cp -v config.xml deployment/
 echo "#!/bin/bash" >> deployment/jSmugmugBackup.sh
 #echo "CLASSPATH=\".:./lib/apache-mime4j-0.4.jar:./lib/commons-codec-1.3.jar:./lib/commons-logging-1.1.1.jar:./lib/httpclient-4.0-beta1.jar:./lib/httpcore-4.0-beta2.jar:lib/httpmime-4.0-beta1.jar\"" >> deployment/jSmugmugBackup.sh
 #echo "java -classpath \$CLASSPATH -jar jSmugmugBackup.jar \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9" >> deployment/jSmugmugBackup.sh
-echo "java -Xms512m -Xmx1024m -jar jSmugmugBackup.jar \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9" >> deployment/jSmugmugBackup.sh
+echo "java -Xms1024m -Xmx2048m -jar jSmugmugBackup.jar \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9" >> deployment/jSmugmugBackup.sh
 chmod -v u+x deployment/jSmugmugBackup.sh
 
 #create unix clear cache script
@@ -88,8 +88,10 @@ chmod -v u+x deployment/clearCache.sh
 #create windows .bat
 #echo "@set CLASSPATH=\".:lib\\commons-codec-1.3.jar:lib\\commons-httpclient-3.1-rc1.jar:lib\\commons-io-1.3.2.jar:lib\\commons-logging-1.1.1.jar:lib\\json-1.0.0.jar:lib\\junit-4.4.jar:lib\\logback-classic-0.9.8.jar:lib\\logback-core-0.9.8.jar:lib\\migbase64-2.2.0.jar:lib\\slf4j-api-1.4.3.jar:lib\\db-derby-10.3.1.4-bin\\derby.jar:lib\\db-derby-10.3.1.4-bin\\derbyLocale_de_DE.jar:lib\\db-derby-10.3.1.4-bin\\derbyclient.jar:lib\\db-derby-10.3.1.4-bin\\derbynet.jar:lib\\db-derby-10.3.1.4-bin\\derbyrun.jar:lib\\db-derby-10.3.1.4-bin\\derbytools.jar\"" >> deployment/jSmugmugBackup/jSmugmugBackup.bat
 #echo "@java -classpath %CLASSPATH% -jar jSmugmugBackup.jar %1 %2 %3 %4 %5 %6 %7 %8 %9" >> deployment/jSmugmugBackup/jSmugmugBackup.bat
-echo "@java -Xms512m -Xmx1024m -jar jSmugmugBackup.jar %1 %2 %3 %4 %5 %6 %7 %8 %9" >> deployment/jSmugmugBackup.bat
+echo "@java -Xms1024m -Xmx2048m -jar jSmugmugBackup.jar %1 %2 %3 %4 %5 %6 %7 %8 %9" >> deployment/jSmugmugBackup.bat
 
+#create windows clear cache .bat
+echo "del jSmugmugBackup.albumCache.*" >> deployment/clearCache.bat
 
 #creat archive
 cd deployment

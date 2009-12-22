@@ -682,56 +682,58 @@ public class SmugmugConnector3G implements ISmugmugConnector
             long startTime = (new Date()).getTime(); // this might belong inside the loop ...
 
 
-//            int contentFilesize = 0;
-//            //int retryCount = 0;
-//            do //loop until the downloaded file has the correct filesize
-//            {
-//                URL url	= new URL(imageURL);
-//                FileOutputStream out = new FileOutputStream(tempFileName, false);
-//                URLConnection conn = url.openConnection();
-//                contentFilesize = conn.getContentLength();
-//                InputStream  in = conn.getInputStream();
-//
-//
-//                byte[] buffer = new byte[65536]; //write data in 64kb chunks
-//                int numRead;
-//                long numWritten = 0;
-//                while ((numRead = in.read(buffer)) != -1)
-//                {
-//                    out.write(buffer, 0, numRead);
-//                    numWritten += numRead;
-//                }
-//
-//                out.close();
-//
-//
-//                //retryCount++;
-//                //if (retryCount > 3) { this.log.printLog("giving up (under development) ... "); } else
-//                if (tempFileName.length() != contentFilesize) { this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
-//            } while ( (tempFileName.length() != contentFilesize) /*&& (retryCount <= 3)*/ );
-
-
-
-
             int contentFilesize = 0;
+            //int retryCount = 0;
             do //loop until the downloaded file has the correct filesize
             {
-                //temporary: get the file size "old school"
                 URL url	= new URL(imageURL);
+                FileOutputStream out = new FileOutputStream(tempFileName, false);
                 URLConnection conn = url.openConnection();
                 contentFilesize = conn.getContentLength();
+                InputStream  in = conn.getInputStream();
 
-                // alternate download ... todo: exceptions, repeating
-                String responseBody = null;
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpGet httpget = new HttpGet(imageURL);
-                ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                responseBody = httpclient.execute(httpget, responseHandler);
-                FileOutputStream out = new FileOutputStream(tempFileName, false);
-                out.write(responseBody.getBytes("ISO-8859-1")); //the fixed encoding might cause problems
-                //this.log.printLog("DEBUG: length: " + tempFileName.length() + ", alternative length: " + responseBody.length() + ", contentFilesize: " + contentFilesize);
+
+                byte[] buffer = new byte[65536]; //write data in 64kb chunks
+                int numRead;
+                long numWritten = 0;
+                while ((numRead = in.read(buffer)) != -1)
+                {
+                    out.write(buffer, 0, numRead);
+                    numWritten += numRead;
+                }
+
+                out.close();
+
+
+                //retryCount++;
+                //if (retryCount > 3) { this.log.printLog("giving up (under development) ... "); } else
                 if (tempFileName.length() != contentFilesize) { this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
-            } while (tempFileName.length() != contentFilesize);
+            } while ( (tempFileName.length() != contentFilesize) /*&& (retryCount <= 3)*/ );
+
+
+
+
+//            int contentFilesize = 0;
+//            do //loop until the downloaded file has the correct filesize
+//            {
+//                //temporary: get the file size "old school"
+//                URL url	= new URL(imageURL);
+//                URLConnection conn = url.openConnection();
+//                contentFilesize = conn.getContentLength();
+//
+//                // alternate download ... todo: exceptions, repeating
+//                String responseBody = null;
+//                HttpClient httpclient = new DefaultHttpClient();
+//                HttpGet httpget = new HttpGet(imageURL);
+//                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+//
+//                responseBody = httpclient.execute(httpget, responseHandler);
+//
+//                FileOutputStream out = new FileOutputStream(tempFileName, false);
+//                out.write(responseBody.getBytes("ISO-8859-1")); //the fixed encoding might cause problems
+//                //this.log.printLog("DEBUG: length: " + tempFileName.length() + ", alternative length: " + responseBody.length() + ", contentFilesize: " + contentFilesize);
+//                if (tempFileName.length() != contentFilesize) { this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
+//            } while (tempFileName.length() != contentFilesize);
 
 
 
@@ -795,6 +797,9 @@ public class SmugmugConnector3G implements ISmugmugConnector
 			}
 			catch (ClientProtocolException e)
 			{
+                // this exception seems thrown when the url (http://upload.smugmug.com/ + filename) contains a german
+                // "Umlaut" character or similar - no idea why, fixed by converting filename to ASCII before using it in the URL
+                // see: smugmug_images_upload below
             	this.log.printLog(Helper.getCurrentTimeString() + " caught ClientProtocolException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
                 repeat = true;
@@ -1951,8 +1956,10 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		String methodName = "smugmug.images.upload";
 		//System.out.print(methodName + " ...");
 
-		//build url
-		String url = "http://upload.smugmug.com/" + Helper.encodeForURL(fileName.getName());
+		// build url
+        // double encoding: ASCII encoding should filter out all special characters ... URL encoding probably
+        //                  isn't nesseciary after that, but just to be sure we'll do it anyway
+		String url = "http://upload.smugmug.com/" + Helper.encodeForURL(Helper.encodeAsASCII(fileName.getName()));
 
 		do
 		{
@@ -1967,7 +1974,6 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        httpPut.addHeader("X-Smug-AlbumID", Integer.toString(albumID) ); // required for uploading new photos, not for replacing existing ones
 	        //httpPut.addHeader("X-Smug-ImageID", ""); //required for replacing, not for uploading
 
-            //httpPut.addHeader("X-Smug-FileName", fileName.getName()); //optional
             //if (caption != null)  { httpPut.addHeader("X-Smug-Caption", Helper.encodeForURL(caption)); } //optional
 	        //if (keywords != null) { httpPut.addHeader("X-Smug-Keywords", Helper.encodeForURL(keywords)); } //optional
             // only ASCII characters are allowed in headers, so we convert eventually non conform characters
@@ -1979,6 +1985,10 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        //httpPut.addHeader("X-Smug-Longitude", ""); //optional
 	        //httpPut.addHeader("X-Smug-Altitude", ""); //optional
 
+            //Debug:
+            //this.log.printLog("DEBUG: url = " + url + " ");
+            //this.log.printLog("DEBUG: header \"X-Smug-FileName\" = " + httpPut.getHeaders("X-Smug-FileName")[0].getValue() + " ");
+            //this.log.printLog("DEBUG: " + fileName + " exists = " + Boolean.toString(fileName.exists()) );
 
 	        // see: http://www.iana.org/assignments/media-types/
 	        // ... maybe this causes the upload-problems with videos???
@@ -2004,7 +2014,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
 
 	            DecimalFormat df = new DecimalFormat("0.0");
-	            this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
+	            this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s");
 	        	//this.log.printLogLine("ok");
 	        	return jobj;
 	        }
