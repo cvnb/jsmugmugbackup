@@ -2020,6 +2020,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
+	                  (this.getJSONValue(jobj, "message") == null ))
+	        {
+            	this.log.printLog(Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
+                Helper.pause(this.config.getConstantRetryWait());
+
+                this.printJSONObject(jobj); //temporary
+            }
+            else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
 	                  (this.getJSONValue(jobj, "message").equals("wrong format ()")))
 	        {
 	        	this.log.printLogLine("failed (wrong format)");
@@ -2031,15 +2040,6 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 	        	return jobj;
 	        }
-	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                  (this.getJSONValue(jobj, "message") == null ))
-	        {
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
-                Helper.pause(this.config.getConstantRetryWait());
-
-                this.printJSONObject(jobj); //temporary
-            }
             else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
 	                  (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))

@@ -313,8 +313,9 @@ public class Model
 
         String dir = transferDialogResult.getDir();
         if (dir == null) { dir = "./"; }
-        String contentGeotagsTxt = "lat	lon	title	description	icon	iconSize	iconOffset\n";
+        
 
+        Hashtable<String, Vector<IImage>> contentGeotagsHashtable = new Hashtable<String, Vector<IImage>>();
         //this.log.printLogLine("DEBUG:----------------- geotags.txt -------------------------------------");
         //this.log.printLogLine("DEBUG:lat	lon	title	description	icon	iconSize	iconOffset");
         for (IAlbum a : albumList)
@@ -324,8 +325,8 @@ public class Model
                 if ( !((i.getLongitude() == null) && (i.getLatitude() == null) && (i.getAltitude() == null)) )
                 {
                     //this.log.printLogLine("DEBUG:   " + a.getFullName() + "." + i.getName());
-                    //this.log.printLogLine("DEBUG:      longitude: " + i.getLongitude());
                     //this.log.printLogLine("DEBUG:      latitude : " + i.getLatitude());
+                    //this.log.printLogLine("DEBUG:      longitude: " + i.getLongitude());
                     //this.log.printLogLine("DEBUG:      altitude : " + i.getAltitude());
                     //this.log.printLogLine("DEBUG:" + i.getLatitude() + "\t" +
                     //                                 i.getLongitude() + "\t" +
@@ -334,19 +335,102 @@ public class Model
                     //                                 "icon.png" + "\t" +
                     //                                 "24,24" + "\t" +
                     //                                 "0,-24");
-                    contentGeotagsTxt += i.getLatitude() + "\t" +
-                                         i.getLongitude() + "\t" +
-                                         i.getName() + "\t" +
-                                         //"geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
-                                         //"<img src=\"" + i.getSmallURL() + "\" />" + "\t" +
-                                         "<a href=" + i.getLargeURL() + " target=\"_blank\"><img src=\"" + i.getTinyURL() + "\" /></a><br><h6>[exported using jSmugmugBackup]</h6>" + "\t" +
-                                         "icon.png" + "\t" +
-                                         "24,24" + "\t" +
-                                         "0,-24" + "\n";
+
+                    //contentGeotagsTxt += i.getLatitude() + "\t" +
+                    //                     i.getLongitude() + "\t" +
+                    //                     i.getName() + "\t" +
+                    //                     //"geotags exported from smugmug using jSmugmugBackup<br><img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                    //                     //"<img src=\"" + i.getSmallURL() + "\" />" + "\t" +
+                    //                     "<a href=" + i.getLargeURL() + " target=\"_blank\"><img src=\"" + i.getTinyURL() + "\" /></a><br><h6>[exported using jSmugmugBackup]</h6>" + "\t" +
+                    //                     "icon.png" + "\t" +
+                    //                     "24,24" + "\t" +
+                    //                     "0,-24" + "\n";
+
+                    //// check if coordinates already exist in table ... if yes, change them slightly
+                    //String tableKey = i.getLatitude() + i.getLongitude();
+                    //Vector<String> geotag = new Vector<String>();
+                    //if ( !contentGeotagsHashtable.containsKey(tableKey) )
+                    //{
+                    //    geotag.add(i.getLatitude());
+                    //    geotag.add(i.getLongitude());
+                    //}
+                    //else
+                    //{
+                    //    String latitude;
+                    //    String longitude;
+                    //    String newTableKey;
+                    //    int count = 1;
+                    //    do
+                    //    {
+                    //        //modifying coordinates slightly
+                    //        long latitudeFraction = Long.parseLong( i.getLatitude().substring(i.getLatitude().lastIndexOf(".") + 1) );
+                    //        latitudeFraction = latitudeFraction + count * 1111;
+                    //        latitude = i.getLatitude().substring(0, i.getLatitude().lastIndexOf(".") + 1) + Long.toString(latitudeFraction);
+                    //
+                    //        long longitudeFraction = Long.parseLong( i.getLongitude().substring(i.getLongitude().lastIndexOf(".") + 1) );
+                    //        longitudeFraction = longitudeFraction - count * 1111;
+                    //        longitude = i.getLongitude().substring(0, i.getLongitude().lastIndexOf(".") + 1) + Long.toString(longitudeFraction);
+                    //
+                    //        count++;
+                    //        newTableKey = latitude + longitude;
+                    //    } while ( contentGeotagsHashtable.containsKey(newTableKey) );
+                    //
+                    //    geotag.add(latitude);
+                    //    geotag.add(longitude);
+                    //
+                    //    this.log.printLogLine("DEBUG:      modLatitude : " + latitude);
+                    //    this.log.printLogLine("DEBUG:      modLongitude: " + longitude);
+                    //}
+                    //geotag.add(i.getName());
+                    //geotag.add(i.getLargeURL());
+                    //geotag.add(i.getTinyURL());
+                    //contentGeotagsHashtable.put(tableKey, geotag);
+
+                    String locationKey = i.getLatitude() + i.getLongitude();
+                    if ( !contentGeotagsHashtable.containsKey(locationKey) )
+                    {
+                        Vector<IImage> imageVector = new Vector<IImage>();
+                        imageVector.add(i);
+                        contentGeotagsHashtable.put(locationKey, imageVector);
+                    }
+                    else
+                    {
+                        Vector<IImage> imageVector = contentGeotagsHashtable.get(locationKey);
+                        imageVector.add(i);
+                    }
+
                 }                
             }
         }
         //this.log.printLogLine("DEBUG:-------------------------------------------------------------------");
+
+        String contentGeotagsTxt = "lat	lon	title	description	icon	iconSize	iconOffset\n";
+        for (Vector<IImage> geotag : contentGeotagsHashtable.values())
+        {
+            contentGeotagsTxt += geotag.get(0).getLatitude() + "\t";
+            contentGeotagsTxt += geotag.get(0).getLongitude() + "\t";
+            
+            contentGeotagsTxt += geotag.get(0).getName();
+            int n = 1;
+            while (n < geotag.size())
+            {
+                contentGeotagsTxt += " and " + geotag.get(n).getName();
+                n++;
+            }
+            contentGeotagsTxt += "\t";
+
+            int m = 0;
+            while (m < geotag.size())
+            {
+                contentGeotagsTxt += "<a href=" + geotag.get(m).getLargeURL() + " target=\"_blank\"><img src=\"" + geotag.get(m).getTinyURL() + "\" /></a><br><h6>[exported using jSmugmugBackup]</h6>";
+                m++;
+            }
+            contentGeotagsTxt += "\t";
+            
+            contentGeotagsTxt += "icon.png" + "\t";
+            contentGeotagsTxt += "24,24" + "\t";
+            contentGeotagsTxt += "0,-24" + "\n";
+        }
 
 
         //write files
