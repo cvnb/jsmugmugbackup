@@ -22,6 +22,7 @@ todo:
  - allow creating categories with a "#"
  - album defaults from config
  - OpenStreetMap integration
+ - persistent queue --> resuming
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality
