@@ -186,66 +186,95 @@ public class CmdView implements IView
 	}
     public void showStatistics(Vector<IAlbum> albumList)
     {
-        int month_m0 = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        int year_m0 = Calendar.getInstance().get(Calendar.YEAR);
-
-        int month_m1;
-        int year_m1;
-        if ( month_m0 > 1 ) { month_m1 = month_m0 - 1; year_m1 = year_m0; }
-        else { month_m1 = 12; year_m1 = year_m0 - 1; }
-
-        int month_m2;
-        int year_m2;
-        if ( month_m0 > 2 ) { month_m2 = month_m0 - 2; year_m2 = year_m0; }
-        else { month_m2 = 12 + (month_m0 - 2); year_m2 = year_m0 - 1; }
+        Calendar calendar = Calendar.getInstance();
+        Vector<Integer> monthVector = new Vector<Integer>();
+        Vector<Integer> yearVector = new Vector<Integer>();
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
+        {
+            monthVector.add(calendar.get(Calendar.MONTH) + 1);
+            yearVector.add(calendar.get(Calendar.YEAR));
+            calendar.add(Calendar.MONTH, -1);
+        }
 
 
+        Vector<Integer> totalBytesVector = new Vector<Integer>();
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { totalBytesVector.add(0); }
+        this.log.printLogLine("");
         this.log.printLogLine("Statistics:");
-        this.log.printLogLine("album                                                       |     " + month_m2 + "/" + year_m2 + "    |     " + month_m1 + "/" + year_m1 + "    |     " + month_m0 + "/" + year_m0 + "   | description");
-        this.log.printLogLine("---------------------------------------------------------------------------------------------------------------------------------");
+        
+        this.log.printLog("album                                                                 |    ");
+        for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--) { this.log.printLogFixedWidthRAL(monthVector.get(i).toString(), 2); this.log.printLog("/" + yearVector.get(i) + "    |    "); }
+        this.log.printLogLine("    |");
+
+        this.log.printLog("----------------------------------------------------------------------|");
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
+        this.log.printLogLine("-");
 
         for (IAlbum a : albumList)
         {
             if (a.getStatistics().size() > 0)
             {
-                int bytes_m2 = 0;
-                for (IAlbumMonthlyStatistics stats : a.getStatistics())
+                Vector<Integer> bytes = new Vector<Integer>();
+                for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
                 {
-                    if ( (stats.getYear() == year_m2) && (stats.getMonth() == month_m2) ) { bytes_m2 = stats.getBytes(); }
-                }                
-
-                int bytes_m1 = 0;
-                for (IAlbumMonthlyStatistics stats : a.getStatistics())
-                {
-                    if ( (stats.getYear() == year_m1) && (stats.getMonth() == month_m1) ) { bytes_m1 = stats.getBytes(); }
-                }                
-
-                int bytes_m0 = 0;
-                for (IAlbumMonthlyStatistics stats : a.getStatistics())
-                {
-                    if ( (stats.getYear() == year_m0) && (stats.getMonth() == month_m0) ) { bytes_m0 = stats.getBytes(); }
+                    for (IAlbumMonthlyStatistics stats : a.getStatistics())
+                    {
+                        if ( (stats.getYear() == yearVector.get(i)) && (stats.getMonth() == monthVector.get(i)) ) { bytes.add(stats.getBytes()); }
+                    }
+                    totalBytesVector.set(i, totalBytesVector.get(i) + bytes.get(i));
                 }
 
-                if ( !((bytes_m2 == 0) && (bytes_m1 == 0) && (bytes_m0 == 0)) )
+                
+                if ( !((bytes.get(2) == 0) && (bytes.get(1) == 0) && (bytes.get(0) == 0)) )
                 {
-                    double megabytes_m2 = ( (float)bytes_m2 / (1024.0 * 1024.0) );
-                    double megabytes_m1 = ( (float)bytes_m1 / (1024.0 * 1024.0) );
-                    double megabytes_m0 = ( (float)bytes_m0 / (1024.0 * 1024.0) );
+                    Vector<Double> megabytesVector = new Vector<Double>();
+                    for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
+                    {
+                        megabytesVector.add( (float)bytes.get(i) / (1024.0 * 1024.0) );
+                    }
 
                     NumberFormat nf = NumberFormat.getInstance();
                     nf.setMaximumFractionDigits(1);
                     nf.setMinimumFractionDigits(1);
 
-
-                    this.log.printLogFixedWidth(a.getFullName(), 60); this.log.printLog("|");
-                    this.log.printLogFixedWidthRAL(nf.format(megabytes_m2) + " mb", 15); this.log.printLog("|");
-                    this.log.printLogFixedWidthRAL(nf.format(megabytes_m1) + " mb", 15); this.log.printLog("|");
-                    this.log.printLogFixedWidthRAL(nf.format(megabytes_m0) + " mb", 15); this.log.printLog("|");
+                    this.log.printLogFixedWidth(a.getFullName(), 70); this.log.printLog("|");
+                    for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--)
+                    {
+                        this.log.printLogFixedWidthRAL(nf.format(megabytesVector.get(i)) + " mb", 15); this.log.printLog("|");
+                    }
                     this.log.printLogLine("");
                 }
                 
             }
         }
+
+        
+        this.log.printLog("----------------------------------------------------------------------|");
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
+        this.log.printLogLine("-");
+        if ( !((totalBytesVector.get(2) == 0) && (totalBytesVector.get(1) == 0) && (totalBytesVector.get(0) == 0)) )
+        {
+
+            NumberFormat nf = NumberFormat.getInstance();
+            nf.setMaximumFractionDigits(1);
+            nf.setMinimumFractionDigits(1);
+
+            this.log.printLogFixedWidth("total", 70); this.log.printLog("|");
+            Vector<Double> totalMegaBytesVector = new Vector<Double>();
+            for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { totalMegaBytesVector.add(0.0); }
+            for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--)
+            {
+                totalMegaBytesVector.set(i, (float)totalBytesVector.get(i) / (1024.0 * 1024.0) );
+                
+                this.log.printLogFixedWidthRAL(nf.format(totalMegaBytesVector.get(i)) + " mb", 15); this.log.printLog("|");
+            }
+            
+            this.log.printLogLine("");
+        }
+        this.log.printLog("----------------------------------------------------------------------|");
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
+        this.log.printLogLine("-");
+
     }
 	public void showError(String errMessage)
 	{
