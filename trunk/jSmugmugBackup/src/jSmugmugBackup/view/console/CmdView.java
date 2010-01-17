@@ -204,7 +204,7 @@ public class CmdView implements IView
         
         this.log.printLog("album                                                                 |    ");
         for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--) { this.log.printLogFixedWidthRAL(monthVector.get(i).toString(), 2); this.log.printLog("/" + yearVector.get(i) + "    |    "); }
-        this.log.printLogLine("    |");
+        this.log.printLogLine("");
 
         this.log.printLog("----------------------------------------------------------------------|");
         for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
@@ -214,23 +214,28 @@ public class CmdView implements IView
         {
             if (a.getStatistics().size() > 0)
             {
-                Vector<Integer> bytes = new Vector<Integer>();
+                Vector<Integer> bytesVector = new Vector<Integer>();
                 for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
                 {
                     for (IAlbumMonthlyStatistics stats : a.getStatistics())
                     {
-                        if ( (stats.getYear() == yearVector.get(i)) && (stats.getMonth() == monthVector.get(i)) ) { bytes.add(stats.getBytes()); }
+                        if ( (stats.getYear() == yearVector.get(i)) && (stats.getMonth() == monthVector.get(i)) ) { bytesVector.add(stats.getBytes()); }
                     }
-                    totalBytesVector.set(i, totalBytesVector.get(i) + bytes.get(i));
+                    totalBytesVector.set(i, totalBytesVector.get(i) + bytesVector.get(i));
                 }
 
                 
-                if ( !((bytes.get(2) == 0) && (bytes.get(1) == 0) && (bytes.get(0) == 0)) )
+                boolean zeroBytes = true;
+                for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
+                {
+                    if (bytesVector.get(i).intValue() != 0) { zeroBytes = false; }
+                }
+                if ( !zeroBytes )
                 {
                     Vector<Double> megabytesVector = new Vector<Double>();
                     for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
                     {
-                        megabytesVector.add( (float)bytes.get(i) / (1024.0 * 1024.0) );
+                        megabytesVector.add( (float)bytesVector.get(i) / (1024.0 * 1024.0) );
                     }
 
                     NumberFormat nf = NumberFormat.getInstance();
@@ -252,7 +257,13 @@ public class CmdView implements IView
         this.log.printLog("----------------------------------------------------------------------|");
         for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
         this.log.printLogLine("-");
-        if ( !((totalBytesVector.get(2) == 0) && (totalBytesVector.get(1) == 0) && (totalBytesVector.get(0) == 0)) )
+
+        boolean zeroTotalBytes = true;
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
+        {
+            if (totalBytesVector.get(i).intValue() != 0) { zeroTotalBytes = false; }
+        }
+        if ( !zeroTotalBytes )
         {
 
             NumberFormat nf = NumberFormat.getInstance();
