@@ -51,7 +51,7 @@ public class GlobalConfig
    private final String constantSmugmugAPIVersion_120       = "1.2.0";
    private final String constantSmugmugAPIVersion_122       = "1.2.2";
    private final int    constantRetryWait                   = 20000; //time to wait before retrying (20sec)
-   private final boolean constantHeavyRelogin               = true; // perform relogin for each queue item, this might improve stability during long lasting queue operations
+   private final boolean constantHeavyRelogin               = false; // perform relogin for each queue item, this might improve stability during long lasting queue operations
    private final boolean constantVerifyMD5ForVideos         = false; // since md5 verification usually fails for videos, this will sspeed up the process
    //private final boolean constantVerboseLogging         = true; //disabled for the moment
    private final int    constantUploadFileSizeLimit         = 600*1024*1024; //600MB
