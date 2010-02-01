@@ -2018,7 +2018,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        	//this.log.printLogLine("ok");
 	        	return jobj;
 	        }
-	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) && //this line throws a NullPointer exception occasionally .. no idea why
 	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
 	                  (this.getJSONValue(jobj, "message") == null ))
 	        {

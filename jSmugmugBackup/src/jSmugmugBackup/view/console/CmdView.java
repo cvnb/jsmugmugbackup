@@ -197,17 +197,18 @@ public class CmdView implements IView
         }
 
 
-        Vector<Integer> totalBytesVector = new Vector<Integer>();
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { totalBytesVector.add(0); }
+        Vector<Integer> monthlyTotalBytesVector = new Vector<Integer>();
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { monthlyTotalBytesVector.add(0); }
         this.log.printLogLine("");
         this.log.printLogLine("Statistics:");
         
         this.log.printLog("album                                                                 |    ");
         for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--) { this.log.printLogFixedWidthRAL(monthVector.get(i).toString(), 2); this.log.printLog("/" + yearVector.get(i) + "    |    "); }
+        this.log.printLogFixedWidth("total", 11); this.log.printLog("|");
         this.log.printLogLine("");
 
         this.log.printLog("----------------------------------------------------------------------|");
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog("---------------|"); }
         this.log.printLogLine("-");
 
         for (IAlbum a : albumList)
@@ -221,7 +222,7 @@ public class CmdView implements IView
                     {
                         if ( (stats.getYear() == yearVector.get(i)) && (stats.getMonth() == monthVector.get(i)) ) { bytesVector.add(stats.getBytes()); }
                     }
-                    totalBytesVector.set(i, totalBytesVector.get(i) + bytesVector.get(i));
+                    monthlyTotalBytesVector.set(i, monthlyTotalBytesVector.get(i) + bytesVector.get(i));
                 }
 
                 
@@ -242,11 +243,16 @@ public class CmdView implements IView
                     nf.setMaximumFractionDigits(1);
                     nf.setMinimumFractionDigits(1);
 
+                    // compute album total
+                    Double albumTotalMegabytes = 0.0;
+                    for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { albumTotalMegabytes += megabytesVector.get(i); }
+
                     this.log.printLogFixedWidth(a.getFullName(), 70); this.log.printLog("|");
                     for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--)
                     {
                         this.log.printLogFixedWidthRAL(nf.format(megabytesVector.get(i)) + " mb", 15); this.log.printLog("|");
                     }
+                    this.log.printLogFixedWidthRAL(nf.format(albumTotalMegabytes) + " mb", 15); this.log.printLog("|");
                     this.log.printLogLine("");
                 }
                 
@@ -255,13 +261,13 @@ public class CmdView implements IView
 
         
         this.log.printLog("----------------------------------------------------------------------|");
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog("---------------|"); }
         this.log.printLogLine("-");
 
         boolean zeroTotalBytes = true;
         for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
         {
-            if (totalBytesVector.get(i).intValue() != 0) { zeroTotalBytes = false; }
+            if (monthlyTotalBytesVector.get(i).intValue() != 0) { zeroTotalBytes = false; }
         }
         if ( !zeroTotalBytes )
         {
@@ -270,20 +276,23 @@ public class CmdView implements IView
             nf.setMaximumFractionDigits(1);
             nf.setMinimumFractionDigits(1);
 
+            Double alltimeTotalMegabytes = 0.0;
+
             this.log.printLogFixedWidth("total", 70); this.log.printLog("|");
             Vector<Double> totalMegaBytesVector = new Vector<Double>();
             for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { totalMegaBytesVector.add(0.0); }
             for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--)
             {
-                totalMegaBytesVector.set(i, (float)totalBytesVector.get(i) / (1024.0 * 1024.0) );
+                totalMegaBytesVector.set(i, (float)monthlyTotalBytesVector.get(i) / (1024.0 * 1024.0) );
+                alltimeTotalMegabytes += totalMegaBytesVector.get(i);
                 
                 this.log.printLogFixedWidthRAL(nf.format(totalMegaBytesVector.get(i)) + " mb", 15); this.log.printLog("|");
             }
-            
+            this.log.printLogFixedWidthRAL(nf.format(alltimeTotalMegabytes) + " mb", 15); this.log.printLog("|");
             this.log.printLogLine("");
         }
         this.log.printLog("----------------------------------------------------------------------|");
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { this.log.printLog("---------------|"); }
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog("---------------|"); }
         this.log.printLogLine("-");
 
     }
