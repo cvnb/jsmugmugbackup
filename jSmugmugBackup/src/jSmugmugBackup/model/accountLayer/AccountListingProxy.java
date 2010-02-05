@@ -560,11 +560,34 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) // handle normal images
     			{
+                    //now we have the matching pair
                     matchCount++;
 
-                    //now we have the matching pair, so we compute the md5sums
-    				String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
-      			
+//                    boolean fileCheckResult;
+//                    String localFileMD5Sum = "[not available]";
+//                    if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
+//                    {
+//                        //compute the md5sums
+//                        localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+//
+//                        //check md5
+//                        if ( localFileMD5Sum.equals(image.getMD5()) ) { fileCheckResult = true; }
+//                        else { fileCheckResult = false; }
+//                    }
+//                    else //check filesize only
+//                    {
+//                        if ( fileList[i].length() == image.getSize() ) { fileCheckResult = true; }
+//                        else { fileCheckResult = false; }
+//                    }
+//
+//
+//                    if (fileCheckResult == true)
+//                    {
+//
+//                    }
+
+                    String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
     				//compare files
 					if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
 					{
@@ -572,7 +595,7 @@ public class AccountListingProxy implements IAccountListingProxy
                        //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
                        //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
 					}
-					else //md5 check failed
+                    else //md5 check failed
 					{
                         if (failed == false)
                         {

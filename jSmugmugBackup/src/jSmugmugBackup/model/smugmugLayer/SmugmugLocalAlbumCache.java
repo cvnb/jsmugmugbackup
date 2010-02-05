@@ -118,6 +118,8 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
                 in = new ObjectInputStream(fis);
                 this.cache = (Hashtable<Integer, IAlbum>)in.readObject();
                 in.close();
+
+                //this.log.printLog("DEBUG: loaded album cache from disk (" + this.cache.size() + " albums) ... ");
             }
             catch (ClassNotFoundException ex)
             {
@@ -140,6 +142,9 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
     }
     private void saveCacheToDisk()
     {
+        //invoking the garbage collector - maybe this helps keeping the cache file small
+        System.gc();
+
         File file = new File(this.cacheFilename);
         FileOutputStream fos = null;
         ObjectOutputStream out = null;
@@ -153,6 +158,8 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
 
             this.dirty = false;
             this.dirtyUpdateCount = 0;
+
+            //this.log.printLog("DEBUG: saved album cache to disk (" + this.cache.size() + " albums) ... ");
         }
         catch (IOException ex)
         {
