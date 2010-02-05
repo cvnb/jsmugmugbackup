@@ -21,8 +21,10 @@ todo:
  - verifying tags
  - allow creating categories with a "#"
  - album defaults from config
- - OpenStreetMap integration
  - persistent queue --> resuming
+ - bugfix: growing cache file
+ - allow multiple instances
+ - album default option templates
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

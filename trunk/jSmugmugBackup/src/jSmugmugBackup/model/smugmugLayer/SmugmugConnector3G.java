@@ -1365,46 +1365,46 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//url = url + "Description=&"; //string, optional
 		//url = url + "Keywords=&"; //string, optional
         if (albumKeywords != null) { url = url + "Keywords=" + Helper.encodeForURL(albumKeywords) + "&"; }//string, optional
-		//url = url + "Geography=&"; //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumGeography() != null) { url = url + "Geography=" + this.config.getPersistentAlbumGeography() + "&"; } //boolean, optional, default: 1
 		//url = url + "HighlightID=&"; //integer, optional
 		//url = url + "Position=&"; //integer, optional
 
 		//look&feel
 		//url = url + "Header=&"; //boolean, optional (power & pro only), default: 0
-		//url = url + "Clean=&"; //boolean, optional, default: 0
-		//url = url + "EXIF=&"; //boolean, optional, default: 1
-		url = url + "Filenames=1&"; //boolean, optional, default: 0
-		url = url + "SquareThumbs=0&"; //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumClean() != null)           { url = url + "Clean=" + this.config.getPersistentAlbumClean() + "&"; } //boolean, optional, default: 0
+		if (this.config.getPersistentAlbumExif() != null)            { url = url + "EXIF=" + this.config.getPersistentAlbumExif() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumFilenames() != null)       { url = url + "Filenames=" + this.config.getPersistentAlbumFilenames() + "&"; } //boolean, optional, default: 0
+		if (this.config.getPersistentAlbumSquareThumbs() != null)    { url = url + "SquareThumbs=" + this.config.getPersistentAlbumSquareThumbs() + "&"; } //boolean, optional, default: 1
 		//url = url + "TemplateID=&"; //integer, optional, default: 0 (viewer choice)
-		url = url + "SortMethod=FileName&"; //string, optional, default: position
-		url = url + "SortDirection=0&"; //boolean, optional, 0 --> ascending, 1 --> decending
+		if (this.config.getPersistentAlbumSortMethod() != null)      { url = url + "SortMethod=" + this.config.getPersistentAlbumSortMethod() + "&"; } //string, optional, default: position
+		if (this.config.getPersistentAlbumSortDirection() != null)   { url = url + "SortDirection=" + this.config.getPersistentAlbumSortDirection() + "&"; } //boolean, optional, 0 --> ascending, 1 --> decending
 
 		//security&privacy
-		//url = url + "Password=&"; //string, optional
-		//url = url + "PasswordHint=&"; //string, optional
-		url = url + "Public=0&"; //boolean, optional, default: 1
-		url = url + "WorldSearchable=0&"; //boolean, optional, default: 1
-		url = url + "SmugSearchable=0&"; //boolean, optional, default: 1
-		//url = url + "External=&"; //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumPassword() != null)        { url = url + "Password=" + this.config.getPersistentAlbumPassword() + "&"; } //string, optional
+		if (this.config.getPersistentAlbumPasswordHint() != null)    { url = url + "PasswordHint=" + this.config.getPersistentAlbumPasswordHint() + "&"; } //string, optional
+		if (this.config.getPersistentAlbumPublic() != null)          { url = url + "Public=" + this.config.getPersistentAlbumPublic() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumWorldSearchable() != null) { url = url + "WorldSearchable=" + this.config.getPersistentAlbumWorldSearchable() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumSmugSearchable() != null)  { url = url + "SmugSearchable=" + this.config.getPersistentAlbumSmugSearchable() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumExternal() != null)        { url = url + "External=" + this.config.getPersistentAlbumExternal() + "&"; } //boolean, optional, default: 1
 		//url = url + "Protected=&"; //boolean, optional(power&pro only), default: 0
 		//url = url + "Watermarking=&"; //boolean, optional (pro only), default: 0
 		//url = url + "WatermarkID=&"; //integer, optional (pro only), default: 0
-		//url = url + "HideOwner=&"; //boolean, optional, default: 0
-		//url = url + "Larges=&"; //boolean, optional (pro only), default: 1
-		//url = url + "XLarges=&"; //boolean, optional (pro only), default: 1
-		//url = url + "X2Larges=&"; //boolean, optional, default: 1
-		//url = url + "X3Larges=&"; //boolean, optional, default: 1
-		//url = url + "Originals=&"; //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumHideOwner() != null)       { url = url + "HideOwner=" + this.config.getPersistentAlbumHideOwner() + "&"; } //boolean, optional, default: 0
+		if (this.config.getPersistentAlbumLarges() != null)          { url = url + "Larges=" + this.config.getPersistentAlbumLarges() + "&"; } //boolean, optional (pro only), default: 1
+		if (this.config.getPersistentAlbumXLarges() != null)         { url = url + "XLarges=" + this.config.getPersistentAlbumXLarges() + "&"; } //boolean, optional (pro only), default: 1
+		if (this.config.getPersistentAlbumX2Larges() != null)        { url = url + "X2Larges=" + this.config.getPersistentAlbumX2Larges() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumX3Larges() != null)        { url = url + "X3Larges=" + this.config.getPersistentAlbumX3Larges() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumOriginals() != null)       { url = url + "Originals=" + this.config.getPersistentAlbumOriginals() + "&"; } //boolean, optional, default: 1
 
 		//social
-		//url = url + "CanRank=&"; //boolean, optional, default: 1
-		//url = url + "FriendEdit=&"; //boolean, optional, default: 0
-		//url = url + "FamilyEdit=&"; //boolean, optional, default: 0
-		//url = url + "Comments=&"; //boolean, optional, default: 1
-		//url = url + "Share=&"; //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumCanRank() != null)         { url = url + "CanRank=" + this.config.getPersistentAlbumCanRank() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumFriendEdit() != null)      { url = url + "FriendEdit=" + this.config.getPersistentAlbumFriendEdit() + "&"; } //boolean, optional, default: 0
+		if (this.config.getPersistentAlbumFamilyEdit() != null)      { url = url + "FamilyEdit=" + this.config.getPersistentAlbumFamilyEdit() + "&"; } //boolean, optional, default: 0
+		if (this.config.getPersistentAlbumComments() != null)        { url = url + "Comments=" + this.config.getPersistentAlbumComments() + "&"; } //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumShare() != null)           { url = url + "Share=" + this.config.getPersistentAlbumShare() + "&"; } //boolean, optional, default: 1
 
 		// printing&sales
-		//url = url + "Printable=&"; //boolean, optional, default: 1
+		if (this.config.getPersistentAlbumPrintable() != null)  { url = url + "Printable=" + this.config.getPersistentAlbumPrintable() + "&"; } //boolean, optional, default: 1
 		//url = url + "DefaultColor=&"; //boolean, optional (pro only), default: 0, depreceated
 		//url = url + "ProofDays=&"; //integer, optional (pro only), default: 0
 		//url = url + "Backprinting=&"; //string, optional (pro only)
@@ -2001,112 +2001,122 @@ public class SmugmugConnector3G implements ISmugmugConnector
 			JSONObject jobj = this.smugmugJSONRequest(httpPut);
 
 
-	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
-	             (this.getJSONValue(jobj, "method").equals(methodName)) )
-	        {
-	            long uploadTime = (new Date()).getTime() - startTime;
-	            double uploadSpeed = 0.0;
-	            //avoid division by zero
-	            if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
+            try //temporary
+            {
+                if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
+                     (this.getJSONValue(jobj, "method").equals(methodName)) )
+                {
+                    long uploadTime = (new Date()).getTime() - startTime;
+                    double uploadSpeed = 0.0;
+                    //avoid division by zero
+                    if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
 
-	            // for statistics
-	        	this.transferedBytes += fileName.length();
-	            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
+                    // for statistics
+                    this.transferedBytes += fileName.length();
+                    double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
 
-	            DecimalFormat df = new DecimalFormat("0.0");
-	            this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s");
-	        	//this.log.printLogLine("ok");
-	        	return jobj;
-	        }
-	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) && //this line throws a NullPointer exception occasionally .. no idea why
-	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                  (this.getJSONValue(jobj, "message") == null ))
-	        {
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
-                Helper.pause(this.config.getConstantRetryWait());
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s");
+                    //this.log.printLogLine("ok");
+                    return jobj;
+                }
+                else if ( (this.getJSONValue(jobj, "stat").equals("fail")) && //this line throws a NullPointer exception occasionally .. no idea why
+                          (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                          (this.getJSONValue(jobj, "message") == null ))
+                {
+                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
+                    Helper.pause(this.config.getConstantRetryWait());
 
-                this.printJSONObject(jobj); //temporary
+                    this.printJSONObject(jobj); //temporary
+                }
+                else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                          (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                          (this.getJSONValue(jobj, "message").equals("wrong format ()")))
+                {
+                    this.log.printLogLine("failed (wrong format)");
+                    this.log.printLogLine("  ERROR: the file format was not recognized by SmugMug");
+                    this.log.printLogLine("  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
+                    this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+
+                    //todo: maybe set ignore tag here ... and print info to console
+
+                    return jobj;
+                }
+                else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                          (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                          (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
+                {
+                    //this.log.printLogLine("failed (wrong bytecount)");
+                    //this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
+                    //this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
+                    //this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+
+                    //return jobj;
+
+                    /*
+                     * special treatment for videos is not nesseciary here, since we've recieved a valid JSON response - if
+                     * the video would be uploaded we would have gotten another response
+                    //check if it's a video
+                    boolean isVideo = false;
+                    for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
+                    {
+                        if (fileName.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
+                    }
+
+                    if (isVideo)
+                    {
+                        this.log.printLog("special (truncated video): checking if the video is already there ... ");
+                        Helper.pause(this.config.getConstantRetryWait() * 6);
+                        JSONObject jobj_imageList = this.smugmug_images_get(albumID);
+                        this.printJSONObject(jobj_imageList);
+                    }
+                    */
+
+
+                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
+                    Helper.pause(this.config.getConstantRetryWait());
+                }
+                else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                          (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                          (((String)this.getJSONValue(jobj, "message")).startsWith("system error (invalid album id)") ))
+                {
+                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
+                    Helper.pause(this.config.getConstantRetryWait());
+
+                    //note: this error seems not to go away, even through repetition ... maybe a relogin helps???
+                }
+                else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                          (this.getJSONValue(jobj, "method").equals(methodName)) &&
+                          (this.getJSONValue(jobj, "message").equals("jSmugmugBackup internal (video seems to having been uploaded)") ))
+                {
+                    long uploadTime = (new Date()).getTime() - startTime;
+                    double uploadSpeed = 0.0;
+                    //avoid division by zero
+                    if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
+
+                    // for statistics
+                    this.transferedBytes += fileName.length();
+                    double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
+
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    this.log.printLog("recovered from exception - ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
+                    //this.log.printLogLine("ok");
+                    return jobj;
+                }
+                else
+                {
+
+                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (reason unknown) ... ");
+                    this.printJSONObject(jobj); //temporary
+                }
             }
-            else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                  (this.getJSONValue(jobj, "message").equals("wrong format ()")))
-	        {
-	        	this.log.printLogLine("failed (wrong format)");
-	            this.log.printLogLine("  ERROR: the file format was not recognized by SmugMug");
-	            this.log.printLogLine("  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
-	            this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
-
-	            //todo: maybe set ignore tag here ... and print info to console
-
-	        	return jobj;
-	        }
-            else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                  (((String)this.getJSONValue(jobj, "message")).startsWith("wrong format (ByteCount given:") ))
-	        {
-	        	//this.log.printLogLine("failed (wrong bytecount)");
-	        	//this.log.printLogLine("  ERROR: the uploaded file appears to be different than the local file");
-	        	//this.log.printLogLine("  ERROR: probably there was an error while transfering the file");
-	        	//this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
-
-	        	//return jobj;
-
-                /*
-                 * special treatment for videos is not nesseciary here, since we've recieved a valid JSON response - if
-                 * the video would be uploaded we would have gotten another response
-                //check if it's a video
-                boolean isVideo = false;
-                for (String fileEnding : this.config.getConstantSupportedFileTypes_Videos())
-                {
-                    if (fileName.getName().toLowerCase().endsWith(fileEnding)) { isVideo = true; }
-                }
-
-                if (isVideo)
-                {
-                    this.log.printLog("special (truncated video): checking if the video is already there ... ");
-                    Helper.pause(this.config.getConstantRetryWait() * 6);
-                    JSONObject jobj_imageList = this.smugmug_images_get(albumID);
-                    this.printJSONObject(jobj_imageList);
-                }
-                */
-
-
-            	this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
-                Helper.pause(this.config.getConstantRetryWait());
-	        }
-	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                  (((String)this.getJSONValue(jobj, "message")).startsWith("system error (invalid album id)") ))
-	        {
-	          	this.log.printLog(Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
-	          	Helper.pause(this.config.getConstantRetryWait());
-
-	          	//note: this error seems not to go away, even through repetition ... maybe a relogin helps???
-	        }
-	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
-	                  (this.getJSONValue(jobj, "method").equals(methodName)) &&
-	                  (this.getJSONValue(jobj, "message").equals("jSmugmugBackup internal (video seems to having been uploaded)") ))
-	        {
-                long uploadTime = (new Date()).getTime() - startTime;
-	            double uploadSpeed = 0.0;
-	            //avoid division by zero
-	            if (uploadTime != 0) { uploadSpeed = ((double)fileName.length() / 1024.0) / ((double)uploadTime / 1000.0); }
-
-	            // for statistics
-	        	this.transferedBytes += fileName.length();
-	            double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
-
-	            DecimalFormat df = new DecimalFormat("0.0");
-	            this.log.printLog("recovered from exception - ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
-	        	//this.log.printLogLine("ok");
-	        	return jobj;
-	        }
-	        else
-	        {
-
-	        	this.log.printLog(Helper.getCurrentTimeString() + " retrying (reason unknown) ... ");
-	        	this.printJSONObject(jobj); //temporary
-	        }
+            catch (java.lang.NullPointerException ne) //temporary
+            {
+                this.log.printLogLine("caught NullPointer exception: " + ne.getMessage());
+                ne.printStackTrace();
+                this.printJSONObject(jobj);
+                System.exit(1);
+            }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 
         //return null;

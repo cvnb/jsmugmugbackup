@@ -8,33 +8,39 @@
     </config>
     <albumDefaults> <!-- not implemented yet -->
         <!-- essentials -->
-        <albumGeography>true</albumGeography>            <!-- default: true -->
+        <albumGeography>true</albumGeography>            <!-- smugmug default: true -->
 
         <!-- look&feel -->
-        <albumClean>false</albumClean>                   <!-- default: false -->
-        <albumExif>true</albumExif>                      <!-- default: true -->
-        <albumFilenames>true</albumFilenames>            <!-- default: false -->
-        <albumSquareThumbs>false</albumSquareThumbs>     <!-- default: true -->
-        <albumSortMethod>FileName</albumSortMethod>      <!-- default: position -->
-        <albumSortDirection>true</albumSortDirection>    <!-- asc = true; desc = false -->
+        <albumClean>false</albumClean>                   <!-- smugmug default: false -->
+        <albumExif>true</albumExif>                      <!-- smugmug default: true -->
+        <albumFilenames>true</albumFilenames>            <!-- smugmug default: false -->
+        <albumSquareThumbs>false</albumSquareThumbs>     <!-- smugmug default: true -->
+        <albumSortMethod>FileName</albumSortMethod>      <!-- smugmug default: position -->
+        <albumSortDirection>false</albumSortDirection>   <!-- asc = false; desc = true -->
 
         <!-- security and privacy -->
-        <albumPassword></albumPassword>
-        <albumPasswordHint></albumPasswordHint>
-        <albumPublic>false</albumPublic>                    <!-- default: true -->
-        <albumWorldSearchable>false</albumWorldSearchable>  <!-- default: true -->
-        <albumSmugSearchable>false</albumSmugSearchable>    <!-- default: true -->
-        <albumExternal>true</albumExternal>                 <!-- default: true -->
-        <albumHideOwner>false</albumHideOwner>              <!-- default: false -->
+        <!--<albumPassword></albumPassword>-->
+        <!--<albumPasswordHint></albumPasswordHint>-->
+        <albumPublic>false</albumPublic>                    <!-- smugmug default: true -->
+        <albumWorldSearchable>false</albumWorldSearchable>  <!-- smugmug default: true -->
+        <albumSmugSearchable>false</albumSmugSearchable>    <!-- smugmug default: true -->
+        <albumExternal>true</albumExternal>                 <!-- smugmug default: true -->
+        <albumHideOwner>false</albumHideOwner>              <!-- smugmug default: false -->
+
+        <albumLarges>true</albumLarges>                     <!-- smugmug default: true (pro only) -->
+        <albumXLarges>true</albumXLarges>                   <!-- smugmug default: true (pro only) -->
+        <albumX2Larges>true</albumX2Larges>                 <!-- smugmug default: true  -->
+        <albumX3Larges>true</albumX3Larges>                 <!-- smugmug default: true  -->
+        <albumOriginals>false</albumOriginals>              <!-- smugmug default: true  -->
 
         <!-- social -->
-        <albumCanRank>true</albumCanRank>                   <!-- default: true -->
-        <albumFriendEdit>false</albumFriendEdit>            <!-- default: false -->
-        <albumFamilyEdit>false</albumFamilyEdit>            <!-- default: false -->
-        <albumComments>true</albumComments>                 <!-- default: true -->
-        <albumShare>true</albumShare>                       <!-- default: true -->
+        <albumCanRank>true</albumCanRank>                   <!-- smugmug default: true -->
+        <albumFriendEdit>false</albumFriendEdit>            <!-- smugmug default: false -->
+        <albumFamilyEdit>false</albumFamilyEdit>            <!-- smugmug default: false -->
+        <albumComments>true</albumComments>                 <!-- smugmug default: true -->
+        <albumShare>true</albumShare>                       <!-- smugmug default: true -->
 
         <!-- printing&sales -->
-        <albumPrintable>true</albumPrintable>               <!-- default: true -->
+        <albumPrintable>true</albumPrintable>               <!-- smugmug default: true -->
     </albumDefaults>
 </jSmugmugBackup>
