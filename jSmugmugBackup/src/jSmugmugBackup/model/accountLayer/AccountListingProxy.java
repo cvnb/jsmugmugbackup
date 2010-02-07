@@ -289,7 +289,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - file has 0 bytes ... skipping");
                 	skippedCount++;
                 }                
-                // check if file is smaller than 512 MB
+                // check if file is smaller than 600 MB
                 else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
                 {
                 	this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - filesize greater than " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB is not supported ... skipping");
@@ -517,121 +517,138 @@ public class AccountListingProxy implements IAccountListingProxy
         
 	    // compare albums
         int matchCount = 0; //count the number of matching pairs found
+        int filesizeLimitHitCount = 0;
     	for (int i=0; i<fileList.length; i++)
     	{
-    		for (IImage image : imageList)
-    		{
-                if ( Helper.isVideo(image.getName()) )
-                {                    
-                    // handle videos ...
-                    if ( ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
-                         ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
+            //sort out files that exceed the filesize limit
+            if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
+            {
+                //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... exceeds filesize limit");
+                filesizeLimitHitCount++;
+            }
+            else // file is smaller than filesize limit
+            {
+                for (IImage image : imageList)
+                {
+                    if ( Helper.isVideo(image.getName()) )
                     {
-                        //compare files
+                        // handle videos ...
 
-                        //now we have the matching pair, so we compute the md5sums
-                        matchCount++;
-                        if (this.config.getConstantVerifyMD5ForVideos())
+                        //either the full filename matches or the first part and the ending is ".mp4"
+                        if ( ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
+                             ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
                         {
-                            String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+                            //compare files
 
-                            // checking md5:
-                            //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
-                            //   and downloaded again) ... md5 sums will most definitively not match
-                            // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
-                            if ( localFileMD5Sum.equals(image.getMD5()) )
+                            //now we have the matching pair, so we compute the md5sums
+                            matchCount++;                            
+
+                            if (this.config.getConstantVerifyMD5ForVideos())
                             {
-                                // no real need to print that to output, though unusual since md5 verification usually fails on videos
-                                //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok (unusual, but definitively nothing to worry about)");
+                                String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
+                                // checking md5:
+                                //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
+                                //   and downloaded again) ... md5 sums will most definitively not match
+                                // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
+                                if ( localFileMD5Sum.equals(image.getMD5()) )
+                                {
+                                    // no real need to print that to output, though unusual since md5 verification usually fails on videos
+                                    //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok (unusual, but definitively nothing to worry about)");
+                                }
+                                else
+                                {
+                                    if (failed == false)
+                                    {
+                                        this.log.printLogLine("failed"); //this completes the first line
+                                        failed = true;
+                                    }
+                                    this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: videos usually fail)");
+                                    //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
+                                    //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
+                                }
                             }
                             else
                             {
-                                if (failed == false)
-                                {
-                                    this.log.printLogLine("failed"); //this completes the first line
-                                    failed = true;
-                                }
-                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: videos usually fail)");
-                                //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
-                                //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
+                                //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
                             }
                         }
                     }
+                    else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) // handle normal images
+                    {
+                        //now we have the matching pair
+                        matchCount++;
+
+    //                    boolean fileCheckResult;
+    //                    String localFileMD5Sum = "[not available]";
+    //                    if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
+    //                    {
+    //                        //compute the md5sums
+    //                        localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+    //
+    //                        //check md5
+    //                        if ( localFileMD5Sum.equals(image.getMD5()) ) { fileCheckResult = true; }
+    //                        else { fileCheckResult = false; }
+    //                    }
+    //                    else //check filesize only
+    //                    {
+    //                        if ( fileList[i].length() == image.getSize() ) { fileCheckResult = true; }
+    //                        else { fileCheckResult = false; }
+    //                    }
+    //
+    //
+    //                    if (fileCheckResult == true)
+    //                    {
+    //
+    //                    }
+
+                        String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
+                        //compare files
+                        if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
+                        {
+                           // no need to print that to output:
+                           //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
+                           //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                        }
+                        else //md5 check failed
+                        {
+                            if (failed == false)
+                            {
+                                this.log.printLogLine("failed"); //this completes the first line
+                                failed = true;
+                            }
+
+                            int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
+                            int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
+                            float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
+                            if ( (exifOrientation > 1) && (filesizeRatio > 0.985) && (filesizeRatio < 1.015) ) //different orientation than "landscape" and file sizes do not differ too much
+                            {
+                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
+                            }
+                            else if (exifDimensions > 48000000) //image has more than 48 megapixel
+                            {
+                                //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
+                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
+                            }
+                            else
+                            {
+                                this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
+                                this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
+                                this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
+                                this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                                this.log.printLogLine("      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
+                            }
+
+                        }
+                    }
                 }
-                else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) // handle normal images
-    			{
-                    //now we have the matching pair
-                    matchCount++;
-
-//                    boolean fileCheckResult;
-//                    String localFileMD5Sum = "[not available]";
-//                    if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
-//                    {
-//                        //compute the md5sums
-//                        localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
-//
-//                        //check md5
-//                        if ( localFileMD5Sum.equals(image.getMD5()) ) { fileCheckResult = true; }
-//                        else { fileCheckResult = false; }
-//                    }
-//                    else //check filesize only
-//                    {
-//                        if ( fileList[i].length() == image.getSize() ) { fileCheckResult = true; }
-//                        else { fileCheckResult = false; }
-//                    }
-//
-//
-//                    if (fileCheckResult == true)
-//                    {
-//
-//                    }
-
-                    String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
-
-    				//compare files
-					if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
-					{
-                       // no need to print that to output:
-                       //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
-                       //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
-					}
-                    else //md5 check failed
-					{
-                        if (failed == false)
-                        {
-                            this.log.printLogLine("failed"); //this completes the first line
-                            failed = true;
-                        }
-
-                        int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
-                        int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
-                        float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
-                        if ( (exifOrientation > 1) && (filesizeRatio > 0.985) && (filesizeRatio < 1.015) ) //different orientation than "landscape" and file sizes do not differ too much
-                        {
-                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
-                        }
-                        else if (exifDimensions > 48000000) //image has more than 48 megapixel
-                        {
-                            //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
-                            this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
-                        }
-                        else
-                        {
-                            this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
-                            this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
-                            this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
-                            this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
-                            this.log.printLogLine("      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
-                        }
-
-					}
-    			}
-      		}
+            }
       	}
 
 
 
-        if ( (fileList.length == matchCount) && (imageList.size() == matchCount) )
+        if ( (fileList.length == (matchCount + filesizeLimitHitCount)) && (imageList.size() == (matchCount + filesizeLimitHitCount)) )
         {
             if (failed == false) { this.log.printLogLine("ok"); } // i.e. there were no errors for the whole album
             else { /*NOOP ... the "failed" was already printed before*/ } // i.e. there were errors with md5 verification, but no missing files or so

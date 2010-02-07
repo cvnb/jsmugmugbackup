@@ -12,7 +12,7 @@ todo:
  - use OS specific dir separator / test with windows
  - downloading
    - password protected albums (anonymous login mode)
- - for commandline: addtags and removetags parameter
+ - for commandline: addtags, removetags and removeall parameter
  - for commandline: maxresolution and minresolution parameter (for download)
  - todo: test encoding after download on mac and windows
  - support questions: heavy statistics, orientation (DGRIN)
