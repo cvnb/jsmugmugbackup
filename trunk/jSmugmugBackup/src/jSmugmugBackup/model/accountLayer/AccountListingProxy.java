@@ -413,7 +413,11 @@ public class AccountListingProxy implements IAccountListingProxy
             if (!Helper.isVideo(image.getName())) { imageFile = new File(targetDir + image.getName()); }
             else
             {
-                String videoName = image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4";
+                //String videoName = image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4";
+                String videoName;
+                if (image.getName().endsWith(this.config.getConstantVideoDownloadFilePostfix())) { videoName = image.getName(); }
+                else { videoName =  image.getName() + this.config.getConstantVideoDownloadFilePostfix(); }
+
                 imageFile = new File(targetDir + videoName);
             }
             //this.log.printLogLine("DEBUG: file: " + imageFile.getAbsolutePath());
@@ -534,8 +538,9 @@ public class AccountListingProxy implements IAccountListingProxy
                     {
                         // handle videos ...
 
-                        //either the full filename matches or the first part and the ending is ".mp4"
-                        if ( ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
+                        //either the full filename matches or it's the full name plus the download extension
+                        if ( //( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
+                             ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName() + this.config.getConstantVideoDownloadFilePostfix()) ) ||
                              ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
                         {
                             //compare files
