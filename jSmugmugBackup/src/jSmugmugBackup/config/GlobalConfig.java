@@ -62,6 +62,7 @@ public class GlobalConfig
    private final String constantOsmIconFilename             = "res/Ol_icon_blue_example.png";
    private final String constantAlbumCacheFilenamePrefix    = "jSmugmugBackup.albumCache.";
    private final String constantTempDownloadFilename        = "jSmugmugBackup.download.temp";
+   private final String constantVideoDownloadFilePostfix    = ".smugmug.mp4";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
    private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp", ".ogv"}; //...hope thats all possible types
    private final String constantHelpNotes =
@@ -455,6 +456,7 @@ public class GlobalConfig
    public String   getConstantPixelFilename()             { return this.constantPixelFilename; }
    public String   getConstantAlbumCacheFilenamePrefix()  { return this.constantAlbumCacheFilenamePrefix; }
    public String   getConstantTempDownloadFilename()      { return this.constantTempDownloadFilename; }
+   public String   getConstantVideoDownloadFilePostfix()  { return this.constantVideoDownloadFilePostfix; }
    public String[] getConstantSupportedFileTypes_Images() { return this.constantSupportedFileTypes_Images; }
    public String[] getConstantSupportedFileTypes_Videos() { return this.constantSupportedFileTypes_Videos; }
    public String   getConstantHelpNotes()                 { return this.constantHelpNotes; }

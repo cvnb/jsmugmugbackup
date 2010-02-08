@@ -564,7 +564,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //JSONObject jsonAlbum = this.smugmug_albums_getInfo(albumID, null, null, albumKey);
         //this.printJSONObject(jsonAlbum);
 
-		JSONObject jsonImages = this.smugmug_images_get(albumID, null, null, albumKey);
+		JSONObject jsonImages = this.smugmug_images_get(albumID, albumKey, null, null);
 		//this.printJSONObject(jsonImages);
 
 
@@ -1034,7 +1034,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		
 
         String methodName = "smugmug.login.anonymously";
-        this.log.printLog(methodName + " ... ");
+        //this.log.printLog(methodName + " ... ");
 
 		//build url
 		String url = this.config.getConstantSmugmugServerURL_122() + "?";
@@ -1723,6 +1723,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //url = url + "Pretty=" +  + "&"; //boolean, default= false
         //url = url + "Strict=" +  + "&"; //boolean, default= false
 
+        //this.log.printLogLine("url: " + url);
 
 		do
 		{
@@ -1748,8 +1749,9 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        		  (this.getJSONValue(jobj, "code").equals(new Long(4))) )
 	        {
                 //invalid user ... probably a missing site password in conjunction with anonymous login ... ignoring this
-	        	this.log.printLogLine("invalid user");
-	        	return jobj;
+                this.log.printLogLine("WARNING: " + this.getJSONValue(jobj, "message"));
+	        	//this.printJSONObject(jobj);
+                return jobj;
 	        }
 	        else
 	        {

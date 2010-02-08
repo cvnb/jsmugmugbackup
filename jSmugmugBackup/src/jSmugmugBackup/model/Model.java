@@ -174,11 +174,25 @@ public class Model
         //this.log.printLogLine("DEBUG: url=" + transferDialogResult.getURL());
 
         String url = transferDialogResult.getURL();
-        String urlTail = url.substring(url.indexOf("/gallery/") + 9);
+        int albumID;
+        String albumKey;
+        if (url.contains("/gallery/"))  // old style url's
+        {
+            String urlTail = url.substring(url.indexOf("/gallery/") + 9);
+            String albumIDString = urlTail.substring(0, urlTail.indexOf("_"));
+            albumID = Integer.parseInt(albumIDString);
+            albumKey = urlTail.substring(urlTail.indexOf("_")+1, urlTail.indexOf("/"));
+        }
+        else
+        {
+            //remove slash at the end
+            if ( url.charAt(url.length()-1) == '/' ) { url = url.substring(0, url.length()-2); }
+            String urlTail = url.substring(url.lastIndexOf("/") + 1);
+            String albumIDString = urlTail.substring(0, urlTail.indexOf("_"));
+            albumID = Integer.parseInt(albumIDString);
+            albumKey = urlTail.substring(urlTail.indexOf("_")+1, urlTail.indexOf("#"));
+        }
 
-        String albumIDString = urlTail.substring(0, urlTail.indexOf("_"));
-        int albumID = Integer.parseInt(albumIDString);
-        String albumKey = urlTail.substring(urlTail.indexOf("_")+1, urlTail.indexOf("/"));
 
         //this.log.printLogLine("DEBUG: albumID : " + albumID);
         //this.log.printLogLine("DEBUG: albumKey: " + albumKey);
