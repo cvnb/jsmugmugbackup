@@ -69,38 +69,36 @@ public class GlobalConfig
 		"notes:\n" +
         " - It is strongly suggestend to stick with the commandline view, since the GUI is currently\n" +
         "   V E R Y buggy!\n" +
-        " - usage examples: on linux and MacOS use \"jSmugmugBackup.sh\", on Windows \"jSmugmugBackup.bat\"\n" +
+        " - usage examples:\n" +
+        "   - Linux and MacOS\n" +
         "      ./jSmugmugBackup.sh --upload --user=me --dir=/home/john/pics/\n" +
         "            ... uploads whole directory structure\n" +
         "      ./jSmugmugBackup.sh --upload --user=me --category=public --album=\"my hollidays\" --dir=/home/john/pics/public/paris\n" +
         "            ... uploads all images in /home/john/pics/public/paris to an album named \"my hollidays\" in the category \"public\"\n" +
-        " - usage example for windows: ... you have to quote everything that contains an \"=\" character, sorry for the inconvenience\n" +
+        "   - Windows: ... you have to quote everything that contains an \"=\" character, sorry for the inconvenience\n" +
         "      jSmugmugBackup.bat --verify \"--user=me\" \"--category=public\" \"--album=\"my hollidays\"\" \"--dir=/home/john/pics/public/paris\"\n" +
 	    " - Names on smugmug are handled as if they were unique, although it is for instance\n" +
 	    "   possible to have two albums with the same name on smugmug. jSmugmugBackup will\n" +
 	    "   always use the first name the matches and ignore the second entity.\n" +
 	    " - on your local machine category names are mapped to subfolders, subcategory names\n" +
 	    "   to subsubfolders and albums to subsubsubfolders.\n" +
-	    " - If you want a certain file not to be uploaded, for instance because it takes too long\n" +
-	    "   with your internet connection, you can set an ignore tag. Just create a file with\n" +
-	    "   the name of the file you don't want jSmugmugBackup to upload plus\n" +
-	    "   \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"\n" +
-	    "   create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"\n" +
-	    " - uploaded albums are by default private, not searchable through smugmug and not searchable\n" +
-	    "   through google ... right now, the only way to change that is the smugmug website\n" +
-        " - it seems like Smugmug can only handle filenames with ASCII characters\n" +
-        "   german (Umlaute) and french special characters are beeing converted, but\n" +
-        "   when downloading these images again, the special characters are lost\n" +
-        " - there is no support for international characters other than german and frech (might not\n" +
-        "   be complete)\n" +
-        " - verify only reports md5 checksum errors if they occur with an image, checksum errors\n" +
-        "   with videos are not reported because videos are converted by smugmug after uploading\n" +
-        "   which makes md5 checks fail on all videos\n" +
-        " - if you want to dowwnload someones public galleries, login using his nickname and\n" +
-        "   \"anonymous\" as password (album passwords are currently not supported, sorry)\n" +
-        " - for downloading, we always download the best resolution available\n" +
-        " - share button and external linking are now disabled by default for new albums created\n" +
-        "   with jSmugmugBackup\n" +
+	    " - uploading:\n" +
+        "   - if you want a certain file not to be uploaded, for instance because it takes too long\n" +
+	    "     with your internet connection, you can set an ignore tag. Just create a file with\n" +
+	    "     the name of the file you don't want jSmugmugBackup to upload plus\n" +
+	    "     \".jSmugmugBackup-upload-ignore.tag\". Example: for the file \"mybigvideo.avi\"\n" +
+	    "     create a file with the name \"mybigvideo.avi.jSmugmugBackup-upload-ignore.tag\"\n" +
+	    "   - uploaded albums are by default private, not searchable through smugmug and not searchable\n" +
+	    "     through google ... but you can edit the file config.xml to change that\n" +
+        "   - it seems like Smugmug can only handle filenames with ASCII characters\n" +
+        "     german (Umlaute) and french special characters are beeing converted, but\n" +
+        "     when downloading these images again, the special characters are lost\n" +
+        "     - there is no support for international characters other than german and frech (might not\n" +
+        "       be complete)\n" +
+        " - downloading:\n" +
+        "   - if you want to dowwnload someones public galleries, login using his nickname and\n" +
+        "     \"anonymous\" as password (album passwords are currently not supported, sorry)\n" +
+        "   - for downloading, we always download the best resolution available\n" +
         /*
         " - resuming downloading works (well resuming per file, not in the middle of one) as long \n" +
         "   as there are no videos ... videos will always be downloaded a second time, no idea how\n" +
@@ -108,11 +106,16 @@ public class GlobalConfig
         " - there is also a bug that prevents us from resuming certain galleries, the same problem\n" +
         "   is responsible for retrying downloading twice before giving up because of a size error\n" +
         */
-        " - when downloading from users that don't allow originals, the reported download queue size\n" +
-        "   is most definitively wrong, and the remaining time counter might get confused too - no fix\n" +
-        "   for that at the moment, sorry\n" +
-        " - statistics: nesseceary functions are more or less implemented, but the smugmug API seems\n" +
-        "   to return zero for everything ... there's not much I can do about it atm, sorry\n" +
+        "   - when downloading from users that don't allow originals, the reported download queue size\n" +
+        "     is most definitively wrong, and the remaining time counter might get confused too - no fix\n" +
+        "     for that at the moment, sorry\n" +
+        " - verifying" +
+        "   - verify only reports md5 checksum errors if they occur with an image, checksum errors\n" +
+        "     with videos are not reported because videos are converted by smugmug after uploading\n" +
+        "     which makes md5 checks fail on all videos\n" +
+        " - statistics:" +
+        "   - nesseceary functions are more or less implemented, but the smugmug API seems\n" +
+        "     to return zero for everything ... there's not much I can do about it atm, sorry\n" +
         " - <to be continued>\n";
    private final String constantOSMbasicHtml =
         "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +

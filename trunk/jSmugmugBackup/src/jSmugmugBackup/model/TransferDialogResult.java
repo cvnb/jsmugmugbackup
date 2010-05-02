@@ -6,6 +6,8 @@
  */
 package jSmugmugBackup.model;
 
+
+
 public class TransferDialogResult implements ITransferDialogResult
 {
 	private String categoryName;
@@ -14,8 +16,11 @@ public class TransferDialogResult implements ITransferDialogResult
 	private String targetDir;
     private String albumKeywords;
     private String url;
-	
-	public TransferDialogResult(String categoryName, String subCategoryName, String albumName, String targetDir, String albumKeywords, String url)
+    private String albumPassword;
+    //private ResolutionEnum minResolution;
+	private ResolutionEnum maxResolution;
+
+	public TransferDialogResult(String categoryName, String subCategoryName, String albumName, String targetDir, String albumKeywords, String url, String albumPassword, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution)
 	{
 		this.categoryName = categoryName;
 		this.subCategoryName = subCategoryName;
@@ -23,6 +28,9 @@ public class TransferDialogResult implements ITransferDialogResult
 		this.targetDir = targetDir;
         this.albumKeywords = albumKeywords;
         this.url = url;
+        this.albumPassword = albumPassword;
+        //this.minResolution = minResolution;
+        this.maxResolution = maxResolution;
 	}
 
 
@@ -41,4 +49,10 @@ public class TransferDialogResult implements ITransferDialogResult
     public String getAlbumKeywords() { return this.albumKeywords; }
 
     public String getURL() { return this.url; }
+
+    public String getAlbumPassword() { return this.albumPassword; }
+
+    //public ResolutionEnum getMinResolution() { return this.minResolution; }
+
+    public ResolutionEnum getMaxResolution() { return this.maxResolution; }
 }

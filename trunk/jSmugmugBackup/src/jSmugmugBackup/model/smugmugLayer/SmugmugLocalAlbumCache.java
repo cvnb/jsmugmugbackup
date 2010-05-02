@@ -136,7 +136,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
         }
         else
         {
-            this.log.printLog("WARNING: no local cache file found, starting empty ... this may take a while! ... ");
+            this.log.printLog("WARNING: no local cache file found, starting empty (this may take a while!) ... ");
             this.initCache();
         } 
     }

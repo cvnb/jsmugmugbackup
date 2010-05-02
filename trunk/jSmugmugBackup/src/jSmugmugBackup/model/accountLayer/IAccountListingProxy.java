@@ -6,6 +6,7 @@
  */
 package jSmugmugBackup.model.accountLayer;
 
+import jSmugmugBackup.model.ResolutionEnum;
 import jSmugmugBackup.view.ILoginView;
 
 import java.io.File;
@@ -17,11 +18,11 @@ public interface IAccountListingProxy
 	void logout();
 	
 
-	IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords);
+	IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords, String albumPassword);
     Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName, String albumKeywords);
 
     void enqueueAlbumForUpload(String categoryName, String subcategoryName, String albumName, File pics_dir, String albumKeywords);
-	void enqueueAlbumForDownload(int albumID, String albumKey, String targetBaseDir);
+	void enqueueAlbumForDownload(int albumID, String albumKey, String albumPassword, String targetBaseDir, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution);
 	//void enqueueAlbumFromURLForDownload(int albumID, String albumKey, String targetDir);
     void verifyAlbum(int albumID, String targetBaseDir);
 	void sort(String categoryName, String subcategoryName);

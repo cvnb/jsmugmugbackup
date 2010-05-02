@@ -72,7 +72,7 @@ public class Model
     {
         if (transferDialogResult == null) { return; }
 
-    	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords()) );
+    	this.view.updateFileListing( this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords(), transferDialogResult.getAlbumPassword()) );
     }
     public void upload(ITransferDialogResult transferDialogResult)
     {
@@ -138,7 +138,7 @@ public class Model
 
 		//this.log.printLogLine("preparing to download files to: " + transferDialogResult.getDir());
 
-        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
+        IRootElement smugmugRoot = this.accListing.getAccountTree(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords(), transferDialogResult.getAlbumPassword());
 
         //add all albums, since they have already been filtered above
         Vector<IAlbum> selectedAlbums = new Vector<IAlbum>();
@@ -155,7 +155,7 @@ public class Model
 
         for (IAlbum a : selectedAlbums)
 		{
-			this.accListing.enqueueAlbumForDownload(a.getID(), null, transferDialogResult.getDir());
+			this.accListing.enqueueAlbumForDownload(a.getID(), null, transferDialogResult.getAlbumPassword(), transferDialogResult.getDir(), /*transferDialogResult.getMinResolution(),*/ transferDialogResult.getMaxResolution());
 		}
 
 //        this.log.printLogLine("category   : " + transferDialogResult.getCategoryName());
@@ -196,7 +196,7 @@ public class Model
 
         //this.log.printLogLine("DEBUG: albumID : " + albumID);
         //this.log.printLogLine("DEBUG: albumKey: " + albumKey);
-        this.accListing.enqueueAlbumForDownload(albumID, albumKey, transferDialogResult.getDir());
+        this.accListing.enqueueAlbumForDownload(albumID, albumKey, transferDialogResult.getAlbumPassword(), transferDialogResult.getDir(), /*transferDialogResult.getMinResolution(),*/ transferDialogResult.getMaxResolution());
 
 
     }
@@ -547,7 +547,6 @@ public class Model
     	}
     	return false;
     }
-    
     private String extractAlbumNameFromDir(String dir)
     {
     	String result = dir;
@@ -562,18 +561,6 @@ public class Model
     	
     	return result;
     }
-    
-//	private void upload_prepare_albumDir(String category, String subcategory, String album, File dir, String keywords)
-//	{
-////		this.log.printLogLine("DEBUG: enqueuing ...");
-////		this.log.printLogLine("DEBUG:      category    : " + category);
-////		this.log.printLogLine("DEBUG:      subcategory : " + subcategory);
-////		this.log.printLogLine("DEBUG:      album       : " + album);
-////		this.log.printLogLine("DEBUG:      dir         : " + dir);
-//
-//		this.accListing.enqueueAlbumForUpload(category, subcategory, album, dir, keywords);
-//	}
-
     private void recursiveUploadDirectorySearch(int maxRecursionLevel, File directory, String category, String subcategory, String album, String keywords)
     {
         //this.log.printLogLine("DEBUG: Model.recursiveUploadDirectorySearch(" + maxRecursionLevel + ", " + directory + ", " + category + ", " + subcategory + ", " + album + ", " + keywords + ")");

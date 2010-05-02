@@ -45,12 +45,12 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 		this.connector.logout();
 	}
-	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords)
+	public IRootElement getAccountTree(String categoryName, String subcategoryName, String albumName, String albumKeywords, String albumPassword)
 	{
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null)
         {
-            this.smugmugRoot = this.connector.getTree();
+            this.smugmugRoot = this.connector.getTree(albumPassword);
             if (this.smugmugRoot == null) { return null; }
         }
 
@@ -111,7 +111,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	public Vector<IAlbum> getAccountAlbumList(String categoryName, String subcategoryName, String albumName, String albumKeywords)
 	{
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
 
         //prepare tags
         Vector<String> albumTags = Helper.getTags(albumKeywords);
@@ -193,7 +193,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	{
 
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
 
         // convert names to ascii, since smugmug sometimes seems to have problems with non-ascii characters
         String categoryAsciiName = Helper.encodeAsASCII(categoryName);
@@ -303,7 +303,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else
                 {
-    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, null, fileList[i], fileList[i].length(), tags);
+    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, null, null, fileList[i], fileList[i].length(), tags, /*null,*/ null);
     				this.transferQueue.add(item);
                     uploadCount++;
                 }
@@ -371,10 +371,12 @@ public class AccountListingProxy implements IAccountListingProxy
         }
 
 	}
-	public void enqueueAlbumForDownload(int albumID, String albumKey, String targetBaseDir)
+	public void enqueueAlbumForDownload(int albumID, String albumKey, String albumPassword, String targetBaseDir, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution)
 	{
+        //this.log.printLogLine("DEBUG: enqueueAlbumForDownload(" + albumID + ", " + albumKey + ", " + albumPassword + ", " + targetBaseDir + ")");
+
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(albumPassword); }
 
 		this.log.printLogLine(Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
 
@@ -391,8 +393,12 @@ public class AccountListingProxy implements IAccountListingProxy
 
         IAlbum album = this.getAlbum(albumID);
 
+        //this.log.printLogLine("DEBUG: name: " + album.getFullName());
+        //for (IImage image : album.getImageList()) { this.log.printLogLine("DEBUG: image name: " + image.getFullName()); }
+
+
         //handle cases where the album can not be found the the tree, i.e. a private URL has been given
-	    if ( (album == null) && (albumKey != null) ) { album = this.connector.getAlbum(albumID, albumKey); }
+	    if ( (album == null) && (albumKey != null) ) { album = this.connector.getAlbum(albumID, albumKey, albumPassword); }
 		
 		for (IImage image : album.getImageList())
 		{
@@ -439,7 +445,7 @@ public class AccountListingProxy implements IAccountListingProxy
                     {
                         //md5 doesn't match, download again
                         this.log.printLogLine("WARNING: image " + image.getName() + " already exists, but has wrong md5 sum ... enqueuing again");
-                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                         this.transferQueue.add(item);
                         downloadCount++;
                     }
@@ -469,7 +475,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             //original url is available ... this is unusual
                             //files sizes don't match, download again
                             this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
-                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                             this.transferQueue.add(item);
                             downloadCount++;
                         }
@@ -478,7 +484,7 @@ public class AccountListingProxy implements IAccountListingProxy
                             //no original available
                             //files sizes don't match, in most cases this indicates that we couldn't download the original file
                             this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - since the original url is not available, there's nothing to worry about ... skipping");
-                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                             skippedCount++;
                         }
                         
@@ -487,7 +493,7 @@ public class AccountListingProxy implements IAccountListingProxy
             }
             else //file doesn't exist, download
             {
-                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), imageFile, image.getSize(), null);
+                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                 this.transferQueue.add(item);
                 downloadCount++;
             }
@@ -498,10 +504,11 @@ public class AccountListingProxy implements IAccountListingProxy
     public void verifyAlbum(int albumID, String targetAlbumDir)
     {
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
 
     	//this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetAlbumDir + ") ... ");
-        this.log.printLog(Helper.getCurrentTimeString() + " verify: " + this.getAlbumDirEnd(albumID) + " ... ");
+        //this.log.printLog(Helper.getCurrentTimeString() + " verify: " + this.getAlbumDirEnd(albumID) + " ... ");
+        this.log.printLog(Helper.getCurrentTimeString() + " verify: " + targetAlbumDir + " ... ");
 
 		File dir = new File(targetAlbumDir);
 	    File[] fileList = dir.listFiles(this.config.getConstantSupportedFileTypesFilter());
@@ -568,7 +575,8 @@ public class AccountListingProxy implements IAccountListingProxy
                                         this.log.printLogLine("failed"); //this completes the first line
                                         failed = true;
                                     }
-                                    this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: videos usually fail)");
+                                    //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: videos usually fail)");
+                                    this.log.printLogLine("   WARNING: " + fileList[i].getName() + " ... md5 failed (reason: videos usually fail)");
                                     //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
                                     //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
                                 }
@@ -629,16 +637,19 @@ public class AccountListingProxy implements IAccountListingProxy
                             float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
                             if ( (exifOrientation > 1) && (filesizeRatio > 0.985) && (filesizeRatio < 1.015) ) //different orientation than "landscape" and file sizes do not differ too much
                             {
-                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
+                                //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
+                                this.log.printLogLine("   WARNING: " + fileList[i].getName() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
                             }
                             else if (exifDimensions > 48000000) //image has more than 48 megapixel
                             {
                                 //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
-                                this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
+                                //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
+                                this.log.printLogLine("   WARNING: " + fileList[i].getName() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
                             }
                             else
                             {
-                                this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
+                                //this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
+                                this.log.printLogLine("   ERROR: " + fileList[i].getName() + " ... md5 failed");
                                 this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
                                 this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
                                 this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
@@ -711,12 +722,12 @@ public class AccountListingProxy implements IAccountListingProxy
             for (String key : fileMappingTable.keySet())
             {
                 if (fileMappingTable.get(key) == 1) { /* NOOP - everything is fine; matched 1:1 */ }
-                else if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
-                else if (fileMappingTable.get(key) == -10) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded"); }
-                else if (fileMappingTable.get(key) == -11) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: ignore tag and file size limit)"); }
-                else if (fileMappingTable.get(key) == -12) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: ignore tag)"); }
-                else if (fileMappingTable.get(key) == -13) { this.log.printLogLine("   WARNING: " + key + " ... was not uploaded (reason: file size limit)"); }
-                else if (fileMappingTable.get(key) == -20) { this.log.printLogLine("   WARNING: the image " + key + " exists on smugmug, but no corresponding file was found"); }
+                else if (fileMappingTable.get(key) > 1) { this.log.printLogLine("   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
+                else if (fileMappingTable.get(key) == -10) { this.log.printLogLine("   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded"); }
+                else if (fileMappingTable.get(key) == -11) { this.log.printLogLine("   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded (reason: ignore tag and file size limit)"); }
+                else if (fileMappingTable.get(key) == -12) { this.log.printLogLine("   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded (reason: ignore tag)"); }
+                else if (fileMappingTable.get(key) == -13) { this.log.printLogLine("   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded (reason: file size limit)"); }
+                else if (fileMappingTable.get(key) == -20) { this.log.printLogLine("   WARNING: the image " + key.substring(key.lastIndexOf("/")+1) + " exists on smugmug, but no corresponding file was found"); }
                 else
                 {
                     this.log.printLogLine("   ERROR: undefined result while matching images with local files");
@@ -903,7 +914,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	public void startSyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
         
 		// start syncronous processing
 		this.transferQueue.startSyncProcessing();
@@ -944,14 +955,14 @@ public class AccountListingProxy implements IAccountListingProxy
 
         //discard current root object, and download treedata again (this would be horrobly slow without caching)
         this.smugmugRoot = null;
-        this.smugmugRoot = this.connector.getTree();
+        this.smugmugRoot = this.connector.getTree(null);
         this.log.printLogLine("ok");
 		
 	}
     public void startASyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
 
 		// start asyncronous processing
 		this.transferQueue.startAsyncProcessing();
@@ -960,7 +971,7 @@ public class AccountListingProxy implements IAccountListingProxy
 	public void finishASyncProcessingQueue()
 	{
         //initialize Tree is nesseciary
-        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(); }
+        if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
 
 		// wait a few secs
 		this.log.printLog(Helper.getCurrentTimeString() + " waiting a few secs for smugmug to process the images ... ");
@@ -995,7 +1006,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
         //discard current root object, and download treedata again (this would be horrobly slow without caching)
         this.smugmugRoot = null;
-        this.smugmugRoot = this.connector.getTree();
+        this.smugmugRoot = this.connector.getTree(null);
 		this.log.printLogLine("ok");
 
 	}
