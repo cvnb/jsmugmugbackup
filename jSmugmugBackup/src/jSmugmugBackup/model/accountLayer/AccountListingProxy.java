@@ -303,7 +303,7 @@ public class AccountListingProxy implements IAccountListingProxy
                 }
                 else
                 {
-    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, null, null, fileList[i], fileList[i].length(), tags, /*null,*/ null);
+    				ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.UPLOAD, albumID, null, fileList[i], fileList[i].length(), tags/*, null, null*/);
     				this.transferQueue.add(item);
                     uploadCount++;
                 }
@@ -402,35 +402,12 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		for (IImage image : album.getImageList())
 		{
-
-            // if it's a video don't use the original name (i.e. .avi), but use .mp4 since all
-            // videos are beeing converted by smugmug into mp4 directly after upload ... this
-            // should also protect original videos when downloading them into the same folder
-            // which they've been uploaded from
-            File imageFile = null;
-            /*
-            if (image.getName().equals("")) //no filename has been assigned
-            {
-                //TODO: find out if it's a video or an image
-                
-                imageFile = new File(targetDir + image.getID() + ".jpg");
-            }
-            else*/
-            if (!Helper.isVideo(image.getName())) { imageFile = new File(targetDir + image.getName()); }
-            else
-            {
-                //String videoName = image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4";
-                String videoName;
-                if (image.getName().endsWith(this.config.getConstantVideoDownloadFilePostfix())) { videoName = image.getName(); }
-                else { videoName =  image.getName() + this.config.getConstantVideoDownloadFilePostfix(); }
-
-                imageFile = new File(targetDir + videoName);
-            }
+            File imageFile = new File(targetDir + Helper.getDownloadFilename(image, maxResolution));
             //this.log.printLogLine("DEBUG: file: " + imageFile.getAbsolutePath());
-
+            String imageURL = Helper.getDownloadURL(image, maxResolution);
             
 
-            if (imageFile.exists()) //skip file
+            if (imageFile.exists()) //a file is already there
             {
                 //md5 checking doesn't seem to work with downloads either
                 if ( (this.config.getPersistentCheckMD5Sums() == true) && (image.getMD5() != null) ) //if md5 checking is enabled in config, and we actually have an md5 (there seems to be no md5 when logging in anonymously)
@@ -445,7 +422,8 @@ public class AccountListingProxy implements IAccountListingProxy
                     {
                         //md5 doesn't match, download again
                         this.log.printLogLine("WARNING: image " + image.getName() + " already exists, but has wrong md5 sum ... enqueuing again");
-                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                        //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                        ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
                         this.transferQueue.add(item);
                         downloadCount++;
                     }
@@ -470,12 +448,14 @@ public class AccountListingProxy implements IAccountListingProxy
                         */
                         
                         
-                        if (image.getOriginalURL() != null)
+                        //if (image.getOriginalURL() != null)
+                        if (Helper.getLargestPossibleResolution(image, maxResolution).ordinal() >= ResolutionEnum.Original.ordinal())
                         {
                             //original url is available ... this is unusual
                             //files sizes don't match, download again
                             this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
-                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                            //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
                             this.transferQueue.add(item);
                             downloadCount++;
                         }
@@ -483,8 +463,10 @@ public class AccountListingProxy implements IAccountListingProxy
                         {
                             //no original available
                             //files sizes don't match, in most cases this indicates that we couldn't download the original file
-                            this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - since the original url is not available, there's nothing to worry about ... skipping");
-                            ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                            this.log.printLogLine("WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - original is not available, so it's probably ok ... skipping");
+                            //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                            //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
+                            //this.transferQueue.add(item);
                             skippedCount++;
                         }
                         
@@ -493,7 +475,8 @@ public class AccountListingProxy implements IAccountListingProxy
             }
             else //file doesn't exist, download
             {
-                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
+                ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
                 this.transferQueue.add(item);
                 downloadCount++;
             }

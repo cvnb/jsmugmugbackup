@@ -11,11 +11,17 @@ package jSmugmugBackup.model;
  */
 public enum ResolutionEnum
 {
+    Thumb,
+    Tiny,
     Small,
     Medium,
     Large,
     XLarge,
     X2Large,
     X3Large,
-    Original
+    Original,
+    Video320,
+    Video640,
+    Video960,
+    Video1280
 }

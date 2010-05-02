@@ -400,7 +400,7 @@ public class Model
                     //geotag.add(i.getTinyURL());
                     //contentGeotagsHashtable.put(tableKey, geotag);
 
-                    String locationKey = i.getLatitude() + i.getLongitude();
+                    String locationKey = i.getLatitude().toString() + i.getLongitude().toString();
                     if ( !contentGeotagsHashtable.containsKey(locationKey) )
                     {
                         Vector<IImage> imageVector = new Vector<IImage>();
