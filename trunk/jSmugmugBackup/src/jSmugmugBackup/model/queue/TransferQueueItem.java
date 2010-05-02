@@ -25,14 +25,15 @@ public class TransferQueueItem implements ITransferQueueItem
 	private TransferQueueItemActionEnum action = null;
 	
 	private int albumID;
-	private int imageID;
-    private String imageKey;
-    private String albumPassword;
+	//private int imageID;
+    //private String imageKey;
+    //private String albumPassword;
+    private String imageURL = null;
 	private File fileName = null;
 	private long fileSize = 0; // needed for pretty output
     private Vector<String> tags = null;
     //private ResolutionEnum minResolution;
-    private ResolutionEnum maxResolution;
+    //private ResolutionEnum maxResolution;
 	
 	private boolean result_processed;
 	private boolean result_successful;
@@ -41,7 +42,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	public TransferQueueItem(TransferQueueItemActionEnum action, int id, String key, String albumPassword, File fileName, long fileSize, Vector<String> tags, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution)
+	public TransferQueueItem(TransferQueueItemActionEnum action, Integer albumID, /*String key, String albumPassword,*/ String imageURL, File fileName, long fileSize, Vector<String> tags/*, ResolutionEnum minResolution, ResolutionEnum maxResolution*/)
 	{
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
@@ -67,16 +68,18 @@ public class TransferQueueItem implements ITransferQueueItem
         this.tags = tags;
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
 		{
-			this.albumID = id;						
+			this.albumID = albumID;
 		}
 		else if ( (this.action.equals(TransferQueueItemActionEnum.DOWNLOAD)) /* ||
 			      (this.action.equals(TransferQueueItemActionEnum.VERIFY))*/ )
 		{
-			this.imageID = id;
-            this.imageKey = key;
-            this.albumPassword = albumPassword;
+			//this.imageID = id;
+            //this.imageKey = key;
+            //this.albumPassword = albumPassword;
+
+            this.imageURL = imageURL;
             //this.minResolution = minResolution;
-            this.maxResolution = maxResolution;
+            //this.maxResolution = maxResolution;
 		}
 	}
 
@@ -103,7 +106,8 @@ public class TransferQueueItem implements ITransferQueueItem
             //if ( this.config.getConstantHeavyRelogin()  ) { this.smugmugConnector.relogin(); } //but for downloading it's probably overkill
 
 			//this.result_successful = this.smugmugConnector.downloadFile(this.imageID, this.fileName);
-			this.smugmugConnector.downloadFile(this.imageID, this.imageKey, this.albumPassword, this.fileName/*, this.fileSize*/, /*minResolution,*/ maxResolution);
+			//this.smugmugConnector.downloadFile(this.imageID, this.imageKey, this.albumPassword, this.fileName/*, this.fileSize*/, /*minResolution,*/ maxResolution);
+            this.smugmugConnector.downloadFile(imageURL, fileName);
 		}
 		/*
 		else if (this.action.equals(TransferQueueItemActionEnum.VERIFY))

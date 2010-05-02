@@ -366,8 +366,95 @@ public class Helper
 
         return false;
     }
-    public static boolean checkDownloadCriteria(ResolutionEnum minResolution, ResolutionEnum maxResolution, ResolutionEnum currResolution)
+//    public static boolean checkDownloadCriteria(ResolutionEnum minResolution, ResolutionEnum maxResolution, ResolutionEnum currResolution)
+//    {
+//        return true;
+//    }
+    public static ResolutionEnum getLargestPossibleResolution(IImage image, ResolutionEnum maxResolution)
     {
-        return true;
+        ResolutionEnum result = null;
+
+        //if maxresolution wasn't specified, we'll set it to "Original"
+        if (maxResolution == null) { maxResolution = ResolutionEnum.Video1280; }
+
+        //attempt to get the largest image/video url available
+        // - assuming maxResolution is not specified above "Original", no support for restricting video resolutions yet
+        if ( image.getVideo1280URL() != null) { result = ResolutionEnum.Video1280; }
+        else if ( image.getVideo960URL() != null) { result = ResolutionEnum.Video960; }
+        else if ( image.getVideo640URL() != null) { result = ResolutionEnum.Video640; }
+        else if ( image.getVideo320URL() != null) { result = ResolutionEnum.Video320; }
+        else if ((image.getOriginalURL() != null) && (maxResolution.compareTo(ResolutionEnum.Original) >= 0)) { result = ResolutionEnum.Original; }
+        else if ((image.getX3LargeURL() != null) && (maxResolution.compareTo(ResolutionEnum.X3Large) >= 0)) { result = ResolutionEnum.X3Large; }
+        else if ((image.getX2LargeURL() != null) && (maxResolution.compareTo(ResolutionEnum.X2Large) >= 0)) { result = ResolutionEnum.X2Large; }
+        else if ((image.getXLargeURL() != null) && (maxResolution.compareTo(ResolutionEnum.XLarge) >= 0)) { result = ResolutionEnum.XLarge; }
+        else if ((image.getLargeURL() != null) && (maxResolution.compareTo(ResolutionEnum.Large) >= 0)) { result = ResolutionEnum.Large; }
+        else if ((image.getMediumURL() != null) && (maxResolution.compareTo(ResolutionEnum.Medium) >= 0)) { result = ResolutionEnum.Medium; }
+        else if ((image.getSmallURL() != null) && (maxResolution.compareTo(ResolutionEnum.Small) >= 0)) { result = ResolutionEnum.Small; }
+        else if ((image.getTinyURL() != null) && (maxResolution.compareTo(ResolutionEnum.Tiny) >= 0)) { result = ResolutionEnum.Tiny; }
+        else if ((image.getThumbURL() != null) && (maxResolution.compareTo(ResolutionEnum.Thumb) >= 0)) { result = ResolutionEnum.Thumb; }
+
+
+        return result;
+    }
+    public static String getDownloadFilename(IImage image, ResolutionEnum maxResolution)
+    {
+        GlobalConfig config = GlobalConfig.getInstance();
+        String fileName;
+        String fileNamePostfix = "-<unknown>";
+
+        // if it's a video don't use the original name (i.e. .avi), but use .mp4 since all
+        // videos are beeing converted by smugmug into mp4 directly after upload ... this
+        // should also protect original videos when downloading them into the same folder
+        // which they've been uploaded from
+        if (Helper.isVideo(image.getName()))
+        {
+                String videoName;
+                if (image.getName().endsWith(config.getConstantVideoDownloadFilePostfix())) { videoName = image.getName(); }
+                else { videoName =  image.getName() + config.getConstantVideoDownloadFilePostfix(); }
+                fileName = videoName;
+        }
+        else
+        {
+            ResolutionEnum largestPossibleImageResolution = Helper.getLargestPossibleResolution(image, maxResolution);
+            if (largestPossibleImageResolution == null) { return null; }
+
+            if (largestPossibleImageResolution.equals(ResolutionEnum.Original)) { fileNamePostfix = ""; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.X3Large)) { fileNamePostfix = "-X3"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.X2Large)) { fileNamePostfix = "-X2"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.XLarge)) { fileNamePostfix = "-XL"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.Large)) { fileNamePostfix = "-L"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.Medium)) { fileNamePostfix = "-M"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.Small)) { fileNamePostfix = "-S"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.Tiny)) { fileNamePostfix = "-Ti"; }
+            else if (largestPossibleImageResolution.equals(ResolutionEnum.Thumb)) { fileNamePostfix = "-Th"; }
+
+            String imageName = image.getName();
+            fileName = imageName.substring(0, imageName.lastIndexOf(".")) + fileNamePostfix + imageName.substring(imageName.lastIndexOf("."));
+        }
+
+        return fileName;
+    }
+    public static String getDownloadURL(IImage image, ResolutionEnum maxResolution)
+    {
+        String imageURL = "";
+
+        ResolutionEnum largestPossibleImageResolution = Helper.getLargestPossibleResolution(image, maxResolution);
+        if (largestPossibleImageResolution == null) { return null; }
+
+        if (largestPossibleImageResolution.equals(ResolutionEnum.Video1280)) { imageURL = image.getVideo1280URL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Video960)) { imageURL = image.getVideo960URL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Video640)) { imageURL = image.getVideo640URL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Video320)) { imageURL = image.getVideo320URL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Original)) { imageURL = image.getOriginalURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.X3Large)) { imageURL = image.getX3LargeURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.X2Large)) { imageURL = image.getX2LargeURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.XLarge)) { imageURL = image.getXLargeURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Large)) { imageURL = image.getLargeURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Medium)) { imageURL = image.getMediumURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Small)) { imageURL = image.getSmallURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Tiny)) { imageURL = image.getTinyURL(); }
+        else if (largestPossibleImageResolution.equals(ResolutionEnum.Thumb)) { imageURL = image.getThumbURL(); }
+
+        return imageURL;
     }
 }

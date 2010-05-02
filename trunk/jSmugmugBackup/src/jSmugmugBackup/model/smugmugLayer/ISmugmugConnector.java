@@ -37,7 +37,7 @@ public interface ISmugmugConnector
 	*/
 	
 	int uploadFile(int albumID, File file, String caption, Vector<String> tags);
-	void downloadFile(int imageID, String imageKey, String albumPassword, File fileName, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution /*, long expectedFileSize*/);
+	//void downloadFile(int imageID, String imageKey, String albumPassword, File fileName, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution /*, long expectedFileSize*/);
 	void downloadFile(String imageURL, File fileName/*, long expectedFileSize*/);
 	//void verifyFile();
 	void deleteFile(int imageID);

@@ -18,9 +18,9 @@ public interface IImage extends ISmugmugObject
 	int getWidth();
 	long getSize();
     //int getLargestURLContentSize();
-    String getLatitude();
-    String getLongitude();
-    String getAltitude();
+    Double getLatitude();
+    Double getLongitude();
+    Long getAltitude();
     
 	String getMD5();
     String getAlbumURL();
@@ -33,4 +33,8 @@ public interface IImage extends ISmugmugObject
     String getX2LargeURL();
     String getX3LargeURL();
 	String getOriginalURL();
+    String getVideo320URL();
+    String getVideo640URL();
+    String getVideo960URL();
+    String getVideo1280URL();
 }
