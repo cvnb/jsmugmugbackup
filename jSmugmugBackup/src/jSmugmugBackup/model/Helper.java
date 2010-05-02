@@ -366,4 +366,8 @@ public class Helper
 
         return false;
     }
+    public static boolean checkDownloadCriteria(ResolutionEnum minResolution, ResolutionEnum maxResolution, ResolutionEnum currResolution)
+    {
+        return true;
+    }
 }

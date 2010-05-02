@@ -62,7 +62,7 @@ public class Controller
                 view.showBusyStop();
 
                 view.showBusyStart("downloading account data ...");
-                model.list(new TransferDialogResult(null, null, null, null, null, null));
+                model.list(new TransferDialogResult(null, null, null, null, null, null, null, /*null,*/ null));
             }
 
             view.showBusyStop();

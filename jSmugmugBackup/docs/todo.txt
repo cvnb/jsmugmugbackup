@@ -25,6 +25,10 @@ todo:
  - bugfix: growing cache file
  - allow multiple instances
  - album default option templates
+ - sitepassword parameter
+ - xml config:
+   - download original filenames / smugmug names
+   - verify turn off warnings
 
  - "pretend" switch on commandline
  - refresh action listener doesn't make much sense, maybe merge functionality

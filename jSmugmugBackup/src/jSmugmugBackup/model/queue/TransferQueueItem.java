@@ -8,6 +8,7 @@ package jSmugmugBackup.model.queue;
 
 
 import jSmugmugBackup.config.GlobalConfig;
+import jSmugmugBackup.model.ResolutionEnum;
 import jSmugmugBackup.model.smugmugLayer.*;
 import jSmugmugBackup.view.*;
 
@@ -26,10 +27,12 @@ public class TransferQueueItem implements ITransferQueueItem
 	private int albumID;
 	private int imageID;
     private String imageKey;
-	private File fileDescriptor = null;
+    private String albumPassword;
+	private File fileName = null;
 	private long fileSize = 0; // needed for pretty output
     private Vector<String> tags = null;
-
+    //private ResolutionEnum minResolution;
+    private ResolutionEnum maxResolution;
 	
 	private boolean result_processed;
 	private boolean result_successful;
@@ -38,7 +41,7 @@ public class TransferQueueItem implements ITransferQueueItem
 	private String result_message;
 	private long result_transferedBytes;
 	
-	public TransferQueueItem(TransferQueueItemActionEnum action, int id, String key, File fileDescriptor, long fileSize, Vector<String> tags)
+	public TransferQueueItem(TransferQueueItemActionEnum action, int id, String key, String albumPassword, File fileName, long fileSize, Vector<String> tags, /*ResolutionEnum minResolution,*/ ResolutionEnum maxResolution)
 	{
         this.config = GlobalConfig.getInstance();
 		this.log = Logger.getInstance();
@@ -59,7 +62,7 @@ public class TransferQueueItem implements ITransferQueueItem
 		this.result_message = "";
 		this.result_transferedBytes = 0;
 		
-		this.fileDescriptor = fileDescriptor;
+		this.fileName = fileName;
         this.fileSize = fileSize;
         this.tags = tags;
 		if (this.action.equals(TransferQueueItemActionEnum.UPLOAD))
@@ -71,6 +74,9 @@ public class TransferQueueItem implements ITransferQueueItem
 		{
 			this.imageID = id;
             this.imageKey = key;
+            this.albumPassword = albumPassword;
+            //this.minResolution = minResolution;
+            this.maxResolution = maxResolution;
 		}
 	}
 
@@ -85,7 +91,7 @@ public class TransferQueueItem implements ITransferQueueItem
             // performing relogin for each queue item might improve stability during long lasting queue operations
             if ( this.config.getConstantHeavyRelogin() ) { this.smugmugConnector.relogin(); }
 
-			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileDescriptor, null, this.tags);
+			this.result_id = this.smugmugConnector.uploadFile(this.albumID, this.fileName, null, this.tags);
 			
 			//this should be safe to assume
 			if (this.result_id == 0) { this.result_successful = false; }
@@ -97,7 +103,7 @@ public class TransferQueueItem implements ITransferQueueItem
             //if ( this.config.getConstantHeavyRelogin()  ) { this.smugmugConnector.relogin(); } //but for downloading it's probably overkill
 
 			//this.result_successful = this.smugmugConnector.downloadFile(this.imageID, this.fileName);
-			this.smugmugConnector.downloadFile(this.imageID, this.imageKey, this.fileDescriptor/*, this.fileSize*/);
+			this.smugmugConnector.downloadFile(this.imageID, this.imageKey, this.albumPassword, this.fileName/*, this.fileSize*/, /*minResolution,*/ maxResolution);
 		}
 		/*
 		else if (this.action.equals(TransferQueueItemActionEnum.VERIFY))

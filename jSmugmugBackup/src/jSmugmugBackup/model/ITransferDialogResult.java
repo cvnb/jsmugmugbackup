@@ -14,4 +14,7 @@ public interface ITransferDialogResult
 	String getDir();
     String getAlbumKeywords();
     String getURL();
+    String getAlbumPassword();
+    //ResolutionEnum getMinResolution();
+    ResolutionEnum getMaxResolution();
 }

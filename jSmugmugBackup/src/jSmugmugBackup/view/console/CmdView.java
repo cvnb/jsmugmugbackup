@@ -339,7 +339,7 @@ public class CmdView implements IView
 		String album = this.extractArgumentValueFromCommandline("album");
         String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		
-		return new TransferDialogResult(category, subCategory, album, null, albumKeywords, null);
+		return new TransferDialogResult(category, subCategory, album, null, albumKeywords, null, null, /*null,*/ null);
 	}
 	public ITransferDialogResult showSortDialog()
 	{
@@ -364,29 +364,39 @@ public class CmdView implements IView
 		String album = this.extractArgumentValueFromCommandline("album");
         String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		String pics_dir = this.extractDirectoryFromCommandline();
+        String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
 		
-		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null);
+		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null, albumPassword, /*null,*/ null);
 	}
 	public ITransferDialogResult showDownloadDialog()
 	{
-		/*
 		String category = this.extractArgumentValueFromCommandline("category");
 		String subCategory = this.extractArgumentValueFromCommandline("subcategory");
 		String album = this.extractArgumentValueFromCommandline("album");
-		String target_dir = this.extractDirectoryFromCommandline();
-			    
-		return new TransferDialogResult(category, subCategory, album, target_dir);
-		*/
-		
+        String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
+		String pics_dir = this.extractDirectoryFromCommandline();
+        String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
+        //ResolutionEnum minResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("minResolution"));
+        ResolutionEnum maxResolution = null;
+        if (this.extractArgumentValueFromCommandline("maxResolution") != null) { maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution")); }
+
+
+		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null, albumPassword, /*minResolution,*/ maxResolution);
+
+        /*
 		//method is identical to the upload dialog
 		return this.showUploadDialog();
+        */
 	}
     public ITransferDialogResult showDownloadURLDialog()
     {
         String pics_dir = this.extractDirectoryFromCommandline();
         String url = this.extractArgumentValueFromCommandline("url");
+        String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
+        //ResolutionEnum minResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("minResolution"));
+        ResolutionEnum maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution"));
 
-        return new TransferDialogResult(null, null, null, pics_dir, null, url);
+        return new TransferDialogResult(null, null, null, pics_dir, null, url, albumPassword, /*minResolution,*/ maxResolution);
     }
 	public ITransferDialogResult showVerifyDialog()
 	{
@@ -438,14 +448,17 @@ public class CmdView implements IView
 		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
 		this.log.printLogLine("options:");
         //this.log.printLogLine("     --pretend                  : don't change anything on smugmug, just print what would be done");
-		this.log.printLogLine("     --user={username or email}  : specify the email-address or the username used to log into smugmug (optional)");
-		this.log.printLogLine("     --password={password}       : specify the password used to log into smugmug, optional (optional)");
-		this.log.printLogLine("     --category={name}           : perform the given action only on the given category (optional)");
-		this.log.printLogLine("     --subcategory={name}        : perform the given action only on the given subcategory (optional)");
-		this.log.printLogLine("     --album={name}              : perform the given action only on the given album (optional)");
-        this.log.printLogLine("     --albumKeywords={keywords}  : perform the given action only using the given keywords, separated by \"; \" (optional)");
-        this.log.printLogLine("     --url={smugmug album url}   : only in conjunction with the \"download\" action, downloads the album specified a url");
-		this.log.printLogLine("     --dir={directory}           : the local base dir for the actions");
+		this.log.printLogLine("     --user={username or email}          : specify the email-address or the username used to log into smugmug (optional)");
+		this.log.printLogLine("     --password={password}               : specify the password used to log into smugmug, optional (optional)");
+		this.log.printLogLine("     --category={name}                   : perform the given action only on the given category (optional)");
+		this.log.printLogLine("     --subcategory={name}                : perform the given action only on the given subcategory (optional)");
+		this.log.printLogLine("     --album={name}                      : perform the given action only on the given album (optional)");
+        this.log.printLogLine("     --albumKeywords={keywords}          : perform the given action only using the given keywords, separated by \"; \" (optional)");
+        this.log.printLogLine("     --url={smugmug album url}           : only in conjunction with the \"download\" action, downloads the album specified by a url");
+        this.log.printLogLine("     --albumPassword={password}          : only in conjunction with the \"download\" action)");
+        //this.log.printLogLine("     --minResolution={S/M/L/XL/X2/X3/O}  : only in conjunction with the \"download\" action)");
+        this.log.printLogLine("     --maxResolution={S/M/L/XL/X2/X3/O}  : only in conjunction with the \"download\" action)");
+        this.log.printLogLine("     --dir={directory}                   : the local base dir for the actions");
 		this.log.printLogLine("");
 		this.log.printLogLine(this.config.getConstantHelpNotes());
 
