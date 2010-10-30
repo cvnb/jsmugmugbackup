@@ -51,7 +51,7 @@ public class CmdView implements IView
 	
 	public void start()
 	{
-		this.log.printLogLine("jSmugmugBackup v" + this.config.getConstantVersion());
+		this.log.printLogLine(LogLevelEnum.Message, "jSmugmugBackup v" + this.config.getConstantVersion());
 		
 		if ( this.cmd_args.length == 0 ) this.printHelp();
 		else if ( this.findArgumentFromCommandline("help") ) this.printHelp();
@@ -141,7 +141,7 @@ public class CmdView implements IView
     public void notifyASyncProcessQueueFinished()
     {
         //throw new UnsupportedOperationException("Not supported yet.");
-        this.log.printLogLine("(asyncchronous) queue processing finished");
+        this.log.printLogLine(LogLevelEnum.Message, "(asyncchronous) queue processing finished");
     }
 
 
@@ -151,35 +151,35 @@ public class CmdView implements IView
 		//this.log.printLogLine("Nickname: " + accountListing.getNickName());
 		for (ICategory c : smugmugRoot.getCategoryList())
 		{
-			this.log.printLogLine("    category: " + c.getName());
+			this.log.printLogLine(LogLevelEnum.Message, "    category: " + c.getName());
 			
 			for (ISubcategory sc : c.getSubcategoryList())
 			{
-				this.log.printLogLine("        subCategory: " + sc.getName());
+				this.log.printLogLine(LogLevelEnum.Message, "        subCategory: " + sc.getName());
 				for (IAlbum a : sc.getAlbumList())
 				{
-					this.log.printLog("            album: " + a.getName());
-                    if (a.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(a.getTags()) + ")" ); }
-                    this.log.printLog("\n"); //finish this line
+					this.log.printLog(LogLevelEnum.Message, "            album: " + a.getName());
+                    if (a.getTags() != null) { this.log.printLog(LogLevelEnum.Message, " (" + Helper.getKeywords(a.getTags()) + ")" ); }
+                    this.log.printLog(LogLevelEnum.Message, "\n"); //finish this line
 					for (IImage i : a.getImageList())
 					{
-						this.log.printLog("                image: " + i.getName());
-                        if (i.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(i.getTags()) + ")" ); }
-                        this.log.printLog("\n"); //finish this line
+						this.log.printLog(LogLevelEnum.Message, "                image: " + i.getName());
+                        if (i.getTags() != null) { this.log.printLog(LogLevelEnum.Message, " (" + Helper.getKeywords(i.getTags()) + ")" ); }
+                        this.log.printLog(LogLevelEnum.Message, "\n"); //finish this line
 					}
 				}
 			}
 			
 			for (IAlbum a : c.getAlbumList())
 			{
-				this.log.printLog("        album: " + a.getName());
-                if (a.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(a.getTags()) + ")" ); }
-                this.log.printLog("\n"); //finish this line
+				this.log.printLog(LogLevelEnum.Message, "        album: " + a.getName());
+                if (a.getTags() != null) { this.log.printLog(LogLevelEnum.Message, " (" + Helper.getKeywords(a.getTags()) + ")" ); }
+                this.log.printLog(LogLevelEnum.Message, "\n"); //finish this line
 				for (IImage i : a.getImageList())
 				{
-					this.log.printLog("            image: " + i.getName());
-                    if (i.getTags() != null) { this.log.printLog( " (" + Helper.getKeywords(i.getTags()) + ")" ); }
-                    this.log.printLog("\n"); //finish this line
+					this.log.printLog(LogLevelEnum.Message, "            image: " + i.getName());
+                    if (i.getTags() != null) { this.log.printLog(LogLevelEnum.Message, " (" + Helper.getKeywords(i.getTags()) + ")" ); }
+                    this.log.printLog(LogLevelEnum.Message, "\n"); //finish this line
 				}
 			}
 		}
@@ -199,17 +199,17 @@ public class CmdView implements IView
 
         Vector<Integer> monthlyTotalBytesVector = new Vector<Integer>();
         for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { monthlyTotalBytesVector.add(0); }
-        this.log.printLogLine("");
-        this.log.printLogLine("Statistics:");
+        this.log.printLogLine(LogLevelEnum.Message, "");
+        this.log.printLogLine(LogLevelEnum.Message, "Statistics:");
         
-        this.log.printLog("album                                                                 |    ");
-        for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--) { this.log.printLogFixedWidthRAL(monthVector.get(i).toString(), 2); this.log.printLog("/" + yearVector.get(i) + "    |    "); }
-        this.log.printLogFixedWidth("total", 11); this.log.printLog("|");
-        this.log.printLogLine("");
+        this.log.printLog(LogLevelEnum.Message, "album                                                                 |    ");
+        for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--) { this.log.printLogFixedWidthRAL(LogLevelEnum.Message, monthVector.get(i).toString(), 2); this.log.printLog(LogLevelEnum.Message, "/" + yearVector.get(i) + "    |    "); }
+        this.log.printLogFixedWidth(LogLevelEnum.Message, "total", 11); this.log.printLog(LogLevelEnum.Message, "|");
+        this.log.printLogLine(LogLevelEnum.Message, "");
 
-        this.log.printLog("----------------------------------------------------------------------|");
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog("---------------|"); }
-        this.log.printLogLine("-");
+        this.log.printLog(LogLevelEnum.Message, "----------------------------------------------------------------------|");
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog(LogLevelEnum.Message, "---------------|"); }
+        this.log.printLogLine(LogLevelEnum.Message, "-");
 
         for (IAlbum a : albumList)
         {
@@ -247,22 +247,22 @@ public class CmdView implements IView
                     Double albumTotalMegabytes = 0.0;
                     for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { albumTotalMegabytes += megabytesVector.get(i); }
 
-                    this.log.printLogFixedWidth(a.getFullName(), 70); this.log.printLog("|");
+                    this.log.printLogFixedWidth(LogLevelEnum.Message, a.getFullName(), 70); this.log.printLog(LogLevelEnum.Message, "|");
                     for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--)
                     {
-                        this.log.printLogFixedWidthRAL(nf.format(megabytesVector.get(i)) + " mb", 15); this.log.printLog("|");
+                        this.log.printLogFixedWidthRAL(LogLevelEnum.Message, nf.format(megabytesVector.get(i)) + " mb", 15); this.log.printLog(LogLevelEnum.Message, "|");
                     }
-                    this.log.printLogFixedWidthRAL(nf.format(albumTotalMegabytes) + " mb", 15); this.log.printLog("|");
-                    this.log.printLogLine("");
+                    this.log.printLogFixedWidthRAL(LogLevelEnum.Message, nf.format(albumTotalMegabytes) + " mb", 15); this.log.printLog(LogLevelEnum.Message, "|");
+                    this.log.printLogLine(LogLevelEnum.Message, "");
                 }
                 
             }
         }
 
         
-        this.log.printLog("----------------------------------------------------------------------|");
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog("---------------|"); }
-        this.log.printLogLine("-");
+        this.log.printLog(LogLevelEnum.Message, "----------------------------------------------------------------------|");
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog(LogLevelEnum.Message, "---------------|"); }
+        this.log.printLogLine(LogLevelEnum.Message, "-");
 
         boolean zeroTotalBytes = true;
         for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++)
@@ -278,7 +278,7 @@ public class CmdView implements IView
 
             Double alltimeTotalMegabytes = 0.0;
 
-            this.log.printLogFixedWidth("total", 70); this.log.printLog("|");
+            this.log.printLogFixedWidth(LogLevelEnum.Message, "total", 70); this.log.printLog(LogLevelEnum.Message, "|");
             Vector<Double> totalMegaBytesVector = new Vector<Double>();
             for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth(); i++) { totalMegaBytesVector.add(0.0); }
             for (int i = this.config.getConstantStatisticsHistoryMonth() - 1; i >= 0 ; i--)
@@ -286,14 +286,14 @@ public class CmdView implements IView
                 totalMegaBytesVector.set(i, (float)monthlyTotalBytesVector.get(i) / (1024.0 * 1024.0) );
                 alltimeTotalMegabytes += totalMegaBytesVector.get(i);
                 
-                this.log.printLogFixedWidthRAL(nf.format(totalMegaBytesVector.get(i)) + " mb", 15); this.log.printLog("|");
+                this.log.printLogFixedWidthRAL(LogLevelEnum.Message, nf.format(totalMegaBytesVector.get(i)) + " mb", 15); this.log.printLog(LogLevelEnum.Message, "|");
             }
-            this.log.printLogFixedWidthRAL(nf.format(alltimeTotalMegabytes) + " mb", 15); this.log.printLog("|");
-            this.log.printLogLine("");
+            this.log.printLogFixedWidthRAL(LogLevelEnum.Message, nf.format(alltimeTotalMegabytes) + " mb", 15); this.log.printLog(LogLevelEnum.Message, "|");
+            this.log.printLogLine(LogLevelEnum.Message, "");
         }
-        this.log.printLog("----------------------------------------------------------------------|");
-        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog("---------------|"); }
-        this.log.printLogLine("-");
+        this.log.printLog(LogLevelEnum.Message, "----------------------------------------------------------------------|");
+        for (int i = 0; i < this.config.getConstantStatisticsHistoryMonth() + 1; i++) { this.log.printLog(LogLevelEnum.Message, "---------------|"); }
+        this.log.printLogLine(LogLevelEnum.Message, "-");
 
     }
 	public void showError(String errMessage)
@@ -378,7 +378,23 @@ public class CmdView implements IView
         String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
         //ResolutionEnum minResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("minResolution"));
         ResolutionEnum maxResolution = null;
-        if (this.extractArgumentValueFromCommandline("maxResolution") != null) { maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution")); }
+        if (this.extractArgumentValueFromCommandline("maxResolution") != null)
+        {
+            //maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution"));
+            String resolutionString = this.extractArgumentValueFromCommandline("maxResolution");
+            if (resolutionString.equals("O")) { maxResolution = ResolutionEnum.Original; }
+            else if (resolutionString.equals("X3")) { maxResolution = ResolutionEnum.X3Large; }
+            else if (resolutionString.equals("X2")) { maxResolution = ResolutionEnum.X2Large; }
+            else if (resolutionString.equals("XL")) { maxResolution = ResolutionEnum.XLarge; }
+            else if (resolutionString.equals("L")) { maxResolution = ResolutionEnum.Large; }
+            else if (resolutionString.equals("M")) { maxResolution = ResolutionEnum.Medium; }
+            else if (resolutionString.equals("S")) { maxResolution = ResolutionEnum.Small; }
+            else
+            {
+                maxResolution = ResolutionEnum.Original;
+                this.log.printLogLine(LogLevelEnum.Warning, "WARNING: the given resolution (\"" + resolutionString + "\") could ne be identified, using originals instead.");
+            }
+        }
 
 
 		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null, albumPassword, /*minResolution,*/ maxResolution);
@@ -394,7 +410,25 @@ public class CmdView implements IView
         String url = this.extractArgumentValueFromCommandline("url");
         String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
         //ResolutionEnum minResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("minResolution"));
-        ResolutionEnum maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution"));
+        ResolutionEnum maxResolution = null;
+        if (this.extractArgumentValueFromCommandline("maxResolution") != null)
+        {
+            //maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution"));
+            String resolutionString = this.extractArgumentValueFromCommandline("maxResolution");
+            if (resolutionString.equals("O")) { maxResolution = ResolutionEnum.Original; }
+            else if (resolutionString.equals("X3")) { maxResolution = ResolutionEnum.X3Large; }
+            else if (resolutionString.equals("X2")) { maxResolution = ResolutionEnum.X2Large; }
+            else if (resolutionString.equals("XL")) { maxResolution = ResolutionEnum.XLarge; }
+            else if (resolutionString.equals("L")) { maxResolution = ResolutionEnum.Large; }
+            else if (resolutionString.equals("M")) { maxResolution = ResolutionEnum.Medium; }
+            else if (resolutionString.equals("S")) { maxResolution = ResolutionEnum.Small; }
+            else
+            {
+                maxResolution = ResolutionEnum.Original;
+                this.log.printLogLine(LogLevelEnum.Warning, "WARNING: the given resolution (\"" + resolutionString + "\") could ne be identified, using originals instead.");
+            }
+        }
+
 
         return new TransferDialogResult(null, null, null, pics_dir, null, url, albumPassword, /*minResolution,*/ maxResolution);
     }
@@ -430,37 +464,37 @@ public class CmdView implements IView
 	//---------------------- private -----------------------------------------------
 	private void printHelp()
 	{
-		this.log.printLogLine("... up- and downloading files from Smugmug.com");
-		this.log.printLogLine("usage:");
-		this.log.printLogLine("     jSmugmugBackup                          : gui interface");
+		this.log.printLogLine(LogLevelEnum.Message, "... up- and downloading files from Smugmug.com");
+		this.log.printLogLine(LogLevelEnum.Message, "usage:");
+		this.log.printLogLine(LogLevelEnum.Message, "     jSmugmugBackup                          : gui interface");
 		//this.log.printLogLine("     jSmugmugBackup --console                : console interface (Java 1.6 only)");
-		this.log.printLogLine("     jSmugmugBackup [action] [options ... ]  : commandline interface");
-		this.log.printLogLine("");
-		this.log.printLogLine("actions:");
-		this.log.printLogLine("     --help         : print this help");
-		this.log.printLogLine("     --list         : list contents of your smumgmug account");
-		this.log.printLogLine("     --sort         : sort categories, subcategories, albums");
-        this.log.printLogLine("     --autotag      : assign tags based on the album name");
-        this.log.printLogLine("     --stats        : show statistics");
-        this.log.printLogLine("     --osmlayer     : create a layer file to be used with OpenStreetMap, requires \"--dir\" option");
-        this.log.printLogLine("     --upload       : upload files to smugmug, requires \"--dir\" option");
-		this.log.printLogLine("     --download     : download files from smugmug, requires \"--dir\" option");
-		this.log.printLogLine("     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
-		this.log.printLogLine("options:");
+		this.log.printLogLine(LogLevelEnum.Message, "     jSmugmugBackup [action] [options ... ]  : commandline interface");
+		this.log.printLogLine(LogLevelEnum.Message, "");
+		this.log.printLogLine(LogLevelEnum.Message, "actions:");
+		this.log.printLogLine(LogLevelEnum.Message, "     --help         : print this help");
+		this.log.printLogLine(LogLevelEnum.Message, "     --list         : list contents of your smumgmug account");
+		this.log.printLogLine(LogLevelEnum.Message, "     --sort         : sort categories, subcategories, albums");
+        this.log.printLogLine(LogLevelEnum.Message, "     --autotag      : assign tags based on the album name");
+        this.log.printLogLine(LogLevelEnum.Message, "     --stats        : show statistics");
+        this.log.printLogLine(LogLevelEnum.Message, "     --osmlayer     : create a layer file to be used with OpenStreetMap, requires \"--dir\" option");
+        this.log.printLogLine(LogLevelEnum.Message, "     --upload       : upload files to smugmug, requires \"--dir\" option");
+		this.log.printLogLine(LogLevelEnum.Message, "     --download     : download files from smugmug, requires \"--dir\" option");
+		this.log.printLogLine(LogLevelEnum.Message, "     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
+		this.log.printLogLine(LogLevelEnum.Message, "options:");
         //this.log.printLogLine("     --pretend                  : don't change anything on smugmug, just print what would be done");
-		this.log.printLogLine("     --user={username or email}          : specify the email-address or the username used to log into smugmug (optional)");
-		this.log.printLogLine("     --password={password}               : specify the password used to log into smugmug, optional (optional)");
-		this.log.printLogLine("     --category={name}                   : perform the given action only on the given category (optional)");
-		this.log.printLogLine("     --subcategory={name}                : perform the given action only on the given subcategory (optional)");
-		this.log.printLogLine("     --album={name}                      : perform the given action only on the given album (optional)");
-        this.log.printLogLine("     --albumKeywords={keywords}          : perform the given action only using the given keywords, separated by \"; \" (optional)");
-        this.log.printLogLine("     --url={smugmug album url}           : only in conjunction with the \"download\" action, downloads the album specified by a url");
-        this.log.printLogLine("     --albumPassword={password}          : only in conjunction with the \"download\" action)");
+		this.log.printLogLine(LogLevelEnum.Message, "     --user={username or email}          : specify the email-address or the username used to log into smugmug (optional)");
+		this.log.printLogLine(LogLevelEnum.Message, "     --password={password}               : specify the password used to log into smugmug, optional (optional)");
+		this.log.printLogLine(LogLevelEnum.Message, "     --category={name}                   : perform the given action only on the given category (optional)");
+		this.log.printLogLine(LogLevelEnum.Message, "     --subcategory={name}                : perform the given action only on the given subcategory (optional)");
+		this.log.printLogLine(LogLevelEnum.Message, "     --album={name}                      : perform the given action only on the given album (optional)");
+        this.log.printLogLine(LogLevelEnum.Message, "     --albumKeywords={keywords}          : perform the given action only using the given keywords, separated by \"; \" (optional)");
+        this.log.printLogLine(LogLevelEnum.Message, "     --url={smugmug album url}           : only in conjunction with the \"download\" action, downloads the album specified by a url");
+        this.log.printLogLine(LogLevelEnum.Message, "     --albumPassword={password}          : only in conjunction with the \"download\" action)");
         //this.log.printLogLine("     --minResolution={S/M/L/XL/X2/X3/O}  : only in conjunction with the \"download\" action)");
-        this.log.printLogLine("     --maxResolution={S/M/L/XL/X2/X3/O}  : only in conjunction with the \"download\" action)");
-        this.log.printLogLine("     --dir={directory}                   : the local base dir for the actions");
-		this.log.printLogLine("");
-		this.log.printLogLine(this.config.getConstantHelpNotes());
+        this.log.printLogLine(LogLevelEnum.Message, "     --maxResolution={S/M/L/XL/X2/X3/O}  : only in conjunction with the \"download\" action)");
+        this.log.printLogLine(LogLevelEnum.Message, "     --dir={directory}                   : the local base dir for the actions");
+		this.log.printLogLine(LogLevelEnum.Message, "");
+		this.log.printLogLine(LogLevelEnum.Message, this.config.getConstantHelpNotes());
 
 		
 		//this.log.printLogLine("     jSmugmugBackup --help");
@@ -475,12 +509,12 @@ public class CmdView implements IView
 	{
 		for (String arg : this.cmd_args)
 		{
-			if (arg.startsWith("--" + argumentName))
+			if (arg.toLowerCase().startsWith("--" + argumentName.toLowerCase()))
 			{
 				return true;
 			}
 		}
-		return false;		
+		return false;
 	}
 	private String extractArgumentValueFromCommandline(String argumentName)
 	{
@@ -493,7 +527,7 @@ public class CmdView implements IView
 			
 			if (concat_mode == false)
 			{
-				if (arg.startsWith("--" + argumentName + "="))
+				if (arg.startsWith("--" + argumentName.toLowerCase() + "="))
 				{
 					result = arg.substring(arg.indexOf("=") + 1);
 					concat_mode = true;

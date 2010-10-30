@@ -64,7 +64,7 @@ public class GlobalConfig
    private final String constantTempDownloadFilename        = "jSmugmugBackup.download.temp";
    private final String constantVideoDownloadFilePostfix    = ".smugmug.mp4";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
-   private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp", ".ogv"}; //...hope thats all possible types
+   private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp", ".ogv", ".ogg"}; //...hope thats all possible types
    private final String constantHelpNotes =
 		"notes:\n" +
         " - It is strongly suggestend to stick with the commandline view, since the GUI is currently\n" +
@@ -113,9 +113,6 @@ public class GlobalConfig
         "   - verify only reports md5 checksum errors if they occur with an image, checksum errors\n" +
         "     with videos are not reported because videos are converted by smugmug after uploading\n" +
         "     which makes md5 checks fail on all videos\n" +
-        " - statistics:" +
-        "   - nesseceary functions are more or less implemented, but the smugmug API seems\n" +
-        "     to return zero for everything ... there's not much I can do about it atm, sorry\n" +
         " - <to be continued>\n";
    private final String constantOSMbasicHtml =
         "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
@@ -214,10 +211,11 @@ public class GlobalConfig
    private final FileComparator constantFileComparator = new FileComparator();
 
    // persistent options --> getter, xml
-   private String  persistentLogfile = null;
-   private boolean persistentCheckMD5Sums;
-   private boolean persistentCacheAccountInfo;
-   private boolean persistentAppendLogfile;
+   private String                           persistentLogfile = null;
+   private jSmugmugBackup.view.LogLevelEnum persistentLogVerbosity;
+   private boolean                          persistentCheckMD5Sums;
+   private boolean                          persistentCacheAccountInfo;
+   private boolean                          persistentAppendLogfile;
    //private String  persistentDefaultUsername = ""; //don't activate this yet
    //private boolean persistentCaseSensitiveImageNames = true;
    //private boolean persistentCaseSensitiveFolderNames = true;
@@ -286,6 +284,10 @@ public class GlobalConfig
        if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
        this.persistentLogfile = nodes.item(0).getTextContent();
        //System.out.println("persistentLogfile: " + this.persistentLogfile);
+
+       nodes = doc.getElementsByTagName("verbosity");
+       if (nodes.getLength() != 1) { System.out.println("ERROR: an error occured while loading " + this.internconstantXMLConfigFilename); System.exit(1); }
+       this.persistentLogVerbosity = jSmugmugBackup.view.LogLevelEnum.valueOf(nodes.item(0).getTextContent());
 
        // persistentCheckMD5Sums
        nodes = doc.getElementsByTagName("checkMD5Sums");
@@ -473,6 +475,7 @@ public class GlobalConfig
    //persistant getter
    public boolean getPersistentCheckMD5Sums() { return this.persistentCheckMD5Sums; }
    public String getPersistentLogfile() { return persistentLogfile; }
+   public jSmugmugBackup.view.LogLevelEnum getPersistentLogVerbosity() { return this.persistentLogVerbosity; }
    public boolean getPersistentCacheAccountInfo() { return this.persistentCacheAccountInfo; }
    public boolean getPersistentAppendLogfile() { return this.persistentAppendLogfile; }
    

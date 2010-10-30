@@ -90,7 +90,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if (SmugmugConnector3G.login_sessionID == null) { return null; }
 
 
-		this.log.printLog(Helper.getCurrentTimeString() + " downloading account data ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " downloading account data ... ");
 
 
         // downloading album statistic data from smugmug ... they will later be merged with other album information
@@ -178,7 +178,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 			statJsonCategory = (JSONObject)this.getJSONValue(tree, "Categories[" + statCategoryIndex + "]");
         }
         //this.log.printLogLine("totalAlbumCount: " + totalAlbumCount);
-        this.log.printLog("(estimatedImageCount: " + stat.estimatedImageCount + ", estimatedAlbumCount: " + stat.estimatedAlbumCount + ") ... "); // too low!!
+        this.log.printLog(LogLevelEnum.Message, "(estimatedImageCount: " + stat.estimatedImageCount + ", estimatedAlbumCount: " + stat.estimatedAlbumCount + ") ... "); // too low!!
 
 
 
@@ -459,11 +459,11 @@ public class SmugmugConnector3G implements ISmugmugConnector
             }
         }
         //this.log.printLogLine("checkAlbumCount: " + checkAlbumCount);
-        this.log.printLog("(totalImageCount: " + totalImageCount + ", totalAlbumCount: " + totalAlbumCount + ", cacheHits: " + cacheHits + ") ... ");
+        this.log.printLog(LogLevelEnum.Message, "(totalImageCount: " + totalImageCount + ", totalAlbumCount: " + totalAlbumCount + ", cacheHits: " + cacheHits + ") ... ");
 
         if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnector3G.albumCache.forceSaveCacheToDisk(); }
 
-        this.log.printLogLine("ok");
+        this.log.printLogLine(LogLevelEnum.Message, "ok");
 
 		return smugmugRoot;
 	}
@@ -552,7 +552,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             if (stat != null)
             {
                 stat.imageCount++; double currCompletion = (double)stat.imageCount / (double) stat.estimatedImageCount;
-                if (currCompletion > stat.currCompletionStep) { this.log.printLog( (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
+                if (currCompletion > stat.currCompletionStep) { this.log.printLog(LogLevelEnum.Message, (int)(stat.currCompletionStep*100) + "%..."); stat.currCompletionStep += stat.completionStep; }
             }
 
             imageIndex++;
@@ -700,7 +700,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 //	}
 	public void downloadFile(String imageURL, File fileName/*, long expectedFilesize*/)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " downloading: " + fileName.getAbsolutePath() + " ... ");
 
         //temporary download destination, renaming afterwards
         File tempFileName = new File(fileName.getParentFile().getAbsolutePath() + "/" + this.config.getConstantTempDownloadFilename());
@@ -736,7 +736,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
                 //retryCount++;
                 //if (retryCount > 3) { this.log.printLog("giving up (under development) ... "); } else
-                if (tempFileName.length() != contentFilesize) { this.log.printLog("incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
+                if (tempFileName.length() != contentFilesize) { this.log.printLog(LogLevelEnum.Message, "incomplete file detected (size: " + tempFileName.length() + ", expected: " + contentFilesize + "), retrying ... "); }
             } while ( (tempFileName.length() != contentFilesize) /*&& (retryCount <= 3)*/ );
 
 
@@ -769,7 +769,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             //rename file
             boolean renameResult;
             renameResult = tempFileName.renameTo(fileName);
-            if (!renameResult) { this.log.printLogLine("ERROR: renaming temporary file to " + fileName + " failed - this might be a platform specific issue"); System.exit(1); }
+            if (!renameResult) { this.log.printLogLine(LogLevelEnum.Error, "ERROR: renaming temporary file to " + fileName + " failed - this might be a platform specific issue"); System.exit(1); }
 
 
             long downloadTime = (new Date()).getTime() - startTime;
@@ -782,10 +782,10 @@ public class SmugmugConnector3G implements ISmugmugConnector
             double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
 
             //debug
-            //this.log.printLog("... fileName.length=" + fileName.length() + " ...");
+            //this.log.printLog(LogLevelEnum.Message, "... fileName.length=" + fileName.length() + " ...");
 
             DecimalFormat df = new DecimalFormat("0.0");
-            this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(downloadSpeed) + "kb/s)");
+            this.log.printLog(LogLevelEnum.Message, "ok (" + df.format(filesizeMB) + "mb@" + df.format(downloadSpeed) + "kb/s)");
 			//this.log.printLogLine("ok");
 		}
 		catch (FileNotFoundException e) { e.printStackTrace(); }
@@ -829,18 +829,18 @@ public class SmugmugConnector3G implements ISmugmugConnector
                 // this exception seems thrown when the url (http://upload.smugmug.com/ + filename) contains a german
                 // "Umlaut" character or similar - no idea why, fixed by converting filename to ASCII before using it in the URL
                 // see: smugmug_images_upload below
-            	this.log.printLog(Helper.getCurrentTimeString() + " caught ClientProtocolException (message:" + e.getMessage() + "), retrying ... ");
+            	this.log.printLog(LogLevelEnum.Exception, Helper.getCurrentTimeString() + " caught ClientProtocolException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
                 repeat = true;
 			}
 			catch (FileNotFoundException e)
 			{
-				this.log.printLog("caught FileNotFoundException ... ");
+				this.log.printLog(LogLevelEnum.Exception, "caught FileNotFoundException ... ");
 				repeat = false;
 			}
             catch (java.net.SocketException e)
             {
-            	this.log.printLog(Helper.getCurrentTimeString() + " caught java.net.SocketException (message:" + e.getMessage() + "), retrying ... ");
+            	this.log.printLog(LogLevelEnum.Exception, Helper.getCurrentTimeString() + " caught java.net.SocketException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
                 repeat = true;
 
@@ -905,19 +905,19 @@ public class SmugmugConnector3G implements ISmugmugConnector
             }
             catch (IOException e) //maybe repeating on IOException is a little too optimistic
             {
-            	this.log.printLog(Helper.getCurrentTimeString() + " caught IOException (message:" + e.getMessage() + "), retrying ... ");
+            	this.log.printLog(LogLevelEnum.Exception, Helper.getCurrentTimeString() + " caught IOException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
                 repeat = true;
             }
 			catch (java.lang.RuntimeException e)
             {
-            	this.log.printLog(Helper.getCurrentTimeString() + " caught java.lang.RuntimeException (message:" + e.getMessage() + "), retrying ... ");
+            	this.log.printLog(LogLevelEnum.Exception, Helper.getCurrentTimeString() + " caught java.lang.RuntimeException (message:" + e.getMessage() + "), retrying ... ");
             	Helper.pause(this.config.getConstantRetryWait());
                 repeat = true;
             }
             catch (Exception e)
             {
-            	this.log.printLog(Helper.getCurrentTimeString() + " caught Exception (message:" + e.getMessage() + ") ... ");
+            	this.log.printLog(LogLevelEnum.Exception, Helper.getCurrentTimeString() + " caught Exception (message:" + e.getMessage() + ") ... ");
                 e.printStackTrace();
             	repeat = false;
             }
@@ -931,15 +931,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //temporary:
         if (jobj == null)
         {
-        	this.log.printLogLine("ERROR: jobj == null ... this is unusual");
-        	this.log.printLogLine(responseBody);
+        	this.log.printLogLine(LogLevelEnum.Error, "ERROR: jobj == null ... this is unusual");
+        	this.log.printLogLine(LogLevelEnum.Error, responseBody);
         }
 
         return jobj;
 	}
 	private Number smugmug_login_withPassword(String userEmail, String password)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " logging in ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " logging in ... ");
 
         String methodName = "smugmug.login.withPassword";
         //this.log.printLog(methodName + " ... ");
@@ -968,7 +968,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        	SmugmugConnector3G.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
 	        	SmugmugConnector3G.login_nickname     = (String)this.getJSONValue(jobj, "Login.User.NickName");
 	        	SmugmugConnector3G.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
-	        	this.log.printLogLine("ok");
+	        	this.log.printLogLine(LogLevelEnum.Message, "ok");
 	        	//return true;
 	        	return SmugmugConnector3G.login_userID;
 	        }
@@ -979,7 +979,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        	SmugmugConnector3G.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
 	        	SmugmugConnector3G.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.NickName");
 	        	SmugmugConnector3G.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
-	        	this.log.printLogLine("failed");
+	        	this.log.printLogLine(LogLevelEnum.Message, "failed");
 
 	        	//this is not the optimal solution
 	        	//System.exit(0);
@@ -989,7 +989,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             else if (this.getJSONValue(jobj, "stat").equals("fail"))
             {
                 // generic "fail" handling ... everything except the "invalid login" which is handled above
-                this.log.printLog("login failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
+                this.log.printLog(LogLevelEnum.Message, "login failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
 
                 //maybe we should quit here??
 
@@ -998,7 +998,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("retrying ... ");
+	        	this.log.printLog(LogLevelEnum.Message, "retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
 
                 Helper.pause(this.config.getConstantRetryWait());
@@ -1041,7 +1041,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             else if (this.getJSONValue(jobj, "stat").equals("fail"))
             {
                 // generic "fail" handling ... everything except the "invalid login" which is handled above
-                this.log.printLog("relogin failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
+                this.log.printLog(LogLevelEnum.Message, "relogin failed (code " + this.getJSONValue(jobj, "code") + ": " + this.getJSONValue(jobj, "message") + "), retrying ... ");
                 Helper.pause(this.config.getConstantRetryWait());
 
                 //maybe we should quit here??
@@ -1050,7 +1050,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        {
 	        	//this.log.printLog(this.getTimeString() + " smugmug.login.withHash ... failed");
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("relogin failed, retrying ...");
+	        	this.log.printLog(LogLevelEnum.Message, "relogin failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
                 Helper.pause(this.config.getConstantRetryWait());
 	        }
@@ -1058,7 +1058,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	}
 	private void smugmug_login_anonymously(boolean beQuiet)
 	{
-        if (!beQuiet) { this.log.printLog(Helper.getCurrentTimeString() + " logging in anonymously ... "); }
+        if (!beQuiet) { this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " logging in anonymously ... "); }
 
 		
 
@@ -1084,20 +1084,20 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	        	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	if (!beQuiet) { this.log.printLogLine("ok"); }
+	        	if (!beQuiet) { this.log.printLogLine(LogLevelEnum.Message, "ok"); }
 	        	SmugmugConnector3G.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	return;
 	        }
 	        else
 	        {
-	        	this.log.printLog("anonymous login failed, retrying ...");
+	        	this.log.printLog(LogLevelEnum.Message, "anonymous login failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
 	}
 	private void smugmug_logout_logout()
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " logging out ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " logging out ... ");
 		//this.log.printLog("smugmug.logout ...");
 
 		//build url
@@ -1119,9 +1119,9 @@ public class SmugmugConnector3G implements ISmugmugConnector
         	SmugmugConnector3G.login_userID       = null;
         	SmugmugConnector3G.login_nickname     = null;
         	SmugmugConnector3G.login_passwordHash = null;
-        	this.log.printLogLine("ok");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok");
         }
-        else { this.log.printLogLine("failed"); }
+        else { this.log.printLogLine(LogLevelEnum.Message, "failed"); }
 	}
 
 	private JSONObject smugmug_users_getTree(String sitePassword)
@@ -1163,7 +1163,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("smugmug.users.getTree failed, retrying ...");
+	        	this.log.printLog(LogLevelEnum.Message, "smugmug.users.getTree failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -1208,7 +1208,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("smugmug.users.getTransferStats failed, retrying ...");
+	        	this.log.printLog(LogLevelEnum.Message, "smugmug.users.getTransferStats failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -1218,7 +1218,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 	private JSONObject smugmug_categories_create(String name)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " creating category ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " creating category ... ");
 
 		String methodName = "smugmug.categories.create";
 		//System.out.print(methodName + " ...");
@@ -1253,7 +1253,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         }
         else
         {
-        	this.log.printLogLine("creating category failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "creating category failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1261,7 +1261,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
     }
 	private JSONObject smugmug_categories_rename(int categoryID, String newName)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " renaming category ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " renaming category ... ");
 
 		String methodName = "smugmug.categories.rename";
 		System.out.print(methodName + " ...");
@@ -1285,12 +1285,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine("failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1298,7 +1298,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
     }
     private JSONObject smugmug_subcategories_create(String name, int categoryID)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " creating subcategory ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " creating subcategory ... ");
 
 		String methodName = "smugmug.subcategories.create";
 		//System.out.print(methodName + " ...");
@@ -1329,7 +1329,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         }
         else
         {
-        	this.log.printLogLine("creating subcategory failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "creating subcategory failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1337,7 +1337,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	}
 	private JSONObject smugmug_subcategories_rename(int subcategoryID, String newName)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " renaming subcategory ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " renaming subcategory ... ");
 
 		String methodName = "smugmug.subcategories.rename";
 		System.out.print(methodName + " ...");
@@ -1362,13 +1362,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
         	//this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
-        	this.log.printLogLine("ok");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok");
         	this.printJSONObject(jobj);
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine("failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1376,7 +1376,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
     }
 	private JSONObject smugmug_albums_create(String title, int categoryID, int subCategoryID, String albumKeywords)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " creating album ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " creating album ... ");
 
 		String methodName = "smugmug.albums.create";
 		//System.out.print(methodName + " ...");
@@ -1469,7 +1469,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         }
         else
         {
-        	this.log.printLogLine("creating album failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "creating album failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1478,7 +1478,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	private JSONObject smugmug_albums_getInfo(int albumID, String password, String sitePassword, String albumKey)
 	{
 		String methodName = "smugmug.albums.getInfo";
-		this.log.printLog(methodName + " ...");
+		this.log.printLog(LogLevelEnum.Message, methodName + " ...");
 
 		//build url
 		String url = this.config.getConstantSmugmugServerURL_122() + "?";
@@ -1502,14 +1502,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	             (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	this.log.printLogLine("ok");
+	        	this.log.printLogLine(LogLevelEnum.Message, "ok");
 	        	return jobj;
 	        }
 	        else
 	        {
-	        	this.log.printLogLine("failed");
+	        	this.log.printLogLine(LogLevelEnum.Message, "failed");
 	        	//this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
-	        	this.log.printLog(methodName + "retrying ... ");
+	        	this.log.printLog(LogLevelEnum.Message, methodName + "retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -1518,7 +1518,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
     }
 	private JSONObject smugmug_albums_changeSettings_title(int albumID, String newTitle)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (title) ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " changing album settings (title) ... ");
 
 		String methodName = "smugmug.albums.changeSettings";
 		//System.out.print(methodName + " ...");
@@ -1610,13 +1610,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
         	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
-        	this.log.printLogLine("ok");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok");
         	//this.printJSONObject(jobj);
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine("failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1624,7 +1624,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	}
 	private JSONObject smugmug_albums_changeSettings_position(int albumID, int newPosition)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " changing album settings (id=" + albumID + ", newPosition=" + newPosition + ") ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " changing album settings (id=" + albumID + ", newPosition=" + newPosition + ") ... ");
 
 		String methodName = "smugmug.albums.changeSettings";
 		//System.out.print(methodName + " ...");
@@ -1710,19 +1710,19 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
-		this.log.printLogLine("url: " + url);
+		this.log.printLogLine(LogLevelEnum.Message, "url: " + url);
 
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
         	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
-        	this.log.printLogLine("ok");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok");
         	//this.printJSONObject(jobj);
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine("failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1785,7 +1785,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("smugmug.images.get failed, retrying ...");
+	        	this.log.printLog(LogLevelEnum.Message, "smugmug.images.get failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -1832,20 +1832,20 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	           	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
 	        	//this.log.printLogLine("ok");
-                this.log.printLog(".");
+                this.log.printLog(LogLevelEnum.Message, ".");
 	           	return jobj;
 	        }
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	        		  (this.getJSONValue(jobj, "code").equals(new Long(5))) )
 	        {
-	        	this.log.printLogLine("nothing changed");
+	        	this.log.printLogLine(LogLevelEnum.Message, "nothing changed");
                 //this.log.printLog("_");
 	        	return jobj;
 	        }
 	        else
 	        {
 	        	//this.log.printLogLine("failed");
-	        	this.log.printLog("smugmug.images.changeSettings failed, retrying ...");
+	        	this.log.printLog(LogLevelEnum.Message, "smugmug.images.changeSettings failed, retrying ...");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -1854,7 +1854,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	}
 	private JSONObject smugmug_images_delete(int imageID)
 	{
-		this.log.printLog(Helper.getCurrentTimeString() + " deleting (imageID=" + imageID + ") ... ");
+		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " deleting (imageID=" + imageID + ") ... ");
 
 		String methodName = "smugmug.images.delete";
 		//this.log.printLog(methodName + " ... ");
@@ -1878,12 +1878,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine("ok");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok");
            	return jobj;
         }
         else
         {
-        	this.log.printLogLine("failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "failed");
            	this.printJSONObject(jobj);
         }
 
@@ -1892,7 +1892,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	private JSONObject smugmug_images_getURLs(int imageID)
 	{
 		String methodName = "smugmug.images.getURLs";
-		this.log.printLog(methodName + " ...");
+		this.log.printLog(LogLevelEnum.Message, methodName + " ...");
 
 		//build url
 		String url = this.config.getConstantSmugmugServerURL_122() + "?";
@@ -1917,13 +1917,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine("ok");
+        	this.log.printLogLine(LogLevelEnum.Message, "ok");
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine("failed");
-        	this.log.printLogLine(Helper.getCurrentTimeString() + " " + methodName + " ... failed");
+        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, Helper.getCurrentTimeString() + " " + methodName + " ... failed");
         }
 
         return null;
@@ -1964,7 +1964,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        {
 	        	//this.log.printLogLine("failed");
 	        	//this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
-	        	this.log.printLog(methodName + "retrying ... ");
+	        	this.log.printLog(LogLevelEnum.Message, methodName + "retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
 	        }
 		} while (true); //hopefully, this will have an end ... sooner or later ...
@@ -1975,11 +1975,11 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	{
         if (keywords == null)
         {
-            this.log.printLog(Helper.getCurrentTimeString() + " upload: " + fileName.getAbsolutePath() + " ... ");
+            this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " upload: " + fileName.getAbsolutePath() + " ... ");
         }
         else
         {
-            this.log.printLog(Helper.getCurrentTimeString() + " upload: " + fileName.getAbsolutePath() + " (" + keywords + ") ... ");
+            this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " upload: " + fileName.getAbsolutePath() + " (" + keywords + ") ... ");
         }
 
 
@@ -2047,7 +2047,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                     double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
 
                     DecimalFormat df = new DecimalFormat("0.0");
-                    this.log.printLog("ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s");
+                    this.log.printLog(LogLevelEnum.Message, "ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s");
                     //this.log.printLogLine("ok");
                     return jobj;
                 }
@@ -2055,7 +2055,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
                           (this.getJSONValue(jobj, "method").equals(methodName)) &&
                           (this.getJSONValue(jobj, "message") == null ))
                 {
-                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
+                    this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " retrying (no error message given) ... ");
                     Helper.pause(this.config.getConstantRetryWait());
 
                     this.printJSONObject(jobj); //temporary
@@ -2064,10 +2064,10 @@ public class SmugmugConnector3G implements ISmugmugConnector
                           (this.getJSONValue(jobj, "method").equals(methodName)) &&
                           (this.getJSONValue(jobj, "message").equals("wrong format ()")))
                 {
-                    this.log.printLogLine("failed (wrong format)");
-                    this.log.printLogLine("  ERROR: the file format was not recognized by SmugMug");
-                    this.log.printLogLine("  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
-                    this.log.printLogLine("  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+                    this.log.printLogLine(LogLevelEnum.Message, "failed (wrong format)");
+                    this.log.printLogLine(LogLevelEnum.Error, "  ERROR: the file format was not recognized by SmugMug");
+                    this.log.printLogLine(LogLevelEnum.Error, "  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
+                    this.log.printLogLine(LogLevelEnum.Error, "  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
 
                     //todo: maybe set ignore tag here ... and print info to console
 
@@ -2104,14 +2104,14 @@ public class SmugmugConnector3G implements ISmugmugConnector
                     */
 
 
-                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
+                    this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " retrying (file was truncated) ... ");
                     Helper.pause(this.config.getConstantRetryWait());
                 }
                 else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
                           (this.getJSONValue(jobj, "method").equals(methodName)) &&
                           (((String)this.getJSONValue(jobj, "message")).startsWith("system error (invalid album id)") ))
                 {
-                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
+                    this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " retrying (invalid album id) ... ");
                     Helper.pause(this.config.getConstantRetryWait());
 
                     //note: this error seems not to go away, even through repetition ... maybe a relogin helps???
@@ -2130,20 +2130,20 @@ public class SmugmugConnector3G implements ISmugmugConnector
                     double filesizeMB = ((double)fileName.length() / (1024.0 * 1024.0));
 
                     DecimalFormat df = new DecimalFormat("0.0");
-                    this.log.printLog("recovered from exception - ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
+                    this.log.printLog(LogLevelEnum.Message, "recovered from exception - ok (" + df.format(filesizeMB) + "mb@" + df.format(uploadSpeed) + "kb/s)");
                     //this.log.printLogLine("ok");
                     return jobj;
                 }
                 else
                 {
 
-                    this.log.printLog(Helper.getCurrentTimeString() + " retrying (reason unknown) ... ");
+                    this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " retrying (reason unknown) ... ");
                     this.printJSONObject(jobj); //temporary
                 }
             }
             catch (java.lang.NullPointerException ne) //temporary
             {
-                this.log.printLogLine("caught NullPointer exception: " + ne.getMessage());
+                this.log.printLogLine(LogLevelEnum.Exception, "caught NullPointer exception: " + ne.getMessage());
                 ne.printStackTrace();
                 this.printJSONObject(jobj);
                 System.exit(1);
@@ -2157,8 +2157,8 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 	private void printJSONObject(JSONObject jobj)
 	{
-		this.log.printLogLine("DEBUG: printing JSONObject ...");
-		this.log.printLogLine("DEBUG: jobj=" + jobj);
+		this.log.printLogLine(LogLevelEnum.Debug, "DEBUG: printing JSONObject ...");
+		this.log.printLogLine(LogLevelEnum.Debug, "DEBUG: jobj=" + jobj);
 
         if (jobj != null) { this.printJSONObject(jobj, ""); }
 	}
@@ -2171,12 +2171,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 			if (value instanceof JSONObject)
 			{
-				this.log.printLogLine("DEBUG:" + indent + key + ": ");
+				this.log.printLogLine(LogLevelEnum.Debug, "DEBUG:" + indent + key + ": ");
 				this.printJSONObject((JSONObject)value, indent + "   ");
 			}
 			else if (value instanceof JSONArray)
 			{
-				this.log.printLogLine("DEBUG:" + indent + key + " (Array)");
+				this.log.printLogLine(LogLevelEnum.Debug, "DEBUG:" + indent + key + " (Array)");
 				JSONArray array = (JSONArray)value;
 				for (int j = 0; j < array.size(); j++)
 				{
@@ -2184,7 +2184,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 					this.printJSONObject((JSONObject)o, indent + key + "[" + j + "].");
 				}
 			}
-			else this.log.printLogLine("DEBUG:" + indent + key + ": " + value);
+			else this.log.printLogLine(LogLevelEnum.Debug, "DEBUG:" + indent + key + ": " + value);
 
 			//System.out.println(indent + jobj.get(jobj.keySet().toArray()[i]));
 
@@ -2253,7 +2253,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             */
 
             //checking if cache has already been initialized
-            if (SmugmugConnector3G.albumCache == null) { this.log.printLogLine("ERROR: album cache has not been initialized"); System.exit(1); }
+            if (SmugmugConnector3G.albumCache == null) { this.log.printLogLine(LogLevelEnum.Debug, "ERROR: album cache has not been initialized"); System.exit(1); }
 
             if (SmugmugConnector3G.albumCache.exists(albumID))
             {

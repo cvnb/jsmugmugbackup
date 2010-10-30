@@ -67,10 +67,16 @@ public class Logger
 		this.view = view;
 	}
 	
-    public void printLog(String text)
+    public void printLog(LogLevelEnum loglevel, String text)
     {
     	//write to view
-    	if (this.view != null) this.view.printLog(text);
+    	if (this.view != null)
+        {
+            if (loglevel.compareTo(this.config.getPersistentLogVerbosity()) >= 0)
+            {
+                this.view.printLog(text);
+            }
+        }
     	
     	//write to file
     	try
@@ -82,12 +88,12 @@ public class Logger
     	catch (IOException e) { e.printStackTrace(); }    	
     }
 	
-    public void printLogLine(String text)
+    public void printLogLine(LogLevelEnum loglevel, String text)
     {
-    	this.printLog(text + "\n");
+    	this.printLog(loglevel, text + "\n");
     }
 
-    public void printLogFixedWidth(String text, int width)
+    public void printLogFixedWidth(LogLevelEnum loglevel, String text, int width)
     {
         String result = null;
 
@@ -103,10 +109,10 @@ public class Logger
         }
         else { result = text; }
 
-        this.printLog(result);
+        this.printLog(loglevel, result);
     }
 
-    public void printLogFixedWidthRAL(String text, int width)
+    public void printLogFixedWidthRAL(LogLevelEnum loglevel, String text, int width)
     {
         String result = null;
 
@@ -117,7 +123,7 @@ public class Logger
         }
         else { result = text; }
 
-        this.printLog(result);
+        this.printLog(loglevel, result);
     }
 
 
