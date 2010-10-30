@@ -7,7 +7,7 @@
 package jSmugmugBackup.model.queue;
 
 import jSmugmugBackup.model.Helper;
-import jSmugmugBackup.view.Logger;
+import jSmugmugBackup.view.*;
 
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -41,7 +41,7 @@ public class TransferQueueProcessor implements Runnable
 		DecimalFormat df = new DecimalFormat("0.0");		
 		
 		
-		this.log.printLogLine(Helper.getCurrentTimeString() + " initializing TransferQueueProcessor (items: " + this.queue.size() + ", size: " + df.format(queue_size_mb) + " mb) ... ok");
+		this.log.printLogLine(LogLevelEnum.Message, Helper.getCurrentTimeString() + " initializing TransferQueueProcessor (items: " + this.queue.size() + ", size: " + df.format(queue_size_mb) + " mb) ... ok");
 
 		//getting start time
 		this.startTime = (new Date()).getTime();
@@ -49,7 +49,7 @@ public class TransferQueueProcessor implements Runnable
 	
 	public void run()
 	{
-		this.log.printLogLine(Helper.getCurrentTimeString() + " running TransferQueueProcessor in separate Thread ...");
+		this.log.printLogLine(LogLevelEnum.Message, Helper.getCurrentTimeString() + " running TransferQueueProcessor in separate Thread ...");
 
         int itemCount = 0;
         int itemTotalNumber = this.queue.size(); //total number of items in queue
@@ -67,7 +67,7 @@ public class TransferQueueProcessor implements Runnable
 			long elapsedTime = (new Date()).getTime() - startTime;
             double estimatedTotalTime = (double)elapsedTime / ( (double)currTransferedBytes / (double)this.queue_size_byte );
 	        long estimatedRemainingTime = (long)estimatedTotalTime - elapsedTime;
-			this.log.printLogLine(", " + itemCount + "/" + itemTotalNumber + ", " + Helper.getDurationTimeString(estimatedRemainingTime) + ")");
+			this.log.printLogLine(LogLevelEnum.Message, ", " + itemCount + "/" + itemTotalNumber + ", " + Helper.getDurationTimeString(estimatedRemainingTime) + ")");
 			//this.log.printLogLine("DEBUG: elasped time=" + elapsedTime + ",\tcurrTransferedBytes=" + currTransferedBytes + ",\tqueue_size_byte=" + this.queue_size_byte);
 
 			//get next item

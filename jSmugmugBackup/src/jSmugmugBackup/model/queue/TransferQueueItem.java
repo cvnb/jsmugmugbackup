@@ -116,7 +116,7 @@ public class TransferQueueItem implements ITransferQueueItem
 			//this.smugmugConnector.verifyFile();
 		}
 		*/
-		else this.log.printLogLine("error in TransferQueueItem.process()");
+		else this.log.printLogLine(LogLevelEnum.Message, "error in TransferQueueItem.process()");
 		
 		this.result_transferedBytes = this.smugmugConnector.getTransferedBytes();
 		this.result_processed = true;

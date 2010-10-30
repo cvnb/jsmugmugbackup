@@ -6,7 +6,7 @@
  */
 package jSmugmugBackup.model.queue;
 
-import jSmugmugBackup.view.Logger;
+import jSmugmugBackup.view.*;
 
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -68,7 +68,7 @@ public class TransferQueue implements ITransferQueue
 
 	public void startAsyncProcessing()
 	{
-        this.log.printLogLine("TransferQueue.startAsyncProcessing()");
+        this.log.printLogLine(LogLevelEnum.Message, "TransferQueue.startAsyncProcessing()");
 
 		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, this.asyncProcessQueueFinishedListener));
 		this.queueProcessorThread.start();
@@ -77,7 +77,7 @@ public class TransferQueue implements ITransferQueue
 
 	public void startSyncProcessing()
 	{
-		this.log.printLogLine("TransferQueue.startSyncProcessing()");
+		this.log.printLogLine(LogLevelEnum.Message, "TransferQueue.startSyncProcessing()");
 		
 		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, null));
 		this.queueProcessorThread.start();

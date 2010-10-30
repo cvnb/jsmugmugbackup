@@ -8,7 +8,7 @@ package jSmugmugBackup.model.smugmugLayer;
 import jSmugmugBackup.config.GlobalConfig;
 import jSmugmugBackup.model.accountLayer.IAlbum;
 import jSmugmugBackup.model.accountLayer.IImage;
-import jSmugmugBackup.view.Logger;
+import jSmugmugBackup.view.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -46,7 +46,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
 
     public void putAlbum(IAlbum album)
     {
-        if (this.cache.containsKey(album.getID())) { this.log.printLogLine("ERROR: album can not be added twice to the cache!"); }
+        if (this.cache.containsKey(album.getID())) { this.log.printLogLine(LogLevelEnum.Error, "ERROR: album can not be added twice to the cache!"); }
 
         this.cache.put(album.getID(), album);
 
@@ -124,19 +124,19 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
             catch (ClassNotFoundException ex)
             {
                 //ex.printStackTrace();
-                this.log.printLogLine("ERROR: class not found exception thrown while loading the cache from disk, starting with an empty cache!");
+                this.log.printLogLine(LogLevelEnum.Error, "ERROR: class not found exception thrown while loading the cache from disk, starting with an empty cache!");
                 this.initCache();
             }
             catch (IOException ex)
             {
                 //ex.printStackTrace();
-                this.log.printLogLine("ERROR: I/O exception thrown while loading the cache from disk, starting with an empty cache!");
+                this.log.printLogLine(LogLevelEnum.Error, "ERROR: I/O exception thrown while loading the cache from disk, starting with an empty cache!");
                 this.initCache();
             }
         }
         else
         {
-            this.log.printLog("WARNING: no local cache file found, starting empty (this may take a while!) ... ");
+            this.log.printLog(LogLevelEnum.Warning, "WARNING: no local cache file found, starting empty (this may take a while!) ... ");
             this.initCache();
         } 
     }
@@ -163,7 +163,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
         }
         catch (IOException ex)
         {
-            this.log.printLogLine("ERROR: an IOException occured during serialization!");
+            this.log.printLogLine(LogLevelEnum.Warning, "ERROR: an IOException occured during serialization!");
             ex.printStackTrace();
         }
     }
