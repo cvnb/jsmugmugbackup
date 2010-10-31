@@ -200,7 +200,7 @@ public class AccountListingProxy implements IAccountListingProxy
         String subcategoryAsciiName = Helper.encodeAsASCII(subcategoryName);
         String albumAsciiName = Helper.encodeAsASCII(albumName);
 
-		this.log.printLogLine(LogLevelEnum.Message, Helper.getCurrentTimeString() + " enqueuing album: " + categoryAsciiName + "/" + subcategoryAsciiName + "/" + albumAsciiName + " (" + pics_dir + ")");
+		this.log.printLogLine(LogLevelEnum.Message, 0, Helper.getCurrentTimeString() + " enqueuing album: " + categoryAsciiName + "/" + subcategoryAsciiName + "/" + albumAsciiName + " (" + pics_dir + ")");
 
         Vector<String> albumTags = Helper.getTags(albumKeywords);
 
@@ -286,19 +286,19 @@ public class AccountListingProxy implements IAccountListingProxy
                 // check if file is not empty
                 if (fileList[i].length() == 0)
                 {
-                	this.log.printLogLine(LogLevelEnum.Warning, "  WARNING: " + fileList[i].getName() + " - file has 0 bytes ... skipping");
+                	this.log.printLogLine(LogLevelEnum.Warning, 0, "  WARNING: " + fileList[i].getName() + " - file has 0 bytes ... skipping");
                 	skippedCount++;
                 }                
                 // check if file is smaller than 600 MB
                 else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
                 {
-                	this.log.printLogLine(LogLevelEnum.Warning, "  WARNING: " + fileList[i].getName() + " - filesize greater than " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB is not supported ... skipping");
+                	this.log.printLogLine(LogLevelEnum.Warning, 0, "  WARNING: " + fileList[i].getName() + " - filesize greater than " + (this.config.getConstantUploadFileSizeLimit() / (1024*1024)) + " MB is not supported ... skipping");
                 	skippedCount++;
                 }                
                 //check if someone has manually set the ignore tag
                 else if ( (new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists() )
                 {
-                	this.log.printLogLine(LogLevelEnum.Warning, "  WARNING: " + fileList[i].getName() + " - the ignore tag was set ... skipping");
+                	this.log.printLogLine(LogLevelEnum.Warning, 0, "  WARNING: " + fileList[i].getName() + " - the ignore tag was set ... skipping");
                 	skippedCount++;
                 }
                 else
@@ -325,7 +325,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         }
                         else
                         {
-                            this.log.printLogLine(LogLevelEnum.Warning, "  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
+                            this.log.printLogLine(LogLevelEnum.Warning, 0, "  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... skipping anyway");
                             skippedCount++;
 
                             //this.log.printLogLine("  WARNING: " + fileList[i].getName() + " - exists on smugmug, but has different MD5Sum - this is unusual ... uploading again");
@@ -357,7 +357,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
                         if ( image.getSize() != fileList[i].length() )
                         {
-                            this.log.printLogLine(LogLevelEnum.Warning, "  WARNING: " + fileList[i].getName() + " - filesize does not match (local: " + fileList[i].length() + ", remote: " + image.getSize() + " ... skipping anyway");
+                            this.log.printLogLine(LogLevelEnum.Warning, 0, "  WARNING: " + fileList[i].getName() + " - filesize does not match (local: " + fileList[i].length() + ", remote: " + image.getSize() + " ... skipping anyway");
                         }
                     }
                 }
@@ -367,7 +367,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //reducing the output a little bit: only show this line if we added any files
         if (uploadCount > 0)
         {
-            this.log.printLogLine(LogLevelEnum.Message, "  ... added " + uploadCount + " files, " + skippedCount + " were skipped, " + unsupportedCount + " had an unsupported file type.");
+            this.log.printLogLine(LogLevelEnum.Message, 0, "  ... added " + uploadCount + " files, " + skippedCount + " were skipped, " + unsupportedCount + " had an unsupported file type.");
         }
 
 	}
@@ -378,7 +378,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(albumPassword); }
 
-		this.log.printLogLine(LogLevelEnum.Message, Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
+		this.log.printLogLine(LogLevelEnum.Message, 0, Helper.getCurrentTimeString() + " enqueuing album (id:" + albumID + ", target:" + targetBaseDir + ")");
 
 		int downloadCount = 0;
 		int skippedCount = 0;
@@ -389,7 +389,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		
 		//check target dir
 		boolean dirIsNew = (new File(targetDir)).mkdirs();
-	    if (dirIsNew) { this.log.printLogLine(LogLevelEnum.Message, "  ... created dir: " + targetDir); }
+	    if (dirIsNew) { this.log.printLogLine(LogLevelEnum.Message, 0, "  ... created dir: " + targetDir); }
 
         IAlbum album = this.getAlbum(albumID);
 
@@ -421,7 +421,7 @@ public class AccountListingProxy implements IAccountListingProxy
                     else
                     {
                         //md5 doesn't match, download again
-                        this.log.printLogLine(LogLevelEnum.Warning, "WARNING: image " + image.getName() + " already exists, but has wrong md5 sum ... enqueuing again");
+                        this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: image " + image.getName() + " already exists, but has wrong md5 sum ... enqueuing again");
                         //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                         ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
                         this.transferQueue.add(item);
@@ -453,7 +453,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         {
                             //original url is available ... this is unusual
                             //files sizes don't match, download again
-                            this.log.printLogLine(LogLevelEnum.Warning, "WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
+                            this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") ... enqueuing again");
                             //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                             ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
                             this.transferQueue.add(item);
@@ -463,7 +463,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         {
                             //no original available
                             //files sizes don't match, in most cases this indicates that we couldn't download the original file
-                            this.log.printLogLine(LogLevelEnum.Warning, "WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - original is not available, so it's probably ok ... skipping");
+                            this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: image " + image.getName() + " exists, but has wrong size (local: " + imageFile.length() + ", remote: " + image.getSize() + ") - original is not available, so it's probably ok ... skipping");
                             //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, image.getID(), image.getKey(), albumPassword, imageFile, image.getSize(), null, /*minResolution,*/ maxResolution);
                             //ITransferQueueItem item = new TransferQueueItem(TransferQueueItemActionEnum.DOWNLOAD, null, imageURL, imageFile, image.getSize(), null);
                             //this.transferQueue.add(item);
@@ -482,15 +482,13 @@ public class AccountListingProxy implements IAccountListingProxy
             }
 		}   
 	    
-	    this.log.printLogLine(LogLevelEnum.Message, "  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
+	    this.log.printLogLine(LogLevelEnum.Message, 0, "  ... added " + downloadCount + " files to target:" + targetDir + " (" + skippedCount + " were skipped)");
 	}
     public void verifyAlbum(int albumID, String targetAlbumDir)
     {
         //initialize Tree is nesseciary
         if (this.smugmugRoot == null) { this.smugmugRoot = this.connector.getTree(null); }
 
-    	//this.log.printLog(Helper.getCurrentTimeString() + " verifying album (id:" + albumID + ", dir:" + targetAlbumDir + ") ... ");
-        //this.log.printLog(Helper.getCurrentTimeString() + " verify: " + this.getAlbumDirEnd(albumID) + " ... ");
         this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " verify: " + targetAlbumDir + " ... ");
 
 		File dir = new File(targetAlbumDir);
@@ -498,241 +496,300 @@ public class AccountListingProxy implements IAccountListingProxy
 	    if (fileList == null)
 	    {
 	    	/* Either dir does not exist or is not a directory */
-	    	this.log.printLogLine(LogLevelEnum.Error, "failed");
-	      	this.log.printLogLine(LogLevelEnum.Error, "   ERROR: local album path could not be found");
-	      	return;
+	    	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
+	      	this.log.printLogLine(LogLevelEnum.Error, 1, "local album path could not be found");
+	      	//return;
 	    }
+        else
+        {
 
-	    Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files, convienence only
+            Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files, convienence only
 
-	    boolean failed = false;
-        IAlbum album = this.getAlbum(albumID);
-        Vector<IImage> imageList = album.getImageList();
-        
-	    // compare albums
-        int matchCount = 0; //count the number of matching pairs found
-        int filesizeLimitHitCount = 0;
-    	for (int i=0; i<fileList.length; i++)
-    	{
-            //sort out files that exceed the filesize limit
-            if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
+            //boolean failed = false;
+            Vector<VerifyOutputMessage> outputMessages = new Vector<VerifyOutputMessage>();
+
+            IAlbum album = this.getAlbum(albumID);
+            Vector<IImage> imageList = album.getImageList();
+
+            // compare albums
+            int matchCount = 0; //count the number of matching pairs found
+            int filesizeLimitHitCount = 0;
+            for (int i=0; i<fileList.length; i++)
             {
-                //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... exceeds filesize limit");
-                filesizeLimitHitCount++;
-            }
-            else // file is smaller than filesize limit
-            {
-                for (IImage image : imageList)
+                //sort out files that exceed the filesize limit
+                if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))
                 {
-                    if ( Helper.isVideo(image.getName()) )
+                    //this.log.printLogLine(LogLevelEnum.Info, "   " + fileList[i].getAbsolutePath() + " ... exceeds filesize limit");
+                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Info, "   " + fileList[i].getAbsolutePath() + " ... exceeds filesize limit"));
+                    filesizeLimitHitCount++;
+                }
+                else // file is smaller than filesize limit
+                {
+                    for (IImage image : imageList)
                     {
-                        // handle videos ...
-
-                        //either the full filename matches or it's the full name plus the download extension
-                        if ( //( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
-                             ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName() + this.config.getConstantVideoDownloadFilePostfix()) ) ||
-                             ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
+                        if ( Helper.isVideo(image.getName()) )
                         {
-                            //compare files
+                            // handle videos ...
 
-                            //now we have the matching pair, so we compute the md5sums
-                            matchCount++;                            
-
-                            if (this.config.getConstantVerifyMD5ForVideos())
+                            //either the full filename matches or it's the full name plus the download extension
+                            if ( //( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName().substring(0, image.getName().lastIndexOf(".") ) + ".mp4") ) ||
+                                 ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName() + this.config.getConstantVideoDownloadFilePostfix()) ) ||
+                                 ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) )
                             {
-                                String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+                                //compare files
 
-                                // checking md5:
-                                //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
-                                //   and downloaded again) ... md5 sums will most definitively not match
-                                // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
-                                if ( localFileMD5Sum.equals(image.getMD5()) )
+                                //now we have the matching pair, so we compute the md5sums
+                                matchCount++;
+
+                                if (this.config.getConstantVerifyMD5ForVideos())
                                 {
-                                    // no real need to print that to output, though unusual since md5 verification usually fails on videos
-                                    //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok (unusual, but definitively nothing to worry about)");
+                                    String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
+                                    // checking md5:
+                                    //   this is either an original video or the video which has already been converted by smugmug (probably uploaded
+                                    //   and downloaded again) ... md5 sums will most definitively not match
+                                    // idea: maybe we shouldn't even compute the md5 in this case (this will speed things up a little)
+                                    if ( localFileMD5Sum.equals(image.getMD5()) )
+                                    {
+                                        // no real need to print that to output, though unusual since md5 verification usually fails on videos
+                                        //this.log.printLogLine("   checking " + fileList[i].getAbsolutePath() + " ... ok (unusual, but definitively nothing to worry about)");
+                                    }
+                                    else
+                                    {
+//                                        if (failed == false)
+//                                        {
+//                                            this.log.printLogLine(LogLevelEnum.Message, "failed"); //this completes the first line
+//                                            failed = true;
+//                                        }
+//                                        //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: videos usually fail)");
+//                                        this.log.printLogLine(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: videos usually fail)");
+//                                        //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
+//                                        //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
+
+                                        outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: videos usually fail)"));
+                                        outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Debug, "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() ));
+                                        outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Debug, "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5()));
+                                    }
                                 }
                                 else
                                 {
-                                    if (failed == false)
-                                    {
-                                        this.log.printLogLine(LogLevelEnum.Message, "failed"); //this completes the first line
-                                        failed = true;
-                                    }
-                                    //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: videos usually fail)");
-                                    this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + fileList[i].getName() + " ... md5 failed (reason: videos usually fail)");
-                                    //this.log.printLogLine("      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() );
-                                    //this.log.printLogLine("      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5() );
+                                    //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Info, "   " + fileList[i].getAbsolutePath() + " ... ok"));
                                 }
                             }
-                            else
+                        }
+                        else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) )
+                        {
+                             // handle normal images
+
+                            //now we have the matching pair
+                            matchCount++;
+
+                            /*
+                            boolean fileCheckResult;
+                            String localFileMD5Sum = "[not available]";
+                            if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
                             {
-                                //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
+                                //compute the md5sums
+                                localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+        
+                                //check md5
+                                if ( localFileMD5Sum.equals(image.getMD5()) ) { fileCheckResult = true; }
+                                else { fileCheckResult = false; }
+                            }
+                            else //check filesize only
+                            {
+                                if ( fileList[i].length() == image.getSize() ) { fileCheckResult = true; }
+                                else { fileCheckResult = false; }
+                            }
+        
+        
+                            if (fileCheckResult == true)
+                            {
+        
+                            }
+                            */
+
+                            String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
+
+                            //compare files
+                            if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
+                            {
+                               // no need to print that to output:
+                               //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
+                               //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                            
+                                outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Info, "   " + fileList[i].getAbsolutePath() + " ... ok"));
+                            }
+                            else //md5 check failed
+                            {
+//                                if (failed == false)
+//                                {
+//                                    this.log.printLogLine(LogLevelEnum.Message, "failed"); //this completes the first line
+//                                    failed = true;
+//                                }
+
+                                int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
+                                int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
+                                float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
+                                if ( ((exifOrientation == 6) || (exifOrientation == 8)) && (filesizeRatio > 0.988) && (filesizeRatio < 1.012) ) //different orientation than "landscape" and file sizes do not differ too much
+                                {
+                                    //this.log.printLogLine(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))"));
+                                }
+                                else if (exifDimensions > 48000000) //image has more than 48 megapixel
+                                {
+                                    //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
+                                    //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
+                                    //this.log.printLogLine(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))"));
+                                }
+                                else
+                                {
+                                    //this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
+                                    //this.log.printLogLine(LogLevelEnum.Error, "   " + fileList[i].getName() + " ... md5 failed");
+                                    //this.log.printLogLine(LogLevelEnum.Error, "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
+                                    //this.log.printLogLine(LogLevelEnum.Error, "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
+                                    //this.log.printLogLine(LogLevelEnum.Error, "      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
+                                    //this.log.printLogLine(LogLevelEnum.Error, "      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + fileList[i].getName() + " ... md5 failed"));
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize()));
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5()));
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      orientation             : " + Helper.getOrientationExifMetadata(fileList[i])));
+                                    outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i])));
+                                }
+
                             }
                         }
                     }
-                    else if ( Helper.encodeAsASCII(fileList[i].getName()).equals(image.getName()) ) // handle normal images
-                    {
-                        //now we have the matching pair
-                        matchCount++;
-
-    //                    boolean fileCheckResult;
-    //                    String localFileMD5Sum = "[not available]";
-    //                    if (this.config.getPersistentCheckMD5Sums() == true) //if md5 checking is enabled in config
-    //                    {
-    //                        //compute the md5sums
-    //                        localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
-    //
-    //                        //check md5
-    //                        if ( localFileMD5Sum.equals(image.getMD5()) ) { fileCheckResult = true; }
-    //                        else { fileCheckResult = false; }
-    //                    }
-    //                    else //check filesize only
-    //                    {
-    //                        if ( fileList[i].length() == image.getSize() ) { fileCheckResult = true; }
-    //                        else { fileCheckResult = false; }
-    //                    }
-    //
-    //
-    //                    if (fileCheckResult == true)
-    //                    {
-    //
-    //                    }
-
-                        String localFileMD5Sum = Helper.computeMD5Hash(fileList[i]);
-
-                        //compare files
-                        if ( localFileMD5Sum.equals(image.getMD5()) ) //check md5
-                        {
-                           // no need to print that to output:
-                           //this.log.printLogLine("   INFO: " + fileList[i].getAbsolutePath() + " ... ok");
-                           //this.log.printLogLine("      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
-                        }
-                        else //md5 check failed
-                        {
-                            if (failed == false)
-                            {
-                                this.log.printLogLine(LogLevelEnum.Message, "failed"); //this completes the first line
-                                failed = true;
-                            }
-
-                            int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
-                            int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
-                            float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
-                            if ( ((exifOrientation == 6) || (exifOrientation == 8)) && (filesizeRatio > 0.988) && (filesizeRatio < 1.012) ) //different orientation than "landscape" and file sizes do not differ too much
-                            {
-                                this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + fileList[i].getName() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
-                            }
-                            else if (exifDimensions > 48000000) //image has more than 48 megapixel
-                            {
-                                //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1024 *1024))  + "mp))");
-                                //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
-                                this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + fileList[i].getName() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
-                            }
-                            else
-                            {
-                                //this.log.printLogLine("   ERROR: " + fileList[i].getAbsolutePath() + " ... md5 failed");
-                                this.log.printLogLine(LogLevelEnum.Error, "   ERROR: " + fileList[i].getName() + " ... md5 failed");
-                                this.log.printLogLine(LogLevelEnum.Error, "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize());
-                                this.log.printLogLine(LogLevelEnum.Error, "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5());
-                                this.log.printLogLine(LogLevelEnum.Error, "      orientation             : " + Helper.getOrientationExifMetadata(fileList[i]));
-                                this.log.printLogLine(LogLevelEnum.Error, "      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i]));
-                            }
-
-                        }
-                    }
                 }
             }
-      	}
 
 
 
-        if ( (fileList.length == (matchCount + filesizeLimitHitCount)) && (imageList.size() == (matchCount + filesizeLimitHitCount)) )
-        {
-            if (failed == false) { this.log.printLogLine(LogLevelEnum.Message, "ok"); } // i.e. there were no errors for the whole album
-            else { /*NOOP ... the "failed" was already printed before*/ } // i.e. there were errors with md5 verification, but no missing files or so
-        }
-        else
-        {
-            if (failed == false) // no error was encountered so far, so we need to print a "failed" message for the album
+
+            // check if all files could be matched
+            if ( (fileList.length == (matchCount + filesizeLimitHitCount)) && (imageList.size() == (matchCount + filesizeLimitHitCount)) )
             {
-                this.log.printLogLine(LogLevelEnum.Message, "failed");
-                failed = true; // not really nesseciary, because "failed" is not used anymore hereafter
+//                if (failed == false) { this.log.printLogLine(LogLevelEnum.Message, "ok"); } // i.e. there were no errors for the whole album
+//                else { /*NOOP ... the "failed" was already printed before*/ } // i.e. there were errors with md5 verification, but no missing files or so
+
+                //all files were matched and checked
+
+
             }
-
-            Hashtable<String, Integer> fileMappingTable = new Hashtable<String, Integer>();
-            //match files against images on smugmug
-            for (int i=0; i<fileList.length; i++)
+            else
             {
-                int fileMatchCount = 0;
-                for (IImage image : imageList)
-                {
-                    if (fileList[i].getName().equals(image.getName())) { fileMatchCount++; }
-                }
+                //something doesn't add up, checking ...
 
-                if (fileMatchCount == 0)
-                {
-                    //check for special cases
-                    File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
-                    if ( (ignoreTagFile.exists()) && (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) ) { fileMatchCount = -11; }
-                    else if (ignoreTagFile.exists()) { fileMatchCount = -12; } //check if ignore tag exists
-                    else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) { fileMatchCount = -13; }
-                    else { fileMatchCount = -10; } //the value -10 identifies it as a file with no corresponding image on smugmug
-                }
+//                if (failed == false) // no error was encountered so far, so we need to print a "failed" message for the album
+//                {
+//                    this.log.printLogLine(LogLevelEnum.Message, "failed");
+//                    failed = true; // not really nesseciary, because "failed" is not used anymore hereafter
+//                }
 
-                fileMappingTable.put(fileList[i].getAbsolutePath(), fileMatchCount);
-            }
-
-            //match images on smugmug against local files
-            for (IImage image : imageList)
-            {
-                int fileMatchCount = 0;
+                Hashtable<String, VerifyResultEnum> fileMappingTable = new Hashtable<String, VerifyResultEnum>();
+                //match files against images on smugmug
                 for (int i=0; i<fileList.length; i++)
                 {
-                    if (fileList[i].getName().equals(image.getName())) { fileMatchCount++; }
+                    int fileMatchCount = 0;
+                    for (IImage image : imageList)
+                    {
+                        if (fileList[i].getName().equals(image.getName())) { fileMatchCount++; }
+                    }
+
+                    if (fileMatchCount == 0)
+                    {
+                        //check for special cases
+                        File ignoreTagFile = new File(fileList[i].getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
+                        if ( (ignoreTagFile.exists()) && (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit())) ) { fileMappingTable.put(fileList[i].getAbsolutePath(), VerifyResultEnum.IgnoreTagAndFilesizeLimit); }
+                        else if (ignoreTagFile.exists())                                                                           { fileMappingTable.put(fileList[i].getAbsolutePath(), VerifyResultEnum.IgnoreTagExists); }
+                        else if (fileList[i].length() > (this.config.getConstantUploadFileSizeLimit()))                            { fileMappingTable.put(fileList[i].getAbsolutePath(), VerifyResultEnum.FilesizeLimit); }
+                        else                                                                                                       { fileMappingTable.put(fileList[i].getAbsolutePath(), VerifyResultEnum.NotUploaded); }
+                    }
+                    else if (fileMatchCount == 1) { fileMappingTable.put(fileList[i].getAbsolutePath(), VerifyResultEnum.Ok); }
+                    else                          { fileMappingTable.put(fileList[i].getAbsolutePath(), VerifyResultEnum.UploadedMultipleTimes); }
                 }
-                
-                //assumption: local files have distinctive names on disk (should be safe to assume)
-                if (fileMatchCount > 1) { this.log.printLogLine(LogLevelEnum.Error, "   ERROR: one image matched with multiple local files! This is not supposed to happen, aborting!"); return; }
-                
-                //the value -20 identifies it as an image on smugmug with no corresponding local file
-                if (fileMatchCount == 0) { fileMatchCount = -20; }
 
-                fileMappingTable.put("id=" + image.getID() + ";name=" + image.getName(), fileMatchCount);
-            }
-
-            //evaluate matching results
-            for (String key : fileMappingTable.keySet())
-            {
-                if (fileMappingTable.get(key) == 1) { /* NOOP - everything is fine; matched 1:1 */ }
-                else if (fileMappingTable.get(key) > 1) { this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
-                else if (fileMappingTable.get(key) == -10) { this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded"); }
-                else if (fileMappingTable.get(key) == -11) { this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded (reason: ignore tag and file size limit)"); }
-                else if (fileMappingTable.get(key) == -12) { this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded (reason: ignore tag)"); }
-                else if (fileMappingTable.get(key) == -13) { this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: " + key.substring(key.lastIndexOf("/")+1) + " ... was not uploaded (reason: file size limit)"); }
-                else if (fileMappingTable.get(key) == -20) { this.log.printLogLine(LogLevelEnum.Warning, "   WARNING: the image " + key.substring(key.lastIndexOf("/")+1) + " exists on smugmug, but no corresponding file was found"); }
-                else
+                //match images on smugmug against local files
+                for (IImage image : imageList)
                 {
-                    this.log.printLogLine(LogLevelEnum.Error, "   ERROR: undefined result while matching images with local files");
-                    this.log.printLogLine(LogLevelEnum.Error, "   ERROR: fileName       = " + key);
-                    this.log.printLogLine(LogLevelEnum.Error, "   ERROR: fileMatchCount = " + fileMappingTable.get(key));
+                    int fileMatchCount = 0;
+                    for (int i=0; i<fileList.length; i++)
+                    {
+                        if (fileList[i].getName().equals(image.getName())) { fileMatchCount++; }
+                    }
+
+                    //assumption: local files have distinctive names on disk (should be safe to assume)
+                    if (fileMatchCount > 1) { this.log.printLogLine(LogLevelEnum.Error, 1, "one image matched with multiple local files! This is not supposed to happen, aborting!"); return; }
+                    else if (fileMatchCount == 1) { fileMappingTable.put("id=" + image.getID() + ";name=" + image.getName(), VerifyResultEnum.Ok); }
+                    else if (fileMatchCount == 0) { fileMappingTable.put("id=" + image.getID() + ";name=" + image.getName(), VerifyResultEnum.NoLocalFileFound); }
                 }
+
+                //evaluate matching results
+                for (String key : fileMappingTable.keySet())
+                {
+                    String filename = key.substring(key.lastIndexOf("/")+1);
+                    if (fileMappingTable.get(key).compareTo(VerifyResultEnum.Ok) == 0)                             { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Info, "   " + filename + " ... ok")); } //this.log.printLogLine(LogLevelEnum.Info, "   " + filename + " ... ok"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.UploadedMultipleTimes) == 0)     { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + filename + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times")); } //this.log.printLogLine(LogLevelEnum.Error, "   " + filename + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.NotUploaded) == 0)               { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + filename + " ... was not uploaded")); } //this.log.printLogLine(LogLevelEnum.Error, "   " + filename + " ... was not uploaded"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.IgnoreTagAndFilesizeLimit) == 0) { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag and file size limit)")); } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag and file size limit)"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.IgnoreTagExists) == 0)           { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag)")); } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag)"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.FilesizeLimit) == 0)             { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: file size limit)")); } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: file size limit)"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.NoLocalFileFound) == 0)          { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   the image " + filename + " exists on smugmug, but no corresponding file was found")); } //this.log.printLogLine(LogLevelEnum.Error, "   the image " + filename + " exists on smugmug, but no corresponding file was found"); }
+                    else
+                    {
+                        //this.log.printLogLine(LogLevelEnum.Error, "   undefined result while matching images with local files");
+                        //this.log.printLogLine(LogLevelEnum.Error, "   fileName       = " + key);
+                        //this.log.printLogLine(LogLevelEnum.Error, "   fileMatchCount = " + fileMappingTable.get(key));
+
+                        outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   undefined result while matching images with local files"));
+                        outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   fileName       = " + key));
+                        outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   fileMatchCount = " + fileMappingTable.get(key)));
+
+                    }
+                }
+
+                /*
+                //Debug output
+                this.log.printLogLine("   DEBUG: fileList.length  :" + fileList.length);
+                this.log.printLogLine("   DEBUG: imageList.size() :" + imageList.size());
+                this.log.printLogLine("   DEBUG: matchCount       :" + matchCount);
+                if (fileMappingTable.size() != (fileList.length + imageList.size())) { this.log.printLogLine("   DEBUG: incorrect size of fileMappingTable, something is wrong!!!"); }
+                this.log.printLogLine("   DEBUG: mapping table ...");
+                for (String key : fileMappingTable.keySet())
+                {
+                    if (fileMappingTable.get(key) != 1)
+                    {
+                        this.log.printLogLine("   DEBUG: " + key + " = " + fileMappingTable.get(key));
+                    }
+                }
+                */
+
+
             }
 
-            /*
-            //Debug output
-            this.log.printLogLine("   DEBUG: fileList.length  :" + fileList.length);
-            this.log.printLogLine("   DEBUG: imageList.size() :" + imageList.size());
-            this.log.printLogLine("   DEBUG: matchCount       :" + matchCount);
-            if (fileMappingTable.size() != (fileList.length + imageList.size())) { this.log.printLogLine("   DEBUG: incorrect size of fileMappingTable, something is wrong!!!"); }
-            this.log.printLogLine("   DEBUG: mapping table ...");
-            for (String key : fileMappingTable.keySet())
+            // print results
+
+            //count errors
+            int errors = 0;
+            int warnings = 0;
+            for (VerifyOutputMessage outMessage : outputMessages)
             {
-                if (fileMappingTable.get(key) != 1)
-                {
-                    this.log.printLogLine("   DEBUG: " + key + " = " + fileMappingTable.get(key));
-                }                
+                if (outMessage.getLogLevel() == LogLevelEnum.Error) { errors++; }
+                else if (outMessage.getLogLevel() == LogLevelEnum.Warning) { warnings++; }
             }
-            */
+
+            //print messages
+            if (errors == 0 && warnings == 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok"); } // i.e. there were no errors for the whole album
+            else if (errors == 0 && warnings > 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok (" + warnings + " Warnings)"); }
+            else { this.log.printLogLine(LogLevelEnum.Message, 0, "failed (" + errors + " Errors, " + warnings + " Warnings)"); } // i.e. there were errors with md5 verification, but no missing files or so
+
+            for (VerifyOutputMessage outMessage : outputMessages)
+            {
+                this.log.printLogLine(outMessage.getLogLevel(), 1, outMessage.getMessage());
+            }
+
         }
     }
     public void sort(String categoryName, String subcategoryName)
@@ -740,8 +797,8 @@ public class AccountListingProxy implements IAccountListingProxy
         //find matching albums
 		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, null, null);
 
-        this.log.printLogLine(LogLevelEnum.Message, "The following albums will be sorted by name:");
-        for (IAlbum a : albumList) { this.log.printLogLine(LogLevelEnum.Message,  "      " + a.getFullName()); }
+        this.log.printLogLine(LogLevelEnum.Message, 0, "The following albums will be sorted by name:");
+        for (IAlbum a : albumList) { this.log.printLogLine(LogLevelEnum.Message, 1,  "" + a.getFullName()); }
 
         //put albums into an array
         int index = 0;
@@ -755,23 +812,23 @@ public class AccountListingProxy implements IAccountListingProxy
         //sort the array
         Arrays.sort(albumArray);
 
-        this.log.printLogLine(LogLevelEnum.Warning, "WARNING: sorting should not be interuped while in progress, otherwise there will be nasty leftovers in your albums!");
+        this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: sorting should not be interuped while in progress, otherwise there will be nasty leftovers in your albums!");
         this.log.printLog(LogLevelEnum.Warning, "WARNING: beginning to sort in 30 sec - abort NOW if you need to ... ");
         Helper.pause(30000);
-        this.log.printLogLine(LogLevelEnum.Message, "ok");
+        this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 
         this.sortAlbums(albumArray);
 
         //this line is not too useful
-		this.log.printLogLine(LogLevelEnum.Message, "  ... sorted " + albumArray.length + " albums");
+		this.log.printLogLine(LogLevelEnum.Message, 0, "  ... sorted " + albumArray.length + " albums");
     }
     public void autotag(String categoryName, String subcategoryName, String albumName)
     {
         //find matching albums
 		Vector<IAlbum> albumList = this.getAccountAlbumList(categoryName, subcategoryName, albumName, null);
 
-        this.log.printLogLine(LogLevelEnum.Message, "Images in the following albums will be tagged:");
-        for (IAlbum a : albumList) { this.log.printLogLine(LogLevelEnum.Message,  "      " + a.getFullName()); }
+        this.log.printLogLine(LogLevelEnum.Message, 0, "Images in the following albums will be tagged:");
+        for (IAlbum a : albumList) { this.log.printLogLine(LogLevelEnum.Message, 1,  a.getFullName()); }
 
         for (IAlbum a : albumList)
         {
@@ -851,12 +908,12 @@ public class AccountListingProxy implements IAccountListingProxy
                 this.log.printLogLine("ok");
                 */
             }
-            this.log.printLogLine(LogLevelEnum.Message, "ok");
+            this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
         }
 
 
         //this line is not too useful
-		this.log.printLogLine(LogLevelEnum.Message, " ... tagged " + albumList.size() + " albums");
+		this.log.printLogLine(LogLevelEnum.Message, 0, " ... tagged " + albumList.size() + " albums");
     }
     public Vector<IAlbum> statistics(String categoryName, String subcategoryName, String albumName)
     {
@@ -871,7 +928,7 @@ public class AccountListingProxy implements IAccountListingProxy
             {
                 if (stats.getBytes() != 0)
                 {
-                    this.log.printLogLine(LogLevelEnum.Debug, "DEBUG: " + a.getFullName() + " statistics for " + stats.getMonth() + "/" + stats.getYear() +  ":");
+                    this.log.printLogLine(LogLevelEnum.Debug, 0, "DEBUG: " + a.getFullName() + " statistics for " + stats.getMonth() + "/" + stats.getYear() +  ":");
     //                this.log.printLogLine("DEBUG:     ID        :" + a.getStatistics().getAlbumID());
     //                this.log.printLogLine("DEBUG:     Bytes     :" + a.getStatistics().getBytes());
     //                this.log.printLogLine("DEBUG:     Thumb     :" + a.getStatistics().getThumb());
@@ -904,7 +961,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		// wait a few secs
 		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " waiting a few secs for smugmug to process the images ... ");
 		Helper.pause(this.config.getConstantRetryWait());
-		this.log.printLogLine(LogLevelEnum.Message, "ok");
+		this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 		
 		//collect Results
 		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
@@ -938,7 +995,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //discard current root object, and download treedata again (this would be horrobly slow without caching)
         this.smugmugRoot = null;
         this.smugmugRoot = this.connector.getTree(null);
-        this.log.printLogLine(LogLevelEnum.Message, "ok");
+        this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 		
 	}
     public void startASyncProcessingQueue()
@@ -958,7 +1015,7 @@ public class AccountListingProxy implements IAccountListingProxy
 		// wait a few secs
 		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " waiting a few secs for smugmug to process the images ... ");
 		Helper.pause(this.config.getConstantRetryWait());
-		this.log.printLogLine(LogLevelEnum.Message, "ok");
+		this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 
 		//collect Results
 		Vector<ITransferQueueItem> processedItemList = this.transferQueue.getProcessedItemList();
@@ -989,7 +1046,7 @@ public class AccountListingProxy implements IAccountListingProxy
         //discard current root object, and download treedata again (this would be horrobly slow without caching)
         this.smugmugRoot = null;
         this.smugmugRoot = this.connector.getTree(null);
-		this.log.printLogLine(LogLevelEnum.Message, "ok");
+		this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 
 	}
 	public long getTransferedBytes() { return this.transferedBytes; }
@@ -1010,7 +1067,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 		this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " waiting a few secs ...");
 		Helper.pause(this.config.getConstantRetryWait());
-		this.log.printLogLine(LogLevelEnum.Message, "ok");
+		this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 
 		this.connector.relogin();
 
@@ -1053,7 +1110,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			}
 		}
 		
-		System.out.println("addSubcategory: ERROR!");
+		this.log.printLogLine(LogLevelEnum.Error, 0, "addSubcategory");
 	}
 	private void addAlbum(int categoryID, int subcategoryID, int id, String key, String name, String albumKeywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStats)
 	{
@@ -1074,7 +1131,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			}
 		}
 		
-		System.out.println("addAlbum: ERROR!");		
+		this.log.printLogLine(LogLevelEnum.Error, 0, "addAlbum");
 	}
 	private void addAlbum(int categoryID, int id, String key, String name, String albumKeywords, String lastUpdatedString, Vector<IAlbumMonthlyStatistics> albumStats)
 	{
@@ -1087,7 +1144,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			}
 		}
 		
-		System.out.println("addAlbum: ERROR!");
+		this.log.printLogLine(LogLevelEnum.Error, 0, "addAlbum");
 	}
 	private void addImage(int albumID, int id, String name)
 	{
@@ -1116,7 +1173,7 @@ public class AccountListingProxy implements IAccountListingProxy
 			}
 		}
 		
-		System.out.println("addImage: ERROR!");
+        this.log.printLogLine(LogLevelEnum.Error, 0, "addImage");
 	}
 
 	private int getCategoryID(String categoryName)
