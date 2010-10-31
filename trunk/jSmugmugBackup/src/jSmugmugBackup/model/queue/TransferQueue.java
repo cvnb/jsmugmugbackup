@@ -68,7 +68,7 @@ public class TransferQueue implements ITransferQueue
 
 	public void startAsyncProcessing()
 	{
-        this.log.printLogLine(LogLevelEnum.Message, "TransferQueue.startAsyncProcessing()");
+        this.log.printLogLine(LogLevelEnum.Message, 0, "TransferQueue.startAsyncProcessing()");
 
 		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, this.asyncProcessQueueFinishedListener));
 		this.queueProcessorThread.start();
@@ -77,7 +77,7 @@ public class TransferQueue implements ITransferQueue
 
 	public void startSyncProcessing()
 	{
-		this.log.printLogLine(LogLevelEnum.Message, "TransferQueue.startSyncProcessing()");
+		this.log.printLogLine(LogLevelEnum.Message, 0, "TransferQueue.startSyncProcessing()");
 		
 		this.queueProcessorThread = new Thread(new TransferQueueProcessor(this.queue, this.processedItemList, null));
 		this.queueProcessorThread.start();

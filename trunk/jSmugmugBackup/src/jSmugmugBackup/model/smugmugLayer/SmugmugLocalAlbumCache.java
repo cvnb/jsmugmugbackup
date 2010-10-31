@@ -46,7 +46,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
 
     public void putAlbum(IAlbum album)
     {
-        if (this.cache.containsKey(album.getID())) { this.log.printLogLine(LogLevelEnum.Error, "ERROR: album can not be added twice to the cache!"); }
+        if (this.cache.containsKey(album.getID())) { this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: album can not be added twice to the cache!"); }
 
         this.cache.put(album.getID(), album);
 
@@ -124,13 +124,13 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
             catch (ClassNotFoundException ex)
             {
                 //ex.printStackTrace();
-                this.log.printLogLine(LogLevelEnum.Error, "ERROR: class not found exception thrown while loading the cache from disk, starting with an empty cache!");
+                this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: class not found exception thrown while loading the cache from disk, starting with an empty cache!");
                 this.initCache();
             }
             catch (IOException ex)
             {
                 //ex.printStackTrace();
-                this.log.printLogLine(LogLevelEnum.Error, "ERROR: I/O exception thrown while loading the cache from disk, starting with an empty cache!");
+                this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: I/O exception thrown while loading the cache from disk, starting with an empty cache!");
                 this.initCache();
             }
         }
@@ -163,7 +163,7 @@ public class SmugmugLocalAlbumCache implements ISmugmugLocalAlbumCache
         }
         catch (IOException ex)
         {
-            this.log.printLogLine(LogLevelEnum.Warning, "ERROR: an IOException occured during serialization!");
+            this.log.printLogLine(LogLevelEnum.Warning, 0, "ERROR: an IOException occured during serialization!");
             ex.printStackTrace();
         }
     }

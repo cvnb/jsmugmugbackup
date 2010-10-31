@@ -463,7 +463,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
         if (this.config.getPersistentCacheAccountInfo()) { SmugmugConnector3G.albumCache.forceSaveCacheToDisk(); }
 
-        this.log.printLogLine(LogLevelEnum.Message, "ok");
+        this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 
 		return smugmugRoot;
 	}
@@ -769,7 +769,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             //rename file
             boolean renameResult;
             renameResult = tempFileName.renameTo(fileName);
-            if (!renameResult) { this.log.printLogLine(LogLevelEnum.Error, "ERROR: renaming temporary file to " + fileName + " failed - this might be a platform specific issue"); System.exit(1); }
+            if (!renameResult) { this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: renaming temporary file to " + fileName + " failed - this might be a platform specific issue"); System.exit(1); }
 
 
             long downloadTime = (new Date()).getTime() - startTime;
@@ -931,8 +931,8 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //temporary:
         if (jobj == null)
         {
-        	this.log.printLogLine(LogLevelEnum.Error, "ERROR: jobj == null ... this is unusual");
-        	this.log.printLogLine(LogLevelEnum.Error, responseBody);
+        	this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: jobj == null ... this is unusual");
+        	this.log.printLogLine(LogLevelEnum.Error, 0, responseBody);
         }
 
         return jobj;
@@ -968,7 +968,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        	SmugmugConnector3G.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
 	        	SmugmugConnector3G.login_nickname     = (String)this.getJSONValue(jobj, "Login.User.NickName");
 	        	SmugmugConnector3G.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
-	        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+	        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 	        	//return true;
 	        	return SmugmugConnector3G.login_userID;
 	        }
@@ -979,7 +979,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        	SmugmugConnector3G.login_userID       = (Number)this.getJSONValue(jobj, "Login.User.id");
 	        	SmugmugConnector3G.login_nickname     = (String)this.getJSONValue(jobj, "Login.Session.NickName");
 	        	SmugmugConnector3G.login_passwordHash = (String)this.getJSONValue(jobj, "Login.PasswordHash");
-	        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+	        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
 
 	        	//this is not the optimal solution
 	        	//System.exit(0);
@@ -1084,7 +1084,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	        	 (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	if (!beQuiet) { this.log.printLogLine(LogLevelEnum.Message, "ok"); }
+	        	if (!beQuiet) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok"); }
 	        	SmugmugConnector3G.login_sessionID    = (String)this.getJSONValue(jobj, "Login.Session.id");
 	        	return;
 	        }
@@ -1119,9 +1119,9 @@ public class SmugmugConnector3G implements ISmugmugConnector
         	SmugmugConnector3G.login_userID       = null;
         	SmugmugConnector3G.login_nickname     = null;
         	SmugmugConnector3G.login_passwordHash = null;
-        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
         }
-        else { this.log.printLogLine(LogLevelEnum.Message, "failed"); }
+        else { this.log.printLogLine(LogLevelEnum.Message, 0, "failed"); }
 	}
 
 	private JSONObject smugmug_users_getTree(String sitePassword)
@@ -1253,7 +1253,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "creating category failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "creating category failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1285,12 +1285,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok (id=" + this.getJSONValue(jobj, "Category.id") + ")");
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1329,7 +1329,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "creating subcategory failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "creating subcategory failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1362,13 +1362,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
         	//this.log.printLogLine("ok (id=" + this.getJSONValue(jobj, "SubCategory.id") + ")");
-        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
         	this.printJSONObject(jobj);
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1469,7 +1469,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "creating album failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "creating album failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1502,12 +1502,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
 	             (this.getJSONValue(jobj, "method").equals(methodName)) )
 	        {
-	        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+	        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
 	        	return jobj;
 	        }
 	        else
 	        {
-	        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+	        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
 	        	//this.log.printLogLine(this.getTimeString() + " " + methodName + " ... failed");
 	        	this.log.printLog(LogLevelEnum.Message, methodName + "retrying ... ");
 	        	this.printJSONObject(jobj); //temporary
@@ -1610,13 +1610,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
         	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
-        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
         	//this.printJSONObject(jobj);
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1710,19 +1710,19 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		HttpGet httpget = new HttpGet(url);
 		JSONObject jobj = this.smugmugJSONRequest(httpget);
 		//this.printJSONObject(jobj);
-		this.log.printLogLine(LogLevelEnum.Message, "url: " + url);
+		this.log.printLogLine(LogLevelEnum.Message, 0, "url: " + url);
 
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
         	//this.log.printLogLine("ok (" + this.getJSONValue(jobj, "Album.id") + ")");
-        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
         	//this.printJSONObject(jobj);
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
         	this.printJSONObject(jobj);
         }
 
@@ -1838,7 +1838,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
 	        		  (this.getJSONValue(jobj, "code").equals(new Long(5))) )
 	        {
-	        	this.log.printLogLine(LogLevelEnum.Message, "nothing changed");
+	        	this.log.printLogLine(LogLevelEnum.Message, 0, "nothing changed");
                 //this.log.printLog("_");
 	        	return jobj;
 	        }
@@ -1878,12 +1878,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
            	return jobj;
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
            	this.printJSONObject(jobj);
         }
 
@@ -1917,13 +1917,13 @@ public class SmugmugConnector3G implements ISmugmugConnector
         if ( (this.getJSONValue(jobj, "stat").equals("ok")) &&
              (this.getJSONValue(jobj, "method").equals(methodName)) )
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "ok");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "ok");
         	return jobj;
         }
         else
         {
-        	this.log.printLogLine(LogLevelEnum.Message, "failed");
-        	this.log.printLogLine(LogLevelEnum.Message, Helper.getCurrentTimeString() + " " + methodName + " ... failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
+        	this.log.printLogLine(LogLevelEnum.Message, 0, Helper.getCurrentTimeString() + " " + methodName + " ... failed");
         }
 
         return null;
@@ -2064,10 +2064,10 @@ public class SmugmugConnector3G implements ISmugmugConnector
                           (this.getJSONValue(jobj, "method").equals(methodName)) &&
                           (this.getJSONValue(jobj, "message").equals("wrong format ()")))
                 {
-                    this.log.printLogLine(LogLevelEnum.Message, "failed (wrong format)");
-                    this.log.printLogLine(LogLevelEnum.Error, "  ERROR: the file format was not recognized by SmugMug");
-                    this.log.printLogLine(LogLevelEnum.Error, "  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
-                    this.log.printLogLine(LogLevelEnum.Error, "  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
+                    this.log.printLogLine(LogLevelEnum.Message, 0, "failed (wrong format)");
+                    this.log.printLogLine(LogLevelEnum.Error, 0, "  ERROR: the file format was not recognized by SmugMug");
+                    this.log.printLogLine(LogLevelEnum.Error, 0, "  ERROR: maybe it's neither a picture, nor a video ... or the video is too long?");
+                    this.log.printLogLine(LogLevelEnum.Error, 0, "  ERROR: see: http://www.smugmug.com/homepage/uploadlog.mg");
 
                     //todo: maybe set ignore tag here ... and print info to console
 
@@ -2143,7 +2143,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             }
             catch (java.lang.NullPointerException ne) //temporary
             {
-                this.log.printLogLine(LogLevelEnum.Exception, "caught NullPointer exception: " + ne.getMessage());
+                this.log.printLogLine(LogLevelEnum.Exception, 0, "caught NullPointer exception: " + ne.getMessage());
                 ne.printStackTrace();
                 this.printJSONObject(jobj);
                 System.exit(1);
@@ -2157,8 +2157,8 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 	private void printJSONObject(JSONObject jobj)
 	{
-		this.log.printLogLine(LogLevelEnum.Debug, "DEBUG: printing JSONObject ...");
-		this.log.printLogLine(LogLevelEnum.Debug, "DEBUG: jobj=" + jobj);
+		this.log.printLogLine(LogLevelEnum.Debug, 0, "DEBUG: printing JSONObject ...");
+		this.log.printLogLine(LogLevelEnum.Debug, 0, "DEBUG: jobj=" + jobj);
 
         if (jobj != null) { this.printJSONObject(jobj, ""); }
 	}
@@ -2171,12 +2171,12 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 			if (value instanceof JSONObject)
 			{
-				this.log.printLogLine(LogLevelEnum.Debug, "DEBUG:" + indent + key + ": ");
+				this.log.printLogLine(LogLevelEnum.Debug, 0, "DEBUG:" + indent + key + ": ");
 				this.printJSONObject((JSONObject)value, indent + "   ");
 			}
 			else if (value instanceof JSONArray)
 			{
-				this.log.printLogLine(LogLevelEnum.Debug, "DEBUG:" + indent + key + " (Array)");
+				this.log.printLogLine(LogLevelEnum.Debug, 0, "DEBUG:" + indent + key + " (Array)");
 				JSONArray array = (JSONArray)value;
 				for (int j = 0; j < array.size(); j++)
 				{
@@ -2184,7 +2184,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 					this.printJSONObject((JSONObject)o, indent + key + "[" + j + "].");
 				}
 			}
-			else this.log.printLogLine(LogLevelEnum.Debug, "DEBUG:" + indent + key + ": " + value);
+			else this.log.printLogLine(LogLevelEnum.Debug, 0, "DEBUG:" + indent + key + ": " + value);
 
 			//System.out.println(indent + jobj.get(jobj.keySet().toArray()[i]));
 
@@ -2253,7 +2253,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
             */
 
             //checking if cache has already been initialized
-            if (SmugmugConnector3G.albumCache == null) { this.log.printLogLine(LogLevelEnum.Debug, "ERROR: album cache has not been initialized"); System.exit(1); }
+            if (SmugmugConnector3G.albumCache == null) { this.log.printLogLine(LogLevelEnum.Debug, 0, "ERROR: album cache has not been initialized"); System.exit(1); }
 
             if (SmugmugConnector3G.albumCache.exists(albumID))
             {

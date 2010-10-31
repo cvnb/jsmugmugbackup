@@ -69,31 +69,15 @@ public class Logger
 	
     public void printLog(LogLevelEnum loglevel, String text)
     {
-    	//write to view
-    	if (this.view != null)
-        {
-            if (loglevel.compareTo(this.config.getPersistentLogVerbosity()) >= 0)
-            {
-                this.view.printLog(text);
-            }
-        }
-    	
-    	//write to file
-    	try
-    	{
-    		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), true);
-    		out.write(text);
-			out.close();
-		}
-    	catch (IOException e) { e.printStackTrace(); }    	
+        this.printLog(loglevel, 0, text);
     }
 	
-    public void printLogLine(LogLevelEnum loglevel, String text)
+    public void printLogLine(LogLevelEnum loglevel, int tabstop, String text)
     {
-    	this.printLog(loglevel, text + "\n");
+    	this.printLog(loglevel, tabstop, text + "\n");
     }
 
-    public void printLogFixedWidth(LogLevelEnum loglevel, String text, int width)
+    public void printLogFixedWidth(LogLevelEnum loglevel, int tabstop, String text, int width)
     {
         String result = null;
 
@@ -109,10 +93,10 @@ public class Logger
         }
         else { result = text; }
 
-        this.printLog(loglevel, result);
+        this.printLog(loglevel, tabstop, result);
     }
 
-    public void printLogFixedWidthRAL(LogLevelEnum loglevel, String text, int width)
+    public void printLogFixedWidthRAL(LogLevelEnum loglevel, int tabstop, String text, int width)
     {
         String result = null;
 
@@ -123,21 +107,48 @@ public class Logger
         }
         else { result = text; }
 
-        this.printLog(loglevel, result);
+        this.printLog(loglevel, tabstop, result);
     }
 
-
-    /*
-    // Verbose logging is disabled for the moment
-    public void printVerboseLog(String text)
+    private void printLog(LogLevelEnum loglevel, int tabstop, String text)
     {
-        if (this.config.getConstantVerboseLogging()) { this.printLog(text); }
+        String outText = this.addOutputPrefix(loglevel, tabstop, text);
+
+    	//write to view
+    	if (this.view != null)
+        {
+            if (loglevel.compareTo(this.config.getPersistentLogVerbosity()) >= 0)
+            {
+                this.view.printLog(outText);
+            }
+        }
+    	
+    	//write to file
+    	try
+    	{
+    		FileWriter out = new FileWriter(new File(this.config.getPersistentLogfile()), true);
+    		out.write(outText);
+			out.close();
+		}
+    	catch (IOException e) { e.printStackTrace(); }    	
     }
 
-    public void printVerboseLogLine(String text)
+    private String addOutputPrefix(LogLevelEnum loglevel, int tabstop, String text)
     {
-        if (this.config.getConstantVerboseLogging()) { this.printLogLine(text); }
+        if (loglevel.compareTo(LogLevelEnum.Debug) == 0)          { return "DEBUG:     " + text; }
+        else if (loglevel.compareTo(LogLevelEnum.Info) == 0)      { return "INFO:      " + text; }
+        else if (loglevel.compareTo(LogLevelEnum.Warning) == 0)   { return "WARNING:   " + text; }
+        else if (loglevel.compareTo(LogLevelEnum.Error) == 0)     { return "ERROR:     " + text; }
+        else if (loglevel.compareTo(LogLevelEnum.Exception) == 0) { return "EXCEPTION: " + text; }
+        else if (loglevel.compareTo(LogLevelEnum.Message) == 0)   { return text; }
+
+        for (int i = 0; i < tabstop; i++)
+        {
+            text = "   " + text;
+        }
+
+        return "ERROR: unknown loglevel (" + text + ")";
     }
-    */
+
 
 }

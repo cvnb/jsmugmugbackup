@@ -55,7 +55,7 @@ public class Model
 
 		
 		DecimalFormat df = new DecimalFormat("0.0");
-    	this.log.printLogLine(LogLevelEnum.Message, "finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, avg speed: " + df.format(transferSpeed) + " kb/sec)");
+    	this.log.printLogLine(LogLevelEnum.Message, 0, "finished. (execution time: " + Helper.getDurationTimeString(timeDiff) + ", transfered: " + df.format(transferedMB) + " mb, avg speed: " + df.format(transferSpeed) + " kb/sec)");
     	System.exit(0);
     }
     public void login(ILoginDialogResult loginDialogResult)
@@ -92,7 +92,7 @@ public class Model
         //this.log.printLogLine("checking: " + directory.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix());
         if ( (new File(rootDir.getAbsolutePath() + this.config.getConstantUploadIgnoreFilePostfix())).exists() )
         {
-            this.log.printLogLine(LogLevelEnum.Warning, "WARNING: " + rootDir.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
+            this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: " + rootDir.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
             return;
         }
 
@@ -125,11 +125,11 @@ public class Model
 					this.accListing.enqueueAlbumForUpload(category, subcategory, album, rootDir, keywords);
 				}
 	        }
-			else { this.log.printLogLine(LogLevelEnum.Error, "ERROR: expected a directory, not a file (" + rootDir + ")"); this.quitApplication(); }
+			else { this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: expected a directory, not a file (" + rootDir + ")"); this.quitApplication(); }
 		}
 		else
 		{
-			this.log.printLogLine(LogLevelEnum.Error, "ERROR: Model.upload: this case is yet unhandled"); this.quitApplication();
+			this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: Model.upload: this case is yet unhandled"); this.quitApplication();
 		}
     }
     public void download(ITransferDialogResult transferDialogResult)
@@ -151,7 +151,7 @@ public class Model
 
             for (IAlbum a : c.getAlbumList()) { selectedAlbums.add(a); }
         }
-        if (selectedAlbums.size() == 0) { this.log.printLogLine(LogLevelEnum.Message, "no matching album was found on your SmugMug Account"); }
+        if (selectedAlbums.size() == 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "no matching album was found on your SmugMug Account"); }
 
         for (IAlbum a : selectedAlbums)
 		{
@@ -202,7 +202,7 @@ public class Model
     }
     public void verify(ITransferDialogResult transferDialogResult)
     {
-        if (this.config.getConstantVerifyMD5ForVideos() == false) { this.log.printLogLine(LogLevelEnum.Warning, "WARNING: md5 sums for videos will not be checked, since they usually fail anyway"); }
+        if (this.config.getConstantVerifyMD5ForVideos() == false) { this.log.printLogLine(LogLevelEnum.Warning, 0, "md5 sums for videos will not be checked, since they usually fail anyway"); }
 
         //this.log.printLogLine("preparing to verify files from: " + transferDialogResult.getDir());
 
@@ -226,7 +226,7 @@ public class Model
 //            }
 //        }
         Vector<IAlbum> selectedAlbums = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
-        if (selectedAlbums.size() == 0) { this.log.printLogLine(LogLevelEnum.Message, "no matching album was found on your SmugMug Account"); }
+        if (selectedAlbums.size() == 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "no matching album was found on your SmugMug Account"); }
 
         
         // compute target base dir
@@ -267,14 +267,14 @@ public class Model
                         String categoryName = null;
                         if ( a.getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_CATEGORY) ) { categoryName = a.getParent().getName(); }
                         else if ( a.getParent().getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_CATEGORY) ) { categoryName = a.getParent().getParent().getName(); }
-                        else { this.log.printLogLine(LogLevelEnum.Error, "ERROR: could not find album category!"); return; }
+                        else { this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: could not find album category!"); return; }
                         targetAlbumDir = targetAlbumDir + categoryName + "/";
                     }
 
                     String subcategoryName = null;
                     if ( a.getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_SUBCATEGORY) ) { subcategoryName = a.getParent().getName() + "/"; }
                     else if ( a.getParent().getSmugmugType().equals(SmugmugTypeEnum.SMUGMUG_CATEGORY) ) { subcategoryName = ""; }
-                    else { this.log.printLogLine(LogLevelEnum.Error, "ERROR: could not find album subcategory!"); return; }
+                    else { this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: could not find album subcategory!"); return; }
                     targetAlbumDir = targetAlbumDir + subcategoryName;
                 }
 
@@ -302,7 +302,7 @@ public class Model
 		//try to bring the albums to a correct order - happens if files were uploaded in an wrong order
     	//this.log.printLogLine("preparing to sort albums");
 
-        if (transferDialogResult.getAlbumName() != null) { this.log.printLogLine(LogLevelEnum.Warning, "WARNING: you specified an album name, which will be ignored! We're rearranging albums here, not images within albums!"); }
+        if (transferDialogResult.getAlbumName() != null) { this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: you specified an album name, which will be ignored! We're rearranging albums here, not images within albums!"); }
     	
         this.accListing.sort(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName());
     }
@@ -313,7 +313,7 @@ public class Model
     }
     public void statistics(ITransferDialogResult transferDialogResult)
     {
-        this.log.printLogLine(LogLevelEnum.Info, "INFO: albums with zero transferd bytes will be omitted");
+        this.log.printLogLine(LogLevelEnum.Info, 0, "INFO: albums with zero transferd bytes will be omitted");
 
 
         if (transferDialogResult == null) { return; }
@@ -468,16 +468,16 @@ public class Model
         //copy icon file
         if (!Helper.copyFile(this.config.getConstantOsmIconFilename(), dir + "icon.png"))
         {
-            this.log.printLogLine(LogLevelEnum.Warning, "WARNING: the file " + this.config.getConstantOsmIconFilename() + " could not be copied to it's destination. You might have to adjust the generated geotags.txt manually." );
+            this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: the file " + this.config.getConstantOsmIconFilename() + " could not be copied to it's destination. You might have to adjust the generated geotags.txt manually." );
         }
 
-        this.log.printLogLine(LogLevelEnum.Info, "INFO: finished creating a layer for OpenStreetMap. The results can be found in " + dir);
+        this.log.printLogLine(LogLevelEnum.Info, 0, "INFO: finished creating a layer for OpenStreetMap. The results can be found in " + dir);
 
     }
     public void delete(ITransferDialogResult transferDialogResult)
     {
-    	this.log.printLogLine(LogLevelEnum.Message, "preparing to delete files");
-    	this.log.printLogLine(LogLevelEnum.Error, "ERROR: not implemented");
+    	this.log.printLogLine(LogLevelEnum.Message, 0, "preparing to delete files");
+    	this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: not implemented");
 
 //    	//check if we are logged in
 //    	if ( (this.loginToken != null) && (this.loginToken.getToken() != null) )
@@ -557,7 +557,7 @@ public class Model
     	//remove leading root dir
     	result = result.substring( result.lastIndexOf("/") + 1 );
     	
-    	this.log.printLogLine(LogLevelEnum.Message, "extracted album name \"" + result + "\" from dir: " + dir);
+    	this.log.printLogLine(LogLevelEnum.Message, 0, "extracted album name \"" + result + "\" from dir: " + dir);
     	
     	return result;
     }
@@ -568,14 +568,14 @@ public class Model
         //check if it's a directory, not a file
         if (!directory.isDirectory()) //should normally be false
         {
-            this.log.printLogLine(LogLevelEnum.Error, "ERROR: expected a directory, not a file (" + directory + ")");
+            this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: expected a directory, not a file (" + directory + ")");
             this.quitApplication();
         }
 
         if (this.containsPics(directory))
         {
             //print a warning - we have nowhere to put the images
-            this.log.printLogLine(LogLevelEnum.Warning, "WARNING: the directory " + directory + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
+            this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: the directory " + directory + " contains images which will be ignored ... specify a \"--album\" parameter or use the parent directory for the \"--dir\" parameter");
         }
 
         File[] directoryList = directory.listFiles();
@@ -651,7 +651,7 @@ public class Model
                             album       = subDirectory.getName();
 
                         }
-                        else { this.log.printLogLine(LogLevelEnum.Error, "ERROR: undefined recursion level"); this.quitApplication(); }
+                        else { this.log.printLogLine(LogLevelEnum.Error, 0, "ERROR: undefined recursion level"); this.quitApplication(); }
 
                         //this.log.printLogLine("DEBUG: enqueuing: " + subDirectory + "(" + category + "/" + subcategory + "/" + album + ")");
                         this.accListing.enqueueAlbumForUpload(category, subcategory, album, subDirectory, keywords);
@@ -672,7 +672,7 @@ public class Model
                 }
                 else // an ignore tag is present, print warning
                 {
-                    this.log.printLogLine(LogLevelEnum.Warning, "WARNING: " + subDirectory.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
+                    this.log.printLogLine(LogLevelEnum.Warning, 0, "WARNING: " + subDirectory.getAbsolutePath() + " - the ignore tag was set ... skipping this directory");
                 }
 
             }
