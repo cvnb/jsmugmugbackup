@@ -493,7 +493,7 @@ public class AccountListingProxy implements IAccountListingProxy
 
 		File dir = new File(targetAlbumDir);
 	    File[] fileList = dir.listFiles(this.config.getConstantSupportedFileTypesFilter());
-	    if (fileList == null)
+        if (fileList == null)
 	    {
 	    	/* Either dir does not exist or is not a directory */
 	    	this.log.printLogLine(LogLevelEnum.Message, 0, "failed");
@@ -505,7 +505,8 @@ public class AccountListingProxy implements IAccountListingProxy
 
             Arrays.sort(fileList, this.config.getConstantFileComparator()); //sort files, convienence only
 
-            //boolean failed = false;
+            int errors = 0;
+            int warnings = 0;
             Vector<VerifyOutputMessage> outputMessages = new Vector<VerifyOutputMessage>();
 
             IAlbum album = this.getAlbum(albumID);
@@ -569,6 +570,7 @@ public class AccountListingProxy implements IAccountListingProxy
                                         outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: videos usually fail)"));
                                         outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Debug, "      file size (local/remote): " + fileList[i].length() + " / " + image.getSize() ));
                                         outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Debug, "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5()));
+                                        warnings++;
                                     }
                                 }
                                 else
@@ -632,10 +634,11 @@ public class AccountListingProxy implements IAccountListingProxy
                                 int exifOrientation = Helper.getOrientationExifMetadata(fileList[i]);
                                 int exifDimensions = Helper.getDimensionExifMetadata(fileList[i]);
                                 float filesizeRatio = (float)fileList[i].length() / (float)image.getSize();
-                                if ( ((exifOrientation == 6) || (exifOrientation == 8)) && (filesizeRatio > 0.988) && (filesizeRatio < 1.012) ) //different orientation than "landscape" and file sizes do not differ too much
+                                if ( ((exifOrientation == 6) || (exifOrientation == 8)) && (filesizeRatio > 0.980) && (filesizeRatio < 1.020) ) //different orientation than "landscape" and file sizes do not differ too much
                                 {
                                     //this.log.printLogLine(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))");
                                     outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: orientation metadata (" + exifOrientation + "))"));
+                                    warnings++;
                                 }
                                 else if (exifDimensions > 48000000) //image has more than 48 megapixel
                                 {
@@ -643,6 +646,7 @@ public class AccountListingProxy implements IAccountListingProxy
                                     //this.log.printLogLine("   WARNING: " + fileList[i].getAbsolutePath() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
                                     //this.log.printLogLine(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))");
                                     outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + fileList[i].getName() + " ... md5 failed (reason: exceeding 48mp size limitation (" + (exifDimensions / (1000 *1000))  + "mp))"));
+                                    warnings++;
                                 }
                                 else
                                 {
@@ -657,6 +661,7 @@ public class AccountListingProxy implements IAccountListingProxy
                                     outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      md5 sum (local/remote)  : " + localFileMD5Sum + " / " + image.getMD5()));
                                     outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      orientation             : " + Helper.getOrientationExifMetadata(fileList[i])));
                                     outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "      pixels                  : " + Helper.getDimensionExifMetadata(fileList[i])));
+                                    errors++;
                                 }
 
                             }
@@ -731,12 +736,12 @@ public class AccountListingProxy implements IAccountListingProxy
                 {
                     String filename = key.substring(key.lastIndexOf("/")+1);
                     if (fileMappingTable.get(key).compareTo(VerifyResultEnum.Ok) == 0)                             { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Info, "   " + filename + " ... ok")); } //this.log.printLogLine(LogLevelEnum.Info, "   " + filename + " ... ok"); }
-                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.UploadedMultipleTimes) == 0)     { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + filename + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times")); } //this.log.printLogLine(LogLevelEnum.Error, "   " + filename + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
-                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.NotUploaded) == 0)               { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + filename + " ... was not uploaded")); } //this.log.printLogLine(LogLevelEnum.Error, "   " + filename + " ... was not uploaded"); }
-                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.IgnoreTagAndFilesizeLimit) == 0) { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag and file size limit)")); } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag and file size limit)"); }
-                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.IgnoreTagExists) == 0)           { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag)")); } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag)"); }
-                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.FilesizeLimit) == 0)             { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: file size limit)")); } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: file size limit)"); }
-                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.NoLocalFileFound) == 0)          { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   the image " + filename + " exists on smugmug, but no corresponding file was found")); } //this.log.printLogLine(LogLevelEnum.Error, "   the image " + filename + " exists on smugmug, but no corresponding file was found"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.UploadedMultipleTimes) == 0)     { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + filename + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times")); errors++; } //this.log.printLogLine(LogLevelEnum.Error, "   " + filename + " ... was uploaded multiple (" + fileMappingTable.get(key) + ") times"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.NotUploaded) == 0)               { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   " + filename + " ... was not uploaded")); errors++; } //this.log.printLogLine(LogLevelEnum.Error, "   " + filename + " ... was not uploaded"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.IgnoreTagAndFilesizeLimit) == 0) { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag and file size limit)")); warnings++; } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag and file size limit)"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.IgnoreTagExists) == 0)           { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag)")); warnings++; } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: ignore tag)"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.FilesizeLimit) == 0)             { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: file size limit)")); warnings++; } //this.log.printLogLine(LogLevelEnum.Warning, "   " + filename + " ... was not uploaded (reason: file size limit)"); }
+                    else if (fileMappingTable.get(key).compareTo(VerifyResultEnum.NoLocalFileFound) == 0)          { outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   the image " + filename + " exists on smugmug, but no corresponding file was found")); errors++; } //this.log.printLogLine(LogLevelEnum.Error, "   the image " + filename + " exists on smugmug, but no corresponding file was found"); }
                     else
                     {
                         //this.log.printLogLine(LogLevelEnum.Error, "   undefined result while matching images with local files");
@@ -746,6 +751,7 @@ public class AccountListingProxy implements IAccountListingProxy
                         outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   undefined result while matching images with local files"));
                         outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   fileName       = " + key));
                         outputMessages.add(new VerifyOutputMessage(LogLevelEnum.Error, "   fileMatchCount = " + fileMappingTable.get(key)));
+                        errors++;
 
                     }
                 }
@@ -771,18 +777,18 @@ public class AccountListingProxy implements IAccountListingProxy
 
             // print results
 
-            //count errors
-            int errors = 0;
-            int warnings = 0;
+            //count errors ... probably won't be nesseciary, once warnings and errors ar counted correctly
+            int errorsLines = 0;
+            int warningsLines = 0;
             for (VerifyOutputMessage outMessage : outputMessages)
             {
-                if (outMessage.getLogLevel() == LogLevelEnum.Error) { errors++; }
-                else if (outMessage.getLogLevel() == LogLevelEnum.Warning) { warnings++; }
+                if (outMessage.getLogLevel() == LogLevelEnum.Error) { errorsLines++; }
+                else if (outMessage.getLogLevel() == LogLevelEnum.Warning) { warningsLines++; }
             }
 
             //print messages
-            if (errors == 0 && warnings == 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok"); } // i.e. there were no errors for the whole album
-            else if (errors == 0 && warnings > 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok (" + warnings + " Warnings)"); }
+            if (errorsLines == 0 && warningsLines == 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok"); } // i.e. there were no errors for the whole album
+            else if (errorsLines == 0 && warningsLines > 0) { this.log.printLogLine(LogLevelEnum.Message, 0, "ok (" + warnings + " Warnings)"); }
             else { this.log.printLogLine(LogLevelEnum.Message, 0, "failed (" + errors + " Errors, " + warnings + " Warnings)"); } // i.e. there were errors with md5 verification, but no missing files or so
 
             for (VerifyOutputMessage outMessage : outputMessages)

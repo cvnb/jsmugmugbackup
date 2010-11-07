@@ -74,15 +74,17 @@ rm -r -f deployment/jSmugmugBackup
 cp -v config.xml deployment/
 
 #create unix script
-echo "#!/bin/bash" >> deployment/jSmugmugBackup.sh
+echo "#!/bin/sh" >> deployment/jSmugmugBackup.sh
 #echo "CLASSPATH=\".:./lib/apache-mime4j-0.4.jar:./lib/commons-codec-1.3.jar:./lib/commons-logging-1.1.1.jar:./lib/httpclient-4.0-beta1.jar:./lib/httpcore-4.0-beta2.jar:lib/httpmime-4.0-beta1.jar\"" >> deployment/jSmugmugBackup.sh
 #echo "java -classpath \$CLASSPATH -jar jSmugmugBackup.jar \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9" >> deployment/jSmugmugBackup.sh
 echo "java -Xms1024m -Xmx2048m -jar jSmugmugBackup.jar \$1 \$2 \$3 \$4 \$5 \$6 \$7 \$8 \$9" >> deployment/jSmugmugBackup.sh
 chmod -v u+x deployment/jSmugmugBackup.sh
 
 #create unix clear cache script
-echo "#!/bin/bash" >> deployment/clearCache.sh
-echo "rm -v jSmugmugBackup.albumCache.*" >> deployment/clearCache.sh
+#echo "#!/bin/bash" >> deployment/clearCache.sh
+#echo "rm -v jSmugmugBackup.albumCache.*" >> deployment/clearCache.sh
+echo "#!/bin/sh" >> deployment/clearCache.sh
+echo "rm jSmugmugBackup.albumCache.*" >> deployment/clearCache.sh
 chmod -v u+x deployment/clearCache.sh
 
 #create windows .bat
