@@ -45,8 +45,9 @@ public class GlobalConfig
    // constants --> getter
    private final String constantVersion                     = "1.3 (dev)";
    private final String constantSmugmugUserAgentString      = "jSmugmugBackup/v" + this.constantVersion;
-   private final String constantSmugmugServerURL_120        = "https://api.smugmug.com/hack/json/1.2.0/";
-   private final String constantSmugmugServerURL_122        = "https://api.smugmug.com/services/api/json/1.2.2/";
+   private final String constantSmugmugServerURL_120        = "http://api.smugmug.com/hack/json/1.2.0/";
+   private final String constantSmugmugServerURL_122        = "http://api.smugmug.com/services/api/json/1.2.2/";
+   private final String constantSmugmugSecureServerURL_122  = "https://api.smugmug.com/services/api/json/1.2.2/"; //using https for login only, workaround
    private final String constantSmugmugAPIKey               = "bGLKncnGHUfZIwICUtqWsW3ejE1RYztJ";
    private final String constantSmugmugAPIVersion_120       = "1.2.0";
    private final String constantSmugmugAPIVersion_122       = "1.2.2";
@@ -64,7 +65,7 @@ public class GlobalConfig
    private final String constantTempDownloadFilename        = "jSmugmugBackup.download.temp";
    private final String constantVideoDownloadFilePostfix    = ".smugmug.mp4";
    private final String[] constantSupportedFileTypes_Images = {".jpg", ".jpeg", ".png", ".gif", ".tiff"};
-   private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", ".3gp", ".ogv", ".ogg"}; //...hope thats all possible types
+   private final String[] constantSupportedFileTypes_Videos = {".avi", ".mp4", ".mpg", ".mpeg", ".mov", ".m4a", ".m4v", ".wmv", /*".xvid",*/ ".flv", /*".3gp",*/ ".ogv", ".ogg"}; //...hope thats all possible types
    private final String constantHelpNotes =
 		"notes:\n" +
         " - It is strongly suggestend to stick with the commandline view, since the GUI is currently\n" +
@@ -446,6 +447,7 @@ public class GlobalConfig
    public String   getConstantSmugmugUserAgentString()    { return this.constantSmugmugUserAgentString; }
    public String   getConstantSmugmugServerURL_120()      { return this.constantSmugmugServerURL_120; }
    public String   getConstantSmugmugServerURL_122()      { return this.constantSmugmugServerURL_122; }
+   public String   getConstantSmugmugSecureServerURL_122(){ return this.constantSmugmugSecureServerURL_122; }
    public String   getConstantSmugmugAPIKey()             { return this.constantSmugmugAPIKey; }
    public String   getConstantSmugmugAPIVersion_120()     { return this.constantSmugmugAPIVersion_120; }
    public String   getConstantSmugmugAPIVersion_122()     { return this.constantSmugmugAPIVersion_122; }

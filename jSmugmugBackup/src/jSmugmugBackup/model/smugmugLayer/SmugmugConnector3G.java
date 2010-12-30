@@ -818,7 +818,6 @@ public class SmugmugConnector3G implements ISmugmugConnector
 	        // Create a response handler
 	        ResponseHandler<String> responseHandler = new BasicResponseHandler();
 
-
 	        try
 			{
 				responseBody = httpclient.execute(httpRequest, responseHandler);
@@ -923,7 +922,6 @@ public class SmugmugConnector3G implements ISmugmugConnector
             }
 		} while (repeat); //infinite loop until repeat becomes false
 
-
         Object obj = JSONValue.parse(responseBody);
         JSONObject jobj = (JSONObject)obj;
         //this.printJSONObject(jobj);
@@ -945,14 +943,17 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //this.log.printLog(methodName + " ... ");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL_122() + "?";
-		url = url + "method=" + methodName + "&";
+		//String url = this.config.getConstantSmugmugServerURL_120() + "?"; //temporary workaround
+		String url = this.config.getConstantSmugmugSecureServerURL_122() + "?";
+        url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "EmailAddress=" + userEmail + "&";
 		url = url + "Password=" + password + "&";
         //url = url + "Callback=" +  + "&"; //string
         //url = url + "Pretty=" +  + "&"; //boolean, default= false
         //url = url + "Strict=" +  + "&"; //boolean, default= false
+
+        //this.log.printLogLine(LogLevelEnum.Debug, 0, "url: " + url);
 
 		do
 		{
@@ -1015,7 +1016,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
 
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL_122() + "?";
+		String url = this.config.getConstantSmugmugSecureServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
 		url = url + "UserID=" + SmugmugConnector3G.login_userID + "&";
@@ -1066,7 +1067,7 @@ public class SmugmugConnector3G implements ISmugmugConnector
         //this.log.printLog(methodName + " ... ");
 
 		//build url
-		String url = this.config.getConstantSmugmugServerURL_122() + "?";
+		String url = this.config.getConstantSmugmugSecureServerURL_122() + "?";
 		url = url + "method=" + methodName + "&";
 		url = url + "APIKey=" + this.config.getConstantSmugmugAPIKey() + "&";
         //url = url + "Callback=" +  + "&"; //string
@@ -1145,6 +1146,8 @@ public class SmugmugConnector3G implements ISmugmugConnector
 		//url = url + "Pretty=" +  + "&"; //boolean
 		if (sitePassword != null) { url = url + "SitePassword=" + sitePassword + "&"; } //optional
         //url = url + "Strict=" +  + "&"; //boolean
+
+        //this.log.printLogLine(LogLevelEnum.Debug, 0, "url: " + url);
 
 		do
 		{
