@@ -2,7 +2,7 @@
 <jSmugmugBackup>
     <config>
         <logfile>jSmugmugBackup.log</logfile>
-        <verbosity>Debug</verbosity>                     <!-- Debug, Info, Warning, Error, Exception, Message-->
+        <verbosity>Message</verbosity>                     <!-- Debug, Info, Warning, Error, Exception, Message-->
         <appendLogfile>true</appendLogfile>
         <checkMD5Sums>false</checkMD5Sums>
         <cacheAccountInfo>true</cacheAccountInfo>
