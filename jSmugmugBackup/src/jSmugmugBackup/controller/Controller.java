@@ -27,6 +27,7 @@ public class Controller
         this.view.addAutotagButtonListener(new AutotagButtonListener());
         this.view.addStatisticsButtonListener(new StatisticsButtonListener());
         this.view.addOsmlayerButtonListener(new OsmlayerButtonListener());
+        this.view.addKmllayerButtonListener(new KmllayerButtonListener());
         this.view.addUploadDialogButtonListener(new UploadDialogButtonListener());
         //this.view.addUploadStartButtonListener(new UploadStartButtonListener());
         this.view.addDownloadDialogButtonListener(new DownloadDialogButtonListener());
@@ -106,7 +107,14 @@ public class Controller
 			model.osmlayer(view.showOsmlayerDialog());
 		}
 	}
-	class UploadDialogButtonListener implements ActionListener
+	class KmllayerButtonListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			model.kmllayer(view.showKmllayerDialog());
+		}
+	}
+    class UploadDialogButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
