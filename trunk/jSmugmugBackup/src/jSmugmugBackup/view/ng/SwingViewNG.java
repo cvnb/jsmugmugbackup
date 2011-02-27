@@ -919,6 +919,10 @@ public class SwingViewNG extends FrameView implements IView
     {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    public ITransferDialogResult showKmllayerDialog()
+    {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     public ITransferDialogResult showDownloadDialog()
     {
         
@@ -1001,6 +1005,10 @@ public class SwingViewNG extends FrameView implements IView
         /* todo: nothing to register yet */
     }
     public void addOsmlayerButtonListener(ActionListener listener)
+    {
+        /* todo: nothing to register yet */
+    }
+    public void addKmllayerButtonListener(ActionListener listener)
     {
         /* todo: nothing to register yet */
     }

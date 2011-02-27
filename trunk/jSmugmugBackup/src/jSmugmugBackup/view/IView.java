@@ -28,6 +28,7 @@ public interface IView
     ITransferDialogResult showAutotagDialog();
     ITransferDialogResult showStatisticsDialog();
     ITransferDialogResult showOsmlayerDialog();
+    ITransferDialogResult showKmllayerDialog();
 	ITransferDialogResult showUploadDialog();
 	ITransferDialogResult showDownloadDialog();
     ITransferDialogResult showDownloadURLDialog();
@@ -45,6 +46,7 @@ public interface IView
     void addAutotagButtonListener(ActionListener listener);
     void addStatisticsButtonListener(ActionListener listener);
     void addOsmlayerButtonListener(ActionListener listener);
+    void addKmllayerButtonListener(ActionListener listener);
 	void addUploadDialogButtonListener(ActionListener listener);
 	void addDownloadDialogButtonListener(ActionListener listener);
     void addDownloadURLDialogButtonListener(ActionListener listener);

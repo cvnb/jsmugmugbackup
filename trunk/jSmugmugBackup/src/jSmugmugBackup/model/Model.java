@@ -8,6 +8,11 @@ import jSmugmugBackup.view.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.*;
+import javax.xml.transform.stream.*;
+import org.w3c.dom.*;
 
 
 public class Model
@@ -473,6 +478,184 @@ public class Model
 
         this.log.printLogLine(LogLevelEnum.Info, 0, "INFO: finished creating a layer for OpenStreetMap. The results can be found in " + dir);
 
+    }
+    public void kmllayer(ITransferDialogResult transferDialogResult)
+    {
+        Vector<IAlbum> albumList = this.accListing.getAccountAlbumList(transferDialogResult.getCategoryName(), transferDialogResult.getSubCategoryName(), transferDialogResult.getAlbumName(), transferDialogResult.getAlbumKeywords());
+
+        ResolutionEnum maxResolution = transferDialogResult.getMaxResolution();
+
+        String dir = transferDialogResult.getDir();
+        if (dir == null) { dir = "./"; }
+
+
+        Hashtable<String, Vector<IImage>> contentGeotagsHashtable = new Hashtable<String, Vector<IImage>>();
+        for (IAlbum a : albumList)
+        {
+            for (IImage i : a.getImageList())
+            {
+                if ( !((i.getLongitude() == null) && (i.getLatitude() == null) && (i.getAltitude() == null)) )
+                {
+                    String locationKey = i.getLatitude().toString() + i.getLongitude().toString();
+                    if ( !contentGeotagsHashtable.containsKey(locationKey) )
+                    {
+                        Vector<IImage> imageVector = new Vector<IImage>();
+                        imageVector.add(i);
+                        contentGeotagsHashtable.put(locationKey, imageVector);
+                    }
+                    else
+                    {
+                        Vector<IImage> imageVector = contentGeotagsHashtable.get(locationKey);
+                        
+                        boolean md5Exists = false;
+                        for (IImage img : imageVector)
+                        {
+                            if (img.getMD5().equals(i.getMD5())) { md5Exists = true; }
+                        }
+                        
+                        if (!md5Exists) { imageVector.add(i); }
+                    }
+                }
+            }
+        }
+
+
+        try
+        {            
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //Create instance of DocumentBuilderFactory
+            DocumentBuilder docBuilder = factory.newDocumentBuilder(); //Get the DocumentBuilder
+            Document doc = docBuilder.newDocument(); //Create blank DOM Document
+
+            Comment comment = doc.createComment("created by jSmugmugBackup"); //create a comment
+            doc.appendChild(comment);
+            
+            Element rootElement = doc.createElement("kml"); //create the root element
+            rootElement.setAttribute("xmlns", "http://www.opengis.net/kml/2.2");
+            doc.appendChild(rootElement); //all it to the xml tree
+
+            Element documentElement = doc.createElement("Document");
+            rootElement.appendChild(documentElement);
+
+//            Element screenOverlayElement = doc.createElement("ScreenOverlay");
+//            Element overlayNameElement = doc.createElement("name");
+//            overlayNameElement.setTextContent("SoulCube.net");
+//            screenOverlayElement.appendChild(overlayNameElement);
+//            Element overlayDescriptionElement = doc.createElement("description");
+//            CDATASection overlayDescriptionCDATA = doc.createCDATASection("<p><a href=\"http://code.google.com/p/jsmugmugbackup/\">jSmugmugBackup</a></p>");
+//            screenOverlayElement.appendChild(overlayDescriptionElement);
+//            Element overlayIconElement = doc.createElement("Icon");
+//            Element overlayHrefElement = doc.createElement("href");
+//            overlayHrefElement.setTextContent("http://");
+//            overlayIconElement.appendChild(overlayHrefElement);
+//            screenOverlayElement.appendChild(overlayIconElement);
+//            Element overlayOverlayXYElement = doc.createElement("overlayXY");
+//            overlayOverlayXYElement.setAttribute("x", "0");
+//            overlayOverlayXYElement.setAttribute("y", "0");
+//            overlayOverlayXYElement.setAttribute("xunits", "fraction");
+//            overlayOverlayXYElement.setAttribute("yunits", "fraction");
+//            screenOverlayElement.appendChild(overlayOverlayXYElement);
+//            Element overlayScreenXYElement = doc.createElement("screenXY");
+//            overlayScreenXYElement.setAttribute("x", "0");
+//            overlayScreenXYElement.setAttribute("y", "0");
+//            overlayScreenXYElement.setAttribute("xunits", "fraction");
+//            overlayScreenXYElement.setAttribute("yunits", "fraction");
+//            screenOverlayElement.appendChild(overlayScreenXYElement);
+//            Element overlaySizeElement = doc.createElement("size");
+//            overlaySizeElement.setAttribute("x", "0");
+//            overlaySizeElement.setAttribute("y", "0");
+//            overlaySizeElement.setAttribute("xunits", "fraction");
+//            overlaySizeElement.setAttribute("yunits", "fraction");
+//            screenOverlayElement.appendChild(overlaySizeElement);
+//            documentElement.appendChild(screenOverlayElement);
+
+
+            Element styleElement = doc.createElement("Style");
+            styleElement.setAttribute("id", "photoStyle");
+            Element iconStyleElement = doc.createElement("IconStyle");
+            Element imageIconElement = doc.createElement("Icon");
+            Element imageHrefElement = doc.createElement("href");
+            //imageHrefElement.setTextContent("http://maps.google.com/mapfiles/kml/paddle/ylw-blank_maps.png");
+            imageHrefElement.setTextContent("http://maps.google.com/mapfiles/kml/paddle/pink-blank_maps.png");
+            imageIconElement.appendChild(imageHrefElement);
+            iconStyleElement.appendChild(imageIconElement);
+            styleElement.appendChild(iconStyleElement);
+            documentElement.appendChild(styleElement);
+
+
+
+            for (Vector<IImage> geotag : contentGeotagsHashtable.values())
+            {
+                String placemarkCoordinates = geotag.get(0).getLongitude() + "," + geotag.get(0).getLatitude() + "," + geotag.get(0).getAltitude();
+
+                String placemarkName = "";
+                for (IImage image : geotag)
+                {
+                    if (placemarkName.length() != 0) { placemarkName += ", "; }
+                    placemarkName += image.getName();
+                }
+
+
+                String placemarkHtmlDescription = "";
+                //placemarkHtmlDescription += placemarkName + "<br/>";
+                placemarkHtmlDescription += "Longitude : " + geotag.get(0).getLongitude() + "<br/>";
+                placemarkHtmlDescription += "Latitude  : " + geotag.get(0).getLatitude() + "<br/>";
+                placemarkHtmlDescription += "Altitude  : " + geotag.get(0).getAltitude() + "m<br/>";
+                placemarkHtmlDescription += "<br/>";
+                for (IImage image : geotag)
+                {
+                    String downloadURL = Helper.getDownloadURL(image, maxResolution);
+                    placemarkHtmlDescription += "Category    : " + image.getParent().getParent().getParent().getName() + "<br/>";
+                    placemarkHtmlDescription += "Subcategory : " + image.getParent().getParent().getName() + "<br/>";
+                    placemarkHtmlDescription += "Album       : " + image.getParent().getName() + "<br/>";
+                    placemarkHtmlDescription += "<a href=\"" + downloadURL + "\"><img src=\"" + image.getMediumURL() + "\" border=\"0\" alt=\"" + image.getName() + "\" /></a><br/>";
+                }
+
+                Element placemarkElement = doc.createElement("Placemark");
+
+                Element imageNameElement = doc.createElement("name");
+                imageNameElement.setTextContent(placemarkName);
+                placemarkElement.appendChild(imageNameElement);
+
+                Element imageDescriptionElement = doc.createElement("description");
+                CDATASection imageDescriptionCdataElement = doc.createCDATASection(placemarkHtmlDescription);
+                imageDescriptionElement.appendChild(imageDescriptionCdataElement);
+                placemarkElement.appendChild(imageDescriptionElement);
+
+                Element imageStyleUrl = doc.createElement("styleUrl");
+                imageStyleUrl.setTextContent("#photoStyle");
+                placemarkElement.appendChild(imageStyleUrl);
+
+
+                Element imagePointElement = doc.createElement("Point");
+                Element imageCoordinatesElement = doc.createElement("coordinates");
+                imageCoordinatesElement.setTextContent(placemarkCoordinates);
+                imagePointElement.appendChild(imageCoordinatesElement);
+                placemarkElement.appendChild(imagePointElement);
+
+                documentElement.appendChild(placemarkElement);
+            }
+
+
+            /*
+             * TODO: - description of position,altitude, time, date and album name, see generated kmz
+             * */
+
+
+
+
+            TransformerFactory tranFactory = TransformerFactory.newInstance();
+            Transformer aTransformer = tranFactory.newTransformer();
+            aTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+            Source src = new DOMSource(doc);
+            Result dest = new StreamResult(dir + "jsb.kml");
+            aTransformer.transform(src, dest);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
     public void delete(ITransferDialogResult transferDialogResult)
     {

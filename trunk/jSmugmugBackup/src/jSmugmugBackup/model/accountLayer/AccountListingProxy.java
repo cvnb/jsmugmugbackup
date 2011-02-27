@@ -405,7 +405,7 @@ public class AccountListingProxy implements IAccountListingProxy
             File imageFile = new File(targetDir + Helper.getDownloadFilename(image, maxResolution));
             //this.log.printLogLine("DEBUG: file: " + imageFile.getAbsolutePath());
             String imageURL = Helper.getDownloadURL(image, maxResolution);
-            
+            this.log.printLogLine(LogLevelEnum.Debug, 1, " enqueuing url (id:" + image.getID() + ", maxResolution:" + maxResolution + ", url:" + imageURL + ")");
 
             if (imageFile.exists()) //a file is already there
             {

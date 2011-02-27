@@ -34,6 +34,7 @@ public class CmdView implements IView
     private ActionListener autotagButtonListener = null;
     private ActionListener statisticsButtonListener = null;
     private ActionListener osmlayerButtonListener = null;
+    private ActionListener kmllayerButtonListener = null;
 	private ActionListener quitButtonListener = null;
     private ActionListener syncProcessQueueButtonListener = null;
     private ActionListener asyncProcessQueueStartButtonListener = null;
@@ -79,6 +80,11 @@ public class CmdView implements IView
 		{
 			this.loginButtonListener.actionPerformed(null);
 			this.osmlayerButtonListener.actionPerformed(null);
+		}
+        else if ( this.findArgumentFromCommandline("kmllayer") )
+		{
+			this.loginButtonListener.actionPerformed(null);
+			this.kmllayerButtonListener.actionPerformed(null);
 		}
         else if ( this.findArgumentFromCommandline("upload") )
 		{
@@ -132,6 +138,7 @@ public class CmdView implements IView
     public void addAutotagButtonListener(ActionListener listener)            { this.autotagButtonListener = listener; }
     public void addStatisticsButtonListener(ActionListener listener)         { this.statisticsButtonListener = listener; }
 	public void addOsmlayerButtonListener(ActionListener listener)           { this.osmlayerButtonListener = listener; }
+	public void addKmllayerButtonListener(ActionListener listener)           { this.kmllayerButtonListener = listener; }
     public void addQuitButtonListener(ActionListener listener)               { this.quitButtonListener = listener; }
 	public void addSyncProcessQueueButtonListener(ActionListener listener)   { this.syncProcessQueueButtonListener = listener; }
 
@@ -357,6 +364,10 @@ public class CmdView implements IView
     {
         return this.showUploadDialog();
     }
+    public ITransferDialogResult showKmllayerDialog()
+    {
+        return this.showDownloadDialog();
+    }
     public ITransferDialogResult showUploadDialog()
 	{
 		String category = this.extractArgumentValueFromCommandline("category");
@@ -365,7 +376,7 @@ public class CmdView implements IView
         String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		String pics_dir = this.extractDirectoryFromCommandline();
         String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
-		
+
 		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null, albumPassword, /*null,*/ null);
 	}
 	public ITransferDialogResult showDownloadDialog()
@@ -376,12 +387,15 @@ public class CmdView implements IView
         String albumKeywords = this.extractArgumentValueFromCommandline("albumKeywords");
 		String pics_dir = this.extractDirectoryFromCommandline();
         String albumPassword = this.extractArgumentValueFromCommandline("albumPassword");
+
         //ResolutionEnum minResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("minResolution"));
         ResolutionEnum maxResolution = null;
-        if (this.extractArgumentValueFromCommandline("maxResolution") != null)
+        String resolutionString = this.extractArgumentValueFromCommandline("maxResolution");
+        if (resolutionString != null)
         {
             //maxResolution = ResolutionEnum.valueOf(this.extractArgumentValueFromCommandline("maxResolution"));
-            String resolutionString = this.extractArgumentValueFromCommandline("maxResolution");
+
+            //this.log.printLogLine(LogLevelEnum.Debug, 0, "resolutionString: " + resolutionString);
             if (resolutionString.equals("O")) { maxResolution = ResolutionEnum.Original; }
             else if (resolutionString.equals("X3")) { maxResolution = ResolutionEnum.X3Large; }
             else if (resolutionString.equals("X2")) { maxResolution = ResolutionEnum.X2Large; }
@@ -396,7 +410,7 @@ public class CmdView implements IView
             }
         }
 
-
+        //this.log.printLogLine(LogLevelEnum.Debug, 0, "maxResolution: " + maxResolution);
 		return new TransferDialogResult(category, subCategory, album, pics_dir, albumKeywords, null, albumPassword, /*minResolution,*/ maxResolution);
 
         /*
@@ -477,6 +491,7 @@ public class CmdView implements IView
         this.log.printLogLine(LogLevelEnum.Message, 0, "     --autotag      : assign tags based on the album name");
         this.log.printLogLine(LogLevelEnum.Message, 0, "     --stats        : show statistics");
         this.log.printLogLine(LogLevelEnum.Message, 0, "     --osmlayer     : create a layer file to be used with OpenStreetMap, requires \"--dir\" option");
+        this.log.printLogLine(LogLevelEnum.Message, 0, "     --kmllayer     : requires \"--dir\" option");
         this.log.printLogLine(LogLevelEnum.Message, 0, "     --upload       : upload files to smugmug, requires \"--dir\" option");
 		this.log.printLogLine(LogLevelEnum.Message, 0, "     --download     : download files from smugmug, requires \"--dir\" option");
 		this.log.printLogLine(LogLevelEnum.Message, 0, "     --verify       : compare local files and files on smugmug, requires \"--dir\" option");
@@ -527,7 +542,7 @@ public class CmdView implements IView
 			
 			if (concat_mode == false)
 			{
-				if (arg.startsWith("--" + argumentName.toLowerCase() + "="))
+				if (arg.startsWith("--" + argumentName + "="))
 				{
 					result = arg.substring(arg.indexOf("=") + 1);
 					concat_mode = true;

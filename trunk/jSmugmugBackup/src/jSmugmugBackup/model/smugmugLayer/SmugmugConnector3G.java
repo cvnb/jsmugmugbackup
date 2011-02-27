@@ -2054,6 +2054,15 @@ public class SmugmugConnector3G implements ISmugmugConnector
                     //this.log.printLogLine("ok");
                     return jobj;
                 }
+                else if ( (this.getJSONValue(jobj, "stat").equals("fail")) &&
+                          (this.getJSONValue(jobj, "method") == null) &&
+                          (((String)this.getJSONValue(jobj, "message")).startsWith("incomplete file (ByteCount given: ") ))
+                {
+                    this.log.printLog(LogLevelEnum.Message, Helper.getCurrentTimeString() + " retrying (incomplete file) ... ");
+                    Helper.pause(this.config.getConstantRetryWait());
+
+                    this.printJSONObject(jobj); //temporary
+                }
                 else if ( (this.getJSONValue(jobj, "stat").equals("fail")) && //this line throws a NullPointer exception occasionally .. no idea why
                           (this.getJSONValue(jobj, "method").equals(methodName)) &&
                           (this.getJSONValue(jobj, "message") == null ))
