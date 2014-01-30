@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="28319add-b700-4126-94e7-c15845363bfc" name="Default" comment="" />
+    <list default="true" id="28319add-b700-4126-94e7-c15845363bfc" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="jSmugmugBackupNG.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,7 +22,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <breakpoint_any>
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
@@ -54,16 +58,182 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="131" />
-    <option name="y" value="20" />
-    <option name="width" value="1400" />
-    <option name="height" value="860" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="jSmugmugBackupNG" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="IAccountListingProxy.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAccountListingProxy.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="38" column="0" selection-start="1559" selection-end="1559" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="748">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SmugmugObject.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/SmugmugObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="77" column="0" selection-start="1648" selection-end="1648" vertical-scroll-proportion="0.0" vertical-offset="1062" max-vertical-offset="1411">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SmugmugTypeEnum.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/SmugmugTypeEnum.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="0" selection-start="367" selection-end="367" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="391">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Subcategory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Subcategory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="33" column="0" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0" vertical-offset="178" max-vertical-offset="663">
+              <folding>
+                <marker date="1390892982469" expanded="true" signature="430:525" placeholder="{...}" />
+                <marker date="1390892982469" expanded="true" signature="663:705" placeholder="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TransferStatistics.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/TransferStatistics.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="0" selection-start="503" selection-end="503" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="510">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VerifyOutputMessage.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/VerifyOutputMessage.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="0" selection-start="585" selection-end="585" vertical-scroll-proportion="0.0" vertical-offset="476" max-vertical-offset="578">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VerifyResultEnum.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/VerifyResultEnum.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="26" selection-start="239" selection-end="239" vertical-scroll-proportion="0.47128713" vertical-offset="0" max-vertical-offset="510">
+              <folding>
+                <element signature="e#0#382#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ISmugmugObject.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ISmugmugObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="19" column="0" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="425">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ISubcategory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ISubcategory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="0" selection-start="362" selection-end="362" vertical-scroll-proportion="0.0" vertical-offset="76" max-vertical-offset="357">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RootElement.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/RootElement.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="0" selection-start="923" selection-end="923" vertical-scroll-proportion="0.0" vertical-offset="522" max-vertical-offset="850">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/controller/Controller.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/ILoginView.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/IView.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/Logger.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/LogLevelEnum.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/console/CmdView.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/console/ConsoleView.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/console/ConsoleViewLogin_1_5.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/view/console/ConsoleViewLogin_1_6.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/AeSimpleMD5.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/Helper.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/ILoginDialogResult.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/ITransferDialogResult.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/LoginDialogResult.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/Model.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/ResolutionEnum.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/TransferDialogResult.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/ISmugmugConnector.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/ISmugmugLocalAlbumCache.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/SmugmugConnector2G.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/SmugmugConnector3G.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/SmugmugLocalAlbumCache.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/ITransferQueue.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/ITransferQueueItem.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/ITransferQueueItemProcessResults.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueue.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueItem.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueItemActionEnum.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueItemProcessResults.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueProcessor.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/AccountListingProxy.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Album.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/AlbumMonthlyStatistics.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Category.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAcountListingProxy.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAlbum.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAlbumMonthlyStatistics.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ICategory.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IImage.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Image.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IRootElement.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ISmugmugObject.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ISubcategory.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/RootElement.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAccountListingProxy.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/SmugmugObject.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/SmugmugTypeEnum.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Subcategory.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/TransferStatistics.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/VerifyOutputMessage.java" />
+        <option value="$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/VerifyResultEnum.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="98" />
+    <option name="y" value="132" />
+    <option name="width" value="1017" />
+    <option name="height" value="705" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -75,6 +245,149 @@
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackup" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackup" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackup" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackup" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackupNG" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jSmugmugBackup" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="config" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToClass.includeLibraries" value="false" />
@@ -88,12 +401,54 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../jSmugmugBackup" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="recentsLimit" value="5" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="FullScreen" value="false" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
+    <configuration default="false" name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="jSmugmugBackup.main.Main" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="jSmugmugBackupNG" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin" singleton="true">
       <module name="" />
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
       <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -178,13 +533,79 @@
       <patterns />
       <method />
     </configuration>
-    <list size="0" />
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Application.Main" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="true" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <configuration useDefault="false">C:\Users\paul\AppData\Roaming\Subversion</configuration>
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="SvnFileUrlMappingImpl">
+    <option name="myMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="Z:\src\IntelliJ IDEA\jSmugmugBackupNG" />
+          <option name="myCopyRoot" value="Z:\src\IntelliJ IDEA\jSmugmugBackupNG" />
+        </SvnCopyRootSimple>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="Z:\src\IntelliJ IDEA\jSmugmugBackupNG\.idea" />
+          <option name="myCopyRoot" value="Z:\src\IntelliJ IDEA\jSmugmugBackupNG\.idea" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+    <option name="myMoreRealMappingRoots">
+      <list>
+        <SvnCopyRootSimple>
+          <option name="myVcsRoot" value="Z:\src\IntelliJ IDEA\jSmugmugBackupNG" />
+          <option name="myCopyRoot" value="Z:\src\IntelliJ IDEA\jSmugmugBackupNG" />
+        </SvnCopyRootSimple>
+      </list>
+    </option>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="28319add-b700-4126-94e7-c15845363bfc" name="Default" comment="" />
@@ -194,24 +615,38 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="131" y="20" width="1400" height="860" extended-state="0" />
+    <frame x="98" y="132" width="1017" height="705" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34565434" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30769232" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297491" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -223,6 +658,584 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/config/GlobalConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="52" column="35" selection-start="1889" selection-end="1889" vertical-scroll-proportion="-2.72" vertical-offset="816" max-vertical-offset="9248">
+          <folding>
+            <element signature="e#0#34936#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#867#868#0" expanded="false" />
+            <element signature="e#917#918#0" expanded="false" />
+            <element signature="e#11349#11950#0" expanded="false" />
+            <element signature="e#11943#11944#0" expanded="false" />
+            <element signature="e#12011#12111#0" expanded="false" />
+            <element signature="e#12104#12105#0" expanded="false" />
+            <element signature="e#28148#28149#0" expanded="false" />
+            <element signature="e#28179#28180#0" expanded="false" />
+            <element signature="e#28240#28241#0" expanded="false" />
+            <element signature="e#28286#28287#0" expanded="false" />
+            <element signature="e#28347#28348#0" expanded="false" />
+            <element signature="e#28391#28392#0" expanded="false" />
+            <element signature="e#28452#28453#0" expanded="false" />
+            <element signature="e#28496#28497#0" expanded="false" />
+            <element signature="e#28557#28558#0" expanded="false" />
+            <element signature="e#28607#28608#0" expanded="false" />
+            <element signature="e#28668#28669#0" expanded="false" />
+            <element signature="e#28705#28706#0" expanded="false" />
+            <element signature="e#28766#28767#0" expanded="false" />
+            <element signature="e#28811#28812#0" expanded="false" />
+            <element signature="e#28872#28873#0" expanded="false" />
+            <element signature="e#28917#28918#0" expanded="false" />
+            <element signature="e#28978#28979#0" expanded="false" />
+            <element signature="e#29011#29012#0" expanded="false" />
+            <element signature="e#29072#29073#0" expanded="false" />
+            <element signature="e#29108#29109#0" expanded="false" />
+            <element signature="e#29169#29170#0" expanded="false" />
+            <element signature="e#29211#29212#0" expanded="false" />
+            <element signature="e#29399#29400#0" expanded="false" />
+            <element signature="e#29442#29443#0" expanded="false" />
+            <element signature="e#29503#29504#0" expanded="false" />
+            <element signature="e#29549#29550#0" expanded="false" />
+            <element signature="e#29610#29611#0" expanded="false" />
+            <element signature="e#29652#29653#0" expanded="false" />
+            <element signature="e#29713#29714#0" expanded="false" />
+            <element signature="e#29760#29761#0" expanded="false" />
+            <element signature="e#29821#29822#0" expanded="false" />
+            <element signature="e#29860#29861#0" expanded="false" />
+            <element signature="e#29921#29922#0" expanded="false" />
+            <element signature="e#29958#29959#0" expanded="false" />
+            <element signature="e#30019#30020#0" expanded="false" />
+            <element signature="e#30067#30068#0" expanded="false" />
+            <element signature="e#30128#30129#0" expanded="false" />
+            <element signature="e#30172#30173#0" expanded="false" />
+            <element signature="e#30233#30234#0" expanded="false" />
+            <element signature="e#30281#30282#0" expanded="false" />
+            <element signature="e#30342#30343#0" expanded="false" />
+            <element signature="e#30391#30392#0" expanded="false" />
+            <element signature="e#30452#30453#0" expanded="false" />
+            <element signature="e#30501#30502#0" expanded="false" />
+            <element signature="e#30562#30563#0" expanded="false" />
+            <element signature="e#30595#30596#0" expanded="false" />
+            <element signature="e#30656#30657#0" expanded="false" />
+            <element signature="e#30692#30693#0" expanded="false" />
+            <element signature="e#30759#30760#0" expanded="false" />
+            <element signature="e#30807#30808#0" expanded="false" />
+            <element signature="e#30873#30874#0" expanded="false" />
+            <element signature="e#30916#30917#0" expanded="false" />
+            <element signature="e#30982#30983#0" expanded="false" />
+            <element signature="e#31020#31021#0" expanded="false" />
+            <element signature="e#31095#31096#0" expanded="false" />
+            <element signature="e#31133#31134#0" expanded="false" />
+            <element signature="e#31176#31177#0" expanded="false" />
+            <element signature="e#31204#31205#0" expanded="false" />
+            <element signature="e#31278#31279#0" expanded="false" />
+            <element signature="e#31316#31317#0" expanded="false" />
+            <element signature="e#31369#31370#0" expanded="false" />
+            <element signature="e#31411#31412#0" expanded="false" />
+            <element signature="e#31461#31462#0" expanded="false" />
+            <element signature="e#31500#31501#0" expanded="false" />
+            <element signature="e#31558#31559#0" expanded="false" />
+            <element signature="e#31593#31594#0" expanded="false" />
+            <element signature="e#31650#31651#0" expanded="false" />
+            <element signature="e#31681#31682#0" expanded="false" />
+            <element signature="e#31738#31739#0" expanded="false" />
+            <element signature="e#31768#31769#0" expanded="false" />
+            <element signature="e#31825#31826#0" expanded="false" />
+            <element signature="e#31860#31861#0" expanded="false" />
+            <element signature="e#31917#31918#0" expanded="false" />
+            <element signature="e#31955#31956#0" expanded="false" />
+            <element signature="e#32012#32013#0" expanded="false" />
+            <element signature="e#32048#32049#0" expanded="false" />
+            <element signature="e#32105#32106#0" expanded="false" />
+            <element signature="e#32144#32145#0" expanded="false" />
+            <element signature="e#32201#32202#0" expanded="false" />
+            <element signature="e#32235#32236#0" expanded="false" />
+            <element signature="e#32292#32293#0" expanded="false" />
+            <element signature="e#32330#32331#0" expanded="false" />
+            <element signature="e#32387#32388#0" expanded="false" />
+            <element signature="e#32419#32420#0" expanded="false" />
+            <element signature="e#32476#32477#0" expanded="false" />
+            <element signature="e#32517#32518#0" expanded="false" />
+            <element signature="e#32574#32575#0" expanded="false" />
+            <element signature="e#32614#32615#0" expanded="false" />
+            <element signature="e#32671#32672#0" expanded="false" />
+            <element signature="e#32705#32706#0" expanded="false" />
+            <element signature="e#32762#32763#0" expanded="false" />
+            <element signature="e#32797#32798#0" expanded="false" />
+            <element signature="e#32854#32855#0" expanded="false" />
+            <element signature="e#32886#32887#0" expanded="false" />
+            <element signature="e#32943#32944#0" expanded="false" />
+            <element signature="e#32976#32977#0" expanded="false" />
+            <element signature="e#33033#33034#0" expanded="false" />
+            <element signature="e#33067#33068#0" expanded="false" />
+            <element signature="e#33124#33125#0" expanded="false" />
+            <element signature="e#33158#33159#0" expanded="false" />
+            <element signature="e#33215#33216#0" expanded="false" />
+            <element signature="e#33250#33251#0" expanded="false" />
+            <element signature="e#33307#33308#0" expanded="false" />
+            <element signature="e#33340#33341#0" expanded="false" />
+            <element signature="e#33397#33398#0" expanded="false" />
+            <element signature="e#33433#33434#0" expanded="false" />
+            <element signature="e#33490#33491#0" expanded="false" />
+            <element signature="e#33526#33527#0" expanded="false" />
+            <element signature="e#33583#33584#0" expanded="false" />
+            <element signature="e#33617#33618#0" expanded="false" />
+            <element signature="e#33674#33675#0" expanded="false" />
+            <element signature="e#33705#33706#0" expanded="false" />
+            <element signature="e#33762#33763#0" expanded="false" />
+            <element signature="e#33797#33798#0" expanded="false" />
+            <element signature="e#33881#33882#0" expanded="false" />
+            <element signature="e#33919#33920#0" expanded="false" />
+            <element signature="e#33994#33995#0" expanded="false" />
+            <element signature="e#34050#34051#0" expanded="false" />
+            <element signature="e#34100#34101#0" expanded="false" />
+            <element signature="e#34138#34139#0" expanded="false" />
+            <element signature="e#34214#34215#0" expanded="false" />
+            <element signature="e#34270#34271#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/controller/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="174" column="36" selection-start="5955" selection-end="5955" vertical-scroll-proportion="-118.32" vertical-offset="0" max-vertical-offset="3264">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/ILoginView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="323" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/IView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="12.24" vertical-offset="306" max-vertical-offset="1054" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/Logger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="154" column="0" selection-start="4578" selection-end="4578" vertical-scroll-proportion="-10.72" vertical-offset="2350" max-vertical-offset="2720" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/LogLevelEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="12" selection-start="91" selection-end="91" vertical-scroll-proportion="-4.76" vertical-offset="0" max-vertical-offset="306" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/console/CmdView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="581" column="0" selection-start="30724" selection-end="30724" vertical-scroll-proportion="-386.92" vertical-offset="204" max-vertical-offset="9979" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/console/ConsoleView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="456" column="0" selection-start="18756" selection-end="18756" vertical-scroll-proportion="-10.72" vertical-offset="7484" max-vertical-offset="7854" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/console/ConsoleViewLogin_1_5.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="0" selection-start="1790" selection-end="1790" vertical-scroll-proportion="-9.88" vertical-offset="960" max-vertical-offset="1309" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/view/console/ConsoleViewLogin_1_6.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="0" selection-start="2151" selection-end="2151" vertical-scroll-proportion="-9.04" vertical-offset="1134" max-vertical-offset="1462" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/AeSimpleMD5.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="0" selection-start="1547" selection-end="1547" vertical-scroll-proportion="-9.04" vertical-offset="556" max-vertical-offset="884">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/Helper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="460" column="0" selection-start="19342" selection-end="19342" vertical-scroll-proportion="-9.88" vertical-offset="7573" max-vertical-offset="7922">
+          <folding>
+            <element signature="e#0#19342#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#10429#10445#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/ILoginDialogResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="261" selection-end="261" vertical-scroll-proportion="-7.48" vertical-offset="85" max-vertical-offset="374">
+          <folding>
+            <element signature="e#0#261#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/ITransferDialogResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="-9.52" vertical-offset="102" max-vertical-offset="442">
+          <folding>
+            <element signature="e#0#515#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/LoginDialogResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="0" selection-start="632" selection-end="632" vertical-scroll-proportion="-9.88" vertical-offset="331" max-vertical-offset="680">
+          <folding>
+            <element signature="e#0#632#0" expanded="false" />
+            <element signature="e#501#502#0" expanded="false" />
+            <element signature="e#542#543#0" expanded="false" />
+            <element signature="e#586#587#0" expanded="false" />
+            <element signature="e#627#628#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/Model.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="866" column="0" selection-start="44243" selection-end="44243" vertical-scroll-proportion="-9.88" vertical-offset="14475" max-vertical-offset="14824">
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#870#871#0" expanded="false" />
+            <element signature="e#902#903#0" expanded="false" />
+            <element signature="e#16186#16210#0" expanded="false" />
+            <element signature="e#24534#24558#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/ResolutionEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="0" selection-start="353" selection-end="353" vertical-scroll-proportion="-9.04" vertical-offset="233" max-vertical-offset="561">
+          <folding>
+            <element signature="e#0#353#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/TransferDialogResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="0" selection-start="1852" selection-end="1852" vertical-scroll-proportion="-9.88" vertical-offset="739" max-vertical-offset="1088">
+          <folding>
+            <element signature="e#0#1852#0" expanded="false" />
+            <element signature="e#1240#1241#0" expanded="false" />
+            <element signature="e#1268#1269#0" expanded="false" />
+            <element signature="e#1326#1327#0" expanded="false" />
+            <element signature="e#1357#1358#0" expanded="false" />
+            <element signature="e#1409#1410#0" expanded="false" />
+            <element signature="e#1434#1435#0" expanded="false" />
+            <element signature="e#1480#1481#0" expanded="false" />
+            <element signature="e#1505#1506#0" expanded="false" />
+            <element signature="e#1545#1546#0" expanded="false" />
+            <element signature="e#1574#1575#0" expanded="false" />
+            <element signature="e#1604#1605#0" expanded="false" />
+            <element signature="e#1623#1624#0" expanded="false" />
+            <element signature="e#1663#1664#0" expanded="false" />
+            <element signature="e#1692#1693#0" expanded="false" />
+            <element signature="e#1819#1820#0" expanded="false" />
+            <element signature="e#1848#1849#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/ISmugmugConnector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="0" selection-start="1715" selection-end="1715" vertical-scroll-proportion="-9.88" vertical-offset="535" max-vertical-offset="884" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/ISmugmugLocalAlbumCache.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="0" selection-start="604" selection-end="604" vertical-scroll-proportion="-9.88" vertical-offset="178" max-vertical-offset="527" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/SmugmugConnector2G.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2326" column="0" selection-start="110315" selection-end="110315" vertical-scroll-proportion="-9.88" vertical-offset="39295" max-vertical-offset="39644" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/SmugmugConnector3G.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2371" column="0" selection-start="121462" selection-end="121462" vertical-scroll-proportion="-9.88" vertical-offset="40060" max-vertical-offset="40409" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/smugmugLayer/SmugmugLocalAlbumCache.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="171" column="0" selection-start="5395" selection-end="5395" vertical-scroll-proportion="-9.88" vertical-offset="2660" max-vertical-offset="3009" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/ITransferQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="0" selection-start="691" selection-end="691" vertical-scroll-proportion="-9.88" vertical-offset="212" max-vertical-offset="561" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/ITransferQueueItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="338" selection-end="338" vertical-scroll-proportion="-7.16" vertical-offset="59" max-vertical-offset="340" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/ITransferQueueItemProcessResults.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="431" selection-end="431" vertical-scroll-proportion="-7.48" vertical-offset="102" max-vertical-offset="391" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="0" selection-start="3239" selection-end="3239" vertical-scroll-proportion="-9.04" vertical-offset="1457" max-vertical-offset="1785" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="134" column="0" selection-start="4963" selection-end="4963" vertical-scroll-proportion="-9.04" vertical-offset="2052" max-vertical-offset="2380" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueItemActionEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="276" selection-end="276" vertical-scroll-proportion="-6.12" vertical-offset="0" max-vertical-offset="255" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueItemProcessResults.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="0" selection-start="1266" selection-end="1266" vertical-scroll-proportion="-9.04" vertical-offset="352" max-vertical-offset="680" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/queue/TransferQueueProcessor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="84" column="0" selection-start="3460" selection-end="3460" vertical-scroll-proportion="-8.2" vertical-offset="1223" max-vertical-offset="1530" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/AccountListingProxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1461" column="0" selection-start="72733" selection-end="72733" vertical-scroll-proportion="-8.2" vertical-offset="24632" max-vertical-offset="24939">
+          <folding>
+            <element signature="e#0#72733#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#49519#49527#0" expanded="false" />
+            <element signature="e#50865#50873#0" expanded="false" />
+            <element signature="e#60559#60560#0" expanded="false" />
+            <element signature="e#60590#60591#0" expanded="false" />
+            <element signature="e#60770#60778#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Album.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="76" column="0" selection-start="2354" selection-end="2354" vertical-scroll-proportion="-9.04" vertical-offset="1066" max-vertical-offset="1394" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/AlbumMonthlyStatistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="0" selection-start="3296" selection-end="3296" vertical-scroll-proportion="-9.04" vertical-offset="1304" max-vertical-offset="1632" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Category.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="0" selection-start="1111" selection-end="1111" vertical-scroll-proportion="-9.04" vertical-offset="556" max-vertical-offset="884" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAlbum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="0" selection-start="524" selection-end="524" vertical-scroll-proportion="-9.88" vertical-offset="161" max-vertical-offset="510" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAlbumMonthlyStatistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="0" selection-start="572" selection-end="572" vertical-scroll-proportion="-8.2" vertical-offset="356" max-vertical-offset="663" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ICategory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="0" selection-start="458" selection-end="458" vertical-scroll-proportion="-8.16" vertical-offset="102" max-vertical-offset="408" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IImage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="0" selection-start="971" selection-end="971" vertical-scroll-proportion="-9.88" vertical-offset="433" max-vertical-offset="782" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Image.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="128" column="0" selection-start="5397" selection-end="5397" vertical-scroll-proportion="-9.88" vertical-offset="1929" max-vertical-offset="2278" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IRootElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="404" selection-end="404" vertical-scroll-proportion="-7.48" vertical-offset="102" max-vertical-offset="391" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ISmugmugObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0" vertical-offset="102" max-vertical-offset="425">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/ISubcategory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="362" selection-end="362" vertical-scroll-proportion="0.0" vertical-offset="76" max-vertical-offset="357">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/RootElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="0" selection-start="923" selection-end="923" vertical-scroll-proportion="0.0" vertical-offset="522" max-vertical-offset="850">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/IAccountListingProxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="0" selection-start="1559" selection-end="1559" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="748">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/SmugmugObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="77" column="0" selection-start="1648" selection-end="1648" vertical-scroll-proportion="0.0" vertical-offset="1062" max-vertical-offset="1411">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/SmugmugTypeEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="0" selection-start="367" selection-end="367" vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="391">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/Subcategory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="0" selection-start="794" selection-end="794" vertical-scroll-proportion="0.0" vertical-offset="178" max-vertical-offset="663">
+          <folding>
+            <marker date="1390892982469" expanded="true" signature="430:525" placeholder="{...}" />
+            <marker date="1390892982469" expanded="true" signature="663:705" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/TransferStatistics.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="0" selection-start="503" selection-end="503" vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="510">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/VerifyOutputMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="0" selection-start="585" selection-end="585" vertical-scroll-proportion="0.0" vertical-offset="476" max-vertical-offset="578">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jSmugmugBackup/model/accountLayer/VerifyResultEnum.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="26" selection-start="239" selection-end="239" vertical-scroll-proportion="0.47128713" vertical-offset="0" max-vertical-offset="510">
+          <folding>
+            <element signature="e#0#382#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>jSmugmugBackupNG</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>IDEA IC-133.696</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 
