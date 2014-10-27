@@ -1,0 +1,2 @@
+GUI functions:
+- sync accunt data with progress info (number of synced files)
